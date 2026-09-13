@@ -1,0 +1,7 @@
+{
+  "name": "Spog",
+  "category": "SPOG",
+  "icon": "\ud83d\udcc1",
+  "description": "System Application component for APK.audio ecosystem.",
+  "entry": "main.py"
+}
