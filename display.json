@@ -1,7 +1,12 @@
 {
-  "name": "Spog",
-  "category": "SPOG",
-  "icon": "\ud83d\udcc1",
-  "description": "System Application component for APK.audio ecosystem.",
-  "entry": "main.py"
+  "id": "SPOG",
+  "name": "SPOG System Bus & Operations Grid",
+  "icon": "🚌",
+  "group": "System",
+  "subGroup": "Bus & Transport",
+  "kind": "web",
+  "app": "APK:Softapps/SPOG/twist-mqtt-tree.html",
+  "entry": "twist-mqtt-tree.html",
+  "tech": "HTML5 / MQTT.js",
+  "description": "System Operations Grid & DataBus live topic monitor for APK.audio ecosystem."
 }
