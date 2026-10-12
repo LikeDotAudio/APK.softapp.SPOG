@@ -1,0 +1,71 @@
+{
+  "id": "fl1-sjsu-ballroom",
+  "name": "SJSU BALLROOM",
+  "project": "QUO-126291-Q6J0N6",
+  "color": "#F4902C",
+  "lighting_grid": {
+    "rig": "Overhead Grid · SJSU Ballroom Stage & House",
+    "presets": [
+      "BALLROOM PRESENTATION",
+      "BANQUET / DINNER",
+      "KEYNOTE / LECTURE",
+      "CONCERT / PERFORMANCE",
+      "PROMO / SHOWCASE",
+      "BLACKOUT"
+    ]
+  },
+  "twists": [
+    {
+      "name": "Stage Lighting Grid",
+      "accepts": "both",
+      "row": "lighting",
+      "presets": [
+        "BALLROOM PRESENTATION",
+        "BANQUET / DINNER",
+        "KEYNOTE / LECTURE",
+        "CONCERT / PERFORMANCE",
+        "PROMO / SHOWCASE",
+        "BLACKOUT"
+      ]
+    },
+    {
+      "name": "House Lighting Wash",
+      "accepts": "both",
+      "row": "lighting"
+    },
+    {
+      "name": "WYSIWYG Pre-Viz",
+      "accepts": "both",
+      "row": "lighting"
+    },
+    {
+      "name": "On Air / Show Call Light",
+      "accepts": "both",
+      "row": "signaling"
+    },
+    {
+      "name": "Stage Tally",
+      "accepts": "both",
+      "row": "signaling"
+    },
+    {
+      "name": "Program Video Screen Left",
+      "accepts": "video",
+      "maxVideo": 1,
+      "monitor": true
+    },
+    {
+      "name": "Program Video Screen Right",
+      "accepts": "video",
+      "maxVideo": 1,
+      "monitor": true
+    },
+    {
+      "name": "House PA Audio Left/Right",
+      "accepts": "audio",
+      "maxAudio": 2,
+      "row": "speaker"
+    }
+  ],
+  "status": "OK"
+}
