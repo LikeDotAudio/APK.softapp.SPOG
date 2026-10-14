@@ -115,7 +115,7 @@ export function createTwistBus(): TwistBus {
     client.on('connect', () => {
       connected = true;
       dbg('connected', sessionId);
-      client!.subscribe(`${SPOG_ROOT}/#`, { qos: 0 });
+      client!.subscribe([`${SPOG_ROOT}/#`, 'devices/#', 'APK.audio/Device/#'], { qos: 0 });
       const beat = (): void => { send(presenceTopic, { active: true, full_id: sessionId, ts: Date.now() }); };
       beat();
       heartbeat = setInterval(beat, 1000);

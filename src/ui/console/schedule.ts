@@ -16,7 +16,7 @@ export async function loadSchedule(): Promise<void> {
     RAW_SCHEDULE_DATA = data;
     const slots = Array.isArray(data) ? data : data.slots;
     const colors = Array.isArray(data) ? undefined : data.colors;
-    if (colors) for (const [show, c] of Object.entries(colors)) setShowColor(show, c);
+    if (colors) for (const [show, c] of Object.entries(colors)) setShowColor(show, c as string);
     if (Array.isArray(slots) && slots.length) {
       SCHEDULE.length = 0;
       SCHEDULE.push(...slots);

@@ -62,7 +62,7 @@ function renderInto(body: HTMLElement, resetScroll = true): void {
   const groupSelected = (group: string): boolean => sel.some((g) => group.toLowerCase().includes(g));
   const foldSet = new Set<string>(collapsed);   // section collapses carry through
   for (const l of all) {
-    if ((l.section === 'where' || l.section === 'how') && !expandedGroups.has(`G:${l.section}|${l.group}`) && !groupSelected(l.group)) foldSet.add(`G:${l.section}|${l.group}`);
+    if ((l.type === 'where' || l.type === 'how') && !expandedGroups.has(`G:${l.section}|${l.group}`) && !groupSelected(l.group)) foldSet.add(`G:${l.section}|${l.group}`);
   }
   // Grid HTML (foldable headers with inline counts, dots, bands, ruler) — see
   // captains-log-timeline-render. `ev` is the click-lookup list.
@@ -81,7 +81,7 @@ function renderInto(body: HTMLElement, resetScroll = true): void {
   const chips = panel?.querySelector('.tl-groups');
   if (chips) {
     const twists = [...document.querySelectorAll<HTMLElement>('.twist-container')];
-    const groups = [...new Set(all.filter((l) => l.section === 'where' || l.section === 'how').map((l) => l.group))];
+    const groups = [...new Set(all.filter((l) => l.type === 'where' || l.type === 'how').map((l) => l.group))];
     chips.innerHTML = `<button class="tl-chip all${!selectedGroups.size && !filter ? ' on' : ''}" data-group="">◎ SHOW ALL</button>` + groups.map((g) => {
       const tw = twists.find((t) => (t.dataset['prodName'] || '').toUpperCase() === g);
       const c = (tw && getComputedStyle(tw).getPropertyValue('--lcars-color').trim()) || '#3FC1C9';

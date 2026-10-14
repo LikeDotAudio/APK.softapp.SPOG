@@ -4,11 +4,11 @@
 // it still emits a COMPOSITE lane aggregating all its events, so nothing vanishes on
 // fold. Split out of captains-log-timeline (200-line rule).
 export interface RKf { ts: number; text: string; rev: boolean; op: string; color: string }
-export interface RPlan { s: number; e: number; label: string; showName: string; reh?: boolean; tear?: boolean; color?: string }
-export interface RLane { type: 'where' | 'who' | 'how' | 'whom'; section: 'in_use' | 'to_be_used' | 'not_used'; group: string; name: string; kf: RKf[]; plans: RPlan[] }
+export interface RPlan { s: number; e: number; label: string; showName?: string; reh?: boolean; tear?: boolean; color?: string }
+export interface RLane { type?: string; section: 'where' | 'who' | 'how' | 'whom' | 'in_use' | 'to_be_used' | 'not_used' | string; group: string; name: string; kf: RKf[]; plans: RPlan[] }
 export interface REv { ts: number; text: string; op: string; rev: boolean; color: string }
 
-const esc = (s: string): string => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] ?? c));
+const esc = (s?: string): string => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] ?? c));
 const hm = (ts: number): string => new Date(ts).toISOString().slice(11, 16);
 
 /** Build the grid innerHTML + the click-lookup event list. `x(ts)` maps a time to px. */
