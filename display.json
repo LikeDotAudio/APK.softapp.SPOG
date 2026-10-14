@@ -1,12 +1,12 @@
 {
   "id": "SPOG",
-  "name": "SPOG System Bus & Operations Grid",
-  "icon": "🚌",
+  "name": "SPOG — Single Pane Of Glass",
+  "icon": "🎛️",
   "group": "System",
-  "subGroup": "Bus & Transport",
+  "subGroup": "Operations & Control",
   "kind": "web",
-  "app": "APK:Softapps/SPOG/twist-mqtt-tree.html",
-  "entry": "twist-mqtt-tree.html",
-  "tech": "HTML5 / MQTT.js",
-  "description": "System Operations Grid & DataBus live topic monitor for APK.audio ecosystem."
+  "app": "APK:Softapps/SPOG/index.next.html",
+  "entry": "index.next.html",
+  "tech": "TypeScript / Vite / LCARS",
+  "description": "Single Pane Of Glass universal operations console, signal visualizer & gear interface for APK.audio ecosystem."
 }

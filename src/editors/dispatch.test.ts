@@ -64,6 +64,8 @@ const EXPECT: Array<[string, string | null]> = [
   ['TSG', 'tsg'],                   // TEST SIGNAL GENERATOR — standardised test patterns
   ['Test Signal Generator', 'tsg'], // order:9 beats signaling's /signal/ (order 11)
   ['Wireless Controller', 'wireless'],   // RF telemetry: packs + coordination controllers
+  ['Device Interface', 'device'],        // Universal Device Editor
+  ['Hardware Rack', 'device'],
 ];
 
 describe('editor dispatch', () => {
@@ -73,8 +75,8 @@ describe('editor dispatch', () => {
     }
   });
 
-  it('registers all 24 editors', () => {
-    expect(PLUGINS.length).toBe(24);
+  it('registers all 25 editors', () => {
+    expect(PLUGINS.length).toBe(25);
   });
 
   it('orders plugins by ascending precedence (legacy import order)', () => {

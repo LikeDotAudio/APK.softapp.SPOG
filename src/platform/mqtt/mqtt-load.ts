@@ -10,7 +10,7 @@ import mqttJsUrl from '../../vendor/mqtt.min.js?url';
 export interface MqttClient {
   on(ev: 'connect' | 'reconnect' | 'close' | 'offline' | 'error', cb: (arg?: unknown) => void): void;
   on(ev: 'message', cb: (topic: string, payload: Uint8Array) => void): void;
-  subscribe(topic: string, opts?: { qos?: 0 | 1 | 2 }): void;
+  subscribe(topic: string | string[], opts?: { qos?: 0 | 1 | 2 }): void;
   publish(topic: string, payload: string, opts?: { retain?: boolean; qos?: 0 | 1 | 2 }): void;
   end(force?: boolean, opts?: unknown, cb?: () => void): void;
 }
