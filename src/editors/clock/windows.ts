@@ -8,7 +8,7 @@ import { el, ctx2d } from '../../ui/dom.js';
 import {
   type Zone, type Resolution, type FaceState, type FaceDef,
   RESOLUTIONS, ZONES, zoneOf, offsetLabel, zoneIdxForOffset,
-} from '../../ui/clock-faces/shared.js';
+} from '../../ui/clock-faces/src/shared.js';
 
 export type Rect = [number, number, number, number];
 

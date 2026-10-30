@@ -24,8 +24,8 @@ globals anywhere.
 
 `domain/test-card/` holds only the pure identity logic (ident, shapes, types); the
 canvas/DOM painters live in `ui/test-card/`. Pieces two editors share sit in `ui/`,
-not in an editor folder: the clock faces (`ui/clock-faces/`, used by the CLOCK bench
-and the TIMER wall clock) and the forecast data + strip face (`ui/weather/`, used by
+not in an editor folder: the clock faces (`ui/clock-faces/`, the TIME.clockFaces submodule — the same
+files the OS shell bundles — whose `src/*.ts` the CLOCK bench and the TIMER wall clock glob) and the forecast data + strip face (`ui/weather/`, used by
 the Graphics Engine).
 
 ## Editors are plugins (M2 + M3)

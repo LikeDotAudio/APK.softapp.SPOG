@@ -1,6 +1,6 @@
 // src/editors/timer/wall-clock — the locked time-of-day header pinned above the two
 // channels (split from index.ts, audit §4.5). Same zone · resolution · face controls
-// as the clock bench (ui/clock-faces/*), but no drag / no close. Owns its own config
+// as the clock bench (ui/clock-faces/src/*, the TIME.clockFaces submodule), but no drag / no close. Owns its own config
 // persist (localStorage) and the FACES glob registry; returns a strip element, a
 // per-frame draw(now), and publish-suppressed setters the MQTT surface drives.
 
@@ -9,10 +9,10 @@ import { el, ctx2d } from '../../ui/dom.js';
 import {
   type Zone, type Resolution, type FaceState, type FaceDef,
   RESOLUTIONS, ZONES, zoneOf, offsetLabel, detectZoneIdx, zoneIdxForOffset, parseZone,
-} from '../../ui/clock-faces/shared.js';
+} from '../../ui/clock-faces/src/shared.js';
 
-// ---- wall-clock faces: the SAME registry the clock bench uses (ui/clock-faces/*) ----
-const faceMods = import.meta.glob<{ default?: FaceDef }>('../../ui/clock-faces/*.ts', { eager: true });
+// ---- wall-clock faces: the SAME registry the clock bench uses (ui/clock-faces/src/*, the TIME.clockFaces submodule) ----
+const faceMods = import.meta.glob<{ default?: FaceDef }>('../../ui/clock-faces/src/*.ts', { eager: true });
 const FACES: FaceDef[] = Object.values(faceMods)
   .map((m) => m.default)
   .filter((d): d is FaceDef => !!d && typeof d.draw === 'function')

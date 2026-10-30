@@ -3,7 +3,7 @@
 // Scans committed source (src/, assets/) + top-level scripts; fails if any non-allowlisted
 // file exceeds MAX_LINES. The allowlist grandfathers not-yet-split files and shrinks each phase —
 // when it reaches [] the rule is fully enforced. Run: `node scripts/check-file-size.mjs`.
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname;
@@ -58,6 +58,9 @@ function walk(dir, out) {
     const full = join(dir, e.name);
     const rel = relative(ROOT, full);
     if (SKIP_DIR.test(rel)) continue;
+    // A submodule (src/ui/clock-faces = TIME.clockFaces) is another repo's
+    // source and answers to that repo's rules, not to this tripwire.
+    if (e.isDirectory() && existsSync(join(full, '.git'))) continue;
     if (e.isDirectory()) walk(full, out);
     else if (EXT.test(e.name)) out.push(full);
   }

@@ -1,0 +1,3 @@
+[submodule "src/ui/clock-faces"]
+	path = src/ui/clock-faces
+	url = https://github.com/LikeDotAudio/APK.softapp.TIME.clockFaces.git

@@ -68,7 +68,7 @@ click twist → app/editor-dispatch.ts → editors/registry.ts match → app/con
 | Pure domain | `domain/routing-core` (graph, faults, tally, `stripOrder`), `domain/timer-core`, `domain/test-tone`, `domain/tsg`, `domain/test-card` (ident, shapes, types) |
 | Console shell | `ui/console/` (91 files: footer, destinations, matrix DnD, helix, captains-log*, timeline, colour engine, router-view, fixtures) |
 | Sources panel | `ui/sources/` (panel, pools, gang cells, format) |
-| Shared painters | `ui/test-card/` (test frame + wall ticker), `ui/clock-faces/` (CLOCK + TIMER wall clock), `ui/weather/` (forecast data + strip, used by the Graphics Engine) |
+| Shared painters | `ui/test-card/` (test frame + wall ticker), `ui/clock-faces/` (CLOCK + TIMER wall clock; the TIME.clockFaces submodule, globbed at `src/*.ts`), `ui/weather/` (forecast data + strip, used by the Graphics Engine) |
 | Editors | `editors/<name>/index.ts` — 25 folders, auto-registered; editors never import editors |
 | Vision mixer | `editors/vision-mixer/`: `schema.ts` (`DEFAULT_SWITCHER`: 24 in — 1-12 video, 13-18 program, 19-24 graphics), `me.ts`, `scenes.ts` (whole-switcher registers incl. DSK PRE-ROUTE `dskSrc`), `preroute.ts`/`gfx-route.ts`, `gfx-take*.ts`, `gfx-feed.ts` |
 | Multiviewer | `editors/multi-viewer/`: `wallCells()` + `gfxOverflow()` in `auto-gfx.ts` |

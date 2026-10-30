@@ -332,7 +332,8 @@ behind `data-cap="shade"`** — only the Chief Engineer (or Captain) sees it.
 | Person | `editors/person/` | `person`, `talent`, `channel strip` | PERSON · VIRTUAL CHANNEL STRIP |
 
 The forecast data and strip face the Graphics Engine uses live in `ui/weather/`, and the clock
-faces the Clock and Timer share live in `ui/clock-faces/` — editors never import editors. The **Timer** is the RC1000-style dual up/down keypad transport, publishing on
+faces the Clock and Timer share are `ui/clock-faces/`, the TIME.clockFaces submodule (one
+copy for SPOG and the OS shell) — editors never import editors. The **Timer** is the RC1000-style dual up/down keypad transport, publishing on
 `destinations/<dest>/counters_timer`; its PRODUCTION TIMERS feeds are routable sources.
 
 ### How the editors connect

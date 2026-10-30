@@ -2,7 +2,7 @@
 // is pure; createPaint closes over the shared context (C) for dpr + the face
 // registry and owns the paint cache (lastDate) that index's rAF loop resets.
 
-import { type Zone, pad } from '../../ui/clock-faces/shared.js';
+import { type Zone, pad } from '../../ui/clock-faces/src/shared.js';
 import type { ClockCtx, Device } from './windows.js';
 
 // ---- date read-out ----------------------------------------------------------
