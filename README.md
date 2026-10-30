@@ -135,6 +135,11 @@ load each operator's scope automatically, rather than hard-coding it. (Today onl
 editor's Shading card is gated, via `data-cap="shade"` — the rest of the matrix is scaffolding
 ready to be applied.)
 
+The Timeline Viewer (`#timeline`) already reads that model for clashes: its `⚠ STAFFING (N)`
+button (or any lane's `×N` badge) lists each upcoming window where a crew role or production
+room is booked twice or more — when, which role/room, how many more operators or rooms, and
+which shows collide (`ui/console/captains-log-timeline-staffing.ts`).
+
 ---
 
 ### Video & switching
