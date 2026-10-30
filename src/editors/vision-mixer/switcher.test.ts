@@ -80,6 +80,14 @@ describe('scenes', () => {
     expect(state.mes[0]!.pgm).toBe(11);
     expect(state.dsks[0]).toBe(true);
   });
+
+  it('captures and recalls the graphics PRE-ROUTE (dskSrc)', () => {
+    const state = { mes: [newME(def), newME(def), newME(def)], dsks: [true, false], auxes: [], dskSrc: [19, 20] };
+    const snap = captureScene(state, 's', 'S');
+    state.dskSrc[0] = 3;
+    recallScene(state, snap, def);
+    expect(state.dskSrc).toEqual([19, 20]);
+  });
 });
 
 describe('DVE math', () => {

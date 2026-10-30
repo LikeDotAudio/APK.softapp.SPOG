@@ -38,6 +38,7 @@ export function captureScene(state: SwitcherState, id: string, name: string): Sc
     mes: state.mes.map((me, i) => capturePreset(me, `${id}-me${i + 1}`, `ME${i + 1}`)),
     dsks: [...state.dsks],
     auxes: [...state.auxes],
+    ...(state.dskSrc ? { dskSrc: [...state.dskSrc] } : {}),
   };
 }
 
@@ -47,4 +48,8 @@ export function recallScene(state: SwitcherState, scene: SceneDef, def: Switcher
   scene.mes.forEach((p, i) => { if (state.mes[i]) applyPreset(state.mes[i]!, p, def); });
   scene.dsks.forEach((on, i) => { if (i < state.dsks.length) state.dsks[i] = on; });
   if (scene.auxes) scene.auxes.forEach((src, i) => { if (i < state.auxes.length) state.auxes[i] = src; });
+  if (scene.dskSrc) {
+    const live = (state.dskSrc ??= def.dsks.map((d) => d.source ?? 0));
+    scene.dskSrc.forEach((src, i) => { if (i < live.length) live[i] = src; });
+  }
 }

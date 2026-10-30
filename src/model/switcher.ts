@@ -45,7 +45,11 @@ export interface MEPreset {
 }
 
 /** A whole-switcher register (audit §8 "scene recall"): every bank + DSKs. */
-export interface SceneDef { id: string; name: string; mes: MEPreset[]; dsks: boolean[]; auxes?: number[]; }
+export interface SceneDef {
+  id: string; name: string; mes: MEPreset[]; dsks: boolean[]; auxes?: number[];
+  /** Graphics PRE-ROUTE: which input feeds each DSK. Absent → leave the live routing alone. */
+  dskSrc?: number[];
+}
 
 export interface DSKDef { name: string; type?: KeyerType; source?: number; }
 
