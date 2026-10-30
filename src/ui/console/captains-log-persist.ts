@@ -25,30 +25,44 @@ export function persistEntry(e: LogEntryEvent, origin?: string): void {
   void idbPut('log', { k: key, origin: org, voyage: e.voyage, voyTitle, entry: e.entry, ts: e.ts, dest: e.dest, prod: e.prod, text: e.text, reversed: e.reversed, by: e.by, role: e.role, added: e.added, removed: e.removed });
 }
 
+/** Restore one IndexedDB row into its narrative. Throws on a malformed row. */
+function restoreRow(r: StoredEntry): void {
+  const org = r.origin ?? selfOrigin();   // legacy rows predate origins → treat as ours
+  let nar = narByOriginVoyage(org, r.voyage);
+  if (!nar) {
+    const mine = org === selfOrigin();
+    nar = { id: r.voyage, origin: org, title: mine ? r.voyTitle : `${r.voyTitle} · ${org.slice(0, 4)}`, entries: [] };
+    narratives.push(nar);
+  }
+  const list = (v: unknown): string[] => (Array.isArray(v) ? v.map(String) : []);
+  nar.entries.push({ id: r.entry, ts: r.ts, twist: null, dest: r.dest, prod: r.prod, added: [], removed: [], text: r.text, reversed: r.reversed, reversedBy: r.reversedBy, reversedTs: r.reversedTs, restored: true, origin: org, role: r.role, labels: r.added || r.removed ? { added: list(r.added), removed: list(r.removed) } : undefined });
+  if (org === selfOrigin()) { raiseNid(r.voyage); raiseEid(r.entry); }
+}
+
+/** Restore the persisted log. Each row is guarded on its own: a malformed row is
+ *  skipped (and counted in one warning), never the end of the restore. Returns the
+ *  number of rows restored. */
 export async function hydrateLog(): Promise<number> {
-  const rows = await idbGetAll<StoredEntry>('log');
-  if (!rows.length) return 0;
+  const all = await idbGetAll<StoredEntry>('log');
+  if (!all.length) return 0;
+  const rows = all.filter((r): r is StoredEntry => !!r && typeof r === 'object'
+    && Number.isFinite(r.ts) && Number.isFinite(r.entry) && Number.isFinite(r.voyage));
+  let skipped = all.length - rows.length;
+  let restored = 0;
   hydrating = true;
   try {
     rows.sort((a, b) => a.ts - b.ts || a.entry - b.entry);
     for (const r of rows) {
-      const org = r.origin ?? selfOrigin();   // legacy rows predate origins → treat as ours
-      let nar = narByOriginVoyage(org, r.voyage);
-      if (!nar) {
-        const mine = org === selfOrigin();
-        nar = { id: r.voyage, origin: org, title: mine ? r.voyTitle : `${r.voyTitle} · ${org.slice(0, 4)}`, entries: [] };
-        narratives.push(nar);
-      }
-      nar.entries.push({ id: r.entry, ts: r.ts, twist: null, dest: r.dest, prod: r.prod, added: [], removed: [], text: r.text, reversed: r.reversed, reversedBy: r.reversedBy, reversedTs: r.reversedTs, restored: true, origin: org, role: r.role, labels: r.added || r.removed ? { added: r.added ?? [], removed: r.removed ?? [] } : undefined });
-      if (org === selfOrigin()) { raiseNid(r.voyage); raiseEid(r.entry); }
+      try { restoreRow(r); restored++; } catch { skipped++; }
     }
+    if (skipped) console.warn(`[captains-log] skipped ${skipped} malformed log row(s) on restore`);
     // Chronological across the merged log.
     narratives.sort((a, b) => (a.entries[0]?.ts ?? 0) - (b.entries[0]?.ts ?? 0) || a.id - b.id);
     // New work lands in a NEW voyage, not appended to a dead session's narrative.
     setCurrent(null);
     render();
   } finally { hydrating = false; }
-  return rows.length;
+  return restored;
 }
 
 const logListeners = new Set<(e: LogEntryEvent) => void>();
