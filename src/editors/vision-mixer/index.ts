@@ -35,6 +35,7 @@ import { createDashboard } from './dashboard.js';
 import { buildLayoutDrawer } from './layout-drawer.js';
 import { buildAuxRow, buildMacroRow } from './panels.js';
 import { buildPreRoute } from './preroute.js';
+import { buildGfxTake } from './gfx-take-panel.js';
 import { buildStage } from './stage.js';
 import { wireKeyboard } from './keyboard.js';
 import { buildTransition, type AutoToken } from './transition.js';
@@ -235,6 +236,12 @@ function render(host: HTMLElement, ctx: EditorContext): void {
     el('p', { class: 'ed-h' }, ['GRAPHICS PRE-ROUTE']),
     preRow,
   ]);
+  // DSK preview → take + the faux-take graphics sets (gfx-take-panel.ts). Fenced:
+  // if it fails to build, the module says so and the rest of the switcher still runs.
+  let gfxBody: HTMLElement;
+  try { gfxBody = buildGfxTake(surface, { pgmMon, pvwMon }).gfxRow; }
+  catch (e) { console.warn('[vision-mixer] GFX SETS unavailable', e); gfxBody = el('p', { class: 'ed-h', style: 'opacity:.6;' }, ['GFX SETS unavailable — see console']); }
+  const gfxSec = el('div', { class: 'vm-sec' }, [el('p', { class: 'ed-h' }, ['GFX SETS · PVW → PGM']), gfxBody]);
   const meSec = el('div', { class: 'vm-sec' }, [
     el('p', { class: 'ed-h' }, ['M/E LOOKS']),
     meRow,
@@ -246,7 +253,7 @@ function render(host: HTMLElement, ctx: EditorContext): void {
 
   const modules: Record<string, HTMLElement> = {
     macros: macroSec, pgm: pgmMon, buses: busesMod, tbar: tbarWrap, pvw: pvwMon, scenes: sceneSec,
-    transitions: transSec, keyers: keyerSec, dsks: dskSec, preroute: preSec, me: meSec, aux: auxSec, dve: dveSec
+    transitions: transSec, keyers: keyerSec, dsks: dskSec, preroute: preSec, gfx: gfxSec, me: meSec, aux: auxSec, dve: dveSec
   };
 
   // ---- dashboard canvas + drawers -----------------------------------------------

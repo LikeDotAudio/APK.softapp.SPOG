@@ -152,7 +152,11 @@ ready to be applied.)
   1-6's default sources, inputs 19-24): an M/E keyer keyed from one reads **USK · ⬡ GFX n**,
   and the **GRAPHICS PRE-ROUTE** module shifts which graphic feeds each bus — LIST (per-DSK
   selects) or MATRIX (GFX × DSK/USK grid); the view is remembered per device and
-  `?preroute=matrix|list` overrides it.
+  `?preroute=matrix|list` overrides it. The **GFX SETS · PVW → PGM** module shows every
+  graphic on the DSKs as a named set: click one to arm it on PREVIEW (dashed chip on the
+  preview monitor), then **CUT GFX** or **AUTO GFX** takes every armed set to PROGRAM through
+  a simulated fade (front-end only; an armed set already on air comes off). The plain DSK
+  buttons still cut on/off air directly.
 - **Multi Viewer** — a configurable monitor wall (2×2 → 16×16, plus PiP). Drag tiles to
   reorder, cycle each window's tally state, and edit UMD labels inline.
 - **ISO Recorder** — per-camera clean recording (timecode, disk space) paired with an instant

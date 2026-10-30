@@ -15,6 +15,8 @@ export interface SwitcherState {
   /** Per-DSK source override (the graphics PRE-ROUTE): which input feeds each
    *  downstream keyer. Absent → each DSK uses its hard-wired `def.dsks[i].source`. */
   dskSrc?: number[];
+  /** DSKs armed on PREVIEW (gfx-take.ts): taken to program by TAKE GFX. Transient. */
+  dskPvw?: boolean[];
 }
 
 const LS_KEY = (twist: string): string => `twist.vm.scenes.${twist}`;
