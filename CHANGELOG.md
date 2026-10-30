@@ -12,6 +12,16 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 - **MONITOR fixture**: a routed PRODUCTION TIMERS feed paints the RC1000 dual-timer (`?timergfx=off`); `?tone=1` adds LISTEN to the routed source's line-up tone.
 - **State glyphs** (Colour Engine P0): `⚠` marks faults without colour; seat pref Auto/On/Off, `?glyphs=on|off`.
 
+### Fixed — loose ends (2026-10-30)
+- **Scene registers** capture and recall the graphics PRE-ROUTE (`dskSrc`), so a whole-switcher recall brings the DSK source shift back (`vision-mixer/scenes.ts`).
+- **Switcher inputs 19-24** are a `graphics` category (DSK-accent tint + ◩ glyph), no longer tinted as audio (`vision-mixer/schema.ts`).
+- **AUTO GFX** counts on-air graphics the full raster has no cell for: `⬡ AUTO GFX · +N OFF WALL` (`multi-viewer/auto-gfx.ts`).
+- **Reverse Course** re-finds a routed dropped group (`NAME ×k`) by name and rebuilds it; the group's log label no longer doubles its `×k` or reads the parent caption (`captains-log-reroute.ts`).
+- **Captain's Log restore** skips a malformed IndexedDB row instead of stopping (`captains-log-persist.ts`).
+- **DUAL COUNTER** ‖ on a TIMER channel keeps the count (the run is folded in via timer-core `toggleRun`); `counters_timer` carries `overtime`, so a down count past zero reads its OVER count (`▲ OVER` on the MONITOR graphic).
+- **Domain purity**: `stripOrder` moved to `domain/routing-core`; gang-cell fault outline uses `var(--state-alarm)`.
+- **Repo**: `node_modules/` is no longer tracked (a fresh `npm ci` gets typescript/vitest); `.env` is gitignored.
+
 ### Changed
 - **Meter Input** hover-help uses the shared `src/ui/tip.ts` panel.
 - **Room fixtures keep running after an error**: a fixture frame that throws is logged once and the loop carries on (`dest-fixtures-shared.ts` `animate()`).
