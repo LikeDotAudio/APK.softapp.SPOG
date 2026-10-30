@@ -1,6 +1,9 @@
 node_modules/
 dist/
-Documentation/🔍Audits/
+# Audit findings stay local (168790c); the lane's INDEX.md is the wiki's own
+# page and is carried, or a fresh clone's wiki --check finds it missing.
+Documentation/🔍Audits/*
+!Documentation/🔍Audits/INDEX.md
 
 *.log
 .env
@@ -11,6 +14,5 @@ __pycache__/
 # vite temp config file (created during config eval)
 vite.config.*.timestamp-*
 
-Documentation/🔍Audits/
 Documentation/PAST\ Audits/
 Documentation/Audits\ /
