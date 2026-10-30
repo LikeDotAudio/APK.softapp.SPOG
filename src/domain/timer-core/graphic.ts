@@ -21,9 +21,11 @@ export interface TimerSnap {
   fps: Fps;
   unix: number;          // ms epoch (time-sync clock) the value was stamped at
   direction: Direction;
+  /** A down count carried past zero and now counting UP over the target. */
+  overtime?: boolean;
 }
 
-export interface TimerRow { id: TimerChan; text: string; running: boolean; direction: Direction | null; }
+export interface TimerRow { id: TimerChan; text: string; running: boolean; direction: Direction | null; overtime?: boolean; }
 
 /** The channels a routed label shows — "TIMER A ▾ COUNT" → [A], "TIMER B …" → [B],
  *  anything else ("TIMER ▸ A/B PANEL", "SHOW CLOCK ▾ BACKTIME") → both. */
@@ -45,15 +47,28 @@ export function isTimerSnap(v: unknown): v is TimerSnap {
     && typeof s.valueFrames === 'number' && Number.isFinite(s.valueFrames)
     && typeof s.unix === 'number' && Number.isFinite(s.unix)
     && FPS.has(s.fps as number)
-    && (s.direction === 'up' || s.direction === 'down');
+    && (s.direction === 'up' || s.direction === 'down')
+    && (s.overtime === undefined || typeof s.overtime === 'boolean');
 }
 
 /** The count at `nowMs`: the stamped value advanced by the elapsed run time in the
- *  channel's direction. A down count stops at zero (the graphic never goes negative). */
+ *  channel's direction. OVERTIME climbs like an up count; a down count stops at zero
+ *  (the graphic never goes negative). */
 export function liveFrames(s: TimerSnap, nowMs: number): number {
   const elapsed = s.running ? Math.max(0, nowMs - s.unix) : 0;
   const d = Math.floor((elapsed / 1000) * s.fps);
-  return Math.max(0, s.direction === 'down' ? s.valueFrames - d : s.valueFrames + d);
+  return Math.max(0, s.direction === 'down' && !s.overtime ? s.valueFrames - d : s.valueFrames + d);
+}
+
+/** START/STOP a channel snapshot at `nowMs`: the elapsed run is folded into
+ *  valueFrames before the stamp moves, so stopping keeps the live count. */
+export function toggleRun(s: TimerSnap, nowMs: number): TimerSnap {
+  return { ...s, valueFrames: liveFrames(s, nowMs), running: !s.running, unix: nowMs };
+}
+
+/** Reset a channel snapshot to zero at `nowMs` (keeps run state and direction). */
+export function resetSnap(s: TimerSnap, nowMs: number): TimerSnap {
+  return { ...s, valueFrames: 0, overtime: false, unix: nowMs };
 }
 
 /** The rows a routed timer feed paints. `bus` is the raw counters_timer value
@@ -63,6 +78,6 @@ export function timerRows(bus: unknown, label: string, nowMs: number): TimerRow[
   return viewForLabel(label).map((id) => {
     const s = all[id];
     if (!isTimerSnap(s)) return { id, text: '--:--:--', running: false, direction: null };
-    return { id, text: formatValue(liveFrames(s, nowMs), 'hms', s.fps), running: s.running, direction: s.direction };
+    return { id, text: formatValue(liveFrames(s, nowMs), 'hms', s.fps), running: s.running, direction: s.direction, overtime: !!s.overtime };
   });
 }

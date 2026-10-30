@@ -13,6 +13,8 @@ import { animate, card, dpr, hms, readout } from './dest-fixtures-shared.js';
 import type { Production } from '../../model/index.js';
 import { getBus } from '../../platform/mqtt/index.js';
 import { timeSync } from '../../platform/time-sync.js';
+import { isTimerSnap, liveFrames, resetSnap, toggleRun } from '../../domain/timer-core/graphic.js';
+import { formatValue } from '../../domain/timer-core/index.js';
 
 interface CState { running: boolean; base: number; startedAt: number; }
 // A + B are the dual counters; S is the standalone stopwatch's own count.
@@ -148,54 +150,40 @@ function counterRow(destId: string, id: 'A' | 'B', openEdit: () => void, offline
   cvs.addEventListener('click', openEdit);
   const run = el('button', { class: 'dfx-mini' }, ['▶']);
   const rst = el('button', { class: 'dfx-mini' }, ['↺']);
-  const sync = (): void => { 
-    const tSync = (countersOf(destId) as any).T?.[id];
-    const isRun = tSync ? tSync.running : s.running;
-    run.textContent = isRun ? '‖' : '▶'; 
-    run.classList.toggle('run', isRun); 
+  // A valid counters_timer channel (the TIMER editor's snapshot) wins over the
+  // local count, and is driven through timer-core: stopping folds the elapsed run
+  // into valueFrames (toggleRun), the read-out is liveFrames — never inline maths.
+  const snap = (): any => { const t = (countersOf(destId) as any).T?.[id]; return isTimerSnap(t) ? t : null; };
+  const pubT = (next: (t: any) => any): boolean => {
+    const T = (countersOf(destId) as any).T, t = snap();
+    if (!t) return false;
+    T[id] = next(t);
+    timeSync.claimMaster();
+    getBus().publishValue(`destinations/${destId}/counters_timer`, T, { throttle: false });
+    return true;
+  };
+  const sync = (): void => {
+    const isRun = snap()?.running ?? s.running;
+    run.textContent = isRun ? '‖' : '▶';
+    run.classList.toggle('run', isRun);
   };
   run.addEventListener('click', (e) => {
     e.stopPropagation();
-    const tSync = (countersOf(destId) as any).T?.[id];
-    if (tSync) {
-      tSync.running = !tSync.running;
-      tSync.unix = timeSync.now();
-      timeSync.claimMaster();
-      getBus().publishValue(`destinations/${destId}/counters_timer`, (countersOf(destId) as any).T, { throttle: false });
-    } else {
+    if (!pubT((t) => toggleRun(t, timeSync.now()))) {
       if (s.running) { s.base = cMs(s); s.running = false; } else { s.startedAt = timeSync.now(); s.running = true; }
       syncCounters(destId);
     }
     sync();
   });
-  rst.addEventListener('click', (e) => { 
-    e.stopPropagation(); 
-    const tSync = (countersOf(destId) as any).T?.[id];
-    if (tSync) {
-      tSync.valueFrames = 0; tSync.unix = timeSync.now();
-      timeSync.claimMaster();
-      getBus().publishValue(`destinations/${destId}/counters_timer`, (countersOf(destId) as any).T, { throttle: false });
-    } else {
-      s.base = 0; s.startedAt = timeSync.now(); syncCounters(destId); 
-    }
+  rst.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!pubT((t) => resetSnap(t, timeSync.now()))) { s.base = 0; s.startedAt = timeSync.now(); syncCounters(destId); }
   });
   let last = '';
-  animate(cvs, () => { 
-    const tSync = (countersOf(destId) as any).T?.[id];
-    let str = '';
-    if (tSync) {
-       const elapsedMs = tSync.running ? timeSync.now() - tSync.unix : 0;
-       let frames = tSync.valueFrames;
-       if (tSync.direction === 'down') frames -= Math.floor(elapsedMs / 1000 * tSync.fps);
-       else frames += Math.floor(elapsedMs / 1000 * tSync.fps);
-       if (frames < 0) frames = 0;
-       const totalS = Math.floor(frames / tSync.fps);
-       const h = Math.floor(totalS / 3600), m = Math.floor((totalS % 3600) / 60), sc = totalS % 60;
-       str = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sc.toString().padStart(2,'0')}`;
-    } else {
-       str = hms(cMs(s)); 
-    }
-    if (str !== last) { last = str; draw(str); } 
+  animate(cvs, () => {
+    const t = snap();
+    const str = t ? formatValue(liveFrames(t, timeSync.now()), 'hms', t.fps) : hms(cMs(s));
+    if (str !== last) { last = str; draw(str); }
   });
   sync();
   return el('div', { class: 'dfx-crow' }, [el('span', { class: 'dfx-clab' }, [id]), cvs, el('div', { class: 'dfx-mrow' }, [run, rst])]);

@@ -141,8 +141,8 @@ const plugin: EditorPlugin = {
       if (ctx.production.id) {
         timeSync.claimMaster();
         getBus().publishValue(`destinations/${ctx.production.id}/counters_timer`, {
-          A: { running: S.channels.A.running, valueFrames: S.channels.A.value, fps: S.fps, unix: timeSync.now(), direction: S.channels.A.direction },
-          B: { running: S.channels.B.running, valueFrames: S.channels.B.value, fps: S.fps, unix: timeSync.now(), direction: S.channels.B.direction }
+          A: { running: S.channels.A.running, valueFrames: S.channels.A.value, fps: S.fps, unix: timeSync.now(), direction: S.channels.A.direction, overtime: S.channels.A.overtime },
+          B: { running: S.channels.B.running, valueFrames: S.channels.B.value, fps: S.fps, unix: timeSync.now(), direction: S.channels.B.direction, overtime: S.channels.B.overtime }
         }, { throttle: false });
       }
     }
@@ -150,8 +150,8 @@ const plugin: EditorPlugin = {
     if (ctx.production.id) {
       getBus().subscribe(`destinations/${ctx.production.id}/counters_timer`, (v: any) => {
         if (v && v.A && v.B) {
-          S.channels.A.running = v.A.running; S.channels.A.value = v.A.valueFrames;
-          S.channels.B.running = v.B.running; S.channels.B.value = v.B.valueFrames;
+          S.channels.A.running = v.A.running; S.channels.A.value = v.A.valueFrames; S.channels.A.overtime = !!v.A.overtime;
+          S.channels.B.running = v.B.running; S.channels.B.value = v.B.valueFrames; S.channels.B.overtime = !!v.B.overtime;
           engine['changed'](null);
         }
       });

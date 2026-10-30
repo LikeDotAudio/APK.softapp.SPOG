@@ -31,7 +31,7 @@ export function drawTimerGraphic(cvs: HTMLCanvasElement, rows: TimerRow[]): void
     g.fillText(r.id, pad + tagW / 2, y + band * 0.36);
     g.fillStyle = r.running ? '#7CFC9A' : '#6b7686';
     g.font = `700 ${Math.max(7, Math.round(band * 0.16))}px 'Courier New',monospace`;
-    const dir = r.direction === 'down' ? '▼ DN' : r.direction === 'up' ? '▲ UP' : '— —';
+    const dir = r.overtime ? '▲ OVER' : r.direction === 'down' ? '▼ DN' : r.direction === 'up' ? '▲ UP' : '— —';
     g.fillText(`${dir} ${r.running ? '▶' : '‖'}`, pad + tagW / 2, y + band * 0.78);
     // read-out: drawSegString paints from (0,0), so translate into the band. Its
     // HH:MM:SS run is ~3.4× its box height wide, so cap the height to fit the width.
