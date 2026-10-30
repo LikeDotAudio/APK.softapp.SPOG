@@ -2,6 +2,15 @@
 
 All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 
+## [Unreleased]
+
+### Changed — Wire payload optimisation (roadmap §3.7)
+- **Throttle refinements**: `throttle.ts` now arms the window on every leading send, so a topic's slot lives only while it is moving (the slot map no longer grows with every param ever touched); a `null`/`undefined` value is coalesced like any other; a throwing send no longer wedges the window; and `dispose()` **flushes** pending trailing values instead of dropping them. The bus's `dispose()` waits for in-flight (encrypting) sends before `end()`, so the final value and the `active:false` presence actually reach the broker.
+- **Seat rank rides the protobuf wire**: `ValueMsg` gains `seat` (7) + `label` (8). The encrypted encoder used to drop them, so the merge mediator's higher-rank-wins tie-break only worked in plaintext mode.
+- **`full_id` shrunk in `json_fallback`**: config / chat / seat-sync / log JSON now carries the 8-hex origin instead of `<hex>:TWIST:<birth-ms>` (−20 B each). Backward-compatible — every consumer reads only the origin prefix, and self-echo is dropped by origin.
+- **v3 compact wire, opt-in `?wire=compact`** (or `localStorage['spog.wire']='compact'`; `wire.ts`): crosspoints are **interned front-coded** (`xp_shared` + `xp_suffix`, each entry stores only what differs from the one before), and Captain's Log entries ride a protobuf **`LogMsg`** arm instead of JSON — no key names, no empty narration. Every build decodes v3; older builds skip it, hence opt-in.
+- **Measured** (`wire.test.ts`, bytes on the wire incl. the 28 B AES-GCM framing) — before → default now → `?wire=compact`: param with seat 53\* → 68 → 68 · crosspoints ×6 84 → 84 → 76 · presence 46 → 46 → 46 · log routing entry 235 → 215 → 92 · log reversal 335 → 315 → 164 · chat 136 → 116 → 116 · **total 889 → 844 → 562 (−37%)**. \*the 53 B dropped seat + label.
+
 ## [v110] — 2026-07-08
 
 ### Added — Captain's Log Timeline Viewer

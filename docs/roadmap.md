@@ -192,9 +192,11 @@ a retained-MQTT `TwistBus`.*
   `Icon-View-Aesthetic-Audit.md`.
 
 ### 3.7 Wire & performance
-- 📋 **Protobuf payload optimization** — implement the unshipped `publishValue` throttle
-  refinements, shrink `full_id`, intern crosspoints, drop log narration from the wire.
-  Audit: `Protobuf-Payload-Optimization-Audit.md`.
+- 🚧 **Protobuf payload optimization** — throttle refinements (bounded slots, flush on
+  dispose), seat/label on `ValueMsg`, `full_id` → origin in `json_fallback` are ✅ default.
+  Interned (front-coded) crosspoints + a protobuf `LogMsg` arm ship opt-in behind
+  `?wire=compact` (889 → 562 B on the measured mix, `wire.test.ts`). Next: make v3 the
+  default once every seat runs a v3-decoding build. Audit: `Protobuf-Payload-Optimization-Audit.md`.
 
 ---
 

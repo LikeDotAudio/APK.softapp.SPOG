@@ -14,6 +14,7 @@ import { loadMqtt, type MqttClient } from './mqtt-load.js';
 import { encodeAndEncrypt, decryptAndDecode } from './crypto.js';
 import { makeThrottler } from './throttle.js';
 import { topicMatches } from './topics.js';
+import { makeSessionId } from './session-id.js';
 
 // Re-exported so consumers (barrel index.ts) keep importing broker config from
 // client.js after the config/loader extraction — public bus API is unchanged.
@@ -23,16 +24,6 @@ export {
 } from './config.js';
 
 export const SPOG_ROOT = 'SPOG';
-
-function makeSessionId(): string {
-  let hex = '';
-  try {
-    const b = new Uint8Array(4);
-    crypto.getRandomValues(b);
-    hex = Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('');
-  } catch { hex = Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, '0'); }
-  return `${hex}:TWIST:${Date.now()}`;
-}
 
 const dbg = (...a: unknown[]): void => { if (typeof window !== 'undefined' && window.OA_MQTT_DEBUG) console.log('[TwistBus]', ...a); };
 
@@ -80,7 +71,14 @@ export function createTwistBus(): TwistBus {
   let rateTimer: ReturnType<typeof setInterval> | null = null;
   const rateTopic = `${SPOG_ROOT}/system/rate/${sessionId.split(':')[0]}`;
 
-  const send = async (topic: string, payload: any, retain = true): Promise<void> => {
+  // In-flight sends (encryption is async) — dispose() waits on them before end().
+  const inflight = new Set<Promise<void>>();
+  const send = (topic: string, payload: any, retain = true): Promise<void> => {
+    const p = sendNow(topic, payload, retain).finally(() => inflight.delete(p));
+    inflight.add(p);
+    return p;
+  };
+  const sendNow = async (topic: string, payload: any, retain: boolean): Promise<void> => {
     if (!client) return;                       // mqtt.js buffers pre-connect and flushes on connect
     try {
       let outPayload: string | Uint8Array;
@@ -188,11 +186,13 @@ export function createTwistBus(): TwistBus {
       clearTimeout(readyTimer);
       if (heartbeat) clearInterval(heartbeat);
       if (rateTimer) clearInterval(rateTimer);
-      throttler.dispose();
+      throttler.dispose();                     // flushes pending trailing values (final value lands)
       subs.clear();
       if (client) {
-        send(presenceTopic, { active: false, full_id: sessionId });
-        try { client.end(true); } catch { /* ignore */ }
+        const c = client;
+        void send(presenceTopic, { active: false, full_id: sessionId });
+        // End only after the async (encrypting) sends have published — end(true) first dropped them.
+        void Promise.allSettled([...inflight]).then(() => { try { c.end(true); } catch { /* ignore */ } });
       }
     },
   };
