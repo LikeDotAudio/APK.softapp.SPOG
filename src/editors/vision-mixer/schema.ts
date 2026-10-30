@@ -56,7 +56,7 @@ export const DEFAULT_SWITCHER: SwitcherDef = {
   inputs: Array.from({ length: 24 }, (_, i): SwitcherInput => ({
     label: `SW ${i + 1}`,
     // A realistic default spread: 1-12 cameras/video, 13-18 playout, 19-24 graphics.
-    category: i < 12 ? 'video' : i < 18 ? 'program' : 'audio',
+    category: i < 12 ? 'video' : i < 18 ? 'program' : 'graphics',
   })),
   mes: 3,
   keyersPerMe: 4,

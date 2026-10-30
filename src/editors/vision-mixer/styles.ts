@@ -89,9 +89,11 @@ export function injectVisionMixerStyles(): void {
         .vm-btn[data-cat="video"]{border-left-color:var(--sig-video,#CC99CC);}
         .vm-btn[data-cat="audio"]{border-left-color:var(--sig-audio,#FF9C63);}
         .vm-btn[data-cat="program"]{border-left-color:var(--sig-program,#646DCC);}
+        .vm-btn[data-cat="graphics"]{border-left-color:var(--state-onair,#ffaa00);}
         .vm-btn[data-cat="video"]::before{content:'▷';opacity:.7;font-size:14px;margin-bottom:4px;}
         .vm-btn[data-cat="audio"]::before{content:'◆';opacity:.7;font-size:14px;margin-bottom:4px;}
         .vm-btn[data-cat="program"]::before{content:'▚';opacity:.7;font-size:14px;margin-bottom:4px;}
+        .vm-btn[data-cat="graphics"]::before{content:'◩';opacity:.7;font-size:14px;margin-bottom:4px;}
         .vm-btn.reentry{border-left-color:var(--cyan,#00ffff);background:#12283a;}
         .vm-btn.reentry::before{content:'⮌';opacity:.8;font-size:14px;margin-bottom:4px;}
         .vm-bus.pgm .vm-btn.sel{background:var(--state-alarm,#ff3b3b);color:#fff;}

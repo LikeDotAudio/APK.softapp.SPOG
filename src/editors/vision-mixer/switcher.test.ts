@@ -19,6 +19,7 @@ const def: SwitcherDef = DEFAULT_SWITCHER;
 describe('schema', () => {
   it('ships a complete 24-in / 3-M/E / 4-keyer default', () => {
     expect(def.inputs).toHaveLength(24);
+    expect(def.inputs.slice(18).every((x) => x.category === 'graphics')).toBe(true);
     expect(def.mes).toBe(3);
     expect(def.keyersPerMe).toBe(4);
     expect(def.dsks.length).toBeGreaterThanOrEqual(2);

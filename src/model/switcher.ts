@@ -9,8 +9,9 @@ export type BusLayout = 'shift12' | 'wide24' | 'stack12';
 
 export interface SwitcherInput {
   label: string;
-  /** Signal category → semantic tint (--sig-*) + shape cue. Default 'video'. */
-  category?: 'video' | 'audio' | 'program';
+  /** Signal category → semantic tint (--sig-*; graphics use the DSK accent
+   *  --state-onair) + shape cue. Default 'video'. */
+  category?: 'video' | 'audio' | 'program' | 'graphics';
   color?: Hex;
 }
 
