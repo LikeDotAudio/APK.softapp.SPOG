@@ -3,11 +3,17 @@
 // rebuildKeyers paints one button per keyer of the delegated bank, each with a
 // hold-to-open drawer (type / source / DVE preset) and a SPLIT M/E toggle.
 // Extracted from the render closure; shared state flows through `Surface`.
+//
+// These are the UPSTREAM keyers (USK, before the DSKs). One keyed from a hard-wired
+// control-room graphic is surfaced as a graphics keyer: its button reads
+// `USK n · TYPE · ⬡ GFX m` (class `gfx`) and graphics sources are ⬡-marked in its
+// source select — the same feeds the PRE-ROUTE matrix shifts.
 
 import { el } from '../../ui/dom.js';
 import { tip } from '../../ui/tip.js';
 import { reentryOf, srcLabel, KEYER_TYPES } from './me.js';
 import { TIPS } from './tips.js';
+import { gfxName } from './gfx-route.js';
 import type { Surface } from './surface.js';
 
 /** Build the keyer-row rebuilder over the shared surface. */
@@ -17,8 +23,9 @@ export function createKeyers(s: Surface, keyerRow: HTMLElement): () => void {
   function rebuildKeyers(): void {
     keyerRow.replaceChildren(...s.me().keyers.map((k, ki) => {
       const wrapper = el('div', { style: 'position: relative; display: flex; flex-direction: column; gap: 4px;' });
-      const b = el('div', { class: `vm-key${k.on ? ' on' : ''}` }, [
-        `KEY ${ki + 1} · ${k.type.toUpperCase()}`,
+      const gfx = gfxName(def, k.source);
+      const b = el('div', { class: `vm-key${k.on ? ' on' : ''}${gfx ? ' gfx' : ''}` }, [
+        `USK ${ki + 1} · ${k.type.toUpperCase()}${gfx ? ` · ⬡ ${gfx}` : ''}`,
       ]);
 
       const paramRow = el('div', { class: 'vm-drawer', style: 'position: absolute; top: 100%; left: 0; z-index: 50; width: max-content; margin-top: 5px; flex-direction: column; align-items: stretch; gap: 4px; background: #17233c; padding: 6px; border-radius: 8px;' });
@@ -30,9 +37,9 @@ export function createKeyers(s: Surface, keyerRow: HTMLElement): () => void {
       typeSel.addEventListener('change', () => { k.type = typeSel.value as typeof k.type; s.publish(`me.${s.delegate + 1}.key.${ki + 1}.type`, k.type); rebuildKeyers(); });
 
       const srcSel = el('select', { class: 'vm-sel' }) as HTMLSelectElement;
-      s.allLabels.forEach((l, i) => { if (reentryOf(i, def) !== s.delegate) srcSel.append(el('option', { value: String(i) }, [l])); });
+      s.allLabels.forEach((l, i) => { if (reentryOf(i, def) !== s.delegate) srcSel.append(el('option', { value: String(i) }, [`${gfxName(def, i) ? '⬡ ' : ''}${l}`])); });
       srcSel.value = String(k.source);
-      srcSel.addEventListener('change', () => { k.source = +srcSel.value; s.publish(`me.${s.delegate + 1}.key.${ki + 1}.source`, srcLabel(k.source, def)); s.sync(); });
+      srcSel.addEventListener('change', () => { k.source = +srcSel.value; s.publish(`me.${s.delegate + 1}.key.${ki + 1}.source`, srcLabel(k.source, def)); rebuildKeyers(); s.sync(); });
 
       const dveSel = el('select', { class: 'vm-sel' }) as HTMLSelectElement;
       dveSel.append(el('option', { value: '' }, ['DVE · NONE']));

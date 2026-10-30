@@ -115,6 +115,16 @@ export function injectVisionMixerStyles(): void {
             color:#d8c8ff;cursor:pointer;font-weight:bold;text-align:center;letter-spacing:1px;}
         .vm-key.on{background:var(--state-onair,#ffaa00);color:#000;}
         .vm-key .cfg{margin-left:8px;opacity:.7;cursor:pointer;}
+        .vm-key.gfx{box-shadow:inset 0 0 0 2px var(--sig-program,#646DCC);}
+
+        /* Graphics PRE-ROUTE matrix (preroute.ts): GFX columns × DSK/USK bus rows */
+        .vm-gfxmatrix{display:grid;gap:4px;align-items:center;}
+        .vm-gfxhead{font:800 10px 'Courier New',monospace;letter-spacing:1px;color:#8fb0d0;text-align:center;}
+        .vm-gfxbus{font:800 10px 'Courier New',monospace;letter-spacing:1px;padding-right:6px;white-space:nowrap;color:#d8c8ff;}
+        .vm-gfxbus.down{color:var(--state-onair,#ffaa00);}
+        .vm-gfxcell{height:24px;border-radius:6px;border:none;background:#17233c;color:#000;cursor:pointer;font-weight:900;}
+        .vm-gfxcell.on{background:var(--cyan,#00ffff);}
+        .vm-gfxcell:hover{filter:brightness(1.4);}
         .vm-scenebtn{padding:10px 16px;border-radius:16px 8px 8px 16px;background:#17233c;border:none;
             color:#cfe0ff;cursor:pointer;font-weight:900;letter-spacing:1px;font-size:11px;}
         .vm-scenebtn:hover{filter:brightness(1.3);}

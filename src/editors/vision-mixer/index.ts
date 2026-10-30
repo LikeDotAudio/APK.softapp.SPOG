@@ -178,8 +178,16 @@ function render(host: HTMLElement, ctx: EditorContext): void {
   // ---- aux + macro panels (panels.ts) -------------------------------------------
   const { auxRow, auxSelects } = buildAuxRow(surface);
   const { macroRow } = buildMacroRow(surface);
-  // Graphics PRE-ROUTE: shift which hard-wired control-room graphic feeds each DSK.
-  const { preRow } = buildPreRoute(surface, dskBtns);
+  // Graphics PRE-ROUTE: shift which hard-wired control-room graphic feeds each keyer
+  // bus (DSK + USK). Guarded: a fault here shows in the panel, the switcher keeps going.
+  let preRow: HTMLElement;
+  let preRefresh: () => void = () => {};
+  try {
+    ({ preRow, refresh: preRefresh } = buildPreRoute(surface, dskBtns));
+  } catch (e) {
+    console.warn('[vision-mixer] PRE-ROUTE unavailable', e);
+    preRow = el('p', { class: 'ed-h', style: 'margin:0;opacity:.7;' }, [`PRE-ROUTE UNAVAILABLE — ${String((e as Error)?.message ?? e)}`]);
+  }
 
   // ---- DVE editor drawer -----------------------------------------------------------
   const dveDrawer = buildDveEditor({
@@ -216,11 +224,11 @@ function render(host: HTMLElement, ctx: EditorContext): void {
     el('div', { class: 'vm-transrow' }, [...transBtns.map((x) => x.b), rate, cutBtn, autoBtn]),
   ]);
   const keyerSec = el('div', { class: 'vm-sec' }, [
-    el('p', { class: 'ed-h' }, ['KEYERS — DELEGATED M/E']),
+    el('p', { class: 'ed-h' }, ['UPSTREAM KEYERS (USK) — DELEGATED M/E']),
     keyerRow,
   ]);
   const dskSec = el('div', { class: 'vm-sec' }, [
-    el('p', { class: 'ed-h' }, ['DOWNSTREAM KEYERS']),
+    el('p', { class: 'ed-h' }, ['DOWNSTREAM KEYERS (DSK)']),
     el('div', { class: 'vm-keyrow' }, dskBtns),
   ]);
   const preSec = el('div', { class: 'vm-sec' }, [
@@ -262,7 +270,10 @@ function render(host: HTMLElement, ctx: EditorContext): void {
 
   // ---- projection: state → DOM + animation frame (projection.ts) ------------------
   const proj = createProjection(surface, { stage, meTabs, transBtns, rate, dskBtns, auxSelects, auto, persist });
-  sync = proj.sync;
+  sync = () => {
+    proj.sync();
+    try { preRefresh(); } catch (e) { console.warn('[vision-mixer] PRE-ROUTE refresh failed', e); }
+  };
   proj.startAnimation();
 
   // ---- MQTT surface (definition-derived registry, plan §6) ---------------------------
