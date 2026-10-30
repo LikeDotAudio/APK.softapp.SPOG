@@ -12,6 +12,7 @@ import {
   advance, calc, formatValue, maxFrames, nudgeFrames, parseEntry,
   type Fps,
 } from '../../domain/timer-core/index.js';
+import type { TimerSnap } from '../../domain/timer-core/graphic.js';
 import {
   mkChannel,
   type ChanId, type Channel, type EngineHooks, type GpiWhen, type TimerState,
@@ -43,6 +44,14 @@ export class TimerEngine {
       else { this.ch('A').status = status; this.ch('B').status = status; }
     }
     this.hooks.onChange();
+  }
+
+  /** Adopt a channel from another seat's `counters_timer` snapshot (already
+   *  validated, value already advanced to now). Silent: no onChange, so a remote
+   *  snapshot is never re-published back (two seats would ping-pong forever). */
+  adopt(id: ChanId, s: TimerSnap): void {
+    const c = this.ch(id);
+    c.running = s.running; c.value = s.valueFrames; c.direction = s.direction; c.overtime = !!s.overtime;
   }
 
   // ---- reference "input" timecode (synthetic — local time-of-day as frames) ----

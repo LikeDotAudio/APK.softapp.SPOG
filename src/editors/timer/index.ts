@@ -16,6 +16,7 @@ import { el, addStyles } from '../../ui/dom.js';
 import { logAction } from '../../ui/console/captains-log.js';
 import { TimerEngine, type ChanId } from './engine.js';
 import { formatValue } from '../../domain/timer-core/index.js';
+import { isTimerSnap, liveFrames } from '../../domain/timer-core/graphic.js';
 import { CSS } from './styles.js';
 import { buildWallClock } from './wall-clock.js';
 import { buildPanel, buildFunctionsDrawer } from './panel.js';
@@ -148,11 +149,13 @@ const plugin: EditorPlugin = {
     }
 
     if (ctx.production.id) {
-      getBus().subscribe(`destinations/${ctx.production.id}/counters_timer`, (v: any) => {
-        if (v && v.A && v.B) {
-          S.channels.A.running = v.A.running; S.channels.A.value = v.A.valueFrames; S.channels.A.overtime = !!v.A.overtime;
-          S.channels.B.running = v.B.running; S.channels.B.value = v.B.valueFrames; S.channels.B.overtime = !!v.B.overtime;
-          engine['changed'](null);
+      // Another seat's snapshot: validate each channel (bus data is untrusted) and
+      // adopt it advanced to now — the count kept running since it was stamped.
+      getBus().subscribe(`destinations/${ctx.production.id}/counters_timer`, (v: unknown) => {
+        const snap = (v && typeof v === 'object' ? v : {}) as Record<string, unknown>;
+        for (const id of ['A', 'B'] as const) {
+          const s = snap[id];
+          if (isTimerSnap(s)) engine.adopt(id, { ...s, valueFrames: liveFrames(s, timeSync.now()) });
         }
       });
     }

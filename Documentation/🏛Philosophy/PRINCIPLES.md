@@ -28,9 +28,8 @@ cited, not copied. The visual law for this app is [LCARS.md](LCARS.md) and
 
 ## Where the code bends a rule
 
-- **Typed bus data is `any` in places.** `countersOf()` in `dest-fixtures-counters.ts` and the
-  TIMER editor's `counters_timer` subscriber read the snapshot untyped; the editor's subscriber
-  does not run `isTimerSnap()`.
+- **Typed bus data is `any` in places.** `countersOf()` in `dest-fixtures-counters.ts` reads the
+  snapshot untyped (each channel still passes `isTimerSnap()`).
 - **Raw hex remains in editor styles** (multi-viewer tally `#ff3344`, iso-recorder, audio-mixer,
   intercom) — the P2 hex→token migration in [Colours and shapes](Colours%20and%20shapes.md) is
   not done.
