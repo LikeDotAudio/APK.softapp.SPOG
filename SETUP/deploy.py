@@ -2,7 +2,7 @@
 
 This is the single production deploy. It supersedes the old `uploadftp.py`
 (js/ shell + JSON app) and `deploy-next.py` (side build). See the A.8 cutover in
-docs/TYPESCRIPT-WASM-REPORT.md.
+Documentation/TYPESCRIPT-WASM-REPORT.md.
 
 What it does, over one Explicit-FTPS connection:
   1. `npm run build`               → dist/ (content-hashed bundle + entry HTML)

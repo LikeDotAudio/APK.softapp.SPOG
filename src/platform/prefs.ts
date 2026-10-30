@@ -1,5 +1,5 @@
 // src/platform/prefs — THE versioned per-seat preference store
-// (docs/Audit/Local-Cache-and-Preferences-Audit.md §3.3, §8 W1).
+// (Documentation/Audit/Local-Cache-and-Preferences-Audit.md §3.3, §8 W1).
 //
 // One localStorage blob (`spog.prefs.v1`) holds every small global preference:
 // chirality, colour scheme, authoring mode, and the console UI memory (selected

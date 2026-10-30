@@ -1,7 +1,7 @@
 // src/ui/console/router-io-apply — replay imported routes into the live DOM through
 // the SAME write path the 1990s grid uses (placeSourceInTwist), matching every named
 // device against the catalog with the app's own naming rules. See the import design in
-// docs/Audit/1990s-View-Import-Export-Audit.md §7.
+// Documentation/Audit/1990s-View-Import-Export-Audit.md §7.
 
 import { SEP, firstLine, gatherSenderNodes, gatherReceivers, gatherLinks } from './router-view-gather.js';
 import { placeSourceInTwist } from './matrix.js';

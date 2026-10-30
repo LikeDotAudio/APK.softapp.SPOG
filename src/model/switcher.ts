@@ -1,5 +1,5 @@
 // src/model/switcher — the per-production vision-mixer definition
-// (docs/Production-Video-Switcher-Deployment-Plan.md §4). These describe JSON
+// (Documentation/Production-Video-Switcher-Deployment-Plan.md §4). These describe JSON
 // (Routes/**), so they live in the model; the editor owns behaviour + defaults.
 import type { Hex } from './common.js';
 

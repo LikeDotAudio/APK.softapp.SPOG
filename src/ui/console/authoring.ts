@@ -1,5 +1,5 @@
 // src/ui/console/authoring — the single-pane AUTHORING layer over the destinations
-// console (audit: docs/Audit /Routes-Editor-Single-Pane-Audit.md).
+// console (audit: Documentation/Audit /Routes-Editor-Single-Pane-Audit.md).
 //
 // The console renders rooms/productions read-only from JSON. This module turns that
 // same rendered surface into an EDITOR: a body-level EDIT LAYOUT toggle reveals

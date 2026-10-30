@@ -1,5 +1,5 @@
 // src/ui/console/state-glyphs — the STATE GLYPH layer of the Colour Engine
-// (docs/Rules/Colours and shapes.md §5, phase P0). Category is already shape-coded
+// (Documentation/🏛Philosophy/Colours and shapes.md §5, phase P0). Category is already shape-coded
 // (video ▱ / audio ▽ / camera ⬡); STATE was colour + pulse only. This layer rides a
 // monochrome glyph LEADING every faulted surface so the state survives grey, mono,
 // colour-blindness and glare — colour becomes the tint, the glyph is the message.

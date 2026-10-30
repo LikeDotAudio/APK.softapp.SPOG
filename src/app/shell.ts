@@ -149,7 +149,7 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   initMergeObserver();   // ⚖ MERGE mediator launcher + panel (launcher adopted into the MENU below)
   initUserMenu();   // seat menu beside the log — adopts academy/1990s/display/chirality/credits/merge
 
-  // MQTT projection (audit: docs/Audit /TWIST-MQTT-Advertising-Audit.md). No-op
+  // MQTT projection (audit: Documentation/Audit /TWIST-MQTT-Advertising-Audit.md). No-op
   // unless a broker is configured via ?mqtt=<host> — the console runs unchanged
   // without one. Advertise the whole catalogue, bridge the Captain's Log, and
   // mirror the operator role; publish a final presence on unload.

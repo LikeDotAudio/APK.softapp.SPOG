@@ -1,6 +1,6 @@
 # `src/` — the A.8 side build (TypeScript, ultra-modular)
 
-This is the clean-room rebuild described in [`docs/TYPESCRIPT-WASM-REPORT.md` §A.8](../docs/TYPESCRIPT-WASM-REPORT.md).
+This is the clean-room rebuild described in [`Documentation/TYPESCRIPT-WASM-REPORT.md` §A.8](../Documentation/TYPESCRIPT-WASM-REPORT.md).
 It runs **alongside** the live `js/` app (entry: `index.next.htm`) until it reaches
 1:1 parity, then a single reversible cutover swaps the entry + service worker + deploy.
 

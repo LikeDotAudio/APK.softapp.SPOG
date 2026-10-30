@@ -1,7 +1,7 @@
 # archive/ — retired legacy artifacts
 
 The app was fully migrated to the TypeScript build in `src/` (see
-`docs/TYPESCRIPT-WASM-REPORT.md` §A.8) and cut over on 2026-07-01. The site now
+`Documentation/TYPESCRIPT-WASM-REPORT.md` §A.8) and cut over on 2026-07-01. The site now
 serves only the built TS bundle; the legacy JavaScript app and loose files that
 belonged to it were moved here rather than deleted, so the git history stays
 clean and nothing is lost.

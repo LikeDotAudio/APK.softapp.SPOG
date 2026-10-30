@@ -1,5 +1,5 @@
 // src/platform/mqtt — the TwistBus: a retained MQTT projection of TWIST's routing
-// state, modelled on OPEN-AIR comMQTT. See docs/Audit /TWIST-MQTT-Advertising-Audit.md.
+// state, modelled on OPEN-AIR comMQTT. See Documentation/Audit /TWIST-MQTT-Advertising-Audit.md.
 //
 // One process-wide bus (the console is a single page). `getBus()` lazily creates
 // it so importers (app boot, the log bridge, per-twist editor services) all share

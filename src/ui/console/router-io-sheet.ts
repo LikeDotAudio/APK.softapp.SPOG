@@ -1,5 +1,5 @@
 // src/ui/console/router-io-sheet — the workbook serializer/parser for the 1990s
-// view import/export (audit: docs/Audit/1990s-View-Import-Export-Audit.md §5).
+// view import/export (audit: Documentation/Audit/1990s-View-Import-Export-Audit.md §5).
 //
 // Format = SpreadsheetML 2003 (.xml): a single file with multiple <Worksheet>s that
 // Excel/LibreOffice open as real tabs — dependency‑free to WRITE (a template string)

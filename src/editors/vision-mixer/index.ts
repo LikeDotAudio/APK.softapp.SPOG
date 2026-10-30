@@ -2,7 +2,7 @@
 //
 // Schema-driven: the surface renders whatever the resolved SwitcherDef says
 // (inputs, M/E count, keyers, DSKs, preset libraries) — counts are DATA, so the
-// switcher is user-scalable per production (docs/Production-Video-Switcher-
+// switcher is user-scalable per production (Documentation/Production-Video-Switcher-
 // Deployment-Plan.md). Three M/E banks with delegation + re-entry, 24 inputs in
 // an operator-chosen layout (prefs.ts), keyers with DVE flight (dve.ts), M/E
 // composite presets, whole-switcher scene registers (scenes.ts), Kind-B tips on

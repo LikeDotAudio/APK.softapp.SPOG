@@ -5,7 +5,7 @@
 // message is ROUTED from one production to another (from ▸ to). Each send AND each
 // received message is narrated into the Captain's Log (logAction), and rides the
 // retained MQTT TwistBus so any subscriber on `chat/#` is a real party.
-// Design: docs/Audit /Studio-Chat-Room-Audit.md. This is the "global dock" variant —
+// Design: Documentation/Audit /Studio-Chat-Room-Audit.md. This is the "global dock" variant —
 // endpoints are PRODUCTIONS (the destinations), not People. This file is the
 // ORCHESTRATOR: initChatDock owns the shared mutable chat state (history/seqByPair/
 // from/to); helpers, rendering, types, styles, and bus wiring live in chat-dock-* siblings.

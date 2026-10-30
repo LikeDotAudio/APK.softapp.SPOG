@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// File-size tripwire — enforces the project's 200-line rule (docs/Audit/File-Size-Modularity-Audit.md).
+// File-size tripwire — enforces the project's 200-line rule (Documentation/Audit/File-Size-Modularity-Audit.md).
 // Scans committed source (src/, assets/) + top-level scripts; fails if any non-allowlisted
 // file exceeds MAX_LINES. The allowlist grandfathers not-yet-split files and shrinks each phase —
 // when it reaches [] the rule is fully enforced. Run: `node scripts/check-file-size.mjs`.
@@ -85,7 +85,7 @@ if (grandfathered.length) {
 if (blocking.length) {
   console.error(`\n✗ ${blocking.length} file(s) exceed ${MAX_LINES} lines and are NOT allowlisted:`);
   for (const o of blocking) console.error(`  ${String(o.lines).padStart(5)}  ${o.rel}`);
-  console.error('\nSplit them (see docs/Audit/File-Size-Modularity-Audit.md) or add to the allowlist.');
+  console.error('\nSplit them (see Documentation/Audit/File-Size-Modularity-Audit.md) or add to the allowlist.');
   process.exit(1);
 }
 

@@ -7,7 +7,7 @@
 // cycle the LEFT leg drops out 1–4 times (the right leg runs continuous, EBU
 // "stereo ident" style), so a listener can count which feed is on the monitor and
 // hear a left/right swap. Pure maths, zero DOM/audio — the Web Audio player that
-// voices it is src/ui/test-tone-player.ts. See docs/Audit/Test-Frame-Routing-Audit.md.
+// voices it is src/ui/test-tone-player.ts. See Documentation/Audit/Test-Frame-Routing-Audit.md.
 
 import { identFor } from '../test-card/ident.js';
 

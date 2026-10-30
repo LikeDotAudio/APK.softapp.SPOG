@@ -22,7 +22,7 @@
             --glow-cyan: 0 0 10px var(--cyan), 0 0 20px rgba(0, 255, 255, 0.4);
             --glow-magenta: 0 0 10px var(--magenta), 0 0 20px rgba(255, 0, 255, 0.4);
 
-            /* ── COLOUR ENGINE (docs/Colours and shapes.md) ──────────────────────
+            /* ── COLOUR ENGINE (Documentation/Colours and shapes.md) ──────────────────────
                Sibling to the CHIRALITY ENGINE below. Three orthogonal axes live as
                attributes on <html>: data-cvd (palette), data-chroma (hue), data-vision
                (contrast). Tier-1 = Okabe-Ito CVD-safe primitives (never referenced by
@@ -64,7 +64,7 @@
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; } }
 
         /* ── CHIRALITY ENGINE ─────────────────────────────────────────────────
-           Handedness axis (docs/Audit /Chirality Deployment strategy.md, C0+C1).
+           Handedness axis (Documentation/Audit /Chirality Deployment strategy.md, C0+C1).
            html[data-chirality="right"|"left"]. `right` (default) docks the SOURCES
            rail on the dominant-hand RIGHT edge; `left` = the classic left dock.
            --chir (+1 right / -1 left) is the sign every JS-computed placement reads
@@ -114,7 +114,7 @@
         .palette-toggle:hover { opacity: 1; filter: brightness(1.12); }
         .palette-toggle svg { width: 18px !important; height: 18px !important; display: block; }
 
-        /* ── CHIRALITY C2 — editor bodies (docs/Audit /Editor-Chirality-Audit.md) ──
+        /* ── CHIRALITY C2 — editor bodies (Documentation/Audit /Editor-Chirality-Audit.md) ──
            Editors open in .ed-overlay OUTSIDE the console mirror, so they flip on
            their own. First wave = the clean-grid editors whose driven-control column
            sits on the RIGHT (correct for the default right-hand-dominant mode). In
@@ -155,7 +155,7 @@
            Under the current geometry mechanism a canvas already ignores `direction`,
            so this is a defensive inline-direction reset + the governance marker every
            spatial diagram carries (the hook for the review checklist and any future
-           scaleX phase). Audit: docs/Audit /Editor-Chirality-Audit.md §4. */
+           scaleX phase). Audit: Documentation/Audit /Editor-Chirality-Audit.md §4. */
         .chir-exempt { direction: ltr; }
 
         * {

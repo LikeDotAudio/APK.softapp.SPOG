@@ -2,7 +2,7 @@
 //
 // Generalises the pattern proven in editors/meter-input (a pointer-following panel
 // with ✓ good / ✕ bad guidance) into ONE reusable service. Two entry points mirror
-// the two kinds of tip in the audit (docs/Audit /LCARS-Hover-Tooltips-*):
+// the two kinds of tip in the audit (Documentation/Audit /LCARS-Hover-Tooltips-*):
 //   • tip()/hint()      — Kind B: "what this control does / how to read it"
 //   • expectationTip()  — Kind A: "what the production expects of this window",
 //                         DERIVED from the EditorContext (accepts/inputs/routed/

@@ -1,5 +1,5 @@
 // src/ui/console/chirality — the handedness ("chirality") switch.
-// Strategy: docs/Audit /Chirality Deployment strategy.md (C0 foundation + C1 rail).
+// Strategy: Documentation/Audit /Chirality Deployment strategy.md (C0 foundation + C1 rail).
 //
 // One axis, two states: `right` | `left`, meaning the operator's hand. It lives as
 // `data-chirality` on <html> (never wiped by the body rebuild); CSS + the `--chir`

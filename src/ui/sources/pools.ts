@@ -11,7 +11,7 @@
 // This file is the slim orchestrator: it dispatches on shape (inferPoolKind →
 // renderSourceLeaf) and RE-EXPORTS every renderer that used to live here, so all
 // external importers of './pools.js' stay byte-identical. The renderers now live
-// in flat pools-*.ts siblings (see docs/Audit §5.2).
+// in flat pools-*.ts siblings (see Documentation/Audit §5.2).
 import type { Hex, PoolKind, SourceLeaf } from '../../model/index.js';
 import { CAP_MAP } from './pools-caps.js';
 import { renderVideoPool } from './pools-video.js';

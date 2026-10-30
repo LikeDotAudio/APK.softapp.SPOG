@@ -30,7 +30,7 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 - **Recurring schedule projected into the future**: The production `SCHEDULE` is a daily timetable, drawn as dashed **"planned" bands** and **projected forward across the next days** so future occurrences sit to the right of the NOW playhead — booked rooms on the WHERE side, booked crew on the WHO side. `⇥ SCHEDULE` jumps to the first future show; `⤒ NOW` re-centres on the playhead.
 - **Filter, multi-select group chips & navigator**: A **filter** box narrows the timeline to matching lanes/events. A **dark chip bar** offers a `◎ SHOW ALL` reset plus one chip per destination group — each **inheriting the room's declared schema colour** (from the DOM twist's `--lcars-color`); chips **multi-select / stack** (union) so you can view several rooms at once, then SHOW ALL to clear.
 - **Navigator, zoom & scrub**: A **navigation minimap** (bottom-right) shows the whole span with event marks, the NOW tick, and a draggable viewport box; its **left/right handles zoom**, and the **mouse-wheel zooms** around the cursor. **Middle-button (wheel-click) drag grab-scrubs** the timeline on both axes.
-- **Foldable composites & deep-link**: Folding a room or section leaves a **composite lane** aggregating all its events, so nothing vanishes on fold. The viewer has a **`#timeline` URL** — opening it reflects the hash, and pasting/navigating to `#timeline` opens it. Rendered **on demand** — a snapshot from the in-memory log + schedule each open (and on ⟳ Refresh), never on a live subscription. Design rationale: `docs/Audits/TimeLine Investigation.md`.
+- **Foldable composites & deep-link**: Folding a room or section leaves a **composite lane** aggregating all its events, so nothing vanishes on fold. The viewer has a **`#timeline` URL** — opening it reflects the hash, and pasting/navigating to `#timeline` opens it. Rendered **on demand** — a snapshot from the in-memory log + schedule each open (and on ⟳ Refresh), never on a live subscription. Design rationale: `Documentation/🔍Audits/TimeLine Investigation.md`.
 
 ### Added — "OOPS" Illegal-Route Logging
 - **Illegal routes recorded in the Captain's Log**: When an operator drops a source onto a destination that rejects its type (e.g. routing audio to a video-only Video Mixer), the rejection is now recorded as a `⚠ OOPS — …` entry in the Captain's Log (attributed and timestamped), instead of failing silently. Legitimate reroutes (host→camera, whole-production, camera/remote fan-out) are not flagged.
@@ -42,7 +42,7 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 - **URL Deep-Linking**: Pasting `https://spog.like.audio/#on/<floor>/<production>` (e.g. `#on/control-room/production-1`) now **selects and jumps to** that production, expanding its Twist groups; the URL also updates to reflect the production being viewed as you navigate.
 - **Academy Version Badge**: The Quick Start overlay header now displays the running build version.
 - **Reverse Course Attribution**: A reversed Captain's Log entry now stays in the log marked `[course reversed by <name> at <time> UTC]`; the attribution travels over MQTT and survives reload.
-- **SMRT Adoption Audit**: Published `docs/Audits/SMRT adoption.md` — a deep comparison of the SMRT protocol/state model against SPOG's MQTT/file-tree architecture, with an adoption recommendation.
+- **SMRT Adoption Audit**: Published `Documentation/🔍Audits/SMRT adoption.md` — a deep comparison of the SMRT protocol/state model against SPOG's MQTT/file-tree architecture, with an adoption recommendation.
 
 ### Changed — Unified Captain's Log (supersedes v107's `log/latest` sync)
 - **Cross-Browser Unified Log**: The Captain's Log now publishes each entry to an origin-namespaced retained topic (`log/<origin>/<voyage>/<entry>`) and subscribes to the **full retained tree**, so a late-joining console catches up on the *entire* merged log rather than only the last entry. Entries are grouped by (origin, voyage) so two seats' voyages never collide or drop as false duplicates — fixing the divergent "36 vs 112" entry counts.
@@ -195,7 +195,7 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 
 ## [v104] — 2026-07-04
 
-### Added — Seat memory & the validated cache (docs/Audit/Local-Cache-and-Preferences-Audit.md §8, waves W0–W4)
+### Added — Seat memory & the validated cache (Documentation/Audit/Local-Cache-and-Preferences-Audit.md §8, waves W0–W4)
 - **Academy re-instated** (`src/ui/console/academy.ts`): the first-load quick start
   returns, with its five step numbers overlaid as pulsing markers on the live console
   regions they teach; ACADEMY button docks beside the byline. Legacy dismissed-key honored.
@@ -275,7 +275,7 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
   ✅/❌/🔒/⛔ summary linking to both documents.
 
 ### Changed
-- **Internal audit notes untracked** (`.gitignore`) — the `docs/Audit ` folder is
+- **Internal audit notes untracked** (`.gitignore`) — the `Documentation/Audit ` folder is
   now git-ignored (escaped trailing-space rule) and its files removed from the
   repo (kept locally on disk), so working notes no longer ship in the tree.
 
@@ -310,7 +310,7 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 ## [v99] — 2026-07-02
 
 ### Added — Chirality C2 (editor overlays, first wave)
-Editors now respond to the selected handedness. Audit: `docs/Audit /Editor-Chirality-Audit.md`.
+Editors now respond to the selected handedness. Audit: `Documentation/Audit /Editor-Chirality-Audit.md`.
 - **Overlay chrome mirrors** (`src/platform/overlay.ts`) — in left-handed mode the
   `.ed-topbar` flips (back/close swap, corner radius + inner shadow), and the back
   chevron **swaps glyph** `‹`→`›` via a `.ed-back::before` pseudo (CSS reads the
@@ -337,7 +337,7 @@ Editors now respond to the selected handedness. Audit: `docs/Audit /Editor-Chira
 
 ### Added — Chirality (handedness) C0 + C1
 A single **left/right handedness toggle** that mirrors the whole console — the
-console now "swings both ways." Strategy: `docs/Audit /Chirality Deployment strategy.md`.
+console now "swings both ways." Strategy: `Documentation/Audit /Chirality Deployment strategy.md`.
 - **The switch** (`src/ui/console/chirality.ts`): `data-chirality` on `<html>`, a
   `--chir` sign token, localStorage persistence, default right-handed. The `✋`
   toggle sits beside the MQTT chip; tooltip reads "Chirality Right/Left".
@@ -374,7 +374,7 @@ console now "swings both ways." Strategy: `docs/Audit /Chirality Deployment stra
   JSON files a non-engineer already edits. Room/floor/person tips thread to the
   editor via `data-prod-tip`; per-tool tips ride the existing `data-config`. Seeded
   examples on PROD 7, 2nd-Floor Room 2, and Ana Silva (+ her IFB tool).
-- Audit: `docs/Audit /LCARS-Hover-Tooltips-Production-Tips-Audit.md`.
+- Audit: `Documentation/Audit /LCARS-Hover-Tooltips-Production-Tips-Audit.md`.
 
 ## [v96] — 2026-07-02
 
@@ -395,7 +395,7 @@ this entry references `src/**`, not the retired `js/**` shell.
   **Prompter editor** (`src/editors/prompter/`) — a scrolling script/mirror/speed head.
   A prompter feed dropped on any twist opens the prompter editor.
 - **Person editor** (`src/editors/person/`) — a virtual channel-strip for talent.
-- **Chirality audits** (`docs/Audit /Chirality.md`, `docs/Audit /Chirality Deployment strategy.md`)
+- **Chirality audits** (`Documentation/Audit /Chirality.md`, `Documentation/Audit /Chirality Deployment strategy.md`)
   — a cited handedness/occlusion evidence base plus a full style-guide + roadmap for
   making every LCARS element mirror on a single left/right "swing both ways" toggle.
 

@@ -1,5 +1,5 @@
 // src/model/common — primitives shared across every domain shape.
-// See docs/TYPESCRIPT-WASM-REPORT.md §A.2.
+// See Documentation/TYPESCRIPT-WASM-REPORT.md §A.2.
 
 export type Hex = `#${string}`;
 
@@ -11,7 +11,7 @@ export type Status = 'OK' | (string & {});
  * a floor room, a person, a source box, or an individual twist. The bare-string
  * form is the whole tip; the object form adds the same ✓ good / ✕ bad guidance the
  * Meter Input scopes use. Surfaced by `ui/tip.ts` alongside the context-derived
- * "what the production expects" tip. See docs/Audit /LCARS-Hover-Tooltips-*.
+ * "what the production expects" tip. See Documentation/Audit /LCARS-Hover-Tooltips-*.
  */
 export type TipSpec = string | { title?: string; lead: string; good?: string; bad?: string };
 

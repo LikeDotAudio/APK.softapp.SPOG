@@ -1,5 +1,5 @@
 // src/ui/console/colour-scheme — the COLOUR & VISION barrel + launcher.
-// Strategy: docs/Colours and shapes.md. Sibling to chirality.ts: a persistent
+// Strategy: Documentation/Colours and shapes.md. Sibling to chirality.ts: a persistent
 // toolbar button (a painter's palette, docked beside the handedness toggle) opens a
 // full LCARS editor that drives three orthogonal accessibility axes, each a `data-*`
 // attribute on <html>:

@@ -3,7 +3,7 @@
 // A "test card" is SPOG's synthetic, self-identifying frame of video: square
 // SMPTE bars + a burned-in slate + a moving shape ident, rendered for whatever
 // source is routed to a given preview surface. See
-// docs/Audit/Test-Frame-Routing-Audit.md §8-9 for the identity/format design.
+// Documentation/Audit/Test-Frame-Routing-Audit.md §8-9 for the identity/format design.
 
 /** The ~12-form roster — chosen to stay distinct at 24px and in silhouette, so
  *  a source is recognisable on shape ALONE (the only channel left in mono mode). */

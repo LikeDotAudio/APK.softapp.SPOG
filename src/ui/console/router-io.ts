@@ -1,7 +1,7 @@
 // src/ui/console/router-io — the 1990s VIEW spreadsheet IMPORT / EXPORT (two tabs:
 // Sources + Destinations). Builds the workbook model from the SAME DOM scrapers the
 // crosspoint grid uses, serializes via router-io-sheet, and replays imports via
-// router-io-apply. See docs/Audit/1990s-View-Import-Export-Audit.md.
+// router-io-apply. See Documentation/Audit/1990s-View-Import-Export-Audit.md.
 
 import { el } from '../dom.js';
 import {

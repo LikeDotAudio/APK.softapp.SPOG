@@ -1,5 +1,5 @@
 // src/ui/console/captains-log-timeline — the TIMELINE VIEWER window (audit:
-// docs/Audits/TimeLine Investigation.md). ONE stringline / swimlane graph of the
+// Documentation/🔍Audits/TimeLine Investigation.md). ONE stringline / swimlane graph of the
 // Captain's Log + production schedule: WHERE (destinations, grouped by room) on TOP,
 // WHO (operators + booked crew) on the BOTTOM, sharing one TIME axis along the bottom.
 // Rows are a FOLDABLE TREE (section → group → lane). Past log events are solid

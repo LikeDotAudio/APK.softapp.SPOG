@@ -1,6 +1,6 @@
 // src/platform/merge/sentinel — SMRT's deterministic sentinel merge, ported to TS.
-// See docs/Audits/Merge - vs last called.md §3 and the SMRT normative merge spec
-// (docs/sentinel.md; conformance A-2.2-05, A-3.3-05, A-2.3-11).
+// See Documentation/🔍Audits/Merge - vs last called.md §3 and the SMRT normative merge spec
+// (Documentation/sentinel.md; conformance A-2.2-05, A-3.3-05, A-2.3-11).
 //
 // The algebra overloads three JSON scalars as CONTROL, not data:
 //   undefined / null  = "no opinion — keep stored"   (nil)

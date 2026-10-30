@@ -24,7 +24,7 @@ export interface TwistConfig {
   /** Per-twist (per-tool) hover tip — what this specific tool expects, authored
       inline on the twist in the room/person JSON. Rides through data-config. */
   tip?: TipSpec;
-  /** Vision-mixer definition (docs/Production-Video-Switcher-Deployment-Plan.md §4).
+  /** Vision-mixer definition (Documentation/Production-Video-Switcher-Deployment-Plan.md §4).
       Absent ⇒ the editor's DEFAULT_SWITCHER; present fields override the default,
       so a production only authors what differs (usually just input labels). */
   switcher?: Partial<SwitcherDef>;

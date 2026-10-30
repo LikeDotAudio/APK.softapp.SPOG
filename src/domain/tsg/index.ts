@@ -2,7 +2,7 @@
 // SMPTE / EBU / ITU / VESA test patterns (SDR + HDR), one painter per file under
 // patterns/. `drawTsg` is the DPR-aware driver for a VISIBLE canvas; the individual
 // `pattern.draw(g,W,H,t)` painters can be called directly for an offscreen buffer
-// (e.g. the meter-input analysis canvas). See docs/Audit/Test-Frame-Routing-Audit.md.
+// (e.g. the meter-input analysis canvas). See Documentation/Audit/Test-Frame-Routing-Audit.md.
 
 import { patternById, DEFAULT_TSG } from './catalog.js';
 import type { TsgPattern } from './types.js';

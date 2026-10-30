@@ -1,4 +1,4 @@
-// src/ui/icon-face — the ICON face resolver (docs/Audit/Icon-View-Aesthetic-Audit.md).
+// src/ui/icon-face — the ICON face resolver (Documentation/Audit/Icon-View-Aesthetic-Audit.md).
 //
 // The FACE axis (colour-scheme.ts, html[data-face]="lcars"|"icons") swaps the LCARS
 // chrome for macOS-style dock tiles. Tiles are rendered PROGRAMMATICALLY

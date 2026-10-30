@@ -2,7 +2,7 @@
 // Reads the current Studio Spaces boxes (each still tagged with its `floor`), regroups
 // them by floor, and lays out 4 studios per floor (walls N/E/S/W; a floor's 10 location
 // pairs distribute 3·3·2·2 so all 50 pairs are preserved — no fabricated devices).
-// Git-reversible. See docs/Audit/Studio-Spaces-and-Hierarchical-Routing-Audit.md.
+// Git-reversible. See Documentation/Audit/Studio-Spaces-and-Hierarchical-Routing-Audit.md.
 import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 

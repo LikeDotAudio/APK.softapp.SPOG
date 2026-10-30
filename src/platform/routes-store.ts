@@ -1,5 +1,5 @@
 // src/platform/routes-store — the draft OVERLAY that makes the read-only Routes
-// tree editable (audit: docs/Audit /Routes-Editor-Single-Pane-Audit.md §7).
+// tree editable (audit: Documentation/Audit /Routes-Editor-Single-Pane-Audit.md §7).
 //
 // The console reads every room / production / person as static JSON through
 // discovery.fetchJSON. There is no backend to write to, so an authoring edit is

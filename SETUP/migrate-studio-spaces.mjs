@@ -4,7 +4,7 @@
 // (Studio → Wall → {Video SB, Audio SB} → channels), preserving every stage box's
 // prefix/count/items. Relocates the wireless (controllers + mic packs) to 002_Wireless
 // and the remotes to 007_Remotes, then removes the old Sound/Video folders and rewrites
-// the root Sources manifest. See docs/Audit/Studio-Spaces-and-Hierarchical-Routing-Audit.md.
+// the root Sources manifest. See Documentation/Audit/Studio-Spaces-and-Hierarchical-Routing-Audit.md.
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 

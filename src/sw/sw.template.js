@@ -1,4 +1,4 @@
-// TWIST service worker — LANE-AWARE caching (docs/Audit/Local-Cache-and-
+// TWIST service worker — LANE-AWARE caching (Documentation/Audit/Local-Cache-and-
 // Preferences-Audit.md §4.2 / §8 W4b). Emitted to dist/sw.js by the
 // `twist-build-id` Vite plugin, which bakes the build stamp (cache version)
 // and the content-hashed bundle list (precache manifest) into this template.

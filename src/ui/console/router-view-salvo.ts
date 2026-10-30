@@ -2,7 +2,7 @@
 // group×group crosspoint (an aggregate row and/or column) wires EVERY matching source
 // feed under the row group into the twists under the col group: one crosspoint per
 // leaf, greedily paired by signal type (a source only lands in a twist whose `accepts`
-// permits it, and never twice). See docs/Audit/Studio-Spaces-and-Hierarchical-Routing.
+// permits it, and never twice). See Documentation/Audit/Studio-Spaces-and-Hierarchical-Routing.
 import { placeSourceInTwist } from './matrix.js';
 import { parseConfig } from './matrix-groups.js';
 import { gatherSenderNodes, firstLine, SEP } from './router-view-gather.js';

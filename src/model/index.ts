@@ -2,7 +2,7 @@
 // modules; import path (`../model/index.js`) stays stable for every consumer.
 //
 // These are the real-TS form of the contracts that the legacy app kept only in
-// comments (see docs/TYPESCRIPT-WASM-REPORT.md §A.2). Every layer above depends
+// comments (see Documentation/TYPESCRIPT-WASM-REPORT.md §A.2). Every layer above depends
 // on these and nothing else for "what the data looks like".
 
 export type * from './common.js';

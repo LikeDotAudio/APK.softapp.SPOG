@@ -3,7 +3,7 @@
 // A source's self-identifying frame of video: square SMPTE bars + a burned-in
 // slate + a moving shape ident, keyed on the source's own name/colour so it is
 // recognisable wherever it lands after routing. See
-// docs/Audit/Test-Frame-Routing-Audit.md.
+// Documentation/Audit/Test-Frame-Routing-Audit.md.
 //
 // createTestCardWall() gives a surface (e.g. the multiviewer) ONE shared rAF
 // ticker for its whole wall — every mounted canvas is painted from a single loop

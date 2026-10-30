@@ -1,6 +1,6 @@
 node_modules/
 dist/
-docs/Audits/
+Documentation/🔍Audits/
 
 *.log
 .DS_Store
@@ -10,6 +10,6 @@ __pycache__/
 # vite temp config file (created during config eval)
 vite.config.*.timestamp-*
 
-docs/Audits/
-docs/PAST\ Audits/
-docs/Audits\ /
+Documentation/🔍Audits/
+Documentation/PAST\ Audits/
+Documentation/Audits\ /

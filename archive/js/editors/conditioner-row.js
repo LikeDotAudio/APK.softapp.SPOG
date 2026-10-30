@@ -7,7 +7,7 @@
 // way out (loudness → CC/SCTE insert → format → sync/embed → failover → output).
 //
 // This is the Part-3 (Operator GUI) surface for the conditioner-row pattern
-// audited in docs/Audit /Signal-Conditioner-Row-Design-Audit.md. Each stage maps
+// audited in Documentation/Audit /Signal-Conditioner-Row-Design-Audit.md. Each stage maps
 // to an App in the requirements catalog (AR.x badge). Like every editor here the
 // data is synthetic; the value is the orderable, bypassable, preset-driven row —
 // ready to be backed by real control-plane APIs (delta report, Interpretation B).
