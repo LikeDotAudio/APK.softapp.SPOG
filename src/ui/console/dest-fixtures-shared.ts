@@ -63,9 +63,16 @@ export function readout(W: number, H: number): { cvs: HTMLCanvasElement; draw: (
   return { cvs, draw: (s: string): void => { if (g) drawSegString(g, W, H, s, 'seg', 'red', '#000'); } };
 }
 
-/** A frame loop that stops itself once the node has left the document. */
+/** A frame loop that stops itself once the node has left the document. A frame
+ *  that throws is logged once and the loop carries on with the next frame, so one
+ *  bad paint (timer graphic, tone retune…) never freezes the fixture. */
 export function animate(node: Node, frame: () => void): void {
-  const tick = (): void => { if (!document.contains(node)) return; frame(); requestAnimationFrame(tick); };
+  let warned = false;
+  const tick = (): void => {
+    if (!document.contains(node)) return;
+    try { frame(); } catch (e) { if (!warned) { warned = true; console.warn('fixture frame failed; continuing', e); } }
+    requestAnimationFrame(tick);
+  };
   requestAnimationFrame(tick);
 }
 
