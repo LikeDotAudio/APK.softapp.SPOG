@@ -30,7 +30,7 @@ export function buildGrid(lanes: RLane[], x: (ts: number) => number, width: numb
     const rowEnd: number[] = [];
     const rowOf = sp.map((p) => { let r = rowEnd.findIndex((e) => p.s >= e); if (r === -1) { r = rowEnd.length; rowEnd.push(0); } rowEnd[r] = p.e; return r; });
     const rows = Math.max(1, rowEnd.length);
-    const conflict = rows > 1 ? ` <em class="tl-conflict" title="peak concurrent bookings — needs ${rows} people/rooms">×${rows}</em>` : '';
+    const conflict = rows > 1 ? ` <em class="tl-conflict" data-staff="${esc(label)}" title="peak concurrent bookings — needs ${rows} people/rooms · click for who/when">×${rows}</em>` : '';
     let rowCls = cls;
     let labelBadge = '';
     if (isRoom) {

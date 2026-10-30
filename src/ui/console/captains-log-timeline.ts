@@ -12,6 +12,7 @@ import { buildLanes, type Lane } from './captains-log-timeline-data.js';
 import { TL_CSS } from './captains-log-timeline-css.js';
 import { wireNav } from './captains-log-timeline-nav.js';
 import { buildGrid } from './captains-log-timeline-render.js';
+import { makeStaffing, needsStaffing, STAFF_CSS } from './captains-log-timeline-staffing.js';
 import { showSchedule } from './schedule.js';
 
 const PLAN = '#5a6a8c';
@@ -25,6 +26,7 @@ const collapsed = new Set<string>();          // explicitly-collapsed SECTIONS (
 const expandedGroups = new Set<string>();     // explicitly-expanded room GROUPS (rooms fold by default)
 const selectedGroups = new Set<string>();   // multi-select room chips (stack / union)
 let filter = '';
+let staffing: ReturnType<typeof makeStaffing> | null = null;   // ⚠ NEEDS STAFFING drawer
 let evList: { ts: number; text: string; op: string; rev: boolean; color: string }[] = [];
 
 /** Sync the minimap's viewport rectangle to the main scroll position. */
@@ -67,6 +69,7 @@ function renderInto(body: HTMLElement, resetScroll = true): void {
   // Grid HTML (foldable headers with inline counts, dots, bands, ruler) — see
   // captains-log-timeline-render. `ev` is the click-lookup list.
   const { html, ev, onAirRooms } = buildGrid(lanes, x, width, t0, t1, now, foldSet);
+  staffing?.refresh();   // re-scan double-bookings on every render (own try/catch)
   evList = ev;
   const grid = el('div', { class: 'tl-grid', style: `width:${width}px;` });
   grid.innerHTML = html;
@@ -118,12 +121,13 @@ function showDetail(idx: number, cx: number, cy: number): void {
 
 /** Open the Timeline Viewer (lazy build; recompute snapshot on every open / ⟳). */
 export function openTimeline(): void {
-  addStyles('cl-timeline-styles', TL_CSS);
+  addStyles('cl-timeline-styles', TL_CSS); addStyles('cl-timeline-staff', STAFF_CSS);
   if (!panel) {
     panel = el('div', { class: 'tl-panel' });
     const body = el('div', { class: 'tl-body' });
     const nowBtn = el('button', { class: 'tl-btn' }, ['⤒ NOW']);
     const schedBtn = el('button', { class: 'tl-btn' }, ['⇥ SCHEDULE']);
+    const refreshBtn = el('button', { class: 'tl-btn' }, ['⟳ REFRESH']);
     const filterEl = el('input', { class: 'tl-filter', type: 'search', placeholder: '⌕ filter lanes / events…' }) as HTMLInputElement;
     filterEl.addEventListener('input', () => { filter = filterEl.value.trim().toLowerCase(); const sx = body.scrollLeft; renderInto(body, false); body.scrollLeft = sx; });
     const groupsEl = el('span', { class: 'tl-groups' });
@@ -138,12 +142,17 @@ export function openTimeline(): void {
       else { const k = g.toLowerCase(); selectedGroups.has(k) ? selectedGroups.delete(k) : selectedGroups.add(k); }  // stack / un-stack
       const sx = body.scrollLeft; renderInto(body, false); body.scrollLeft = sx;
     });
+    // NEEDS STAFFING scans the UNFILTERED schedule (a clash matters even when filtered
+    // out of view); a row click pans to the clash, a ×N badge opens it scoped to its lane.
+    staffing = makeStaffing(() => needsStaffing(buildLanes().lanes, Date.now()), (ts) => {
+      const { t0 } = buildLanes(); body.scrollLeft = Math.max(0, ((ts - t0) / 60000) * pxPerMin - 60);
+    });
     const head = el('div', { class: 'tl-head' }, [
       el('span', { class: 'tl-title' }, ['⧗ TIMELINE VIEWER']),
       filterEl,
       el('span', { class: 'tl-legend' }),
       el('span', { class: 'tl-onair-banner' }),
-      nowBtn, schedBtn, el('button', { class: 'tl-btn' }, ['⟳ REFRESH']),
+      nowBtn, schedBtn, refreshBtn, staffing.btn,
       el('span', { class: 'tl-x', title: 'Close' }, ['✕']),
     ]);
     const chipbar = el('div', { class: 'tl-chipbar' }, [groupsEl]);
@@ -152,7 +161,7 @@ export function openTimeline(): void {
     // except when the click lands on an actual control (buttons, filter, chips, legend).
     head.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('button, input, select, .tl-filter, .tl-legend, .tl-groups')) return; closeTimeline(); });
     head.querySelector('.tl-x')!.addEventListener('click', closeTimeline);
-    (head.querySelectorAll('.tl-btn')[3] as HTMLElement).addEventListener('click', () => renderInto(body));
+    refreshBtn.addEventListener('click', () => renderInto(body));
     nowBtn.addEventListener('click', () => { const n = body.querySelector<HTMLElement>('.tl-now'); if (n) body.scrollLeft = Math.max(0, n.offsetLeft - body.clientWidth * 0.5); });
     schedBtn.addEventListener('click', () => {
       const nowX = body.querySelector<HTMLElement>('.tl-now')?.offsetLeft ?? 0;
@@ -162,6 +171,8 @@ export function openTimeline(): void {
     // Delegated clicks: fold a section/group, or open a keyframe's log detail.
     body.addEventListener('click', (e) => {
       const t = e.target as HTMLElement;
+      const badge = t.closest<HTMLElement>('.tl-conflict[data-staff]');
+      if (badge) { staffing?.open(badge.dataset['staff']); return; }
       const fold = t.closest<HTMLElement>('[data-fold]');
       // Groups fold by default → their toggle tracks EXPANDED (opt-in); sections track COLLAPSED.
       if (fold) { const k = fold.dataset['fold']!; const set = k.startsWith('G:') ? expandedGroups : collapsed; set.has(k) ? set.delete(k) : set.add(k); const sx = body.scrollLeft; renderInto(body, false); body.scrollLeft = sx; return; }
@@ -187,7 +198,7 @@ export function openTimeline(): void {
       rerender: () => renderInto(body, false),
     });
     body.addEventListener('scroll', () => updateNavView());
-    panel.append(head, chipbar, body, nav);
+    panel.append(head, chipbar, body, nav, staffing.drawer);
     document.body.appendChild(panel);
   }
   renderInto(panel.querySelector('.tl-body') as HTMLElement);

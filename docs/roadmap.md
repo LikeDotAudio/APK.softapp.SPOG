@@ -122,8 +122,11 @@ a retained-MQTT `TwistBus`.*
 ## 3. Planned — by theme
 
 ### 3.1 Timeline, schedule & resource booking
-- 📋 **Resource-conflict surfacing** — turn the `×N` overlap badges into an actionable
-  "needs staffing" view (who/what/when a second operator is required).
+- ✅ **Resource-conflict surfacing** — `⚠ STAFFING (N)` in the Timeline header opens a
+  "needs staffing" drawer: every upcoming window where a crew role or production room is
+  double-booked — when, which lane, `+N operators/rooms`, which shows collide. Clicking a `×N`
+  badge opens it scoped to that lane; a row pans the timeline to the clash
+  (`captains-log-timeline-staffing.ts`). Next: assign a named second operator from the drawer.
 - 📋 **Schedule authoring** — edit the recurring `SCHEDULE` in-app (today it is a code table),
   round-tripping to a persisted store. Ties into the Routes Editor work (3.5).
 - 📋 **Studio-spaces hierarchical routing** — P2 grid-3-layer, P3 salvo, P4 JSON-export of the
