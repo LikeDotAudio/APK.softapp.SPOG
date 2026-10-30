@@ -6,7 +6,7 @@ signal-flow visualizer whose "twists" open into role-specific editors (vision mi
 audio, lighting, prompter, graphics, timers…), backed by a static `Routes/**` file tree and
 a retained-MQTT `TwistBus`.*
 
-*Last updated: 2026-07-09.*
+*Last updated: 2026-10-30.*
 
 > **How to read this.** Each item carries a status:
 > `✅ Shipped` · `🚧 In progress` · `⏭️ Next` · `📋 Planned` · `🔬 Exploring`.
@@ -33,6 +33,16 @@ a retained-MQTT `TwistBus`.*
 
 ## 1. Now — recently shipped
 
+- ✅ **Switcher PRE-ROUTE matrix + explicit USK/DSK graphics** — GFX × DSK/USK MATRIX beside the per-DSK LIST (`vision-mixer/gfx-route.ts`, `preroute.ts`, `?preroute=matrix|list`); M/E keyers on a graphic read `USK n · ⬡ GFX m`; a PRE-ROUTE fault leaves the switcher running.
+- ✅ **DSK preview → take (faux-take GFX sets)** — `GFX SETS · PVW → PGM` module: arm a DSK graphic on preview, CUT/AUTO GFX takes it to program through a simulated fade (`vision-mixer/gfx-take.ts`, `gfx-take-panel.ts`).
+- ✅ **Auto-multiviewer (first slice)** — the switcher announces on-air graphics per production (`vision-mixer/gfx-feed.ts` → `platform/gfx-monitor.ts`); the wall's opt-in `⬡ AUTO GFX` (`?automv=1`) fills spare cells with read-only AUTO tiles (`multi-viewer/auto-gfx.ts`).
+- ✅ **Reverse Course after reload** — routing rows persist their source labels and `captains-log-reroute.ts` re-derives the undo; a batch skips what it can't redo and carries on; merge events are session-only notes (`?mergelog=keep` restores).
+- ✅ **Needs-staffing drawer** — `⚠ STAFFING (N)` in the Timeline header lists every double-booked crew role / room window (`captains-log-timeline-staffing.ts`); the REFRESH button handler is fixed.
+- ✅ **Shared tooltips: Meter Input** — the last hand-rolled tooltip now rides `src/ui/tip.ts` (`helpTip()`); its `.mi-tip` panel is gone.
+- ✅ **RC1000 dual-timer graphic on MONITOR** — a routed PRODUCTION TIMERS feed paints the seven-seg timer from the room's `counters_timer` snapshot (`domain/timer-core/graphic.ts`, `ui/timer-graphic.ts`; `?timergfx=off`).
+- ✅ **Test-frame tone half** — EBU R68 line-up + per-source ident (`domain/test-tone`), LISTEN/MUTE on each room MONITOR behind `?tone=1` (`ui/test-tone-player.ts`).
+- ✅ **Colour Engine state glyphs (P0)** — `⚠` on faulted nodes, rooms, folds and twists so fault reads without colour (`ui/console/state-glyphs.ts`; seat pref Auto/On/Off, `?glyphs=on|off`).
+- ✅ **Wire payload optimisation** — bounded throttle slots + flush on dispose, seat/label on `ValueMsg`, origin-only `full_id`; opt-in `?wire=compact` (front-coded crosspoints + protobuf `LogMsg`, 889 → 562 B measured).
 - ✅ **Deterministic Merge Mediator + Observer** — replaces per-topic last-writer-wins with a
   windowed arbitration layer: concurrent writes to a param are bucketed and resolved by
   **higher seat rank wins** (full_id tie-break), so consoles converge with no "up/down"
@@ -61,36 +71,12 @@ a retained-MQTT `TwistBus`.*
 
 ## 2. In progress / next
 
-- 🎯 **Control-room graphics in the switcher — pre-router + up/downstream keyers** *(top priority,
-  building now)* — make graphics engine outputs (weather, TSG, chyron, lower-thirds…) first-class
-  in the vision mixer. The model, as speced:
-  - **Hard-wired, always-there graphics.** The control room's graphics are permanently wired
-    into the switcher (the existing `DSK · GRAPHICS n` inputs, sources 19-24) — always present,
-    never requiring a manual route.
-  - **Downstream keyers (DSK).** Graphics keyed *after* the M/E — the 6 DSKs already in
-    `schema.ts`. Preview them in the switcher (arm on preview → take to program).
-  - **Upstream keyers (USK).** *Some* graphics also ride as **normal M/E keyers** (upstream of
-    the DSK) — already possible (ME keyers can target a graphics source, e.g. the LOWER-THIRD
-    preset); surface them explicitly as graphics.
-  - **PRE ROUTE tab (beside the M/E).** A new tab/panel next to the M/E lets the operator
-    **shift which hard-wired graphic feeds each keyer/DSK bus** *after* it's presented — a small
-    graphics→bus pre-router matrix, since the M/E has no native way to re-route these.
-  - **Faux-take "set".** Anything on the graphics displays as a takeable **set** (named scene)
-    that previews and "takes" via a simulated transition (front-end sim).
-  - **Auto-multiviewer.** Any graphic on the DSK/switcher **automatically lands in a multiviewer
-    tile**, monitored without a manual route. *First slice shipped:* the switcher announces its
-    on-air graphics per production (`vision-mixer/gfx-feed.ts` → `platform/gfx-monitor.ts`) and
-    the multiviewer's opt-in **⬡ AUTO GFX** toggle (`?automv=1`) fills spare cells with
-    read-only AUTO tiles. *Next:* a switcher and wall in different productions/seats (needs the
-    bus, not the same-browser channel), and AUTO tiles that reserve cells instead of only
-    filling spare ones.
-  - *Touches:* `vision-mixer/{schema,me,keyers,dashboard,panels,styles}.ts`, the graphics-engine
-    mount (dest-fixtures synthTwist), and multiviewer auto-population. Ties into §3.2 Graphics
-    suite. **First slice: the PRE ROUTE panel + explicit up/downstream graphics keyers.**
-  - ✅ *First slice landed:* PRE-ROUTE module with LIST (per-DSK) and MATRIX (GFX × DSK/USK,
-    `gfx-route.ts`) views, `?preroute=matrix|list`; M/E keyers on a graphic read
-    `USK n · ⬡ GFX m`; section headers name USK vs DSK; a PRE-ROUTE fault no longer stops
-    the switcher. Next: DSK preview/take, faux-take sets, auto-multiviewer.
+- 🚧 **Control-room graphics in the switcher — what is left** — pre-route, USK/DSK surfacing,
+  DSK preview/take and the auto-multiviewer's first slice shipped (§1). *Next:* a switcher and
+  wall in different productions/seats (the on-air list rides the same-browser
+  `platform/gfx-monitor.ts` channel today, not the bus); AUTO tiles that reserve cells instead
+  of only filling spare ones; a GFX SET take that rides the bus instead of front-end only.
+  Ties into §3.2 Graphics suite.
 - 🚧 **Timeline 5W+H reframe** — re-section the Timeline Viewer by node type instead of the
   current WHERE/WHO pair:
   | Question | Contents |
@@ -103,16 +89,6 @@ a retained-MQTT `TwistBus`.*
   | HOW | equipment · control rooms · productions · encoders · edit suites |
   Needs a node-type → section classifier in `captains-log-timeline-data.ts`. *Pending final
   confirmation of the mapping + section order.*
-- ✅ **Reverse Course after reload** — routing entries now persist their source labels
-  (IDB rows + the wire already carry `added`/`removed`), so a restored (post-reload) or
-  networked entry is re-derived in `captains-log-reroute.ts`: find the twist by dest/prod, take
-  the added sources out, clone the removed ones back from the sources panel. Reversing another
-  seat's entry flags *its* record (`log/<its origin>/…`). A batch reversal keeps going past an
-  entry it can't redo now (twist or source gone): that one stays selected, un-reversed, with a
-  transient `⚠` note. Selection is keyed `origin#entry` (ids are only unique per seat). Merge
-  events are **transient** notes — shown this session, never persisted/published/selectable;
-  `?mergelog=keep` restores the old behaviour. Still read-only: label-less legacy rows and
-  semantic (layout) entries restored after a reload (their undo closure can't be re-derived).
 - ⏭️ **Seat rank on the wire for cross-console merge** — the mediator's higher-rank-wins is
   authoritative within a console and now carries `seat`/`label` on `ValueMsg`; finish the
   cross-console convergence proof + sparse-overlay publishing so orthogonal edits compose.
@@ -122,11 +98,8 @@ a retained-MQTT `TwistBus`.*
 ## 3. Planned — by theme
 
 ### 3.1 Timeline, schedule & resource booking
-- ✅ **Resource-conflict surfacing** — `⚠ STAFFING (N)` in the Timeline header opens a
-  "needs staffing" drawer: every upcoming window where a crew role or production room is
-  double-booked — when, which lane, `+N operators/rooms`, which shows collide. Clicking a `×N`
-  badge opens it scoped to that lane; a row pans the timeline to the clash
-  (`captains-log-timeline-staffing.ts`). Next: assign a named second operator from the drawer.
+- 📋 **Resource-conflict follow-up** — assign a named second operator from the needs-staffing
+  drawer (the drawer itself shipped, §1).
 - 📋 **Schedule authoring** — edit the recurring `SCHEDULE` in-app (today it is a code table),
   round-tripping to a persisted store. Ties into the Routes Editor work (3.5).
 - 📋 **Studio-spaces hierarchical routing** — P2 grid-3-layer, P3 salvo, P4 JSON-export of the
@@ -137,33 +110,21 @@ a retained-MQTT `TwistBus`.*
   handle stage + crop + fast touchpad grammar. Audit: `docs/Audit/DVE-Makeover-Audit.md`.
 - 📋 **Editor chirality C2** — handedness flip for ~10 editors (wysiwyg first; audio-mixer /
   camera-control highest benefit). Audit: `Editor-Chirality-Audit.md`.
-- 🚧 **RC1000 dual-timer source** — a dual up/down timer graphics source + keypad transport.
-  Audit: `RC1000-Dual-Timer-Audit.md`. The keypad transport is the TIMER editor
-  (`src/editors/timer`, two RC1000-style keypads on `destinations/<dest>/counters_timer`).
-  Shipped slice: a routed PRODUCTION TIMERS feed now paints the dual-timer graphic on the
-  destination MONITOR (`TIMER A`/`TIMER B` → one channel, `A/B PANEL` → both), derived
-  live from that snapshot (`src/domain/timer-core/graphic.ts`, `src/ui/timer-graphic.ts`);
-  a malformed/absent snapshot shows dashes and a failed paint falls back to the faux
-  signal. Rollback: `?timergfx=off`. Next: the same graphic on the multi-viewer /
-  vision-mixer previews (they use `drawFauxSignal`, which has no timer hook yet).
+- 🚧 **RC1000 dual-timer source** — keypad transport (TIMER editor) and the MONITOR graphic
+  shipped (§1). Next: the same graphic on the multi-viewer / vision-mixer previews (they use
+  `drawFauxSignal`, which has no timer hook yet). Audit: `RC1000-Dual-Timer-Audit.md`.
 - 📋 **Graphics suite** — a graphics engine hosting a suite of editor-functions mounted on
   dest-fixtures. Audit: `graphics-suite-architecture`.
 - 📋 **Production video switcher** — audit + deployment plan already drafted
   (`docs/Production-Video-Switcher-*.md`).
-- 🚧 **Shared tooltips / tool-ticks** — Meter Input's hover-tip pattern lives in the shared
-  `src/ui/tip.ts` (`tip()` / `hint()` / `expectationTip()`); Meter Input itself, the last
-  hand-rolled copy, now rides it too (its `.mi-tip` panel is gone). Left: editors still on
-  native `title=` hovers (Vision Mixer ≈28, Graphics Engine ≈7, a few elsewhere) move to
-  `hint()`. Audit: `LCARS-Hover-Tooltips-…-Audit.md`.
+- 🚧 **Shared tooltips / tool-ticks** — every hand-rolled tooltip now rides `src/ui/tip.ts`
+  (Meter Input was the last, §1). Left: editors still on native `title=` hovers (Vision Mixer,
+  Graphics Engine, a few elsewhere) move to `hint()`. Audit: `LCARS-Hover-Tooltips-…-Audit.md`.
 
 ### 3.3 Sources, destinations & test signal
-- 🚧 **Test-frame routing** — a shared synthetic SMPTE test-card + tone module routable through
-  every source/dest with live preview. Audit: `Test-Frame-Routing-Audit.md`. Picture half
-  shipped (`src/domain/test-card` → multiviewer wall + per-room MONITOR). Tone half behind
-  `?tone=1`: `src/domain/test-tone` voices EBU R68 line-up (1 kHz −18 dBFS) with a 1–4 left-leg
-  ident keyed on the card's number; the MONITOR fixture gets a LISTEN toggle
-  (`src/ui/test-tone-player.ts`, one shared listen bus, retunes on re-route, muted on any
-  audio failure). Next: tone on the multiviewer/audio-monitor surfaces, then default-on.
+- 🚧 **Test-frame routing** — picture half (`src/domain/test-card`) and the opt-in tone half
+  (`?tone=1`, §1) shipped. Next: tone on the multiviewer/audio-monitor surfaces, then
+  default-on. Audit: `Test-Frame-Routing-Audit.md`.
 - 📋 **Weather forecast strip** — P2 on-air "forecast strip" faces (P0/P1 shipped). Audit:
   `Weather-Forecast-Strip-Audit.md`.
 - 📋 **Teleprompter conditioner-row** — resolve the open conditioner-row question.
@@ -181,22 +142,16 @@ a retained-MQTT `TwistBus`.*
   (localStorage → FS Access API → server). Audit: `Routes-Editor-Single-Pane-Audit.md`.
 
 ### 3.6 Accessibility & presentation
-- 🚧 **Colour Engine expansion** — the low-vis/high-vis/grey/mono presets ship (Colour &
-  Vision editor). **State glyphs (P0) shipped:** `⚠` leads every faulted source node, room
-  L-bar, fold header and corrupted twist (`src/ui/console/state-glyphs.ts`), so fault reads
-  without colour. Per-seat **State glyphs: Auto / On / Off** (Auto = on in Grey, Mono or
-  High; the default console is unchanged); `?glyphs=on|off` overrides for one load. Next:
+- 🚧 **Colour Engine expansion** — presets and fault state glyphs (P0, §1) shipped. Next:
   on-air/OK/muted glyphs on live surfaces, then the P2 hex→token migration.
   Audit: `docs/Rules/Colours and shapes.md`.
 - 📋 **Icon-view FACE axis** — skin LCARS chrome with generated icon tiles. Audit:
   `Icon-View-Aesthetic-Audit.md`.
 
 ### 3.7 Wire & performance
-- 🚧 **Protobuf payload optimization** — throttle refinements (bounded slots, flush on
-  dispose), seat/label on `ValueMsg`, `full_id` → origin in `json_fallback` are ✅ default.
-  Interned (front-coded) crosspoints + a protobuf `LogMsg` arm ship opt-in behind
-  `?wire=compact` (889 → 562 B on the measured mix, `wire.test.ts`). Next: make v3 the
-  default once every seat runs a v3-decoding build. Audit: `Protobuf-Payload-Optimization-Audit.md`.
+- 🚧 **Protobuf payload optimization** — the default-on and opt-in `?wire=compact` slices
+  shipped (§1). Next: make v3 the default once every seat runs a v3-decoding build.
+  Audit: `Protobuf-Payload-Optimization-Audit.md`.
 
 ---
 
@@ -222,12 +177,5 @@ Every `📋` / `🔬` item above traces to an audit under `docs/Audit/` or `docs
 picking up an item: read its audit first, confirm scope, then ship the smallest reversible
 slice behind a seat preference or a URL param. New proposals start as an audit, not as code.
 
-*Note: `docs/` is not tracked in git (like the other audits), so this roadmap is a local
-working document. If it should ship with the repo, un-ignore `docs/roadmap.md` explicitly.*
-
-1. Switcher preview of the DSK — arm a graphic on preview → take to program.
-2. Faux-take "set" — a graphic as a takeable named scene via a simulated transition.
-3. Auto-multiviewer — a graphic on the DSK auto-populates a multiviewer tile.
-4. Explicit upstream (M/E-keyer) vs downstream graphics surfacing — you noted "some graphics upstream that are normal keyers" (already possible via M/E keyers; surface them as graphics).
-
-One process note: this was a very large session — I shipped ~10 features across the merge mediator, timeline, schedule, and now the switcher. Want me to keep going straight into slice 2 (switcher preview + auto-multiviewer), or pause here so you can drive the PRE ROUTE panel first and confirm it feels right before I build more on top?
+`docs/roadmap.md` and `docs/Rules/` are tracked in git; the other audits under `docs/` are
+local working documents.

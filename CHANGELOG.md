@@ -4,6 +4,18 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 
 ## [Unreleased]
 
+### Added — backlog sweep (roadmap §1)
+- **Vision Mixer graphics**: PRE-ROUTE MATRIX view (`?preroute=matrix|list`), USK/DSK-labelled graphics keyers, and the **GFX SETS · PVW → PGM** module (arm a DSK graphic on preview, CUT/AUTO GFX to program).
+- **Auto-multiviewer** (opt-in `⬡ AUTO GFX`, `?automv=1`): on-air graphics fill spare multiviewer cells as read-only AUTO tiles.
+- **Reverse Course after reload**: restored and networked routing entries reverse from their persisted labels; merge events become session-only notes (`?mergelog=keep` restores).
+- **Timeline needs-staffing drawer** (`⚠ STAFFING (N)`), plus the REFRESH button fix.
+- **MONITOR fixture**: a routed PRODUCTION TIMERS feed paints the RC1000 dual-timer (`?timergfx=off`); `?tone=1` adds LISTEN to the routed source's line-up tone.
+- **State glyphs** (Colour Engine P0): `⚠` marks faults without colour; seat pref Auto/On/Off, `?glyphs=on|off`.
+
+### Changed
+- **Meter Input** hover-help uses the shared `src/ui/tip.ts` panel.
+- **Room fixtures keep running after an error**: a fixture frame that throws is logged once and the loop carries on (`dest-fixtures-shared.ts` `animate()`).
+
 ### Changed — Wire payload optimisation (roadmap §3.7)
 - **Throttle refinements**: `throttle.ts` now arms the window on every leading send, so a topic's slot lives only while it is moving (the slot map no longer grows with every param ever touched); a `null`/`undefined` value is coalesced like any other; a throwing send no longer wedges the window; and `dispose()` **flushes** pending trailing values instead of dropping them. The bus's `dispose()` waits for in-flight (encrypting) sends before `end()`, so the final value and the `active:false` presence actually reach the broker.
 - **Seat rank rides the protobuf wire**: `ValueMsg` gains `seat` (7) + `label` (8). The encrypted encoder used to drop them, so the merge mediator's higher-rank-wins tie-break only worked in plaintext mode.
