@@ -1,23 +1,30 @@
-# `src/` — the A.8 side build (TypeScript, ultra-modular)
+# `src/` — the SPOG app (TypeScript, ultra-modular)
 
-This is the clean-room rebuild described in [`Documentation/TYPESCRIPT-WASM-REPORT.md` §A.8](../Documentation/TYPESCRIPT-WASM-REPORT.md).
-It runs **alongside** the live `js/` app (entry: `index.next.htm`) until it reaches
-1:1 parity, then a single reversible cutover swaps the entry + service worker + deploy.
+This is the whole app. The legacy `js/` app is retired (a copy sits in
+`archive/` for reference only); the TypeScript build is the console. Its dev entry is
+`index.next.html` at the repo root, which `SETUP/deploy.py` publishes as the site's
+`/index.htm` (see [Delivery](../Documentation/🌍Publishing/DELIVERY.md)).
 
 ## Layering (M7 — dependency direction is a rule)
 
 ```
-domain/        pure logic, ZERO DOM/globals  (routing-core: graph, faults, tally…)
-  └─ model/    the typed data shapes (Production, TwistConfig, Capability, Role…)
-       └─ platform/   discovery (manifest/autoindex), service worker, hash router
-            └─ ui/    widget Web Components (knob, fader, meter, scope…)   [P2]
+domain/        pure logic, ZERO DOM/globals  (routing-core, timer-core, test-tone, tsg, test-card idents)
+  └─ model/    the typed data shapes (Production, TwistConfig, SwitcherDef, Role…)
+       └─ platform/   discovery (manifest/autoindex), MQTT bus, merge, time-sync, stores
+            └─ ui/    console, sources panel, widgets, tooltips, timer/test-card painters
                  └─ editors/   one plugin package per editor (auto-registered)
                       └─ app/   boot + composition root
+sw/            service-worker template (emitted to dist/sw.js by vite.config.ts)
 ```
 
 A layer may import only from layers above it. **Editors never import editors** —
 cross-editor needs arrive as typed services on `EditorContext`. No `window.*`
 globals anywhere.
+
+Known breaks of the rule: `domain/test-card/render.ts` (imports `ui/faux-signal`)
+and `domain/test-card/index.ts` (imports `ui/dom`, `ui/timers`) are canvas/DOM
+painters living under `domain/`. `domain/test-card/ident.ts` and `domain/test-tone`
+are pure.
 
 ## Editors are plugins (M2 + M3)
 
@@ -29,31 +36,19 @@ reads only the typed `EditorContext` (resolved data), never the DOM.
 ## Run
 
 ```bash
-npm install          # vite + typescript + vitest (dev only)
-npm run dev          # side build at /index.next.htm (serves shared Routes/ data)
+npm ci               # the pinned toolchain (typescript, vite, vitest, protobufjs)
+npm run dev          # vite dev server, opens /index.next.html (serves Routes/ data)
 npm run typecheck    # tsc --noEmit, strict
-npm test             # vitest (routing-core unit tests, dispatch tests)
-npm run build        # → dist/  (content-hashed; retires the ?v= ritual)
+npm test             # vitest run (src/**/*.test.ts)
+npm run build        # prebuild size check → dist/ (content-hashed bundle + sw.js)
 ```
 
-## Deploy (cutover — TypeScript only)
+## Deploy
 
-The build has a relative base, so `dist/` drops at the site root next to the
-shared `Routes/`. `deploy.py` (repo root) builds the app, publishes the entry as
-`/index.htm` (the site default document — this is the cutover), uploads the
-hashed bundle to `/assets/`, keeps the `Routes/` data + manifests on the server,
-and removes the retired legacy `js/` shell + `sw.js`.
-
-```bash
-npm run deploy            # build → upload dist/ + Routes/ → remove legacy js/
-npm run deploy:all        # same, but upload the ENTIRE Routes tree
-```
+Local `npm run deploy*` scripts are disabled on purpose. A push to `main` runs
+`.github/workflows/deploy-production.yml` (typecheck + test, then
+`python3 SETUP/deploy.py`); `sandbox`/`develop` run the sandbox workflow. The build
+has a relative base, so `dist/` drops at the site root next to the shared `Routes/`.
 
 `Routes/**` is the only JSON that ships — routing DATA, discovered via per-folder
 `index.json` manifests (`src/platform/discovery.ts`), never app code.
-
-## Status
-
-- **P0 ✅** scaffold: tooling, layering, model, discovery, routing-core seed + tests,
-  editor plugin contract + auto-registry, walking-skeleton boot.
-- P1–P7: see the tasks / §A.8 phases.
