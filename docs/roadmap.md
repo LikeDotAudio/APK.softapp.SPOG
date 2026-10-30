@@ -157,8 +157,13 @@ a retained-MQTT `TwistBus`.*
   `hint()`. Audit: `LCARS-Hover-Tooltips-…-Audit.md`.
 
 ### 3.3 Sources, destinations & test signal
-- 📋 **Test-frame routing** — a shared synthetic SMPTE test-card + tone module routable through
-  every source/dest with live preview. Audit: `Test-Frame-Routing-Audit.md`.
+- 🚧 **Test-frame routing** — a shared synthetic SMPTE test-card + tone module routable through
+  every source/dest with live preview. Audit: `Test-Frame-Routing-Audit.md`. Picture half
+  shipped (`src/domain/test-card` → multiviewer wall + per-room MONITOR). Tone half behind
+  `?tone=1`: `src/domain/test-tone` voices EBU R68 line-up (1 kHz −18 dBFS) with a 1–4 left-leg
+  ident keyed on the card's number; the MONITOR fixture gets a LISTEN toggle
+  (`src/ui/test-tone-player.ts`, one shared listen bus, retunes on re-route, muted on any
+  audio failure). Next: tone on the multiviewer/audio-monitor surfaces, then default-on.
 - 📋 **Weather forecast strip** — P2 on-air "forecast strip" faces (P0/P1 shipped). Audit:
   `Weather-Forecast-Strip-Audit.md`.
 - 📋 **Teleprompter conditioner-row** — resolve the open conditioner-row question.
