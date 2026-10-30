@@ -70,7 +70,7 @@ export interface TwistBus {
   status(): { enabled: boolean; connected: boolean };
   /** Publish a retained `…/config` advertisement under the SPOG root. */
   publishConfig(topicSuffix: string, msg: Omit<ConfigMsg, 'full_id'>): void;
-  /** Publish a retained live value; opts.throttle coalesces rapid drags (~45 Hz). */
+  /** Publish a retained live value; opts.throttle coalesces rapid drags (~20 Hz, see throttle.ts). */
   publishValue<T>(topicSuffix: string, value: T, opts?: { throttle?: boolean; seat?: number; label?: string }): void;
   /** Publish an already-shaped retained payload (log entries, presence, …). */
   publishRaw(topicSuffix: string, payload: unknown, opts?: { retain?: boolean }): void;

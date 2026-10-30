@@ -2,6 +2,11 @@
 
 All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 
+## [Unreleased]
+
+### Changed — Wire payload optimisation (roadmap §3.7)
+- **Throttle refinements**: `throttle.ts` now arms the window on every leading send, so a topic's slot lives only while it is moving (the slot map no longer grows with every param ever touched); a `null`/`undefined` value is coalesced like any other; a throwing send no longer wedges the window; and `dispose()` **flushes** pending trailing values instead of dropping them. The bus's `dispose()` waits for in-flight (encrypting) sends before `end()`, so the final value and the `active:false` presence actually reach the broker.
+
 ## [v110] — 2026-07-08
 
 ### Added — Captain's Log Timeline Viewer
