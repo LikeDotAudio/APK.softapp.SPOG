@@ -9,6 +9,7 @@ import {
   type ColourScheme, DEFAULT, paletteById,
   isVision, isChroma, isFace, isCvd,
 } from './colour-palettes.js';
+import { applyStateGlyphs } from './state-glyphs.js';
 
 /** The current scheme, read back from the <html> attributes (default-filled). */
 export function getScheme(): ColourScheme {
@@ -50,6 +51,7 @@ function paint(s: ColourScheme): void {
     h.style.setProperty('--mono-hue', `${s.monoHue}deg`);
   }
   applyPaletteTokens(s.cvd);
+  applyStateGlyphs(s);   // `auto` glyphs follow chroma/vision; fail-soft
 }
 
 /** Read the persisted scheme and paint the attributes. Call BEFORE first render. */

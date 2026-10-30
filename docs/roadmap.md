@@ -148,8 +148,13 @@ a retained-MQTT `TwistBus`.*
   (localStorage → FS Access API → server). Audit: `Routes-Editor-Single-Pane-Audit.md`.
 
 ### 3.6 Accessibility & presentation
-- 📋 **Colour Engine expansion** — low-vis/high-vis/grey/mono modes; the real gap is STATE
-  glyphs (category is already shape-coded). Audit: `docs/Colours and shapes.md`.
+- 🚧 **Colour Engine expansion** — the low-vis/high-vis/grey/mono presets ship (Colour &
+  Vision editor). **State glyphs (P0) shipped:** `⚠` leads every faulted source node, room
+  L-bar, fold header and corrupted twist (`src/ui/console/state-glyphs.ts`), so fault reads
+  without colour. Per-seat **State glyphs: Auto / On / Off** (Auto = on in Grey, Mono or
+  High; the default console is unchanged); `?glyphs=on|off` overrides for one load. Next:
+  on-air/OK/muted glyphs on live surfaces, then the P2 hex→token migration.
+  Audit: `docs/Rules/Colours and shapes.md`.
 - 📋 **Icon-view FACE axis** — skin LCARS chrome with generated icon tiles. Audit:
   `Icon-View-Aesthetic-Audit.md`.
 
