@@ -4,12 +4,16 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
+import { randomBytes } from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'spog-super-secret-key-2026';
+// No baked-in secret: JWT_SECRET from the environment, else a random per-process key
+// (tokens then die with the process — fine for this dev-only API).
+const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
+if (!process.env.JWT_SECRET) console.warn('JWT_SECRET unset: signing with a random per-process key');
 
 declare module 'express-serve-static-core' {
   interface Request {

@@ -31,10 +31,6 @@ cited, not copied. The visual law for this app is [LCARS.md](LCARS.md) and
 - **Typed bus data is `any` in places.** `countersOf()` in `dest-fixtures-counters.ts` and the
   TIMER editor's `counters_timer` subscriber read the snapshot untyped; the editor's subscriber
   does not run `isTimerSnap()`.
-- **`server/index.ts` signs JWTs with a hard-coded fallback secret** when `JWT_SECRET` is unset.
-  It is a dev-only API (`npm run server`), not deployed, but the default should not exist.
-- **The sandbox workflow does not typecheck or test** before deploying
-  (`.github/workflows/deploy-sandbox.yml`); production does.
 - **Raw hex remains in editor styles** (multi-viewer tally `#ff3344`, iso-recorder, audio-mixer,
   intercom) — the P2 hex→token migration in [Colours and shapes](Colours%20and%20shapes.md) is
   not done.

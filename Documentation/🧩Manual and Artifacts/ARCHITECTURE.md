@@ -28,7 +28,7 @@ URL switches (per seat, default off or unchanged): `?preroute=matrix|list`, `?au
 | `index.next.html` → `src/app/main.ts` | the console: build stamp, `buildConsole()` (`app/shell.ts`), `openFromHash()` (`app/editor-dispatch.ts`), device receiver |
 | `twist-mqtt-tree.html` | standalone MQTT topic-tree diagnostic (second Vite input) |
 | `src/sw/sw.template.js` | service worker, emitted to `dist/sw.js` with the build id + precache list by `vite.config.ts` |
-| `server/index.ts` (`npm run server`) | optional dev API on `:3000` — JWT login, `/api/v1/changelog`, `/api/v1/routes/*`. Not deployed. |
+| `server/index.ts` (`npm run server`) | optional dev API on `:3000` — JWT login (key from `JWT_SECRET`, else random per process), `/api/v1/changelog`, `/api/v1/routes/*`. Not deployed. |
 | `SETUP/deploy.py` | the CI deploy (see [Delivery](../%F0%9F%8C%8DPublishing/DELIVERY.md)) |
 
 ## Data flow
