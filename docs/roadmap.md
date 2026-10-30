@@ -82,6 +82,10 @@ a retained-MQTT `TwistBus`.*
   - *Touches:* `vision-mixer/{schema,me,keyers,dashboard,panels,styles}.ts`, the graphics-engine
     mount (dest-fixtures synthTwist), and multiviewer auto-population. Ties into §3.2 Graphics
     suite. **First slice: the PRE ROUTE panel + explicit up/downstream graphics keyers.**
+  - ✅ *First slice landed:* PRE-ROUTE module with LIST (per-DSK) and MATRIX (GFX × DSK/USK,
+    `gfx-route.ts`) views, `?preroute=matrix|list`; M/E keyers on a graphic read
+    `USK n · ⬡ GFX m`; section headers name USK vs DSK; a PRE-ROUTE fault no longer stops
+    the switcher. Next: DSK preview/take, faux-take sets, auto-multiviewer.
 - 🚧 **Timeline 5W+H reframe** — re-section the Timeline Viewer by node type instead of the
   current WHERE/WHO pair:
   | Question | Contents |

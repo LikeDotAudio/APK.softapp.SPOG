@@ -8,10 +8,18 @@
 //
 // A source is flagged ⬡ GFX when it is one of the switcher's hard-wired graphics
 // inputs (the pool positions the DSKs default to).
+//
+// Two views, toggled in the panel (remembered per device; `?preroute=matrix|list`
+// overrides): LIST — the shipped per-DSK selects over any source — and MATRIX —
+// the GFX × bus pre-router (gfx-route.ts): one row per DSK (DOWNSTREAM) and per
+// keyer of the delegated M/E (UPSTREAM), one column per hard-wired graphic.
 
 import { el } from '../../ui/dom.js';
 import { srcLabel } from './me.js';
+import { gfxBuses, gfxFeeds, prerouteView, routeGfx } from './gfx-route.js';
 import type { Surface } from './surface.js';
+
+const VIEW_KEY = 'twist.vm.preroute.view';
 
 const srcOf = (d: { source?: number }): number => d.source ?? 0;
 
@@ -33,18 +41,38 @@ export function dskLabel(s: Surface, i: number): string {
   return eff === srcOf(d) ? d.name : `${head} ⟵ ${srcLabel(eff, s.def)}`;
 }
 
-/** Build the PRE-ROUTE panel: one graphic→DSK source select per downstream keyer. */
+/** Build the PRE-ROUTE panel (LIST + MATRIX views). `refresh` repaints it from state
+ *  (delegate change, a keyer re-sourced elsewhere) — call it after every sync. */
 export function buildPreRoute(
   s: Surface,
   dskBtns: HTMLElement[],
-): { preRow: HTMLElement; preSelects: HTMLSelectElement[] } {
+): { preRow: HTMLElement; preSelects: HTMLSelectElement[]; refresh: () => void } {
   const def = s.def;
   const gfx = graphicsInputs(s);
   if (!s.state.dskSrc) s.state.dskSrc = def.dsks.map(srcOf);
 
   const preRow = el('div', { class: 'vm-transrow', style: 'flex-direction:column;align-items:stretch;gap:8px;' });
-  preRow.append(el('p', { class: 'ed-h', style: 'margin:0 0 2px;opacity:.7;font-size:10px;' },
-    ['⬡ control-room graphics are hard-wired — shift which one feeds each DSK']));
+  const listView = el('div', { style: 'display:flex;flex-direction:column;gap:8px;' });
+  const matrixView = el('div', { class: 'vm-gfxmatrix' });
+  const viewBtn = el('button', { class: 'vm-tbtn vm-ab', type: 'button' }, ['']);
+  let stored: string | null = null;
+  try { stored = localStorage.getItem(VIEW_KEY); } catch { /* private mode */ }
+  let view = prerouteView(stored, typeof location === 'undefined' ? '' : location.href);
+  const showView = (): void => {
+    listView.style.display = view === 'list' ? 'flex' : 'none';
+    matrixView.style.display = view === 'matrix' ? 'grid' : 'none';
+    viewBtn.textContent = view === 'list' ? '▦ MATRIX' : '☰ LIST';
+  };
+  viewBtn.addEventListener('click', () => {
+    view = view === 'list' ? 'matrix' : 'list';
+    try { localStorage.setItem(VIEW_KEY, view); } catch { /* ignore */ }
+    showView(); refresh();
+  });
+  preRow.append(el('div', { style: 'display:flex;gap:8px;align-items:center;' }, [
+    el('p', { class: 'ed-h', style: 'margin:0;opacity:.7;font-size:10px;flex:1;' },
+      ['⬡ control-room graphics are hard-wired — shift which one feeds each keyer bus']),
+    viewBtn,
+  ]), listView, matrixView);
   const preSelects: HTMLSelectElement[] = [];
 
   def.dsks.forEach((d, i) => {
@@ -62,7 +90,38 @@ export function buildPreRoute(
     });
     preSelects.push(sel);
     row.append(sel);
-    preRow.append(row);
+    listView.append(row);
   });
-  return { preRow, preSelects };
+
+  /** MATRIX: header of GFX columns, then one row per bus; a lit cell = that graphic feeds it. */
+  function paintMatrix(): void {
+    const feeds = gfxFeeds(def);
+    matrixView.style.gridTemplateColumns = `auto repeat(${feeds.length}, minmax(34px, 1fr))`;
+    const cells: HTMLElement[] = [el('span', {}, ['']),
+      ...feeds.map((src, c) => el('span', { class: 'vm-gfxhead', title: srcLabel(src, def) }, [`GFX ${c + 1}`]))];
+    gfxBuses(def, s.state, s.delegate).forEach((bus, r) => {
+      cells.push(el('span', { class: `vm-gfxbus ${bus.stream}` }, [`${bus.stream === 'down' ? 'DSK' : 'USK'} · ${bus.label}`]));
+      for (const src of feeds) {
+        const cell = el('button', { class: `vm-gfxcell${bus.source === src ? ' on' : ''}`, type: 'button', title: `${srcLabel(src, def)} → ${bus.label}` }, [bus.source === src ? '●' : '']);
+        cell.addEventListener('click', () => {
+          const hit = routeGfx(def, s.state, s.delegate, r, src);
+          if (!hit) return;
+          s.publish(hit.topic, srcLabel(src, def));
+          if (hit.stream === 'down') dskBtns[r]!.textContent = dskLabel(s, r); else s.rebuildKeyers();
+          s.sync();
+        });
+        cells.push(cell);
+      }
+    });
+    matrixView.replaceChildren(...cells);
+  }
+
+  function refresh(): void {
+    preSelects.forEach((sel, i) => { sel.value = String(dskSource(s, i)); dskBtns[i]!.textContent = dskLabel(s, i); });
+    if (view === 'matrix') paintMatrix();
+  }
+
+  showView();
+  refresh();
+  return { preRow, preSelects, refresh };
 }
