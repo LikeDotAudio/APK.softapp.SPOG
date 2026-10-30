@@ -12,4 +12,4 @@ Is `WEB.SPOG` deployed? Written by `.apk.scripts/smoke.py` from the module's own
 
 Re-run: `python3 .apk.scripts/smoke.py PODS/POD.THIN/WEB.SPOG`
 
-<!-- smoke:sig 8b6df6c7f8ee since 2026-10-30 12:51 EDT -->
+<!-- smoke:sig e10233d9c48a since 2026-10-30 12:51 EDT -->
