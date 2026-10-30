@@ -486,3 +486,7 @@ Created by **Anthony Peter Kuzub** · [like.audio/20260627/twist-like-audio](htt
 LCARS is a trademark/design associated with *Star Trek* and its rights holders. This is a
 non-commercial fan tribute and a working engineering tool; no affiliation or endorsement is
 implied.
+
+<!-- wiki:smoke -->
+**Smoke test** — ✅ PASS 1/1 since 2026-10-30 12:51 EDT — [results](Documentation/%F0%9F%A7%A9Manual%20and%20Artifacts/SMOKE.md)
+<!-- /wiki:smoke -->
