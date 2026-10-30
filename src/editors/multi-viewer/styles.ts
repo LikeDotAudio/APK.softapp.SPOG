@@ -36,6 +36,8 @@ export function injectMultiViewerStyles(): void {
         .mv-win.pgm{border-color:#ff3344;box-shadow:0 0 0 1px #ff3344, 0 0 16px rgba(255,51,68,.5);}
         .mv-win.pvw{border-color:#33dd66;box-shadow:0 0 0 1px #33dd66, 0 0 16px rgba(51,221,102,.45);}
         .mv-win.dragging{opacity:.4;}
+        /* Auto-multiviewer tile: on air via the switcher, read-only (dashed = not hand-routed). */
+        .mv-win.mv-auto{cursor:default;border-style:dashed;}
         .mv-screen{flex:1;display:flex;align-items:center;justify-content:center;color:#56708f;
             font-size:13px;letter-spacing:1px;background:repeating-linear-gradient(45deg,#070b14 0 10px,#0a0f1c 10px 20px);}
         .mv-meter{position:absolute;right:5px;top:8px;bottom:26px;width:7px;border-radius:3px;

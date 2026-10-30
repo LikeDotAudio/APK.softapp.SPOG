@@ -3,7 +3,8 @@
 // A multiviewer "layout maker": an LCARS-framed wall of tiles fed from the
 // twist's routed sources (ctx.sources, NOT DOM scraping). Preset buttons reshape
 // the wall (NxN / PIP), tiles cycle PGM/PVW/off tally on click, carry an editable
-// UMD label and an animated VU meter, and reorder by drag-and-drop.
+// UMD label and an animated VU meter, and reorder by drag-and-drop. With ⬡ AUTO
+// GFX on (auto-gfx.ts), the switcher's on-air graphics fill the spare cells.
 
 import { VOICE_COMMANDS } from './VOICE.js';
 import type { EditorPlugin } from '../types.js';
@@ -13,6 +14,8 @@ import { createTestCardWall, testCardFor } from '../../domain/test-card/index.js
 import { injectMultiViewerStyles } from './styles.js';
 import { channelsFor } from './channels.js';
 import { createPanes, type Win } from './panes.js';
+import { autoGfxEnabled, setAutoGfxEnabled, gfxTile, wallCells } from './auto-gfx.js';
+import { onAirGraphics, watchOnAirGraphics, type OnAirGraphic } from '../../platform/gfx-monitor.js';
 
 const plugin: EditorPlugin = {
   id: 'multi-viewer',
@@ -90,6 +93,25 @@ const plugin: EditorPlugin = {
       });
       pbar.appendChild(b);
     });
+    // Auto-multiviewer (opt-in per seat / ?automv=1): the switcher's on-air
+    // graphics land in spare cells with no manual route.
+    let autoOn = autoGfxEnabled();
+    let gfx: OnAirGraphic[] = autoOn ? onAirGraphics(ctx.production.id) : [];
+    const autoBtn = el('div', { class: 'mv-pbtn mv-autobtn' + (autoOn ? ' sel' : ''), textContent: '⬡ AUTO GFX',
+      title: 'Auto-multiviewer: graphics on air on the switcher land in spare tiles' });
+    autoBtn.addEventListener('click', () => {
+      autoOn = !autoOn;
+      setAutoGfxEnabled(autoOn);
+      gfx = autoOn ? onAirGraphics(ctx.production.id) : [];
+      autoBtn.classList.toggle('sel', autoOn);
+      draw();
+    });
+    pbar.appendChild(autoBtn);
+    ctx.dispose.add(watchOnAirGraphics(ctx.production.id, (list) => {
+      if (!autoOn) return;
+      gfx = list;
+      if (host.isConnected) draw();
+    }));
     frame.appendChild(pbar);
 
     const grid = el('div', { class: 'mv-grid' });
@@ -116,7 +138,7 @@ const plugin: EditorPlugin = {
 
     function draw(): void {
       pbar
-        .querySelectorAll<HTMLElement>('.mv-pbtn')
+        .querySelectorAll<HTMLElement>('.mv-pbtn:not(.mv-autobtn)')
         .forEach((b) => b.classList.toggle('sel', b.textContent === preset));
       const cols = PRESETS[preset] || 3;
       const compact = cols >= 8;
@@ -126,19 +148,21 @@ const plugin: EditorPlugin = {
       grid.style.gridTemplateColumns = preset === 'PIP' ? '3fr 1fr' : `repeat(${cols},1fr)`;
       grid.style.gridTemplateRows = preset === 'PIP' ? '' : `repeat(${cols},1fr)`;
       grid.innerHTML = '';
-      if (compact) {
-        // Fill a full cols×cols wall; map cells to sources, rest stay empty.
-        for (let i = 0; i < cols * cols; i++) grid.appendChild(compactWin(wins[i]));
-      } else if (preset === 'PIP') {
+      // An AUTO tile that fails to build degrades to an empty cell, never a dead wall.
+      const auto = (g: OnAirGraphic): HTMLElement => {
+        try { return gfxTile(g, compact, videoScreen); }
+        catch (e) { console.warn('[multi-viewer] auto-gfx tile failed', e); return compactWin(undefined); }
+      };
+      if (preset === 'PIP') {
         wins.forEach((w, i) => grid.appendChild(fullWin(w, i)));
-      } else {
-        // Full cols×cols wall here too — cells past the sources render empty,
-        // like unassigned inputs on a real multiviewer.
-        for (let i = 0; i < cols * cols; i++) {
-          const w = wins[i];
-          grid.appendChild(w ? fullWin(w, i) : compactWin(undefined));
-        }
+        gfx.forEach((g) => grid.appendChild(auto(g)));
+        return;
       }
+      // Full cols×cols wall: routed sources, then AUTO graphics, then empty cells
+      // (like unassigned inputs on a real multiviewer). Dense walls use compact tiles.
+      wallCells(wins, gfx, cols * cols).forEach((c, i) => grid.appendChild(
+        c && 'win' in c ? (compact ? compactWin(c.win) : fullWin(c.win, i))
+          : c ? auto(c.gfx) : compactWin(undefined)));
     }
 
     // Honour inbound writes from the bus / other consoles → apply to state and
