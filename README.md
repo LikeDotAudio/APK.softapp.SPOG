@@ -149,6 +149,9 @@ ready to be applied.)
   monitors, bus source selection, transition styles (CUT / MIX / WIPE), and downstream keyers
   for lower-thirds and logos. This is the surface that *drives* tally — its PGM/PVW state is
   what the Signaling editor distributes.
+  It also announces every **on-air graphic** (whatever an ON DSK keys, plus hard-wired graphics on
+  an ON M/E keyer or a PGM bus) per production on `platform/gfx-monitor.ts` — the feed the
+  multiviewer's auto-graphics tiles watch (fail-soft: a broken watcher never blocks a take).
 - **Multi Viewer** — a configurable monitor wall (2×2 → 16×16, plus PiP). Drag tiles to
   reorder, cycle each window's tally state, and edit UMD labels inline.
 - **ISO Recorder** — per-camera clean recording (timecode, disk space) paired with an instant
