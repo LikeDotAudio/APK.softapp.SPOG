@@ -20,6 +20,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
+          # src/ui/clock-faces is the private TIME.clockFaces repo: GITHUB_TOKEN cannot
+          # read it, so this needs a GH_PAT secret (as APK.audio's ci.yml uses)
+          token: ${{ secrets.GH_PAT || github.token }}
+          submodules: recursive
           fetch-depth: 0
 
       - name: Setup Node.js
