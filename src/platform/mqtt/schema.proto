@@ -19,6 +19,31 @@ message ValueMsg {
   repeated string value_list = 4;  // F2: routing crosspoints as repeated strings (not JSON-in-a-string)
   fixed32 origin_id = 5;           // F1: 4-byte session origin (the hex8 prefix)
   uint64 ts_ms = 6;                // F5: wall-clock ms as a varint
+  uint32 seat = 7;                 // merge mediator: writer's seat rank (was dropped on this wire)
+  string label = 8;                // merge mediator: writer's seat label
+  // v3 (?wire=compact): crosspoints FRONT-CODED (interned against the previous entry) —
+  // xp_shared[i] = UTF-16 units shared with entry i-1, xp_suffix[i] = the rest.
+  repeated uint32 xp_shared = 9;
+  repeated string xp_suffix = 10;
+}
+
+// v3 (?wire=compact): a Captain's Log entry as protobuf instead of JSON-in-json_fallback —
+// no key names, no empty narration, no "<hex>:TWIST:<birth>" string. Old decoders skip it.
+message LogMsg {
+  uint32 voyage = 1;
+  uint32 entry = 2;
+  uint64 ts_ms = 3;
+  string dest = 4;
+  string prod = 5;
+  repeated string added = 6;
+  repeated string removed = 7;
+  string text = 8;                 // only for entries whose narration is NOT derivable
+  string by = 9;
+  string role = 10;
+  bool reversed = 11;
+  string reversed_by = 12;
+  uint64 reversed_ts = 13;
+  fixed32 origin_id = 14;
 }
 
 message PresenceMsg {
@@ -41,5 +66,6 @@ message PayloadWrapper {
     PresenceMsg presence_msg = 2;
     RateMsg rate_msg = 3;
     string json_fallback = 4;
+    LogMsg log_msg = 5;
   }
 }

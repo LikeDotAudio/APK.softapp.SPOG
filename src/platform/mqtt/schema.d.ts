@@ -183,6 +183,18 @@ export namespace spog {
         /** ValueMsg tsMs. */
         tsMs: (number|Long);
 
+        /** ValueMsg seat. */
+        seat: number;
+
+        /** ValueMsg label. */
+        label: string;
+
+        /** ValueMsg xpShared. */
+        xpShared: number[];
+
+        /** ValueMsg xpSuffix. */
+        xpSuffix: string[];
+
         /**
          * Creates a new ValueMsg instance using the specified properties.
          * @param [properties] Properties to set
@@ -285,6 +297,18 @@ export namespace spog {
             /** ValueMsg tsMs */
             tsMs?: (number|Long|null);
 
+            /** ValueMsg seat */
+            seat?: (number|null);
+
+            /** ValueMsg label */
+            label?: (string|null);
+
+            /** ValueMsg xpShared */
+            xpShared?: (number[]|null);
+
+            /** ValueMsg xpSuffix */
+            xpSuffix?: (string[]|null);
+
             /** Unknown fields preserved while decoding when enabled */
             $unknowns?: Uint8Array[];
         }
@@ -297,8 +321,207 @@ export namespace spog {
           valueList?: string[]|null;
           originId?: number|null;
           tsMs?: number|Long|null;
+          seat?: number|null;
+          label?: string|null;
+          xpShared?: number[]|null;
+          xpSuffix?: string[]|null;
           $unknowns?: Uint8Array[];
         };
+    }
+
+    /**
+     * Properties of a LogMsg.
+     * @deprecated Use spog.LogMsg.$Properties instead.
+     */
+    interface ILogMsg extends spog.LogMsg.$Properties {
+    }
+
+    /** Represents a LogMsg. */
+    class LogMsg {
+
+        /**
+         * Constructs a new LogMsg.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: spog.LogMsg.$Properties);
+
+        /** Unknown fields preserved while decoding when enabled */
+        $unknowns?: Uint8Array[];
+
+        /** LogMsg voyage. */
+        voyage: number;
+
+        /** LogMsg entry. */
+        entry: number;
+
+        /** LogMsg tsMs. */
+        tsMs: (number|Long);
+
+        /** LogMsg dest. */
+        dest: string;
+
+        /** LogMsg prod. */
+        prod: string;
+
+        /** LogMsg added. */
+        added: string[];
+
+        /** LogMsg removed. */
+        removed: string[];
+
+        /** LogMsg text. */
+        text: string;
+
+        /** LogMsg by. */
+        by: string;
+
+        /** LogMsg role. */
+        role: string;
+
+        /** LogMsg reversed. */
+        reversed: boolean;
+
+        /** LogMsg reversedBy. */
+        reversedBy: string;
+
+        /** LogMsg reversedTs. */
+        reversedTs: (number|Long);
+
+        /** LogMsg originId. */
+        originId: number;
+
+        /**
+         * Creates a new LogMsg instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns LogMsg instance
+         */
+        static create(properties: spog.LogMsg.$Shape): spog.LogMsg & spog.LogMsg.$Shape;
+        static create(properties?: spog.LogMsg.$Properties): spog.LogMsg;
+
+        /**
+         * Encodes the specified LogMsg message. Does not implicitly {@link spog.LogMsg.verify|verify} messages.
+         * @param message LogMsg message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        static encode(message: spog.LogMsg.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified LogMsg message, length delimited. Does not implicitly {@link spog.LogMsg.verify|verify} messages.
+         * @param message LogMsg message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        static encodeDelimited(message: spog.LogMsg.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a LogMsg message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns {spog.LogMsg & spog.LogMsg.$Shape} LogMsg
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): spog.LogMsg & spog.LogMsg.$Shape;
+
+        /**
+         * Decodes a LogMsg message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns {spog.LogMsg & spog.LogMsg.$Shape} LogMsg
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): spog.LogMsg & spog.LogMsg.$Shape;
+
+        /**
+         * Verifies a LogMsg message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a LogMsg message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns LogMsg
+         */
+        static fromObject(object: { [k: string]: any }): spog.LogMsg;
+
+        /**
+         * Creates a plain object from a LogMsg message. Also converts values to other types if specified.
+         * @param message LogMsg
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        static toObject(message: spog.LogMsg, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this LogMsg to JSON.
+         * @returns JSON object
+         */
+        toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the type url for LogMsg
+         * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+         * @returns The type url
+         */
+        static getTypeUrl(prefix?: string): string;
+    }
+
+    namespace LogMsg {
+
+        /** Properties of a LogMsg. */
+        interface $Properties {
+
+            /** LogMsg voyage */
+            voyage?: (number|null);
+
+            /** LogMsg entry */
+            entry?: (number|null);
+
+            /** LogMsg tsMs */
+            tsMs?: (number|Long|null);
+
+            /** LogMsg dest */
+            dest?: (string|null);
+
+            /** LogMsg prod */
+            prod?: (string|null);
+
+            /** LogMsg added */
+            added?: (string[]|null);
+
+            /** LogMsg removed */
+            removed?: (string[]|null);
+
+            /** LogMsg text */
+            text?: (string|null);
+
+            /** LogMsg by */
+            by?: (string|null);
+
+            /** LogMsg role */
+            role?: (string|null);
+
+            /** LogMsg reversed */
+            reversed?: (boolean|null);
+
+            /** LogMsg reversedBy */
+            reversedBy?: (string|null);
+
+            /** LogMsg reversedTs */
+            reversedTs?: (number|Long|null);
+
+            /** LogMsg originId */
+            originId?: (number|null);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+        }
+
+        /** Shape of a LogMsg. */
+        type $Shape = spog.LogMsg.$Properties;
     }
 
     /**
@@ -602,8 +825,11 @@ export namespace spog {
         /** PayloadWrapper jsonFallback. */
         jsonFallback?: (string|null);
 
+        /** PayloadWrapper logMsg. */
+        logMsg?: (spog.LogMsg.$Properties|null);
+
         /** PayloadWrapper payload. */
-        payload?: ("valueMsg"|"presenceMsg"|"rateMsg"|"jsonFallback");
+        payload?: ("valueMsg"|"presenceMsg"|"rateMsg"|"jsonFallback"|"logMsg");
 
         /**
          * Creates a new PayloadWrapper instance using the specified properties.
@@ -701,8 +927,11 @@ export namespace spog {
             /** PayloadWrapper jsonFallback */
             jsonFallback?: (string|null);
 
+            /** PayloadWrapper logMsg */
+            logMsg?: (spog.LogMsg.$Properties|null);
+
             /** PayloadWrapper payload */
-            payload?: ("valueMsg"|"presenceMsg"|"rateMsg"|"jsonFallback");
+            payload?: ("valueMsg"|"presenceMsg"|"rateMsg"|"jsonFallback"|"logMsg");
 
             /** Unknown fields preserved while decoding when enabled */
             $unknowns?: Uint8Array[];
@@ -714,9 +943,10 @@ export namespace spog {
           presenceMsg?: spog.PresenceMsg.$Shape|null;
           rateMsg?: spog.RateMsg.$Shape|null;
           jsonFallback?: string|null;
+          logMsg?: spog.LogMsg.$Shape|null;
           $unknowns?: Uint8Array[];
         } & (
-          ({ payload?: undefined; valueMsg?: null; presenceMsg?: null; rateMsg?: null; jsonFallback?: null }|{ payload?: "valueMsg"; valueMsg: spog.ValueMsg.$Shape; presenceMsg?: null; rateMsg?: null; jsonFallback?: null }|{ payload?: "presenceMsg"; valueMsg?: null; presenceMsg: spog.PresenceMsg.$Shape; rateMsg?: null; jsonFallback?: null }|{ payload?: "rateMsg"; valueMsg?: null; presenceMsg?: null; rateMsg: spog.RateMsg.$Shape; jsonFallback?: null }|{ payload?: "jsonFallback"; valueMsg?: null; presenceMsg?: null; rateMsg?: null; jsonFallback: string })
+          ({ payload?: undefined; valueMsg?: null; presenceMsg?: null; rateMsg?: null; jsonFallback?: null; logMsg?: null }|{ payload?: "valueMsg"; valueMsg: spog.ValueMsg.$Shape; presenceMsg?: null; rateMsg?: null; jsonFallback?: null; logMsg?: null }|{ payload?: "presenceMsg"; valueMsg?: null; presenceMsg: spog.PresenceMsg.$Shape; rateMsg?: null; jsonFallback?: null; logMsg?: null }|{ payload?: "rateMsg"; valueMsg?: null; presenceMsg?: null; rateMsg: spog.RateMsg.$Shape; jsonFallback?: null; logMsg?: null }|{ payload?: "jsonFallback"; valueMsg?: null; presenceMsg?: null; rateMsg?: null; jsonFallback: string; logMsg?: null }|{ payload?: "logMsg"; valueMsg?: null; presenceMsg?: null; rateMsg?: null; jsonFallback?: null; logMsg: spog.LogMsg.$Shape })
         );
     }
 }

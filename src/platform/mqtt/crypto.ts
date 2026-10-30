@@ -1,4 +1,5 @@
 import { spog } from './schema.js';
+import { wireCompact, frontCode, frontDecode, isLogPayload, logToProto, logFromProto } from './wire.js';
 
 const MASTER_KEY_STRING = 'SPOG-ENTERPRISE-SECRET-KEY-2026-X';
 const ENCODER = new TextEncoder();
@@ -34,6 +35,9 @@ function idOf(msg: { fullId?: string | null; originId?: number | null }): string
   return o ? (o >>> 0).toString(16).padStart(8, '0') : '';
 }
 
+/** The 8-hex origin prefix of a full_id (unchanged when it has none). */
+const originHex = (fullId: string): string => fullId.split(':')[0] || fullId;
+
 /** The 4-byte session origin from a full_id ("a1b2c3d4:TWIST:…" → 0xa1b2c3d4). */
 function originIdOf(fullId: unknown): number {
   const hex = String(fullId ?? '').split(':')[0] ?? '';
@@ -52,13 +56,19 @@ export async function encodeAndEncrypt(payloadObj: any): Promise<Uint8Array> {
     wrapper = { rateMsg: { messagesPerMinute: payloadObj.messagesPerMinute, originId, ts: payloadObj.ts } };
   } else if (payloadObj.active !== undefined) {
     wrapper = { presenceMsg: { active: payloadObj.active, originId, ts: payloadObj.ts } };
+  } else if (isLogPayload(payloadObj) && wireCompact()) {
+    wrapper = { logMsg: logToProto(payloadObj, originId) };            // v3: log entry as protobuf
   } else if (payloadObj.value !== undefined) {
     const value = payloadObj.value;
     const vm: spog.ValueMsg.$Shape = { originId, tsMs: payloadObj.ts };   // F5: ts as varint
+    if (typeof payloadObj.seat === 'number') vm.seat = payloadObj.seat >>> 0;   // merge rank rides the wire
+    if (payloadObj.label) vm.label = String(payloadObj.label);
     // F2: a non-empty string array (routing crosspoints) rides as repeated strings,
-    // not JSON-in-a-string. Empty arrays / objects still use the JSON string_value.
+    // not JSON-in-a-string; v3 (?wire=compact) interns them front-coded.
+    // Empty arrays / objects still use the JSON string_value.
     if (Array.isArray(value) && value.length > 0 && value.every((v) => typeof v === 'string')) {
-      vm.valueList = value;
+      if (wireCompact()) Object.assign(vm, frontCode(value));
+      else vm.valueList = value;
     } else {
       let paramVal: spog.ParamValue.$Shape = {};
       if (typeof value === 'number') paramVal = { numberValue: value, value: 'numberValue' };
@@ -69,7 +79,11 @@ export async function encodeAndEncrypt(payloadObj: any): Promise<Uint8Array> {
     }
     wrapper = { valueMsg: vm };
   } else {
-    wrapper = { jsonFallback: typeof payloadObj === 'string' ? payloadObj : JSON.stringify(payloadObj) };
+    // Shrink full_id here too: consumers only read its origin prefix (self-echo is
+    // dropped by origin in client.ts), so the "<hex>:TWIST:<birth>" tail is dead weight.
+    const obj = payloadObj && typeof payloadObj === 'object' && typeof payloadObj.full_id === 'string'
+      ? { ...payloadObj, full_id: originHex(payloadObj.full_id) } : payloadObj;
+    wrapper = { jsonFallback: typeof obj === 'string' ? obj : JSON.stringify(obj) };
   }
 
   const protobufBytes = spog.PayloadWrapper.encode(spog.PayloadWrapper.create(wrapper)).finish();
@@ -99,7 +113,8 @@ export async function decryptAndDecode(bytes: Uint8Array): Promise<any> {
     if (wrapper.valueMsg) {
       const vm = wrapper.valueMsg;
       let val: any;
-      if (vm.valueList && vm.valueList.length) val = vm.valueList;              // F2: repeated strings
+      if (vm.xpSuffix && vm.xpSuffix.length) val = frontDecode(vm.xpShared ?? [], vm.xpSuffix);   // v3: interned
+      else if (vm.valueList && vm.valueList.length) val = vm.valueList;         // F2: repeated strings
       else if (vm.value?.numberValue != null) val = vm.value.numberValue;
       else if (vm.value?.boolValue != null) val = vm.value.boolValue;
       else {
@@ -109,10 +124,14 @@ export async function decryptAndDecode(bytes: Uint8Array): Promise<any> {
         }
       }
       // New msgs carry ts_ms (varint); legacy carry the ts double — take whichever is set.
-      return { value: val, ts: numOf(vm.tsMs) || vm.ts || 0, full_id: idOf(vm) };
+      const out: any = { value: val, ts: numOf(vm.tsMs) || vm.ts || 0, full_id: idOf(vm) };
+      if (vm.seat) out.seat = vm.seat;
+      if (vm.label) out.label = vm.label;
+      return out;
     }
     if (wrapper.presenceMsg) return { active: wrapper.presenceMsg.active, full_id: idOf(wrapper.presenceMsg), ts: wrapper.presenceMsg.ts };
     if (wrapper.rateMsg) return { messagesPerMinute: wrapper.rateMsg.messagesPerMinute, full_id: idOf(wrapper.rateMsg), ts: wrapper.rateMsg.ts };
+    if (wrapper.logMsg) return logFromProto(wrapper.logMsg, numOf, idOf(wrapper.logMsg));
     if (wrapper.jsonFallback) {
       try { return JSON.parse(wrapper.jsonFallback); } catch { return wrapper.jsonFallback; }
     }
