@@ -10,9 +10,10 @@ a retained-MQTT `TwistBus`.*
 
 > **How to read this.** Each item carries a status:
 > `✅ Shipped` · `🚧 In progress` · `⏭️ Next` · `📋 Planned` · `🔬 Exploring`.
-> Deep design rationale for most items lives under `docs/Audit/` and `docs/Audits/`; those
-> audits are the backlog's source of truth and are linked where they exist. This roadmap
-> summarizes and sequences them — it is not itself normative.
+> Deep design rationale for most items lives in audits named below by file name. Those
+> audits are **local working documents**: `Documentation/🔍Audits/` is gitignored, so none of
+> the named audits ship in this repository (only `monolith-audit.md` sits there in a working
+> checkout). This roadmap summarizes and sequences them — it is not itself normative.
 
 ---
 
@@ -47,11 +48,11 @@ a retained-MQTT `TwistBus`.*
   windowed arbitration layer: concurrent writes to a param are bucketed and resolved by
   **higher seat rank wins** (full_id tie-break), so consoles converge with no "up/down"
   volley. A `⚖ MERGE` panel (in the seat MENU) shows the live argument + a self-contained
-  arena; contested merges surface a toast. Design: `docs/Audits/Merge - vs last called.md`;
-  companion `docs/Audits/SMRT adoption in SPOG.md`.
+  arena; contested merges surface a toast. Design audit (local): `Merge - vs last called.md`;
+  companion `SMRT adoption in SPOG.md`.
 - ✅ **Timeline Viewer v110** — one stringline/swimlane graph of the Captain's Log + schedule,
   foldable tree, projected recurring schedule, filter + multi-select room chips, minimap
-  zoom/scrub, `#timeline` deep-link. Design: `docs/Audits/TimeLine Investigation.md`.
+  zoom/scrub, `#timeline` deep-link. Design audit (local): `TimeLine Investigation.md`.
 - ✅ **Timeline polish (this cycle)** —
   - Left-column titles + fold headers stay **pinned on horizontal scroll**.
   - Folded topics show an **inline event count** *and* a **one-line summary event** on the
@@ -107,7 +108,7 @@ a retained-MQTT `TwistBus`.*
 
 ### 3.2 Editors & control surfaces
 - 📋 **DVE WYSIWYG makeover** — replace slider/prompt()-driven DVE with a Photoshop/AE-style
-  handle stage + crop + fast touchpad grammar. Audit: `docs/Audit/DVE-Makeover-Audit.md`.
+  handle stage + crop + fast touchpad grammar. Audit (local): `DVE-Makeover-Audit.md`.
 - 📋 **Editor chirality C2** — handedness flip for ~10 editors (wysiwyg first; audio-mixer /
   camera-control highest benefit). Audit: `Editor-Chirality-Audit.md`.
 - 🚧 **RC1000 dual-timer source** — keypad transport (TIMER editor) and the MONITOR graphic
@@ -116,7 +117,7 @@ a retained-MQTT `TwistBus`.*
 - 📋 **Graphics suite** — a graphics engine hosting a suite of editor-functions mounted on
   dest-fixtures. Audit: `graphics-suite-architecture`.
 - 📋 **Production video switcher** — audit + deployment plan already drafted
-  (`docs/Production-Video-Switcher-*.md`).
+  (local `Production-Video-Switcher-*.md`).
 - 🚧 **Shared tooltips / tool-ticks** — every hand-rolled tooltip now rides `src/ui/tip.ts`
   (Meter Input was the last, §1). Left: editors still on native `title=` hovers (Vision Mixer,
   Graphics Engine, a few elsewhere) move to `hint()`. Audit: `LCARS-Hover-Tooltips-…-Audit.md`.
@@ -134,7 +135,7 @@ a retained-MQTT `TwistBus`.*
   TwistBus like the Captain's Log. Audit: `Studio-Chat-Room-Audit.md`.
 - 📋 **TWIST→MQTT advertising** — advertise every room/route/resource/log event onto an MQTT
   topic tree (`TwistBus`). Audit: `TWIST-MQTT-Advertising-Audit.md`.
-- 📋 **Wireless telemetry** — audit exists (`docs/Audit/wireless_telemetry_audit.md`).
+- 📋 **Wireless telemetry** — audit exists locally (`wireless_telemetry_audit.md`).
 
 ### 3.5 Authoring & topology
 - 📋 **Routes Editor (single pane)** — direct-manipulation authoring of rooms/stage-boxes/
@@ -144,7 +145,7 @@ a retained-MQTT `TwistBus`.*
 ### 3.6 Accessibility & presentation
 - 🚧 **Colour Engine expansion** — presets and fault state glyphs (P0, §1) shipped. Next:
   on-air/OK/muted glyphs on live surfaces, then the P2 hex→token migration.
-  Audit: `docs/Rules/Colours and shapes.md`.
+  Rules: [Colours and shapes](../🏛Philosophy/Colours%20and%20shapes.md).
 - 📋 **Icon-view FACE axis** — skin LCARS chrome with generated icon tiles. Audit:
   `Icon-View-Aesthetic-Audit.md`.
 
@@ -166,16 +167,18 @@ a retained-MQTT `TwistBus`.*
   control + GStreamer render path is the largest long-term alignment and the least available
   today (greenfield on both sides).
 - 🔬 **RFSA integration layer** — the delta between SPOG's front-end simulation and a real
-  media-production RFSA is the API/integration layer. Audit: `docs/Audit` RFSA reports.
-- 🔬 **Patent surface** — `docs/Audit/Patent-Audit.md`.
+  media-production RFSA is the API/integration layer. Audits (local): the RFSA reports.
+- 🔬 **Patent surface** — local `Patent-Audit.md`.
 
 ---
 
 ## 5. Backlog index
 
-Every `📋` / `🔬` item above traces to an audit under `docs/Audit/` or `docs/Audits/`. When
+Every `📋` / `🔬` item above traces to a local audit (named by file name above). When
 picking up an item: read its audit first, confirm scope, then ship the smallest reversible
 slice behind a seat preference or a URL param. New proposals start as an audit, not as code.
 
-`docs/roadmap.md` and `docs/Rules/` are tracked in git; the other audits under `docs/` are
-local working documents.
+This roadmap and the rules under `Documentation/🏛Philosophy/` are tracked in git. The audits
+it names (`RC1000-Dual-Timer-Audit.md`, `Test-Frame-Routing-Audit.md`,
+`Protobuf-Payload-Optimization-Audit.md` and the rest) are not: `Documentation/🔍Audits/` is
+in `.gitignore`, so they exist only in the working checkout that wrote them.
