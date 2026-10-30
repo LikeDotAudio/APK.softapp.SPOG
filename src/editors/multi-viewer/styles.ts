@@ -38,6 +38,7 @@ export function injectMultiViewerStyles(): void {
         .mv-win.dragging{opacity:.4;}
         /* Auto-multiviewer tile: on air via the switcher, read-only (dashed = not hand-routed). */
         .mv-win.mv-auto{cursor:default;border-style:dashed;}
+        .mv-pbtn.mv-overflow{outline:2px dashed var(--state-onair,#ffaa00);outline-offset:-2px;}
         .mv-screen{flex:1;display:flex;align-items:center;justify-content:center;color:#56708f;
             font-size:13px;letter-spacing:1px;background:repeating-linear-gradient(45deg,#070b14 0 10px,#0a0f1c 10px 20px);}
         .mv-meter{position:absolute;right:5px;top:8px;bottom:26px;width:7px;border-radius:3px;

@@ -14,7 +14,7 @@ import { createTestCardWall, testCardFor } from '../../domain/test-card/index.js
 import { injectMultiViewerStyles } from './styles.js';
 import { channelsFor } from './channels.js';
 import { createPanes, type Win } from './panes.js';
-import { autoGfxEnabled, setAutoGfxEnabled, gfxTile, wallCells } from './auto-gfx.js';
+import { autoGfxEnabled, setAutoGfxEnabled, gfxTile, wallCells, gfxOverflow, autoGfxCaption } from './auto-gfx.js';
 import { onAirGraphics, watchOnAirGraphics, type OnAirGraphic } from '../../platform/gfx-monitor.js';
 
 const plugin: EditorPlugin = {
@@ -153,6 +153,10 @@ const plugin: EditorPlugin = {
         try { return gfxTile(g, compact, videoScreen); }
         catch (e) { console.warn('[multi-viewer] auto-gfx tile failed', e); return compactWin(undefined); }
       };
+      // Graphics with no spare cell are counted on the AUTO button, never dropped silently.
+      const hidden = preset === 'PIP' ? 0 : gfxOverflow(wins.length, gfx.length, cols * cols);
+      autoBtn.textContent = autoGfxCaption(hidden);
+      autoBtn.classList.toggle('mv-overflow', hidden > 0);
       if (preset === 'PIP') {
         wins.forEach((w, i) => grid.appendChild(fullWin(w, i)));
         gfx.forEach((g) => grid.appendChild(auto(g)));

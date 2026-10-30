@@ -51,6 +51,17 @@ export function wallCells<T>(wins: T[], gfx: OnAirGraphic[], cells: number): Arr
   });
 }
 
+/** How many on-air graphics the raster has no spare cell for (routed wins keep
+ *  their cells). The wall shows this count rather than dropping them silently. */
+export function gfxOverflow(wins: number, gfx: number, cells: number): number {
+  return Math.max(0, gfx - Math.max(0, cells - wins));
+}
+
+/** The ⬡ AUTO GFX button caption: names the graphics that did not fit. */
+export function autoGfxCaption(hidden: number): string {
+  return hidden > 0 ? `⬡ AUTO GFX · +${hidden} OFF WALL` : '⬡ AUTO GFX';
+}
+
 /** A read-only AUTO tile (no drag / tally cycle / UMD edit: the switcher owns it). */
 export function gfxTile(g: OnAirGraphic, compact: boolean, videoScreen: (w: Win) => HTMLElement): HTMLElement {
   const w = gfxWin(g);
