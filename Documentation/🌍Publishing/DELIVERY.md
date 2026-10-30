@@ -49,9 +49,15 @@ Only CI deploys; `npm run deploy`, `deploy:all`, `deploy:next` print an error an
 
 - A static FTPS host at `spog.like.audio`: `/index.htm`, `/assets/`, `/Routes/`, `/sw.js`,
   `/build-id.json`, `/twist-mqtt-tree.html`.
-- **No Docker image bakes SPOG.** It is not under `PODS/POD.THIN/Softapps/`, so neither
-  WEB.Frontend-Assets nor DATABASE.server.SQL copy it; the monorepo's
-  `.apk.scripts/deploy_all.py` only pushes this submodule (CI then deploys).
+- **The bench and apk.audio build their own copy** (LOOSE-web-spog-webspog-has-no), the same
+  shape as spog.like.audio's (entry as `index.htm`, `Routes/` beside the bundle):
+  WEB.Frontend-Assets' image has a `spog-build` stage (named context `spog` = this repo) and
+  serves it at `/APK:SPOG/`, with `/spog/` and `/SPOG/` redirecting there — so an edit here
+  reaches a bench only after `up-stack.sh WEB.Frontend-Assets`; the monorepo's root `ci.yml`
+  builds it ("Build SPOG") and its `deploy.py` uploads `dist/` as `APK:SPOG/`. The OS opens it
+  from its `SPOG` display (`PODS/POD.THIN/OS/SPOG/display.json`, `app: APK:SPOG/index.htm`), as
+  does this repo's `display.json`. DATABASE.server.SQL's Storage-Portal does not carry it.
+  `.apk.scripts/deploy_all.py` pushes this submodule (CI then deploys spog.like.audio).
 - `server/index.ts` is a dev-only Express API (`npm run server`, `:3000`); nothing ships it.
 
 ## Not automated

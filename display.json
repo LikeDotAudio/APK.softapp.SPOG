@@ -5,7 +5,7 @@
   "group": "System",
   "subGroup": "Operations & Control",
   "kind": "web",
-  "app": "APK:Softapps/SPOG/index.next.html",
+  "app": "APK:SPOG/index.htm",
   "entry": "index.next.html",
   "tech": "TypeScript / Vite / LCARS",
   "description": "Single Pane Of Glass universal operations console, signal visualizer & gear interface for APK.audio ecosystem."
