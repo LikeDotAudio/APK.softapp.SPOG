@@ -10,7 +10,7 @@ import { VOICE_COMMANDS } from './VOICE.js';
 import type { EditorPlugin } from '../types.js';
 import type { ParamSpec } from '../../platform/mqtt/types.js';
 import { el } from '../../ui/dom.js';
-import { createTestCardWall, testCardFor } from '../../domain/test-card/index.js';
+import { createTestCardWall, testCardFor } from '../../ui/test-card/index.js';
 import { injectMultiViewerStyles } from './styles.js';
 import { channelsFor } from './channels.js';
 import { createPanes, type Win } from './panes.js';

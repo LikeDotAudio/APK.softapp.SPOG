@@ -22,14 +22,14 @@ import { el, addStyles } from '../../ui/dom.js';
 import {
   type Resolution, type FaceDef,
   deriveZones, detectZoneIdx,
-} from './faces/shared.js';
+} from '../../ui/clock-faces/shared.js';
 import { CSS } from './styles.js';
 import { createWindows, type ClockCtx, type Device } from './windows.js';
 import { createLayouts } from './layouts.js';
 import { createPaint } from './paint.js';
 
 // ---- face registry (one file per face under faces/) -------------------------
-const faceMods = import.meta.glob<{ default?: FaceDef }>('./faces/*.ts', { eager: true });
+const faceMods = import.meta.glob<{ default?: FaceDef }>('../../ui/clock-faces/*.ts', { eager: true });
 const FACES: FaceDef[] = Object.values(faceMods)
   .map((m) => m.default)
   .filter((d): d is FaceDef => !!d && typeof d.draw === 'function')

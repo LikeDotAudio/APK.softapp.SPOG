@@ -1,4 +1,4 @@
-// src/editors/weather/faces/strip — the ON-AIR broadcast "forecast strip" face
+// src/ui/weather/faces/strip — the ON-AIR broadcast "forecast strip" face
 // (audit §2/§3, P2). A fixed, horizontal, left→right timeline for ONE anchor
 // city — the graphic a viewer sees, as opposed to the operator `board` grid:
 //
@@ -9,7 +9,7 @@
 // are the currentColor SVG glyphs from ../icons (not emoji), so the LCARS accent
 // + Colour Engine drive them. Severe codes (WMO 95/96/99) raise a red banner.
 
-import { el, addStyles } from '../../../ui/dom.js';
+import { el, addStyles } from '../../dom.js';
 import { svgForCode } from '../icons.js';
 import {
   type Forecast, type Location, type Unit, type Daypart,

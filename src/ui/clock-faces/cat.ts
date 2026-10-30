@@ -1,4 +1,4 @@
-// src/editors/clock/faces/cat — Kit-Cat: wagging tail + shifting eyes over a belly
+// src/ui/clock-faces/cat — Kit-Cat: wagging tail + shifting eyes over a belly
 // clock. Drawn on a DARK panel with a soft WHITE fuzz rim bleeding off the glossy
 // black silhouette (a white brush-stroke shadow) — the fur catching a rim light.
 import { type FaceDef, type FaceCtx, zoneTime, roundRect, TAU } from './shared.js';

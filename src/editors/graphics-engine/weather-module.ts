@@ -12,8 +12,8 @@
 // doesn't spam the geocoding API.
 
 import { el, addStyles } from '../../ui/dom.js';
-import { geocode, type GeoMatch, type Location, type Unit } from '../weather/data.js';
-import { makeStrip } from '../weather/faces/strip.js';
+import { geocode, type GeoMatch, type Location, type Unit } from '../../ui/weather/data.js';
+import { makeStrip } from '../../ui/weather/faces/strip.js';
 
 const GFX_WX_CSS = `
 .gfx-weather{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:4.5% 3.5%;}

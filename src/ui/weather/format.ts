@@ -1,4 +1,4 @@
-// src/editors/weather/format — units, WMO-code decode, and time-zone/label
+// src/ui/weather/format — units, WMO-code decode, and time-zone/label
 // helpers (P0 extraction). The pure formatting half of the WEATHER data layer,
 // split out of data.ts (audit §4.7): unit conversion, the WMO code table,
 // time-zone helpers, and feed-label seeding. No behaviour change.

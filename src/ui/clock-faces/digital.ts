@@ -1,4 +1,4 @@
-// src/editors/clock/faces/digital — big red LED read-out (honours the resolution).
+// src/ui/clock-faces/digital — big red LED read-out (honours the resolution).
 import { type FaceDef, type FaceCtx, zoneTime, formatTime, roundRect } from './shared.js';
 
 function draw(g: CanvasRenderingContext2D, S: number, c: FaceCtx): void {

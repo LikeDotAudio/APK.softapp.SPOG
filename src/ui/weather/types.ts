@@ -1,4 +1,4 @@
-// src/editors/weather/types — the WEATHER data-layer types (P0 extraction).
+// src/ui/weather/types — the WEATHER data-layer types (P0 extraction).
 //
 // The shared interfaces/types for the one data pipe both faces read — the
 // operator `board` grid and the on-air `strip`. Split out of data.ts (audit §4.7).

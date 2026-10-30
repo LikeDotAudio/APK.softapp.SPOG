@@ -1,4 +1,4 @@
-// src/editors/clock/faces/bigben — the Great Clock of Westminster: a gilded Gothic
+// src/ui/clock-faces/bigben — the Great Clock of Westminster: a gilded Gothic
 // tower dial. Gilt bezel + bronze ring, cream opal face, blackletter Roman numerals
 // in a barred minute ring, a gilt filigree rosette, and pierced Gothic hour + minute
 // hands. No second hand, as on the real clock.

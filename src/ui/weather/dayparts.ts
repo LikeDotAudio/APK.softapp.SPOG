@@ -1,4 +1,4 @@
-// src/editors/weather/dayparts — the on-air strip's five curated selections
+// src/ui/weather/dayparts — the on-air strip's five curated selections
 // (P0). Pure projection over an already-fetched Forecast: no new network calls.
 // Each daypart is a (temp, code, day/night) triple the strip face turns into a
 // panel. Split out of data.ts (audit §4.7).

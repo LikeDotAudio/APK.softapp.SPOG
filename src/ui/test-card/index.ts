@@ -1,4 +1,4 @@
-// src/domain/test-card — SPOG's synthetic, routable test frame.
+// src/ui/test-card — SPOG's synthetic, routable test frame.
 //
 // A source's self-identifying frame of video: square SMPTE bars + a burned-in
 // slate + a moving shape ident, keyed on the source's own name/colour so it is
@@ -10,16 +10,16 @@
 // at the display cap, while the LOGICAL frame count runs at the format fps.
 // Canvases that leave the DOM are pruned automatically (like dest-fixtures).
 
-import type { Disposer } from '../../ui/timers.js';
-import { el } from '../../ui/dom.js';
+import type { Disposer } from '../timers.js';
+import { el } from '../dom.js';
 import { drawCard } from './render.js';
-import { identFor } from './ident.js';
-import { MEZZANINE, type CardSpec } from './types.js';
+import { identFor } from '../../domain/test-card/ident.js';
+import { MEZZANINE, type CardSpec } from '../../domain/test-card/types.js';
 
 export { drawCard } from './render.js';
-export { identFor, hashHue, hueOf } from './ident.js';
-export { pathShape } from './shapes.js';
-export * from './types.js';
+export { identFor, hashHue, hueOf } from '../../domain/test-card/ident.js';
+export { pathShape } from '../../domain/test-card/shapes.js';
+export * from '../../domain/test-card/types.js';
 
 /** Build a CardSpec from a source's label + authored colour (the common case).
  *  `extra` threads the source's origin/media/fault through to the faux signal. */

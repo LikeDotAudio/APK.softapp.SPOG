@@ -1,4 +1,4 @@
-// src/editors/clock/faces/timeextreme — TIME-EXTREME: a Timex-Ironman-style sports
+// src/ui/clock-faces/timeextreme — TIME-EXTREME: a Timex-Ironman-style sports
 // watch. A black/orange resin bezel (with the TIME ZONE across the top) frames a
 // greenish LCD showing weekday + date on top and the running time below — the same
 // LCD family as the Clasio face.

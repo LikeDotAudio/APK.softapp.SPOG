@@ -11,7 +11,8 @@ This is the whole app. The legacy `js/` app is retired (a copy sits in
 domain/        pure logic, ZERO DOM/globals  (routing-core, timer-core, test-tone, tsg, test-card idents)
   └─ model/    the typed data shapes (Production, TwistConfig, SwitcherDef, Role…)
        └─ platform/   discovery (manifest/autoindex), MQTT bus, merge, time-sync, stores
-            └─ ui/    console, sources panel, widgets, tooltips, timer/test-card painters
+            └─ ui/    console, sources panel, widgets, tooltips, timer/test-card painters,
+                      clock faces, weather strip
                  └─ editors/   one plugin package per editor (auto-registered)
                       └─ app/   boot + composition root
 sw/            service-worker template (emitted to dist/sw.js by vite.config.ts)
@@ -21,10 +22,11 @@ A layer may import only from layers above it. **Editors never import editors** �
 cross-editor needs arrive as typed services on `EditorContext`. No `window.*`
 globals anywhere.
 
-Known breaks of the rule: `domain/test-card/render.ts` (imports `ui/faux-signal`)
-and `domain/test-card/index.ts` (imports `ui/dom`, `ui/timers`) are canvas/DOM
-painters living under `domain/`. `domain/test-card/ident.ts` and `domain/test-tone`
-are pure.
+`domain/test-card/` holds only the pure identity logic (ident, shapes, types); the
+canvas/DOM painters live in `ui/test-card/`. Pieces two editors share sit in `ui/`,
+not in an editor folder: the clock faces (`ui/clock-faces/`, used by the CLOCK bench
+and the TIMER wall clock) and the forecast data + strip face (`ui/weather/`, used by
+the Graphics Engine).
 
 ## Editors are plugins (M2 + M3)
 

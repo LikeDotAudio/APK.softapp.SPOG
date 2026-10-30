@@ -1,4 +1,4 @@
-// src/editors/weather/net — Open-Meteo geocoding + forecast fetch (P0 extraction).
+// src/ui/weather/net — Open-Meteo geocoding + forecast fetch (P0 extraction).
 //
 // The network half of the WEATHER data layer, split out of data.ts (audit §4.7):
 // Open-Meteo geocoding + forecast fetch. `decode()` and the `Forecast` shape are

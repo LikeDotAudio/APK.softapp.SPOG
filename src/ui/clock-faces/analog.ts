@@ -1,4 +1,4 @@
-// src/editors/clock/faces/analog — the Evertz analog reference: white face, 12h + inner
+// src/ui/clock-faces/analog — the Evertz analog reference: white face, 12h + inner
 // red 24h numerals, and a smoothly-sweeping high-vis red second hand.
 import { type FaceDef, type FaceCtx, zoneTime, TAU } from './shared.js';
 

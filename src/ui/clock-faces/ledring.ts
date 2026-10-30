@@ -1,4 +1,4 @@
-// src/editors/clock/faces/ledring — the Evertz digital reference: HH:MM:SS ringed by
+// src/ui/clock-faces/ledring — the Evertz digital reference: HH:MM:SS ringed by
 // 60 second ticks that light up to the current second and pulse on the beat.
 import { type FaceDef, type FaceCtx, zoneTime, formatTime, roundRect, TAU } from './shared.js';
 

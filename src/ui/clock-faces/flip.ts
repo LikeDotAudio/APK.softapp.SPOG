@@ -1,4 +1,4 @@
-// src/editors/clock/faces/flip — a split-flap board: HH·MM·SS(·FF) cards flip, settle
+// src/ui/clock-faces/flip — a split-flap board: HH·MM·SS(·FF) cards flip, settle
 // and bounce. Card count follows the resolution. Per-window state rides c.state.flip.
 import { type FaceDef, type FaceCtx, zoneTime, pad, frames, roundRect } from './shared.js';
 

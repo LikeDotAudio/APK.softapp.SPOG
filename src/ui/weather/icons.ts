@@ -1,4 +1,4 @@
-// src/editors/weather/icons — the on-air seasonal glyph library (P1, audit §4).
+// src/ui/weather/icons — the on-air seasonal glyph library (P1, audit §4).
 //
 // 21 broadcast weather glyphs built from ~8 shared primitives (sun, moon, cloud,
 // raindrop, flake, bolt, wind-lines, fog-bars). Every glyph is a single-colour

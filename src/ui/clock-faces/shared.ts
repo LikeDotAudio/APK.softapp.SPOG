@@ -1,4 +1,4 @@
-// src/editors/clock/faces/shared — the clock-face contract + shared primitives.
+// src/ui/clock-faces/shared — the clock-face contract + shared primitives.
 //
 // Every face lives in its own file under faces/ and default-exports a FaceDef. The
 // clock editor collects them with import.meta.glob (see index.ts), so adding a face

@@ -4,7 +4,7 @@
 // the window spawners so applyScene can rebuild the live device set.
 
 import { el } from '../../ui/dom.js';
-import { type Resolution, type Zone, parseZone, ZONES, zoneIdxForOffset } from './faces/shared.js';
+import { type Resolution, type Zone, parseZone, ZONES, zoneIdxForOffset } from '../../ui/clock-faces/shared.js';
 import type { ClockCtx, Rect, WindowsApi } from './windows.js';
 
 interface SceneItem { kind: 'clock' | 'date'; label: string; face?: string; res?: Resolution; offsetMin?: number; rect: Rect; }

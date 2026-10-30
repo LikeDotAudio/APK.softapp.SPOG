@@ -1,4 +1,4 @@
-// src/editors/clock/faces/casio — CLASIO: a classic silver digital wristwatch. A
+// src/ui/clock-faces/casio — CLASIO: a classic silver digital wristwatch. A
 // metallic bezel (with the TIME ZONE engraved where the brand would be) frames a
 // greenish LCD showing the weekday, date, AM/PM and the running time — calendar and
 // clock built in, like the real thing.

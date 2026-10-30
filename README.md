@@ -331,8 +331,8 @@ behind `data-cap="shade"`** — only the Chief Engineer (or Captain) sees it.
 | Prompter | `editors/prompter/` | `prompt` | PROMPTER · TELEPROMPTER |
 | Person | `editors/person/` | `person`, `talent`, `channel strip` | PERSON · VIRTUAL CHANNEL STRIP |
 
-`editors/weather/` has no `index.ts`: it is the forecast data and faces the Graphics Engine
-uses. The **Timer** is the RC1000-style dual up/down keypad transport, publishing on
+The forecast data and strip face the Graphics Engine uses live in `ui/weather/`, and the clock
+faces the Clock and Timer share live in `ui/clock-faces/` — editors never import editors. The **Timer** is the RC1000-style dual up/down keypad transport, publishing on
 `destinations/<dest>/counters_timer`; its PRODUCTION TIMERS feeds are routable sources.
 
 ### How the editors connect

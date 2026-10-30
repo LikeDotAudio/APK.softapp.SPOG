@@ -1,4 +1,4 @@
-// src/editors/weather/data — the WEATHER data layer (barrel).
+// src/ui/weather/data — the WEATHER data layer (barrel).
 //
 // Everything network- and model-shaped that used to live inline here now lives
 // in siblings (audit §4.7): Open-Meteo geocoding + forecast fetch (net), the

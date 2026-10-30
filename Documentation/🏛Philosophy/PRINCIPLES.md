@@ -28,11 +28,6 @@ cited, not copied. The visual law for this app is [LCARS.md](LCARS.md) and
 
 ## Where the code bends a rule
 
-- **`domain/test-card` is not all pure.** `render.ts` imports `ui/faux-signal` and `index.ts`
-  imports `ui/dom` and `ui/timers` — canvas/DOM painters filed under `domain/`.
-- **Editors do import editors** in two places: `editors/timer/wall-clock.ts` uses
-  `editors/clock/faces/shared.ts`, and `editors/graphics-engine/weather-module.ts` uses
-  `editors/weather/`.
 - **Typed bus data is `any` in places.** `countersOf()` in `dest-fixtures-counters.ts` and the
   TIMER editor's `counters_timer` subscriber read the snapshot untyped; the editor's subscriber
   does not run `isTimerSnap()`.

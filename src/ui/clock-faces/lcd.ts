@@ -1,4 +1,4 @@
-// src/editors/clock/faces/lcd — a seven-segment LCD renderer shared by the digital
+// src/ui/clock-faces/lcd — a seven-segment LCD renderer shared by the digital
 // wristwatch faces (Casio, Time-Extreme). Draws beveled segment bars with faint
 // "off" ghost segments — the characteristic look of a monochrome LCD. Not a face
 // itself (no default export), so the faces/ glob skips it.
