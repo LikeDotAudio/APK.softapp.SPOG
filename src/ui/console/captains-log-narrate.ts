@@ -10,7 +10,7 @@ import { operator, role } from '../../platform/auth.js';
 import { emitLog } from './captains-log-persist.js';
 import { render } from './captains-log-view.js';
 import { narratives, selected, ensureNarrative, nextEid, entKey, reversible, selfOrigin, type Entry, type Removed } from './captains-log-state.js';
-import { findTwist, reroute } from './captains-log-reroute.js';
+import { findTwist, groupBase, reroute } from './captains-log-reroute.js';
 
 let observer: MutationObserver | null = null, paused = false;
 
@@ -29,9 +29,13 @@ function nodeLabel(n: Element | null): string {
   if (!n || n.nodeType !== 1) return '';
   const el = n as HTMLElement;
   if (el.classList.contains('dropped-group')) {
+    // The header is [parent caption span] + "NAME ×k" text: label from the text only,
+    // so it reads `NAME ×k` once and Reverse Course can re-find NAME (captains-log-reroute).
     const h = el.querySelector<HTMLElement>('.dropped-group-header');
     const k = el.querySelectorAll('.dropped-group-children .signal-node').length;
-    const base = ((h ? h.innerText : el.dataset.origin) || 'group').trim().split('\n')[0] ?? 'group';
+    const text = h ? [...h.childNodes].filter((c) => c.nodeType === 3).map((c) => c.textContent ?? '').join('') : '';
+    const raw = (text || el.dataset.origin || 'group').trim().split('\n')[0] || 'group';
+    const base = groupBase(raw) ?? raw;
     return k ? `${base} ×${k}` : base;
   }
   return (el.innerText || '').trim().split('\n')[0] ?? '';

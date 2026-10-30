@@ -3,7 +3,7 @@
 // reversal keeps going past entries that can't be reversed now.
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { reversalPlan } from './captains-log-reroute.js';
+import { reversalPlan, groupBase } from './captains-log-reroute.js';
 import { reverseSelected } from './captains-log-narrate.js';
 import { narratives, selected, entKey, reversible, type Entry } from './captains-log-state.js';
 import { logAction } from './captains-log.js';
@@ -22,6 +22,16 @@ describe('reversalPlan', () => {
   });
   it('treats an added source already gone as done, and a still-routed one as no-op', () => {
     expect(reversalPlan(['B'], ['A'], ['B'], ['A', 'B'])).toEqual({ drop: [], add: [] });
+  });
+  it('reads a dropped group label back to its NAME (single or stacked ×k)', () => {
+    expect(groupBase('STAGEBOX 201 ×3')).toBe('STAGEBOX 201');
+    expect(groupBase('STAGEBOX 201 ×3 ×3')).toBe('STAGEBOX 201');
+    expect(groupBase('CAM 1')).toBeNull();
+  });
+  it('puts a removed group back when the console can rebuild it by NAME', () => {
+    const canRestore = (l: string): boolean => groupBase(l) === 'STAGEBOX 201';
+    expect(reversalPlan(['CAM 1'], ['CAM 1'], ['STAGEBOX 201 ×3'], canRestore)).toEqual({ drop: [0], add: ['STAGEBOX 201 ×3'] });
+    expect(reversalPlan(['STAGEBOX 201 ×3'], ['STAGEBOX 201 ×3 ×3'], [], [])?.drop).toEqual([0]);
   });
   it('refuses when a source to put back is not on the console', () => {
     expect(reversalPlan(['A'], ['A'], ['GONE'], ['A'])).toBeNull();
