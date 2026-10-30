@@ -1,16 +1,16 @@
 // src/editors/meter-input/help — the "how to read this scope" hover-help. Split
 // from index.ts: the INTRO + per-card HELP text tables and the pointer-following
 // tooltip that attaches to each card title (and the whole-bench intro chip).
-import { el } from '../../ui/dom.js';
-
-const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, v));
+// The panel itself is the shared one in src/ui/tip (this file was its prototype):
+// one app-wide overlay, aria-label, focus + touch — no per-open body <div>.
+import { tip, type Tip } from '../../ui/tip.js';
 
 // ── Hover-help: a "how to read this scope" tooltip on each card title ──────
 // These scopes visualize the same audio/video as an objective source of truth;
 // the guidance below (lead + ✓ good / ✕ bad signal) is surfaced on title hover.
 type Help = { t: string; lead: string; good?: string; bad?: string };
 const INTRO =
-  'These scopes can look intimidating, but they are just different ways of visualizing the same audio &amp; video data. ' +
+  'These scopes can look intimidating, but they are just different ways of visualizing the same audio & video data. ' +
   'Once you can read them they become an objective source of truth — showing what your eyes/ears miss due to monitor calibration or room acoustics. ' +
   'Hover any scope’s title for how to read it.';
 const HELP: Record<string, Help> = {
@@ -34,29 +34,21 @@ const HELP: Record<string, Help> = {
   editlog: { t: 'Edit Log', lead: 'A time-stamped list of detected scene cuts. Each row logs when a big luminance change happened, so you can find every edit point. SENS (Subtle → Hard) sets how big a change counts; edit tempo shows how fast cuts are coming.', good: 'Rows land exactly where the video actually cuts.', bad: 'Missed cuts (lower SENS to Subtle) or false hits on flashes / fast motion (raise SENS to Hard).' },
 };
 
+/** The shared-tip form of a card's help (undefined for a card with none). Plain text —
+ *  src/ui/tip escapes it, so the tables above must never carry HTML entities. */
+export function helpTip(key: string): Tip | undefined {
+  const h = HELP[key];
+  return h && { title: h.t, lead: h.lead, good: h.good, bad: h.bad };
+}
+export const INTRO_TIP: Tip = { title: 'Reading the scopes', lead: INTRO };
+
 // Wire the hover-help onto each card title and the whole-bench intro chip.
 export function attachHelp(host: HTMLElement, cardMap: Record<string, HTMLElement>): void {
-  const tipEl = el('div', { class: 'mi-tip' });
-  document.body.append(tipEl);
-  const placeTip = (x: number, y: number): void => {
-    const w = tipEl.offsetWidth, h = tipEl.offsetHeight;
-    tipEl.style.left = `${clamp(x + 14, 6, window.innerWidth - w - 6)}px`;
-    tipEl.style.top = `${clamp(y + 16, 6, window.innerHeight - h - 6)}px`;
-  };
-  const attachTip = (target: HTMLElement, html: string): void => {
-    target.addEventListener('mouseenter', (e) => { tipEl.innerHTML = html; tipEl.classList.add('open'); placeTip(e.clientX, e.clientY); });
-    target.addEventListener('mousemove', (e) => placeTip(e.clientX, e.clientY));
-    target.addEventListener('mouseleave', () => tipEl.classList.remove('open'));
-  };
-  const helpHtml = (h: Help): string =>
-    `<b>${h.t}</b><br>${h.lead}` +
-    (h.good ? `<br><span class="g">✓ Good:</span> ${h.good}` : '') +
-    (h.bad ? `<br><span class="bad">✕ Bad:</span> ${h.bad}` : '');
   for (const [key, card] of Object.entries(cardMap)) {
-    const h4 = card.querySelector('h4'); const h = HELP[key];
-    if (h4 && h) { h4.classList.add('mi-help'); attachTip(h4, helpHtml(h)); }
+    const h4 = card.querySelector('h4'); const t = helpTip(key);
+    if (h4 && t) tip(h4, t);
   }
   // The whole-bench intro rides the "EDIT DETECTOR" title tab.
   const introChip = host.querySelector<HTMLElement>('.mi-title');
-  if (introChip) { introChip.classList.add('mi-help'); attachTip(introChip, `<b>Reading the scopes</b><br>${INTRO}`); }
+  if (introChip) tip(introChip, INTRO_TIP);
 }

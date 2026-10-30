@@ -143,8 +143,11 @@ a retained-MQTT `TwistBus`.*
   dest-fixtures. Audit: `graphics-suite-architecture`.
 - 📋 **Production video switcher** — audit + deployment plan already drafted
   (`docs/Production-Video-Switcher-*.md`).
-- 📋 **Shared tooltips / tool-ticks** — promote Meter Input's hover-tip pattern to a shared
-  `src/ui/tip.ts` across all editors. Audit: `LCARS-Hover-Tooltips-…-Audit.md`.
+- 🚧 **Shared tooltips / tool-ticks** — Meter Input's hover-tip pattern lives in the shared
+  `src/ui/tip.ts` (`tip()` / `hint()` / `expectationTip()`); Meter Input itself, the last
+  hand-rolled copy, now rides it too (its `.mi-tip` panel is gone). Left: editors still on
+  native `title=` hovers (Vision Mixer ≈28, Graphics Engine ≈7, a few elsewhere) move to
+  `hint()`. Audit: `LCARS-Hover-Tooltips-…-Audit.md`.
 
 ### 3.3 Sources, destinations & test signal
 - 📋 **Test-frame routing** — a shared synthetic SMPTE test-card + tone module routable through
