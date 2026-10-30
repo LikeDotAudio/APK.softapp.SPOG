@@ -10,4 +10,5 @@ The principles this code keeps, each pointed at the code that keeps it.
 | [Colours and shapes.md](Colours%20and%20shapes.md) | Colours & Shapes — Colour-Vision Accessibility Audit + Colour-Engine Strategy |
 | [LCARS-RULES.html](LCARS-RULES.html) | LCARS-RULES |
 | [LCARS.md](LCARS.md) | LCARS Style Guide |
+| [PRINCIPLES.md](PRINCIPLES.md) | Principles — WEB.SPOG |
 <!-- /wiki:index -->

@@ -2,9 +2,9 @@
 
 The house rules for the LCARS ("okudagram") skin worn by SPOG. This is the design
 contract for every panel, rail, elbow, button and window in the app. The live
-implementation is [`lcars.css`](./lcars.css) (shared, never forked, by both the
+implementation is [`lcars.css`](../../lcars.css) (shared, never forked, by both the
 `js/` build and the TypeScript `src/` build); the canonical palette data lives in
-[`archive/lcars-styleguide.json`](./archive/lcars-styleguide.json).
+[`archive/lcars-styleguide.json`](../../archive/lcars-styleguide.json).
 
 The **component-part vocabulary** — elbow, elbow pit, arm, armpit, wrist, hand,
 finger, spine, foot, seam — is defined with annotated diagrams in
@@ -94,7 +94,7 @@ When adding a new element, pick `R` from this ladder (`44 / 40 / 30 / 16 / 15 / 
 ## 2. Palette
 
 Signal **category** is carried by colour *and* shape (shape is the accessible
-fallback — see [`docs/Colours and shapes.md`](./docs/Colours%20and%20shapes.md)).
+fallback — see [`Colours and shapes.md`](Colours%20and%20shapes.md)).
 Components read **only** the Tier-2 semantic tokens; never hardcode a category hex.
 
 | Token             | Default   | Meaning |
@@ -110,7 +110,7 @@ Components read **only** the Tier-2 semantic tokens; never hardcode a category h
 
 The full okudagram palette (Standard + ST:VIII / ST:X / com sets, ~90 named swatches
 from *Okudagrams Color Complete Set v4.1*) is in
-[`archive/lcars-styleguide.json`](./archive/lcars-styleguide.json). The Colour
+[`archive/lcars-styleguide.json`](../../archive/lcars-styleguide.json). The Colour
 Engine (`html[data-cvd]` / `[data-chroma]` / `[data-vision]`) re-points Tier-2 for
 colour-blind, greyscale, mono-phosphor and high/low-contrast modes — so a compliant
 component follows those modes for free.
@@ -135,7 +135,7 @@ rail on the dominant right edge; `"left"` is the classic left dock. Geometry tha
 asymmetric (elbows, spines, caps) must provide a mirrored rule so the big `R` still
 hugs the **outer** edge after the flip. **Never** mirror spatial canvases (scopes,
 maps, diagrams) — tag them `.chir-exempt`. See the header of `lcars.css` and
-`docs/Audit /Editor-Chirality-Audit.md`.
+the local (gitignored) `Editor-Chirality-Audit.md`.
 
 ---
 

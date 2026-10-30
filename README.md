@@ -21,6 +21,12 @@ control surface** — a vision mixer with a T-bar, a CCU shading console with wa
 a DMX lighting board, an IFB mix-minus rack. The patch panel is the map; the editors are the
 rooms. The rest of this document is mostly about those rooms.
 
+**Live:** <https://spog.like.audio/> · **Wiki:** [Documentation/README.md](Documentation/README.md) —
+[Principles](Documentation/%F0%9F%8F%9BPhilosophy/PRINCIPLES.md) ·
+[Architecture](Documentation/%F0%9F%A7%A9Manual%20and%20Artifacts/ARCHITECTURE.md) ·
+[Delivery](Documentation/%F0%9F%8C%8DPublishing/DELIVERY.md) ·
+[Roadmap](Documentation/%F0%9F%9B%A3Roadmap/roadmap.md)
+
 ---
 
 ## What it does
