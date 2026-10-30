@@ -15,7 +15,7 @@ const GANG_CSS = `
     justify-content:center;min-height:34px;background:rgba(0,0,0,.55);}
 .signal-node.gang-cell .multiplex-header{font-size:13px;font-weight:bold;letter-spacing:1px;padding:9px 2px;width:100%;text-align:center;}
 .signal-node.gang-cell .multiplex-children{display:none;flex-direction:column;gap:2px;padding:2px;}
-.signal-node.gang-cell.fault{outline:2px solid #ff3344;}
+.signal-node.gang-cell.fault{outline:2px solid var(--state-alarm,#ff3b3b);}
 .signal-node.gang-cell.expanded{grid-column:1 / -1;flex-direction:column;align-items:stretch;justify-content:flex-start;}
 .signal-node.gang-cell.expanded > .multiplex-children{display:flex;flex-direction:row;flex-wrap:wrap;gap:4px;}
 .signal-node.gang-cell.expanded .gang-cam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;width:100%;}
