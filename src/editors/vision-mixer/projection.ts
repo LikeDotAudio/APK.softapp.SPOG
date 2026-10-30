@@ -16,6 +16,8 @@ import type { TransitionKind } from '../../model/index.js';
 import type { Surface } from './surface.js';
 import type { Stage } from './stage.js';
 import type { AutoToken } from './transition.js';
+import { onAirGraphicsOf } from './gfx-feed.js';
+import { announceOnAirGraphics } from '../../platform/gfx-monitor.js';
 
 export interface ProjectionRefs {
   stage: Stage;
@@ -94,6 +96,9 @@ export function createProjection(s: Surface, refs: ProjectionRefs): { sync: () =
     const pgmTally = [...tallySet(state.mes, def.mes - 1, def)].map((i) => srcLabel(i, def)).sort();
     const key = pgmTally.join('|');
     if (key !== lastTally) { lastTally = key; s.publish('tally.program', pgmTally); }
+    // Auto-multiviewer: announce on-air graphics for the wall (fail-soft — never blocks a take).
+    try { announceOnAirGraphics(s.ctx.production.id, onAirGraphicsOf(def, state)); }
+    catch (e) { console.warn('[vision-mixer] on-air graphics announce failed', e); }
     auxSelects.forEach((sel, i) => { if (!sel.value) sel.value = String(state.auxes[i]); });
     persist();
   }

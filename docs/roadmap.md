@@ -78,7 +78,12 @@ a retained-MQTT `TwistBus`.*
   - **Faux-take "set".** Anything on the graphics displays as a takeable **set** (named scene)
     that previews and "takes" via a simulated transition (front-end sim).
   - **Auto-multiviewer.** Any graphic on the DSK/switcher **automatically lands in a multiviewer
-    tile**, monitored without a manual route.
+    tile**, monitored without a manual route. *First slice shipped:* the switcher announces its
+    on-air graphics per production (`vision-mixer/gfx-feed.ts` → `platform/gfx-monitor.ts`) and
+    the multiviewer's opt-in **⬡ AUTO GFX** toggle (`?automv=1`) fills spare cells with
+    read-only AUTO tiles. *Next:* a switcher and wall in different productions/seats (needs the
+    bus, not the same-browser channel), and AUTO tiles that reserve cells instead of only
+    filling spare ones.
   - *Touches:* `vision-mixer/{schema,me,keyers,dashboard,panels,styles}.ts`, the graphics-engine
     mount (dest-fixtures synthTwist), and multiviewer auto-population. Ties into §3.2 Graphics
     suite. **First slice: the PRE ROUTE panel + explicit up/downstream graphics keyers.**

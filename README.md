@@ -157,8 +157,15 @@ ready to be applied.)
   preview monitor), then **CUT GFX** or **AUTO GFX** takes every armed set to PROGRAM through
   a simulated fade (front-end only; an armed set already on air comes off). The plain DSK
   buttons still cut on/off air directly.
+  It also announces every **on-air graphic** (whatever an ON DSK keys, plus hard-wired graphics on
+  an ON M/E keyer or a PGM bus) per production on `platform/gfx-monitor.ts` — the feed the
+  multiviewer's auto-graphics tiles watch (fail-soft: a broken watcher never blocks a take).
 - **Multi Viewer** — a configurable monitor wall (2×2 → 16×16, plus PiP). Drag tiles to
   reorder, cycle each window's tally state, and edit UMD labels inline.
+  **⬡ AUTO GFX** (opt-in per seat, or `?automv=1` / `?automv=0` in the URL) is the
+  auto-multiviewer: every graphic on air on the production's switcher lands in a spare tile
+  (dashed, PGM tally, captioned with where it rides — `DSK 1`, `M/E 2 KEY 3`…) with no manual
+  route. Routed sources keep their cells; graphics past the raster are not shown.
 - **ISO Recorder** — per-camera clean recording (timecode, disk space) paired with an instant
   **replay** engine: rolling buffer, jog/shuttle, angle select, variable speed, mark-to-air.
 
