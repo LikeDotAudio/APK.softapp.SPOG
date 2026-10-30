@@ -137,8 +137,15 @@ a retained-MQTT `TwistBus`.*
   handle stage + crop + fast touchpad grammar. Audit: `docs/Audit/DVE-Makeover-Audit.md`.
 - 📋 **Editor chirality C2** — handedness flip for ~10 editors (wysiwyg first; audio-mixer /
   camera-control highest benefit). Audit: `Editor-Chirality-Audit.md`.
-- 📋 **RC1000 dual-timer source** — a dual up/down timer graphics source + keypad transport.
-  Audit: `RC1000-Dual-Timer-Audit.md`.
+- 🚧 **RC1000 dual-timer source** — a dual up/down timer graphics source + keypad transport.
+  Audit: `RC1000-Dual-Timer-Audit.md`. The keypad transport is the TIMER editor
+  (`src/editors/timer`, two RC1000-style keypads on `destinations/<dest>/counters_timer`).
+  Shipped slice: a routed PRODUCTION TIMERS feed now paints the dual-timer graphic on the
+  destination MONITOR (`TIMER A`/`TIMER B` → one channel, `A/B PANEL` → both), derived
+  live from that snapshot (`src/domain/timer-core/graphic.ts`, `src/ui/timer-graphic.ts`);
+  a malformed/absent snapshot shows dashes and a failed paint falls back to the faux
+  signal. Rollback: `?timergfx=off`. Next: the same graphic on the multi-viewer /
+  vision-mixer previews (they use `drawFauxSignal`, which has no timer hook yet).
 - 📋 **Graphics suite** — a graphics engine hosting a suite of editor-functions mounted on
   dest-fixtures. Audit: `graphics-suite-architecture`.
 - 📋 **Production video switcher** — audit + deployment plan already drafted

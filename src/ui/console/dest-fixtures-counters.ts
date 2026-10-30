@@ -40,6 +40,9 @@ function countersOf(id: string): { A: CState; B: CState; S: CState; T?: any } {
   return s;
 }
 
+/** The raw counters_timer snapshot (unvalidated) — read by the MONITOR's timer graphic. */
+export function timerSnapshotOf(id: string): unknown { return countersOf(id).T; }
+
 function syncCounters(id: string): void {
   const s = counterStore.get(id);
   if (s) {
