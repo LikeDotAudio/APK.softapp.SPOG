@@ -9,7 +9,7 @@
 // -narrate (mutation → entry + Reverse Course), -view (CSS + render).
 import { addStyles } from '../dom.js';
 import { role, onRoleChange } from '../../platform/auth.js';
-import { ensureNarrative, nextEid, nextNid, nid, setCurrent, narratives, selected, entryById, narByKeyStr, raiseNid, raiseEid, selfOrigin, setSelfOrigin, originOf, narByOriginVoyage, type Entry, type Narrative, type LogEntryEvent } from './captains-log-state.js';
+import { ensureNarrative, nextEid, nextNid, nid, setCurrent, narratives, selected, entKey, entryByKey, reversible, narByKeyStr, raiseNid, raiseEid, selfOrigin, setSelfOrigin, originOf, narByOriginVoyage, type Entry, type Narrative, type LogEntryEvent } from './captains-log-state.js';
 import { getBus } from '../../platform/mqtt/index.js';
 import { hydrateLog, emitLog, onLogEntry, persistEntry } from './captains-log-persist.js';
 import { signed, reverseSelected, observeRoot, narrationFromLabels } from './captains-log-narrate.js';
@@ -22,14 +22,16 @@ export type { LogEntryEvent };
 
 /** Log a SEMANTIC action (e.g. an Edit-Layout change) as a Captain's Log entry.
  *  `undo`, if given, is run by Reverse Course to undo it — so layout edits are
- *  narrated and reversible right alongside routing changes. */
-export function logAction(text: string, undo?: () => void): void {
+ *  narrated and reversible right alongside routing changes. `transient` notes
+ *  (merge events, Reverse Course warnings) show this session only: not persisted,
+ *  not published, not selectable. */
+export function logAction(text: string, undo?: () => void, opts: { transient?: boolean } = {}): void {
   const ts = Date.now();
   const nar = ensureNarrative();
   const line = signed(text);
-  const entry: Entry = { id: nextEid(), ts, twist: null, dest: '', prod: '', added: [], removed: [], text: line, reversed: false, undo, role: role().name };
+  const entry: Entry = { id: nextEid(), ts, twist: null, dest: '', prod: '', added: [], removed: [], text: line, reversed: false, undo, role: role().name, transient: opts.transient };
   nar.entries.push(entry);
-  emitLog({ voyage: nar.id, entry: entry.id, ts, dest: '', prod: '', added: [], removed: [], text: line, reversed: false, role: role().name });
+  if (!opts.transient) emitLog({ voyage: nar.id, entry: entry.id, ts, dest: '', prod: '', added: [], removed: [], text: line, reversed: false, role: role().name });
   render();
 }
 
@@ -67,7 +69,8 @@ export function receiveNetworkLog(e: LogEntryEvent, origin?: string): void {
   const entry: Entry = {
     id: e.entry, ts: e.ts, twist: null, dest: e.dest, prod: e.prod,
     added: [], removed: [], text, reversed: e.reversed,
-    restored: true, origin: org, role: e.role
+    restored: true, origin: org, role: e.role,
+    labels: e.added.length || e.removed.length ? { added: e.added, removed: e.removed } : undefined
   };
   nar.entries.push(entry);
   nar.entries.sort((a, b) => a.id - b.id);
@@ -104,7 +107,12 @@ function build(): HTMLElement {
   panel.querySelector('.cl-x')?.addEventListener('click', close);
   // Clicking the yellow header bar closes the log too (matches the other editors).
   panel.querySelector('.cl-head')?.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('button, input, select')) return; close(); });
-  panel.querySelector('.cl-rev')?.addEventListener('click', reverseSelected);
+  panel.querySelector('.cl-rev')?.addEventListener('click', () => {
+    // Keep going past an entry that can't be reversed now (its twist or a source is
+    // gone): the rest reverse, and the skipped ones stay selected with a note.
+    const skipped = reverseSelected();
+    if (skipped.length) logAction(`⚠ Reverse Course skipped ${skipped.length} entr${skipped.length === 1 ? 'y' : 'ies'} — destination or source no longer on this console`, undefined, { transient: true });
+  });
   panel.querySelector('.cl-tl')?.addEventListener('click', () => { void openTimeline(); });
   panel.querySelector('.cl-new')?.addEventListener('click', () => {
     const title = prompt('Name this voyage:', `Voyage ${nid() + 1}`);
@@ -122,15 +130,15 @@ function build(): HTMLElement {
       }
       const n = narByKeyStr(nh.dataset.nar);
       if (!n) return;
-      const ids = n.entries.filter((x) => !x.reversed).map((x) => x.id);
+      const ids = n.entries.filter(reversible).map(entKey);
       const allSel = ids.length > 0 && ids.every((id) => selected.has(id));
       ids.forEach((id) => (allSel ? selected.delete(id) : selected.add(id)));
       render(); return;
     }
     const er = target.closest<HTMLElement>('.cl-entry');
     if (er?.dataset.entry) {
-      const id = Number(er.dataset.entry), en = entryById(id);
-      if (en?.reversed) return;   // already reversed → can't re-reverse; restored entries ARE selectable
+      const id = er.dataset.entry, en = entryByKey(id);
+      if (!en || !reversible(en)) return;   // reversed, transient, or a label-less restored row → read-only
       selected.has(id) ? selected.delete(id) : selected.add(id);
       render();
     }

@@ -159,7 +159,11 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   // whenever a window held a real fight. (The ⚖ observer launcher is created above and
   // adopted into the seat MENU by initUserMenu; the panel opens centred on demand.)
   initMergeBadge();
-  mergeManager.onEvent((e) => { if (e.contested || e.concordant) logAction(`⚖ ${describeEvent(e)}`); });
+  // Merge events are TRANSIENT notes (this session only, never persisted/published/
+  // reversible) so they don't bury the routing history; `?mergelog=keep` restores
+  // the old persisted behaviour.
+  const keepMerge = new URLSearchParams(location.search).get('mergelog') === 'keep';
+  mergeManager.onEvent((e) => { if (e.contested || e.concordant) logAction(`⚖ ${describeEvent(e)}`, undefined, { transient: !keepMerge }); });
   initChromeIcons();   // ICON-face tiles for the chrome buttons (after ALL chrome inits)
   startLogBridge(bus);
   initSeatSync(bus);   // seat prefs ride the retained bus; newer-wins on connect

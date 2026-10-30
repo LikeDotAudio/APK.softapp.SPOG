@@ -5,6 +5,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { startLogBridge } from './log-bridge.js';
 import { logAction } from '../../ui/console/captains-log.js';
+import { emitLog } from '../../ui/console/captains-log-persist.js';
 import type { TwistBus } from './types.js';
 
 // captains-log render() touches `document` (badge count); stub it so logAction is
@@ -63,5 +64,21 @@ describe('startLogBridge', () => {
     const texts = pubs.map((p) => (p.payload as { text: string }).text);
     expect(texts.some((t) => t.includes('after connect'))).toBe(true);
     expect(texts.some((t) => t.includes('before connect'))).toBe(false);
+  });
+
+  it('keeps transient notes (merge events) off the wire', () => {
+    const { bus, pubs } = fakeBus(() => true);
+    const stop = startLogBridge(bus);
+    logAction('⚖ merge window', undefined, { transient: true });
+    stop();
+    expect(pubs.length).toBe(0);
+  });
+
+  it("publishes a reversal of another seat's entry under THAT seat's origin", () => {
+    const { bus, pubs } = fakeBus(() => true);
+    const stop = startLogBridge(bus);
+    emitLog({ voyage: 2, entry: 5, ts: 1, dest: 'PGM', prod: '', added: ['A'], removed: [], text: 'Course reversed: x', reversed: true, origin: 'beef' });
+    stop();
+    expect(pubs.map((p) => p.topic)).toEqual(['log/beef/2/5']);
   });
 });

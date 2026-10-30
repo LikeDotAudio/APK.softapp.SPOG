@@ -103,10 +103,16 @@ a retained-MQTT `TwistBus`.*
   | HOW | equipment · control rooms · productions · encoders · edit suites |
   Needs a node-type → section classifier in `captains-log-timeline-data.ts`. *Pending final
   confirmation of the mapping + section order.*
-- ⏭️ **Reverse Course after reload** — restored (post-reload) and networked log entries are
-  currently read-only (their undo references died with the session). Re-derive routing from
-  persisted state so past entries can be reversed again; and keep transient merge events out
-  of the persistent reversible log so they don't bury routing entries.
+- ✅ **Reverse Course after reload** — routing entries now persist their source labels
+  (IDB rows + the wire already carry `added`/`removed`), so a restored (post-reload) or
+  networked entry is re-derived in `captains-log-reroute.ts`: find the twist by dest/prod, take
+  the added sources out, clone the removed ones back from the sources panel. Reversing another
+  seat's entry flags *its* record (`log/<its origin>/…`). A batch reversal keeps going past an
+  entry it can't redo now (twist or source gone): that one stays selected, un-reversed, with a
+  transient `⚠` note. Selection is keyed `origin#entry` (ids are only unique per seat). Merge
+  events are **transient** notes — shown this session, never persisted/published/selectable;
+  `?mergelog=keep` restores the old behaviour. Still read-only: label-less legacy rows and
+  semantic (layout) entries restored after a reload (their undo closure can't be re-derived).
 - ⏭️ **Seat rank on the wire for cross-console merge** — the mediator's higher-rank-wins is
   authoritative within a console and now carries `seat`/`label` on `ValueMsg`; finish the
   cross-console convergence proof + sparse-overlay publishing so orthogonal edits compose.
