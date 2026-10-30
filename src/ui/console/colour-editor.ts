@@ -9,6 +9,7 @@ import { getScheme, setScheme, sameScheme } from './colour-engine.js';
 import { PALETTES, PRESETS, AXES } from './colour-palettes.js';
 import { STYLE_ID, CSS } from './colour-editor-css.js';
 import { isLcarsPulseOn, setLcarsPulse } from './lcars-pulse.js';
+import { GLYPH_MODES, getGlyphMode, setGlyphMode } from './state-glyphs.js';
 
 /** Build the editor body: presets, the vision/chroma axes, the palette gallery, and a live preview. */
 function buildEditor(body: HTMLElement): void {
@@ -141,6 +142,15 @@ function buildEditor(body: HTMLElement): void {
       el('span', { class: 'cse-hint' }, ['Animated LCARS data-pulse column down the screen edge. Off by default.']),
     ]),
   ]);
+  const glyphSeg = el('div', { class: 'cse-seg' });
+  const glyphBtns = GLYPH_MODES.map((m) => {
+    const b = el('button', { type: 'button' }, [m[0]!.toUpperCase() + m.slice(1)]);
+    b.addEventListener('click', () => { setGlyphMode(m, getScheme()); sync(); });
+    glyphSeg.append(b);
+    return { m, b };
+  });
+  displaySec.append(el('div', { class: 'cse-row' }, [el('span', { class: 'cse-lab' }, ['State glyphs']), glyphSeg,
+    el('span', { class: 'cse-hint' }, ['⚠ on faults so state reads without colour. Auto = on in Grey / Mono / High.'])]));
 
   body.append(presetSec, axisSec, palSec, displaySec, prevSec);
 
@@ -166,6 +176,7 @@ function buildEditor(body: HTMLElement): void {
       hueRow.classList.remove('active');
     }
     hueInput.value = String(cur.monoHue ?? -8);
+    for (const { m, b } of glyphBtns) b.setAttribute('aria-pressed', String(getGlyphMode() === m));
   }
   sync();
 }

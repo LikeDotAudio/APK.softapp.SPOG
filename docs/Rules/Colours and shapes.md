@@ -1,6 +1,8 @@
 # Colours & Shapes — Colour-Vision Accessibility Audit + Colour-Engine Strategy
 
 **Status:** Audit + strategy proposal · **Date:** 2026-07-03
+**Shipped since:** the four presets + palettes (Colour & Vision editor, `colour-engine.ts`);
+**P0 state glyphs for FAULT** (2026-10-30, `src/ui/console/state-glyphs.ts`, see §5 "Shipped").
 **Scope:** Colour-blindness / low-vision UX audit of the live LCARS UI, plus a design for a
 composable **Colour Engine** driving four presentation modes — *low-visibility*,
 *high-visibility*, *grey*, and *monochrome* — as the substrate under every module and style.
@@ -369,6 +371,18 @@ shipped in *every* mode, so meaning never depends on hue:
 
 *(Category glyphs already shipped: video ◄trapezoid►, audio ▲inverted▲, camera ⬡ — leave as-is,
 just make sure their **fill** is a token so grey/mono modes work.)*
+
+**Shipped (P0, fault first).** `src/ui/console/state-glyphs.ts` injects CSS keyed off
+`html[data-state-glyphs]`; the DOM never changes. `⚠︎` (text presentation, inherits the node's
+colour) leads `.signal-node.fault` / `.sub-stream.fault`, `.foldable-header.fault`, a faulted
+room's `.program-title` and a `.twist-container.corrupted` title; a routed node in a drop zone
+keeps its crosspoint badge on `::before`, so its glyph rides `::after` top-right. The editor's
+preview state dots gain `! ✓ ●`. Per-seat `prefs.ui.stateGlyphs` = `auto | on | off` (Display
+section of Colour & Vision); **auto** turns glyphs on when `data-chroma` is grey/mono or
+`data-vision` is high, so the default full-colour console is unchanged. `?glyphs=on|off` in the
+URL overrides the seat for one load. Fail-soft: a bad pref, URL or missing DOM only logs a
+warning — painting the scheme carries on. Not yet: on-air / OK / muted / auth glyphs on live
+surfaces (no live DOM class carries those states yet), fill patterns.
 
 Rules:
 - The glyph rides **leading** every chip/row/node that today uses colour to mean *state*. Shape is

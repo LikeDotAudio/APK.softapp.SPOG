@@ -21,6 +21,8 @@ export interface UiPrefs {
   routerCollapsed?: RouterCollapsed;
   /** The LCARS "Heartbeat monitor" edge pulse (off by default; toggled in Colour & Vision). */
   heartbeat?: boolean;
+  /** STATE glyph layer (state-glyphs.ts): auto (on in grey/mono/high-vis) | on | off. */
+  stateGlyphs?: 'auto' | 'on' | 'off';
 }
 export interface Prefs {
   v: 1;
