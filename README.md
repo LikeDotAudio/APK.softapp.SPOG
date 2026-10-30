@@ -148,7 +148,11 @@ ready to be applied.)
 - **Vision Mixer** — a broadcast switcher: central **T-bar** between PROGRAM and PREVIEW
   monitors, bus source selection, transition styles (CUT / MIX / WIPE), and downstream keyers
   for lower-thirds and logos. This is the surface that *drives* tally — its PGM/PVW state is
-  what the Signaling editor distributes.
+  what the Signaling editor distributes. The **GFX SETS · PVW → PGM** module shows every
+  graphic on the DSKs as a named set: click one to arm it on PREVIEW (dashed chip on the
+  preview monitor), then **CUT GFX** or **AUTO GFX** takes every armed set to PROGRAM through
+  a simulated fade (front-end only; an armed set already on air comes off). The plain DSK
+  buttons still cut on/off air directly.
 - **Multi Viewer** — a configurable monitor wall (2×2 → 16×16, plus PiP). Drag tiles to
   reorder, cycle each window's tally state, and edit UMD labels inline.
 - **ISO Recorder** — per-camera clean recording (timecode, disk space) paired with an instant
