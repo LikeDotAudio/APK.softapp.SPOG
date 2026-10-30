@@ -10,10 +10,16 @@
 // source onto any of the room's twists lights this monitor WITHOUT a full room
 // re-render. When the room is OFFLINE it shows the NO SIGNAL slate; when nothing
 // is routed it shows an idle placeholder.
+//
+// With `?tone=1` the fixture also gets a LISTEN button that voices the routed
+// source's line-up tone + ident cadence (src/domain/test-tone) on the shared
+// listen bus, retuning as the route changes. Audio failures leave it muted.
 
 import { el } from '../dom.js';
 import { drawFauxSignal, type FauxSource } from '../faux-signal.js';
 import { patternForLabel } from '../../domain/tsg/index.js';
+import { toneFor } from '../../domain/test-tone/index.js';
+import { toneEnabled, listenTone, stopTone, listening } from '../test-tone-player.js';
 import { animate, card } from './dest-fixtures-shared.js';
 
 /** The feed to monitor: the first VIDEO/control feed routed anywhere in the room
@@ -63,13 +69,42 @@ export function monitorCard(body: HTMLElement, offline: boolean): HTMLElement {
   // ~15fps redraw (every 4th display frame): the faux "breathing" bob is slow, so
   // this stays smooth while quartering the DOM re-scan + canvas realloc cost.
   let f = 0;
+  const tone = toneEnabled() ? listenButton(body, offline) : null;
   animate(cvs, () => {
     if (f++ % 4) return;
     const t = performance.now();
+    tone?.sync();
     if (offline) { drawFauxSignal(cvs, { label: 'PROGRAM', faulted: true }, t); return; }
     const feed = routedFeed(body);
     if (feed) drawFauxSignal(cvs, feed, t);
     else drawIdle(cvs);
   });
-  return card('MONITOR', cvs, offline ? 'offline' : 'routed source');
+  const view = tone ? el('div', { class: 'dfx-chat' }, [cvs, el('div', { class: 'dfx-mrow' }, [tone.btn])]) : cvs;
+  return card('MONITOR', view, offline ? 'offline' : 'routed source');
+}
+
+/** The LISTEN toggle: voices the routed feed's test tone; `sync` (called from the
+ *  fixture loop) retunes on a re-route and drops the bus when nothing is routed. */
+function listenButton(body: HTMLElement, offline: boolean): { btn: HTMLElement; sync: () => void } {
+  const btn = el('button', { class: 'dfx-mini', textContent: 'LISTEN', title: '1 kHz −18 dBFS line-up; left-leg dropouts count the source ident' });
+  const mine = (): boolean => listening().owner === btn;
+  const play = (label: string): void => {
+    if (!listenTone(toneFor(label, { faulted: offline }), btn)) btn.textContent = 'NO AUDIO';
+  };
+  btn.addEventListener('click', () => {
+    if (mine()) { stopTone(); return; }
+    const feed = routedFeed(body);
+    if (feed) play(feed.label ?? 'PROGRAM');
+  });
+  const sync = (): void => {
+    if (mine()) {
+      const feed = routedFeed(body);
+      if (!feed) stopTone();
+      else if ((feed.label ?? 'PROGRAM') !== listening().id) play(feed.label ?? 'PROGRAM');
+    }
+    const on = mine();
+    btn.classList.toggle('run', on);
+    if (on || btn.textContent !== 'NO AUDIO') btn.textContent = on ? 'MUTE' : 'LISTEN';
+  };
+  return { btn, sync };
 }
