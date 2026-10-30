@@ -1,7 +1,7 @@
 // src/ui/console/captains-log-view — the Captain's Log CSS + the list renderer.
 // Owns the `listEl` DOM ref (set by the orchestrator's build()); render() reads
 // the shared narratives / selected state and repaints the panel + the badge.
-import { narratives, selected, narKey } from './captains-log-state.js';
+import { narratives, selected, narKey, entKey, reversible } from './captains-log-state.js';
 
 const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 const esc = (s: string): string => String(s).replace(/[&<>"]/g, (c) => ESC[c] ?? c);
@@ -37,6 +37,7 @@ export const CL_CSS = `
 .cl-entry.sel .cl-cap{background:rgb(244, 144, 44) !important;color:#fff;}
 .cl-entry.reversed{opacity:.4;}
 .cl-entry.reversed .cl-mid{text-decoration:line-through;}
+.cl-entry.ro:not(.reversed){cursor:default;opacity:.7;}
 .cl-rb{color:#ff8a8a;font-style:italic;font-size:10px;}`;
 
 let listEl: HTMLElement | null = null;
@@ -59,7 +60,8 @@ export function render(): void {
       const revTag = e.reversed
         ? ` <span class="cl-rb">[course reversed${e.reversedBy ? ` by ${esc(e.reversedBy)}` : ''}${e.reversedTs ? ` at ${hms(e.reversedTs)} UTC` : ''}]</span>`
         : '';
-      html += `<div class="cl-entry${selected.has(e.id) ? ' sel' : ''}${e.reversed ? ' reversed' : ''}" data-entry="${e.id}">
+      const k = entKey(e);
+      html += `<div class="cl-entry${selected.has(k) ? ' sel' : ''}${e.reversed ? ' reversed' : ''}${reversible(e) ? '' : ' ro'}" data-entry="${esc(k)}">
         <div class="cl-cap" style="background:${color}"></div>
         <div class="cl-mid">${esc(e.text)}${revTag}</div>
         <div class="cl-val">${hms(e.ts)}<small>UTC</small></div></div>`;

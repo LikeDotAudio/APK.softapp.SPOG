@@ -8,24 +8,32 @@ interface Removed { node: HTMLElement; parent: Node; next: Node | null }
 // `undo` is set on SEMANTIC entries (e.g. a layout edit via logAction): reversing
 // them runs the callback instead of restoring drop-zone nodes. Routing entries
 // carry a real `twist` + added/removed nodes; action entries carry `twist: null`.
-// `restored` marks entries hydrated from IndexedDB — read-only history: the DOM
-// nodes / undo callbacks they narrated died with the previous session, so they
-// can't be selected for Reverse Course (audit §7.3 gap 3).
-export interface Entry { id: number; ts: number; twist: HTMLElement | null; dest: string; prod: string; added: HTMLElement[]; removed: Removed[]; text: string; reversed: boolean; reversedBy?: string; reversedTs?: number; undo?: () => void; restored?: boolean; origin?: string; role?: string }
+// `restored` marks entries hydrated from IndexedDB or received from another seat:
+// the DOM nodes / undo callbacks they narrated died with that session. A routing
+// one keeps its source LABELS in `labels`, so Reverse Course re-derives it from
+// that persisted state (captains-log-reroute); one without labels stays read-only.
+// `transient` entries (merge-mediator notes) live this session only: never
+// persisted, published or selectable, so they can't bury the reversible history.
+export interface Entry { id: number; ts: number; twist: HTMLElement | null; dest: string; prod: string; added: HTMLElement[]; removed: Removed[]; text: string; reversed: boolean; reversedBy?: string; reversedTs?: number; undo?: () => void; restored?: boolean; origin?: string; role?: string; labels?: { added: string[]; removed: string[] }; transient?: boolean }
 // A narrative is identified by (origin session, voyage number): a UNIFIED log
 // merges every console's voyages, so two seats' "Voyage 1" stay distinct entries.
 export interface Narrative { id: number; title: string; entries: Entry[]; origin?: string }
 export type { Removed };
 // IndexedDB row shape (audit §8 W2): the log is the audit trail.
-export interface StoredEntry { k: string; origin?: string; voyage: number; voyTitle: string; entry: number; ts: number; dest: string; prod: string; text: string; reversed: boolean; reversedBy?: string; reversedTs?: number; by?: string; role?: string }
-/** A log entry surfaced to external listeners (the MQTT bridge, audit §4.6). */
-export interface LogEntryEvent { voyage: number; entry: number; ts: number; dest: string; prod: string; added: string[]; removed: string[]; text: string; reversed: boolean; reversedBy?: string; reversedTs?: number; by?: string; role?: string }
+// `added`/`removed` (source labels) are what lets a routing row be reversed after
+// a reload; rows written before they existed hydrate read-only.
+export interface StoredEntry { k: string; origin?: string; voyage: number; voyTitle: string; entry: number; ts: number; dest: string; prod: string; text: string; reversed: boolean; reversedBy?: string; reversedTs?: number; by?: string; role?: string; added?: string[]; removed?: string[] }
+/** A log entry surfaced to external listeners (the MQTT bridge, audit §4.6).
+ *  `origin` is set only when the entry belongs to ANOTHER seat (reversing it). */
+export interface LogEntryEvent { voyage: number; entry: number; ts: number; dest: string; prod: string; added: string[]; removed: string[]; text: string; reversed: boolean; reversedBy?: string; reversedTs?: number; by?: string; role?: string; origin?: string }
 
 // The one true copies of the mutable state. Arrays/sets are exported by
 // reference (mutated in place); the scalar counters + `current` are private and
 // only ever touched through the accessors below so there is a single owner.
 export const narratives: Narrative[] = [];
-export const selected = new Set<number>();
+// Selection is keyed by entKey (origin#entry): entry ids are only unique per seat,
+// and the unified log holds every seat's entries side by side.
+export const selected = new Set<string>();
 let current: Narrative | null = null;
 let nidSeq = 0, eidSeq = 0;
 
@@ -52,7 +60,13 @@ export function ensureNarrative(): Narrative {
   return current;
 }
 
-export const entryById = (id: number): Entry | null => { for (const n of narratives) { const e = n.entries.find((x) => x.id === id); if (e) return e; } return null; };
+/** Unified selection key for an entry: its seat's origin + its entry number. */
+export const entKey = (e: Entry): string => `${e.origin ?? selfOrig}#${e.id}`;
+export const entryByKey = (k: string): Entry | null => { for (const n of narratives) { const e = n.entries.find((x) => entKey(x) === k); if (e) return e; } return null; };
+/** Can Reverse Course act on this entry? Live refs, an undo callback, or the
+ *  persisted labels of a routing change (re-derived) — else it is read-only. */
+export const reversible = (e: Entry): boolean =>
+  !e.reversed && !e.transient && (!!e.undo || !!e.twist || !!(e.labels && (e.labels.added.length || e.labels.removed.length)));
 export const narById = (id: number): Narrative | undefined => narratives.find((n) => n.id === id);
 /** Look up a narrative by its unified (origin, voyage) identity. */
 export const narByOriginVoyage = (origin: string | undefined, voyage: number): Narrative | undefined =>

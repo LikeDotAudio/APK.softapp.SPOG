@@ -1,7 +1,8 @@
 // src/ui/console/captains-log-persist — IndexedDB persistence + the external
 // listener bus for the Captain's Log. persistEntry writes the audit trail (§8
-// W2); hydrateLog restores it as read-only rows; emitLog fans every entry out
-// to subscribers (the MQTT bridge) after persisting it.
+// W2); hydrateLog restores it (routing rows keep their source labels, so Reverse
+// Course can re-derive them); emitLog fans every entry out to subscribers (the
+// MQTT bridge) after persisting it.
 import { idbPut, idbGetAll } from '../../platform/store-idb.js';
 import { narratives, setCurrent, raiseNid, raiseEid, selfOrigin, narByOriginVoyage, type StoredEntry, type LogEntryEvent } from './captains-log-state.js';
 import { render } from './captains-log-view.js';
@@ -9,7 +10,7 @@ import { render } from './captains-log-view.js';
 let hydrating = false;
 export function persistEntry(e: LogEntryEvent, origin?: string): void {
   if (hydrating) return;
-  const org = origin ?? selfOrigin();
+  const org = origin ?? e.origin ?? selfOrigin();
   const key = `${org}:${e.voyage}:${e.entry}`;
   const voyTitle = narByOriginVoyage(org, e.voyage)?.title ?? `Voyage ${e.voyage}`;
   if (e.reversed) {
@@ -21,7 +22,7 @@ export function persistEntry(e: LogEntryEvent, origin?: string): void {
     });
     return;
   }
-  void idbPut('log', { k: key, origin: org, voyage: e.voyage, voyTitle, entry: e.entry, ts: e.ts, dest: e.dest, prod: e.prod, text: e.text, reversed: e.reversed, by: e.by, role: e.role });
+  void idbPut('log', { k: key, origin: org, voyage: e.voyage, voyTitle, entry: e.entry, ts: e.ts, dest: e.dest, prod: e.prod, text: e.text, reversed: e.reversed, by: e.by, role: e.role, added: e.added, removed: e.removed });
 }
 
 export async function hydrateLog(): Promise<number> {
@@ -38,7 +39,7 @@ export async function hydrateLog(): Promise<number> {
         nar = { id: r.voyage, origin: org, title: mine ? r.voyTitle : `${r.voyTitle} · ${org.slice(0, 4)}`, entries: [] };
         narratives.push(nar);
       }
-      nar.entries.push({ id: r.entry, ts: r.ts, twist: null, dest: r.dest, prod: r.prod, added: [], removed: [], text: r.text, reversed: r.reversed, reversedBy: r.reversedBy, reversedTs: r.reversedTs, restored: true, origin: org, role: r.role });
+      nar.entries.push({ id: r.entry, ts: r.ts, twist: null, dest: r.dest, prod: r.prod, added: [], removed: [], text: r.text, reversed: r.reversed, reversedBy: r.reversedBy, reversedTs: r.reversedTs, restored: true, origin: org, role: r.role, labels: r.added || r.removed ? { added: r.added ?? [], removed: r.removed ?? [] } : undefined });
       if (org === selfOrigin()) { raiseNid(r.voyage); raiseEid(r.entry); }
     }
     // Chronological across the merged log.

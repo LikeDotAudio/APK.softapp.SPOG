@@ -33,7 +33,9 @@ export function startLogBridge(bus: TwistBus): () => void {
     };
     // Namespaced by ORIGIN so two consoles' `voyage/entry` numbers never collide
     // (each seat owns its own retained subtree) — the key to a unified, complete log.
-    bus.publishRaw(`log/${origin}/${e.voyage}/${e.entry}`, { ...msg, full_id: bus.sessionId });
+    // Reversing ANOTHER seat's entry (re-derived from its labels) flags that seat's
+    // record, so it goes to the entry's own subtree (`e.origin`), not ours.
+    bus.publishRaw(`log/${e.origin ?? origin}/${e.voyage}/${e.entry}`, { ...msg, full_id: bus.sessionId });
   });
 
   // Subscribe to the WHOLE retained per-entry tree: the broker replays every retained
@@ -43,7 +45,9 @@ export function startLogBridge(bus: TwistBus): () => void {
   const unsubRemote = bus.subscribe('log/+/+/+', (topic, payload) => {
     const msg = payload as LogMsg | null;
     if (!msg || msg.full_id === bus.sessionId) return;
-    const org = (msg.full_id || '').split(':')[0] || topic.split('/')[1];
+    // The topic's origin segment names whose entry it is (a reversal may be
+    // published by another seat); full_id is the fallback.
+    const org = topic.split('/')[1] || (msg.full_id || '').split(':')[0];
     receiveNetworkLog({
       voyage: msg.voyage, entry: msg.entry, ts: msg.ts,
       dest: msg.dest, prod: msg.prod, added: msg.added, removed: msg.removed,
