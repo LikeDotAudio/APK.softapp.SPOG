@@ -81,13 +81,5 @@ export function injectMeterInputStyles(): void {
     background:#0a1326;border:1px solid #2c3e5e;border-radius:8px;padding:12px 14px;color:#bcd3ee;
     font:11px/1.55 'Courier New',monospace;white-space:pre;box-shadow:0 10px 28px rgba(0,0,0,.6);}
 .mi-layout.open{display:block;}
-/* ── hover-help + tooltip ──────────────────────────────────────────────── */
-.mi-help{cursor:help;}
-.mi-tip{position:fixed;z-index:100000;display:none;max-width:340px;pointer-events:none;
-    background:#0b1526;border:1px solid #2c4370;border-radius:9px;padding:11px 13px;
-    color:#cfe0f2;font:11px/1.55 Arial,Helvetica,sans-serif;box-shadow:0 12px 34px rgba(0,0,0,.7);}
-.mi-tip.open{display:block;}
-.mi-tip b{color:#6FC8F0;letter-spacing:1px;text-transform:uppercase;font-size:11px;}
-.mi-tip .g{color:#7fe0a0;font-weight:bold;} .mi-tip .bad{color:#ff9a9a;font-weight:bold;}
 `);
 }
