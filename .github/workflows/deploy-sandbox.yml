@@ -39,6 +39,11 @@ jobs:
       - name: Install Python Dependencies
         run: pip install paho-mqtt
 
+      - name: Typecheck and Test
+        run: |
+          npm run typecheck
+          npm run test -- --run
+
       - name: Inject FTP Credentials
         run: |
           # The sandbox uses a distinct set of secrets or a different target path

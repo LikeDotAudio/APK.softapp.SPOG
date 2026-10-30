@@ -49,7 +49,7 @@ npm run build        # prebuild size check → dist/ (content-hashed bundle + sw
 
 Local `npm run deploy*` scripts are disabled on purpose. A push to `main` runs
 `.github/workflows/deploy-production.yml` (typecheck + test, then
-`python3 SETUP/deploy.py`); `sandbox`/`develop` run the sandbox workflow. The build
+`python3 SETUP/deploy.py`); `sandbox`/`develop` run the sandbox workflow (same typecheck + test first). The build
 has a relative base, so `dist/` drops at the site root next to the shared `Routes/`.
 
 `Routes/**` is the only JSON that ships — routing DATA, discovered via per-folder

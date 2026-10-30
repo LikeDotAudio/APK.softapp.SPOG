@@ -28,7 +28,7 @@ Only CI deploys; `npm run deploy`, `deploy:all`, `deploy:next` print an error an
 | Trigger | Workflow | Does |
 |---|---|---|
 | push to `main` | `.github/workflows/deploy-production.yml` (environment `production`) | `npm ci` → typecheck → test → `python3 SETUP/deploy.py` |
-| push / PR to `sandbox` or `develop` | `.github/workflows/deploy-sandbox.yml` (environment `sandbox`) | `npm ci` → `python3 SETUP/deploy.py` with the `SANDBOX_FTP_*` secrets — **no typecheck or test** |
+| push / PR to `sandbox` or `develop` | `.github/workflows/deploy-sandbox.yml` (environment `sandbox`) | `npm ci` → typecheck → test → `python3 SETUP/deploy.py` with the `SANDBOX_FTP_*` secrets |
 
 `SETUP/deploy.py` (helpers in `SETUP/deploy/`), over one Explicit-FTPS connection to
 `FTP_HOST` (default `spog.like.audio`):
@@ -57,7 +57,6 @@ Only CI deploys; `npm run deploy`, `deploy:all`, `deploy:next` print an error an
 ## Not automated
 
 - No browser/E2E test: CI runs only `tsc` and vitest (node). Nothing loads the built page.
-- The sandbox deploy runs no typecheck or tests.
 - No post-deploy check that `spog.like.audio` serves the new `build-id.json`; the monorepo's
   `.apk.scripts/smoke.py` checks only that `HEAD` is pushed
   ([SMOKE](../%F0%9F%A7%A9Manual%20and%20Artifacts/SMOKE.md)).
