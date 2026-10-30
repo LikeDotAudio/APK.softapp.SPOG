@@ -8,10 +8,8 @@ export function slugId(s: string | null | undefined): string {
   return String(s == null ? '' : s).replace(/[^a-zA-Z0-9]+/g, '-');
 }
 
-/** Strip the backend-only ordering prefix ("001_") — used for sort, never shown. */
-export function stripOrder(name: string | null | undefined): string {
-  return String(name == null ? '' : name).replace(/^\d{3,}_/, '');
-}
+/** Re-exported from the pure domain (routing-core owns it). */
+export { stripOrder } from '../../domain/routing-core/index.js';
 
 /** LCARS fault badge markup for a header (empty when not faulted). */
 export function faultTag(status: string | undefined): string {

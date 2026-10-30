@@ -5,7 +5,7 @@
 // from the source label (order-prefix stripped); shape+number from a stable hash
 // of the seed; hue from the authored colour (falls back to a hashed hue).
 
-import { stripOrder } from '../../ui/sources/format.js';
+import { stripOrder } from '../routing-core/index.js';
 import { SHAPE_ROSTER, type CardIdent, type ShapeKind } from './types.js';
 
 /** FNV-1a — a cheap, stable string hash (no crypto needed for visual idents). */
