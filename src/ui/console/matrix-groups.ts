@@ -2,6 +2,7 @@
 // collapsible "dropped group" chip that bundles same-origin feeds. Split out of
 // matrix.ts (audit §5.3); imported by matrix.ts, matrix-place.ts, matrix-cascade.ts.
 import type { TwistConfig } from '../../model/index.js';
+import { setInkVar } from '../ink-var.js';
 
 export function parseConfig(twist: HTMLElement): TwistConfig | null {
   if (twist.dataset.config) { try { return JSON.parse(twist.dataset.config) as TwistConfig; } catch { /* ignore */ } }
@@ -31,11 +32,13 @@ let grpSeq = 0;
 /** Unique-ish id suffix for cloned crosspoints/groups (single owner; shared via export). */
 export const rid = (): string => (grpSeq++).toString(36) + '-' + (Date.now() % 1e6).toString(36);
 
+/** `groupColor` is a TRUE colour (ink-var trueColourOf), never one read back resolved. */
 export function buildDroppedGroup(groupName: string, groupColor: string, sourceNodes: HTMLElement[], parentLabel: string): HTMLElement {
   const group = document.createElement('div');
   group.className = 'signal-node dropped-group';
-  group.style.borderColor = groupColor;
-  group.style.color = groupColor;
+  setInkVar(group, '--dg-color', groupColor);   // the source's TRUE colour, repainted per mode (ROAD-3464)
+  group.style.borderColor = 'var(--dg-color)';
+  group.style.color = 'var(--dg-color)';
   group.id = 'grp-' + rid();
   group.draggable = true;
   const head = document.createElement('div');

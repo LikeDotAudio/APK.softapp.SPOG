@@ -31,15 +31,23 @@ const hueRotate = (deg: number): M => {
 const brightness = (b: number): M => lin([b, 0, 0, 0, b, 0, 0, 0, b]);
 const contrast = (k: number): M => lin([k, 0, 0, 0, k, 0, 0, 0, k], 0.5 - 0.5 * k);
 
-/** The filter chain a mode stands for — the order lcars.css composed it in (chroma, then vision). */
-export function chain(m: Mode): M[] {
-  const out: M[] = [];
-  if (m.chroma === 'grey') out.push(grayscale());
-  if (m.chroma === 'mono') out.push(grayscale(), sepia(), saturate(3.2), hueRotate(m.monoHue ?? -8), brightness(1.06));
-  if (m.vision === 'high') out.push(contrast(1.14), brightness(1.1));
-  if (m.vision === 'low') out.push(brightness(0.72), contrast(0.96), saturate(0.9));
+type Fn = 'grayscale' | 'sepia' | 'saturate' | 'hue-rotate' | 'brightness' | 'contrast';
+/** A mode as CSS filter functions — the order lcars.css composed it in (chroma, then vision). */
+export function steps(m: Mode): Array<readonly [Fn, number]> {
+  const out: Array<readonly [Fn, number]> = [];
+  if (m.chroma === 'grey') out.push(['grayscale', 1]);
+  if (m.chroma === 'mono') out.push(['grayscale', 1], ['sepia', 1], ['saturate', 3.2], ['hue-rotate', m.monoHue ?? -8], ['brightness', 1.06]);
+  if (m.vision === 'high') out.push(['contrast', 1.14], ['brightness', 1.1]);
+  if (m.vision === 'low') out.push(['brightness', 0.72], ['contrast', 0.96], ['saturate', 0.9]);
   return out;
 }
+const MATRIX: Record<Fn, (a: number) => M> = { grayscale, sepia, saturate, 'hue-rotate': hueRotate, brightness, contrast };
+/** The filter chain a mode stands for, as colour matrices. */
+export const chain = (m: Mode): M[] => steps(m).map(([f, a]) => MATRIX[f](a));
+/** The same chain as a CSS `filter` value (`none` when the mode is the identity): for what no token
+ *  reaches, a colour-emoji glyph in its own element (ui/console/emoji-ink.ts, ROAD-3464). */
+export const cssFilter = (m: Mode): string =>
+  steps(m).map(([f, a]) => `${f}(${a}${f === 'hue-rotate' ? 'deg' : ''})`).join(' ') || 'none';
 
 const clamp = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
 /** Apply a chain to one 0..1 RGB triple. */

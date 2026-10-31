@@ -3,7 +3,7 @@
 // old root filter; across all 612 palette colours × these six modes the function matched every
 // pixel exactly (0 of 3,672 off by even one level), so the filter could retire.
 import { describe, it, expect } from 'vitest';
-import { resolveColour, parseColour, hslColour, type Mode } from './colour-resolve.js';
+import { resolveColour, parseColour, hslColour, cssFilter, steps, type Mode } from './colour-resolve.js';
 
 const MODES: Record<string, Mode> = {
   grey: { chroma: 'grey', vision: 'normal' },
@@ -44,5 +44,15 @@ describe('resolveColour (ROAD-3456)', () => {
   });
   it('leaves what it cannot read alone (names, gradients, var())', () => {
     for (const c of ['red', 'var(--pal-x)', 'linear-gradient(red, blue)']) expect(resolveColour(c, MODES.grey!)).toBe(c);
+  });
+});
+
+describe('cssFilter (ROAD-3464)', () => {
+  it('spells the same steps resolveColour runs, in the order lcars.css composed them', () => {
+    expect(cssFilter({ chroma: 'full', vision: 'normal' })).toBe('none');
+    expect(cssFilter(MODES.grey!)).toBe('grayscale(1)');
+    expect(cssFilter(MODES.monolow!)).toBe('grayscale(1) sepia(1) saturate(3.2) hue-rotate(-8deg) brightness(1.06) brightness(0.72) contrast(0.96) saturate(0.9)');
+    expect(cssFilter(MODES.high!)).toBe('contrast(1.14) brightness(1.1)');
+    for (const m of Object.values(MODES)) expect(cssFilter(m).split(') ').length).toBe(steps(m).length);
   });
 });

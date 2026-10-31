@@ -7,6 +7,7 @@
 
 import { addStyles, el } from '../ui/dom.js';
 import { makeDisposer, type Disposer } from '../ui/timers.js';
+import { setInkVar, dropInkVar } from '../ui/ink-var.js';
 import { PAL, alpha } from '../domain/palette.js';
 
 const STYLE_ID = 'tr-ed-overlay';
@@ -91,14 +92,17 @@ function ensureOverlay(): OverlayHandle {
  * hash to #/<prod>/<twist> and restores the previous hash on close.
  */
 export function openOverlay(
-  opts: { title: string; color: string; prodName: string; twistName: string; voiceCommands?: Record<string, string> },
+  opts: { title: string; color: string; ink?: string; prodName: string; twistName: string; voiceCommands?: Record<string, string> },
   build: (body: HTMLElement, dispose: Disposer) => void,
 ): Disposer {
   const h = ensureOverlay();
   if (activeDisposer) activeDisposer.dispose();
   const dispose = makeDisposer();
   activeDisposer = dispose;
-  h.root.style.setProperty('--ed-color', opts.color || PAL.blue60);
+  // `ink`: the production's TRUE (data) colour, so --ed-color follows every mode change while
+  // the editor is open (ROAD-3464); without it `color` is a palette var or a fixed paint.
+  if (opts.ink) setInkVar(h.root, '--ed-color', opts.ink);
+  else { dropInkVar(h.root, '--ed-color'); h.root.style.setProperty('--ed-color', opts.color || PAL.blue60); }
   h.title.textContent = opts.title;
   h.body.innerHTML = '';
   

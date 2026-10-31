@@ -47,9 +47,42 @@ function paintVar(el: HTMLElement, prop: string, colour: string): void {
  *  sends or stores it (a chat endpoint's colour), never the mode-resolved paint. */
 export const trueInkVar = (el: Element, prop: string): string | undefined => read(el).get(prop);
 
+/** Forget `prop`'s true colour on `el` (the element is reused for a colour that is not data). */
+export function dropInkVar(el: HTMLElement, prop: string): void {
+  const m = read(el);
+  if (!m.delete(prop)) return;
+  if (m.size) el.setAttribute('data-ink', write(m)); else el.removeAttribute('data-ink');
+}
+
+/** The TRUE colour `el` paints its text in now, for a copy that must follow later mode changes (a
+ *  dropped group takes its source's colour, ROAD-3464). Read with the element marked
+ *  `data-true-colour`, so palette tokens come back as spelled; when that equals the resolved data
+ *  colour of the nearest `--lcars-color` on the way up, the source paints that one: its true colour. */
+export function trueColourOf(el: HTMLElement): string {
+  const had = el.hasAttribute('data-true-colour');
+  if (!had) el.setAttribute('data-true-colour', '');
+  const seen = getComputedStyle(el).color;
+  if (!had) el.removeAttribute('data-true-colour');
+  for (let a: HTMLElement | null = el; a; a = a.parentElement) {
+    const lc = read(a).get('--lcars-color');
+    if (lc === undefined) continue;
+    const [x, y] = [parseColour(seen), parseColour(ink(lc))];
+    return x && y && x.slice(0, 3).every((v, i) => Math.round(v) === Math.round(y[i]!)) ? lc : seen;
+  }
+  return seen;
+}
+
 /** The same for an HTML string: `style="${prop}: …"` comes from inkValue, this is the attribute. */
 export const inkAttr = (vars: Record<string, string>): string =>
   `data-ink="${write(new Map(Object.entries(vars))).replace(/"/g, '&quot;')}"`;
+
+/** The first `from` data colour in an HTML string (as inkAttr wrote it), carried onto `to`:
+ *  `[attribute, style declaration]`, both '' when the string holds none (a gang elbow takes its
+ *  first twist's colour, ROAD-3464). */
+export function carryInk(html: string, from: string, to: string): [string, string] {
+  const c = new RegExp(`data-ink="(?:[^"]*\\|)?${from}=([^|"]+)`).exec(html)?.[1];
+  return c ? [` ${inkAttr({ [to]: c })}`, ` ${to}:${inkValue(c)};`] : ['', ''];
+}
 
 /** Re-resolve every remembered data colour (after a mode change). */
 export function repaintInkVars(root: ParentNode = document): void {

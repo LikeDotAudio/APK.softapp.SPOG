@@ -12,9 +12,8 @@ import { buildSubCards } from './subcards.js';
 
 export function renderIntercom(host: HTMLElement, ctx: EditorContext): void {
   injectIntercomStyles();
-  // Legacy overlay chrome supplied --ed-color from the production; mirror it so
-  // the tool buttons pick up the production colour.
-  host.style.setProperty('--ed-color', ctx.production.color);
+  // The tool buttons take the production colour from the overlay's --ed-color, which follows
+  // the colour modes (ROAD-3464); re-stamping it here would freeze it.
 
   const state = createIntercomState(resolveKeys(ctx));
   const { keys } = state;

@@ -16,6 +16,7 @@ import { loadAllDestinations } from '../ui/console/footer.js';
 import { applyScope } from '../ui/console/auth-panel.js';
 import { BLURBS } from './blurbs.js';
 import { PAL } from '../domain/palette.js';
+import { trueInkVar } from '../ui/ink-var.js';
 
 /** A twist element in the console was clicked → open its dispatched editor. */
 export function openEditorForTwist(twistEl: HTMLElement): void {
@@ -70,7 +71,7 @@ export function openEditorForTwist(twistEl: HTMLElement): void {
   };
   const twistSvc = twistServices(prodName, name);
   openOverlay(
-    { title: prodName ? `${prodName} · ${plugin.title}` : plugin.title, color, prodName, twistName: name, voiceCommands: plugin.voiceCommands },
+    { title: prodName ? `${prodName} · ${plugin.title}` : plugin.title, color, ink: trueInkVar(twistEl, '--lcars-color'), prodName, twistName: name, voiceCommands: plugin.voiceCommands },
     (body, dispose) => {
       const ctx = buildContext(prod, twist, dispose, twistSvc, twistEl);
       // "What the production expects of this window" — a hover tip on the title rail,
@@ -110,6 +111,8 @@ function synthTwistFor(rep: HTMLElement, name: string): HTMLElement {
   }
   const color = rep.style.getPropertyValue('--lcars-color');
   if (color) t.style.setProperty('--lcars-color', color);
+  const ink = rep.getAttribute('data-ink');   // its true colour too, for the overlay (ROAD-3464)
+  if (ink) t.setAttribute('data-ink', ink);
   const title = el('div', { class: 'twist-title' }, [name]);
   t.append(title);
   return t;

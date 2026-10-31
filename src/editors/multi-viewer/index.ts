@@ -75,9 +75,9 @@ const plugin: EditorPlugin = {
     // A reorder shifts many panes at once → republish every pane's source+tally.
     const publishAllPanes = (): void => wins.forEach((_, i) => { publishSource(i, { throttle: false }); publishTally(i); });
 
-    // LCARS elbow frame wrapping the preset bar + wall. Frame colour comes from
-    // the production (data-in), replacing the legacy inherited --ed-color.
-    const frame = el('div', { class: 'mv-frame', style: `--ed-color:${ctx.production.color}` });
+    // LCARS elbow frame wrapping the preset bar + wall, in the production colour: the overlay's
+    // --ed-color, which follows the colour modes (ROAD-3464) — so not re-stamped here.
+    const frame = el('div', { class: 'mv-frame' });
     frame.append(el('div', { class: 'mv-frame-label', innerHTML: 'MULTI<br>VIEWER' }));
     host.appendChild(frame);
 

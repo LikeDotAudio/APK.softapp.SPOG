@@ -6,9 +6,9 @@
  *  chroma / vision mode (src/domain/colour-resolve.ts), and `[data-true-colour]` re-declares
  *  them as spelled, so a signal surface (TSG, video, scopes) marked with that attribute keeps
  *  its true colour while the interface around it follows the mode. Points the canvas setters
- *  (src/ui/canvas-ink.ts) at the same mode. */
+ *  (src/ui/canvas-ink.ts) at the same mode, and carries the mode as a CSS filter for emoji. */
 
-import type { Mode } from '../../domain/colour-resolve.js';
+import { cssFilter, type Mode } from '../../domain/colour-resolve.js';
 import { installCanvasInk, setInkMode, resolvedVars, TRUE_VARS } from '../canvas-ink.js';
 
 const block = (sel: string, vals: Readonly<Record<string, string>>): string =>
@@ -25,6 +25,7 @@ export function paintPalette(mode: Mode): Readonly<Record<string, string>> {
     tag.id = 'pal-tokens';
     document.head.appendChild(tag);
   }
-  tag.textContent = `${block(':root', res)}\n${block('[data-true-colour]', TRUE_VARS)}`;
+  // --emoji-filter: the mode as CSS, for colour-emoji glyphs (ui/console/emoji-ink.ts, ROAD-3464).
+  tag.textContent = `${block(':root', { ...res, 'emoji-filter': cssFilter(mode) })}\n${block('[data-true-colour]', { ...TRUE_VARS, 'emoji-filter': 'none' })}`;
   return res;
 }

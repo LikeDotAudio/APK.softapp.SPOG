@@ -11,7 +11,7 @@ import { decorateRoom } from './authoring.js';
 import { mountDestFixtures } from './dest-fixtures.js';
 import { applyScope } from './auth-panel.js';
 import { PAL, alpha } from '../../domain/palette.js';
-import { inkAttr, inkValue } from '../ink-var.js';
+import { inkAttr, inkValue, carryInk } from '../ink-var.js';
 
 const twistName = (t: string | TwistConfig): string => (typeof t === 'string' ? t : t.name);
 
@@ -99,31 +99,30 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
   // starts COLLAPSED (just its bar showing); the operator unfolds the banks they
   // want. (source-filter.ts force-opens groups that a source/filter targets.)
   const openByDefault = (_count: number): string => '';
-  // The gang elbow paints in the members' own LCARS colour (first twist's).
-  const zoneStyle = (content: string): string => {
-    const c = (content.match(/--lcars-color:\s*([^;"']+)/) || [])[1];
-    return c ? ` --zone-color:${c.trim()};` : '';
-  };
+  // The gang elbow paints in the members' own LCARS colour (first twist's), taken TRUE off its
+  // data-ink and written through ink-var, so a mode change repaints it (ROAD-3464).
+  const zone = (content: string): string => carryInk(content, '--lcars-color', '--zone-color')[0];
+  const zoneStyle = (content: string): string => carryInk(content, '--lcars-color', '--zone-color')[1];
   // A gang's summary IS the elbow's top bar (title inside the LCARS, no separate
   // header row, no redundant caret — the bar itself folds the group).
   const summaryFor = (name: string, count: number, gang: boolean): string => gang
     ? `<summary class="gang-bar"><span style="flex:1;">${name.toUpperCase()} <span style="opacity:0.55; font-weight:normal;">(${count})</span></span></summary>`
-    : `<summary style="cursor: pointer; padding: 1px 8px; font-weight: bold; color: ${pColor}; user-select: none; font-size: 0.85em; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
+    : `<summary style="cursor: pointer; padding: 1px 8px; font-weight: bold; color: var(--prod-color); user-select: none; font-size: 0.85em; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
           <span style="flex:1;">${name.toUpperCase()} <span style="opacity:0.5; font-weight:normal;">(${count})</span></span>
         </summary>`;
   const wrapGroup = (name: string, content: string, extraClass: string = '', names: string[] = []) => {
     const count = (content.match(/twist-container/g) || []).length;
     const gang = isGang(names);
     return `
-      <details class="twist-group ${extraClass}${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
+      <details class="twist-group ${extraClass}${gang ? ' gang' : ''}"${openByDefault(count)}${zone(content)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
         ${summaryFor(name, count, gang)}
         <div class="monitor-row zone-row ${extraClass}" style="margin-top: ${gang ? 0 : 2}px;">${content}</div>
       </details>`;
   };
 
   let html = `
-    <div class="program-row${faulted ? ' fault' : ''}" style="--prod-color: ${pColor}; position: relative; overflow: hidden; padding: 0; margin-bottom: 10px; flex: 1 1 auto;">
-      <div class="program-title" style="background: ${pColor};">${monoEmoji(titleText)}${titleText}${faulted ? ' ' : ''}${faultTag(pgm.status)}</div>
+    <div class="program-row${faulted ? ' fault' : ''}" ${inkAttr({ '--prod-color': pColor })} style="--prod-color: ${inkValue(pColor)}; position: relative; overflow: hidden; padding: 0; margin-bottom: 10px; flex: 1 1 auto;">
+      <div class="program-title" style="background: var(--prod-color);">${monoEmoji(titleText)}${titleText}${faulted ? ' ' : ''}${faultTag(pgm.status)}</div>
       <div class="program-body" style="display: flex; flex-direction: column; gap: 1px; align-items: flex-start; width: 100%;">`;
   // Big (function) twists group like the small rows do — but keep their wrapping
   // ~3-across flow instead of the equal-share monitor row.
@@ -131,7 +130,7 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
     const count = (content.match(/twist-container/g) || []).length;
     const gang = isGang(names);
     return `
-      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
+      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)}${zone(content)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
         ${summaryFor(name, count, gang)}
         <div class="zone-row" style="display:flex;flex-wrap:wrap;gap:6px;width:100%;align-items:flex-start;margin-top:${gang ? 0 : 2}px;">${content}</div>
       </details>`;
@@ -143,7 +142,7 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
     const gang = isGang(names);
     const cols = Math.max(1, count);
     return `
-      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
+      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)}${zone(content)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
         ${summaryFor(name, count, gang)}
         <div class="zone-row" style="display:grid;grid-template-columns:repeat(${cols},minmax(0,1fr));gap:6px;width:100%;align-items:stretch;margin-top:${gang ? 0 : 2}px;">${content}</div>
       </details>`;

@@ -14,7 +14,8 @@ import { STATE_TONES, TONE_NAMES } from '../../domain/state.js';
 import { paintPalette } from './palette-paint.js';
 import { ink } from '../canvas-ink.js';
 import { repaintInkVars } from '../ink-var.js';
-import { applyEmojiGrey } from './emoji-grey.js';
+import { applyEmojiInk } from './emoji-ink.js';
+import { cssFilter } from '../../domain/colour-resolve.js';
 
 /** The current scheme, read back from the <html> attributes (default-filled). */
 export function getScheme(): ColourScheme {
@@ -60,10 +61,11 @@ function paint(s: ColourScheme): void {
   }
   // The palette's --pal-* and the canvas setters, resolved for the mode: no page filter, so
   // signal content keeps its true colour (ROAD-3456). Before the tokens below, which ink() too.
-  paintPalette({ chroma: s.chroma, vision: s.vision, monoHue: s.monoHue });
+  const mode = { chroma: s.chroma, vision: s.vision, monoHue: s.monoHue };
+  paintPalette(mode);
   applyPaletteTokens(s.cvd);
   repaintInkVars();     // data colours (Routes JSON) written through ink-var follow too
-  applyEmojiGrey(s.chroma === 'grey');   // colour-emoji glyphs: no token reaches them (ROAD-3463)
+  applyEmojiInk(cssFilter(mode) !== 'none');   // colour-emoji glyphs: no token reaches them (ROAD-3464)
   applyStateGlyphs(s);   // `auto` glyphs follow chroma/vision; fail-soft
 }
 

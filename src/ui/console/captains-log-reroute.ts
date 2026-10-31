@@ -9,6 +9,7 @@ import { placeSourceInTwist, publishCrosspoints } from './matrix-place.js';
 import { refreshCrosspoints } from './matrix-crosspoints.js';
 import { updateTwistVisuals } from './helix.js';
 import { acceptsFor, buildDroppedGroup, parseConfig } from './matrix-groups.js';
+import { trueColourOf } from '../ink-var.js';
 
 export interface ReversalPlan { drop: number[]; add: string[] }
 
@@ -63,7 +64,7 @@ export function reroute(twist: HTMLElement, added: string[], removed: string[], 
     const src = single(r);
     if (src) { placeSourceInTwist(twist, src); continue; }
     const g = groupFeeds(twist, r, pool, labelOf);
-    if (g) dz.appendChild(buildDroppedGroup(g.name, getComputedStyle(g.colorOf).color, g.feeds, g.parent));
+    if (g) dz.appendChild(buildDroppedGroup(g.name, trueColourOf(g.colorOf), g.feeds, g.parent));
   }
   refreshCrosspoints(dz);
   updateTwistVisuals(twist);

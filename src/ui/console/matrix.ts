@@ -9,6 +9,7 @@
 // here, the rest is split into flat matrix-* siblings and re-exported so every
 // existing `./matrix.js` import stays byte-identical.
 import { updateTwistVisuals, toggleHelix } from './helix.js';
+import { trueColourOf } from '../ink-var.js';
 import { parseConfig, enforceTwistLimits, ensureDropZone, acceptsFor, buildDroppedGroup, rid } from './matrix-groups.js';
 import { refreshCrosspoints } from './matrix-crosspoints.js';
 import { publishCrosspoints, applyCrosspointsFromNetwork } from './matrix-place.js';
@@ -107,7 +108,7 @@ export function initializeTwists(root: ParentNode, onOpenEditor?: OpenEditor): v
             const headerEl = node.querySelector<HTMLElement>('.multiplex-header');
             const groupName = headerEl ? headerEl.innerText : (node.dataset.origin || node.id);
             const parentCap = (node.dataset.origin || '').split(' — ').map((s) => s.trim()).filter(Boolean).join(' · ');
-            dropZone.appendChild(buildDroppedGroup(groupName, getComputedStyle(node).color, feeds, parentCap));
+            dropZone.appendChild(buildDroppedGroup(groupName, trueColourOf(node), feeds, parentCap));
           }
           controls.forEach((ctrlNode) => {
             const clone = ctrlNode.cloneNode(true) as HTMLElement;
@@ -127,7 +128,7 @@ export function initializeTwists(root: ParentNode, onOpenEditor?: OpenEditor): v
         const parentCap = parts.slice(0, -1).join(' · ');
         const first = nodes[0];
         if (origin && nodes.length >= 2 && first) {
-          dropZone.appendChild(buildDroppedGroup(boxName, getComputedStyle(first).color, nodes, parentCap));
+          dropZone.appendChild(buildDroppedGroup(boxName, trueColourOf(first), nodes, parentCap));
         } else {
           nodes.forEach((n) => {
             const clone = n.cloneNode(true) as HTMLElement;

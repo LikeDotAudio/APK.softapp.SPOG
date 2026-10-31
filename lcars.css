@@ -53,9 +53,9 @@
            (src/domain/colour-resolve.ts holds the maths). High also kills glow, which
            lowers effective contrast. */
         html[data-vision="high"] { --glow-cyan: none; --glow-magenta: none; }
-        /* Colour-emoji glyphs are no palette colour: under grey the element holding one is marked
-           data-emoji (src/ui/console/emoji-grey.ts) and greyed here — exact, the element is grey already. */
-        html[data-chroma="grey"] [data-emoji] { filter: grayscale(1); }
+        /* Colour-emoji glyphs are no palette colour: each run sits in its own span[data-emoji]
+           (src/ui/console/emoji-ink.ts) and takes the mode as a filter (--emoji-filter, palette-paint.ts). */
+        [data-emoji] { filter: var(--emoji-filter, none); }
         /* Native controls (range, checkbox, radio, progress) paint the browser's own accent unless told:
            Chrome's default blue as a palette colour (sky50), so it follows the mode like everything else. */
         html { accent-color: var(--pal-sky50); }
