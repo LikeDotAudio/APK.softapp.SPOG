@@ -7,5 +7,6 @@ Plans are not kept here: every plan is a card in the APK.audio monorepo's `Docum
 <!-- wiki:index -->
 | Page | What |
 |---|---|
+| [IMPROVEMENTS.md](IMPROVEMENTS.md) | 🛣 Improvements — WEB.SPOG (from the 2026-10-30 architecture audit) |
 | [roadmap.md](roadmap.md) | SPOG Roadmap |
 <!-- /wiki:index -->
