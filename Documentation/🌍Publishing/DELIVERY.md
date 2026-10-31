@@ -109,8 +109,8 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
   `COPY --from` instead of naming SPOG's files. Verified: `npm run build:image`, and `docker compose
   build` of the dist stage plus a consumer stage copying it (index.htm + Routes/index.json
   present). The size gate now reads submodule paths from `.gitmodules`, so a context without
-  `.git` still skips TIME.clockFaces. Switching the Frontend-Assets Dockerfile over is W09's
-  (handoff filed).
+  `.git` still skips TIME.clockFaces. WEB.Frontend-Assets now consumes it (`1fa0fe5e`: compose service
+  `spog-dist` → `COPY --from=spog-dist / /srv/www/SPOG`), so it no longer names SPOG's files.
 - **Generator for the protobuf code** — `npm run proto` / `proto:check` (`SETUP/proto.mjs`, pbjs
   static-module es6 + pbts) and `schema.test.ts` failing when `schema.js`/`schema.d.ts` are stale.
   Verified: the committed files are byte-identical to the generator's output.
