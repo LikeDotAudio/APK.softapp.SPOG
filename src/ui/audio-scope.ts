@@ -8,6 +8,7 @@
 // draw the same instruments from one place (Phase 4 consumes these).
 
 import { withTrueColour } from '../domain/true-colour.js';
+import { PAL, alpha } from '../domain/palette.js';
 
 export interface AudioWaveOpts {
   /** Red "attention" trace (the IFB uses it while a Talk key is held). */
@@ -31,7 +32,7 @@ function paintAudioWave(cv: HTMLCanvasElement, level: number, opts: AudioWaveOpt
   if (!ctx) return;
   const cycles = opts.cycles || 6;
   ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = opts.alert ? 'rgba(255,120,120,.9)' : (opts.color || 'rgba(90,224,140,.9)');
+  ctx.strokeStyle = opts.alert ? alpha(PAL.red74s100, .9) : (opts.color || alpha(PAL.green62, .9));
   ctx.lineWidth = 2;
   ctx.beginPath();
   for (let x = 0; x <= w; x += 3) {
@@ -59,12 +60,12 @@ function paintLissajous(cv: HTMLCanvasElement, corr: number, frame: number, amp:
   if (!ctx) return;
   ctx.clearRect(0, 0, w, h);
   // crosshair graticule
-  ctx.strokeStyle = 'rgba(80,110,150,.25)';
+  ctx.strokeStyle = alpha(PAL.sky45s30, .25);
   ctx.beginPath();
   ctx.moveTo(w / 2, 4); ctx.lineTo(w / 2, h - 4);
   ctx.moveTo(4, h / 2); ctx.lineTo(w - 4, h / 2);
   ctx.stroke();
-  ctx.strokeStyle = corr < 0 ? 'rgba(255,90,90,.85)' : 'rgba(120,235,150,.85)';
+  ctx.strokeStyle = corr < 0 ? alpha(PAL.red68s100, .85) : alpha(PAL.green70s74, .85);
   ctx.lineWidth = 1.4;
   ctx.beginPath();
   const a = (0.5 + amp * 0.5) * (w / 2 - 8);

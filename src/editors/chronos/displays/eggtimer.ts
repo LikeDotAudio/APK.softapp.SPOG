@@ -7,7 +7,7 @@
 // simply winds the ring the other way). When a down count lands, the rim pulses red.
 
 import { TAU, roundRect, type DisplayDef, type DisplayCtx } from '../shared.js';
-import { PAL } from '../../../domain/palette.js';
+import { PAL, alpha } from '../../../domain/palette.js';
 
 function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx): void {
   const cx = W / 2, cy = H / 2, S = Math.min(W, H);
@@ -19,7 +19,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   const body = g.createLinearGradient(0, cy - bR, 0, cy + bR);
   body.addColorStop(0, PAL.white); body.addColorStop(1, PAL.grey90);
   g.fillStyle = body; g.fill();
-  g.strokeStyle = 'rgba(0,0,0,0.14)'; g.lineWidth = S * 0.006; g.stroke();
+  g.strokeStyle = alpha(PAL.black, .14); g.lineWidth = S * 0.006; g.stroke();
 
   const R = S * 0.4;                                   // dial radius
   const remainMin = Math.max(0, Math.min(60, c.ms / 60_000));
@@ -47,7 +47,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   g.restore();
 
   // Recessed dial rim (the moulded well the ring turns in).
-  g.strokeStyle = 'rgba(0,0,0,0.22)'; g.lineWidth = S * 0.004;
+  g.strokeStyle = alpha(PAL.black, .22); g.lineWidth = S * 0.004;
   g.beginPath(); g.arc(cx, cy, R * 0.82, 0, TAU); g.stroke();
 
   // Landed alarm: a red rim pulse while a finished down count sits at zero.
@@ -63,7 +63,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   const kg = g.createLinearGradient(cx - kw / 2, 0, cx + kw / 2, 0);
   kg.addColorStop(0, PAL.grey91); kg.addColorStop(0.5, PAL.white); kg.addColorStop(1, PAL.grey84);
   g.fillStyle = kg; g.fill();
-  g.strokeStyle = 'rgba(0,0,0,0.16)'; g.lineWidth = S * 0.003; g.stroke();
+  g.strokeStyle = alpha(PAL.black, .16); g.lineWidth = S * 0.003; g.stroke();
 
   // Fixed red triangle pointer at 12 o'clock.
   g.fillStyle = PAL.red50s76;

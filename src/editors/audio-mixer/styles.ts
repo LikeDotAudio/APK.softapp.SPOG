@@ -2,7 +2,7 @@
 // addStyles('twist-editor-audio-mixer', …) CSS block so the console visuals match 1:1.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectAudioMixerStyles(): void {
   addStyles(
@@ -19,7 +19,7 @@ export function injectAudioMixerStyles(): void {
             font-weight:900;letter-spacing:1px;font-size:14px;text-align:center;cursor:pointer;
             white-space:nowrap;transition:filter .12s,box-shadow .12s,background .12s;}
         .am-layerbtn:hover{filter:brightness(1.12);}
-        .am-layerbtn.sel{background:var(--ed-color,${PAL.orange69});color:${PAL.black};box-shadow:0 0 14px rgba(255,156,99,.55);}
+        .am-layerbtn.sel{background:var(--ed-color,${PAL.orange69});color:${PAL.black};box-shadow:0 0 14px ${alpha(PAL.orange69, .55)};}
         .am-layerbtn.static{cursor:default;}
         /* Decorative LCARS elbow blocks down the rail */
         .am-elbow{flex:0 0 auto;height:30px;border-radius:24px 6px 6px 24px;}
@@ -39,28 +39,28 @@ export function injectAudioMixerStyles(): void {
         .am-spill{font-size:11px;font-weight:900;letter-spacing:1px;border:none;border-radius:8px;
             padding:6px 12px;cursor:pointer;background:${PAL.blue27};color:${PAL.blue91};}
         .am-spill:hover{filter:brightness(1.15);}
-        .am-spill.on{background:var(--cyan,${PAL.cyan50});color:${PAL.black};box-shadow:0 0 10px rgba(0,255,255,.5);}
+        .am-spill.on{background:var(--cyan,${PAL.cyan50});color:${PAL.black};box-shadow:0 0 10px ${alpha(PAL.cyan50, .5)};}
         .am-knob{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 50% 35%,${PAL.blue32},${PAL.blue12});
-            border:3px solid ${PAL.blue40};position:relative;cursor:ns-resize;box-shadow:0 2px 6px rgba(0,0,0,.5);}
+            border:3px solid ${PAL.blue40};position:relative;cursor:ns-resize;box-shadow:0 2px 6px ${alpha(PAL.black, .5)};}
         .am-knob::after{content:'';position:absolute;left:50%;top:6px;width:3px;height:18px;background:var(--cyan,${PAL.cyan50});
             transform-origin:50% 25px;transform:translateX(-50%) rotate(var(--rot,0deg));border-radius:2px;}
         .am-klabel{font-size:9px;letter-spacing:1px;color:${PAL.blue60s27};margin-top:-6px;}
         /* Stage-box remote-preamp SENS control, revealed with a little magic. */
         .am-sens{position:relative;margin:4px auto 8px;padding:6px 4px 4px;border-radius:10px;
-            background:rgba(242,183,75,.1);border:1px solid rgba(242,183,75,.5);display:flex;flex-direction:column;align-items:center;}
+            background:${alpha(PAL.orange62, .1)};border:1px solid ${alpha(PAL.orange62, .5)};display:flex;flex-direction:column;align-items:center;}
         .am-sens-badge{font:bold 8px sans-serif;letter-spacing:1px;color:${PAL.orange62};margin-bottom:3px;}
         .am-sens-btn{margin-top:2px;width:100%;background:${PAL.orange62};color:${PAL.orange06};border:none;border-radius:6px;font:bold 9px sans-serif;letter-spacing:1px;padding:7px 6px;cursor:pointer;}
         .am-sens-btn:hover{filter:brightness(1.08);}
-        .am-pregain{margin:4px auto 6px;padding:5px 4px;border-radius:9px;background:rgba(242,183,75,.1);border:1px solid rgba(242,183,75,.45);display:flex;flex-direction:column;align-items:center;gap:4px;}
+        .am-pregain{margin:4px auto 6px;padding:5px 4px;border-radius:9px;background:${alpha(PAL.orange62, .1)};border:1px solid ${alpha(PAL.orange62, .45)};display:flex;flex-direction:column;align-items:center;gap:4px;}
         .am-pregain .am-knob{--cyan:${PAL.orange62};width:42px;height:42px;border-color:${PAL.amber35};}
         .am-pregain .am-knob::after{height:12px;top:4px;transform-origin:50% 16px;}
         .am-pre-open{width:100%;background:${PAL.blue15};color:${PAL.orange62};border:1px solid ${PAL.amber35};border-radius:5px;font:bold 8px sans-serif;letter-spacing:.5px;padding:5px 4px;cursor:pointer;}
         .am-pre-open:hover{background:${PAL.blue21};}
         /* Wireless mic channel: the strip carries an RF accent so the operator can
            spot radio channels (battery/RF risk) at a glance; button opens telemetry. */
-        .am-strip.wireless{border:1px solid rgba(63,193,201,.55);border-radius:8px;
-            background:linear-gradient(180deg,rgba(63,193,201,.12),rgba(63,193,201,.03) 40%);
-            box-shadow:0 0 10px rgba(63,193,201,.18) inset;}
+        .am-strip.wireless{border:1px solid ${alpha(PAL.cyan52, .55)};border-radius:8px;
+            background:linear-gradient(180deg,${alpha(PAL.cyan52, .12)},${alpha(PAL.cyan52, .03)} 40%);
+            box-shadow:0 0 10px ${alpha(PAL.cyan52, .18)} inset;}
         .am-strip.wireless .am-name::after{content:'RF';font:bold 7px sans-serif;letter-spacing:1px;color:${PAL.sky10};
             background:${PAL.cyan52};border-radius:3px;padding:1px 3px;margin-left:4px;vertical-align:middle;}
         .am-pre-open.wireless{background:${PAL.cyan12};color:${PAL.cyan52};border-color:${PAL.cyan37s54};}
@@ -79,16 +79,16 @@ export function injectAudioMixerStyles(): void {
         .am-ms{display:flex;gap:8px;}
         .am-ms button{font-size:13px;font-weight:900;letter-spacing:1px;border:none;border-radius:8px;
             padding:8px 16px;cursor:pointer;background:${PAL.blue23};color:${PAL.blue91};}
-        .am-ms button.mute.on{background:${PAL.red60};color:${PAL.white};box-shadow:0 0 12px rgba(255,51,68,.6);}
-        .am-ms button.solo.on{background:${PAL.amber61};color:${PAL.black};box-shadow:0 0 12px rgba(245,197,66,.6);}
+        .am-ms button.mute.on{background:${PAL.red60};color:${PAL.white};box-shadow:0 0 12px ${alpha(PAL.red60, .6)};}
+        .am-ms button.solo.on{background:${PAL.amber61};color:${PAL.black};box-shadow:0 0 12px ${alpha(PAL.amber61, .6)};}
         .am-fadarea{display:flex;gap:10px;align-items:flex-end;height:240px;}
         .am-fader{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;
             width:46px;height:230px;border-radius:24px;border:2px solid ${PAL.blue34};cursor:grab;
-            background:linear-gradient(${PAL.blue12s60},${PAL.blue16});box-shadow:inset 0 0 14px rgba(0,0,0,.6);}
+            background:linear-gradient(${PAL.blue12s60},${PAL.blue16});box-shadow:inset 0 0 14px ${alpha(PAL.black, .6)};}
         .am-fader:active{cursor:grabbing;}
         .am-fader::-webkit-slider-thumb{-webkit-appearance:none;width:60px;height:34px;border-radius:9px;
             background:linear-gradient(${PAL.blue97},${PAL.blue81});border:2px solid ${PAL.white};cursor:grab;
-            box-shadow:0 3px 6px rgba(0,0,0,.55),0 0 8px rgba(207,224,255,.5);}
+            box-shadow:0 3px 6px ${alpha(PAL.black, .55)},0 0 8px ${alpha(PAL.blue91, .5)};}
         .am-fader::-moz-range-thumb{width:60px;height:34px;border-radius:9px;background:${PAL.blue91};border:2px solid ${PAL.white};cursor:grab;}
         .am-strip.master .am-fader::-webkit-slider-thumb{background:linear-gradient(${PAL.indigo92},${PAL.indigo83});}
         .am-vu{width:16px;height:230px;border-radius:5px;background:${PAL.blue09};overflow:hidden;display:flex;flex-direction:column-reverse;}

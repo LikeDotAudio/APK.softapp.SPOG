@@ -7,7 +7,7 @@
 // level line-up.
 
 import type { DvdState } from './state.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const TOP = [PAL.grey75, PAL.yellow37, PAL.cyan37, PAL.green37, PAL.purple37, PAL.red37, PAL.blue37] as const;
 const MID = [PAL.blue37, PAL.grey07_131313, PAL.purple37, PAL.grey07_131313, PAL.cyan37, PAL.grey07_131313, PAL.grey75] as const;
@@ -49,7 +49,7 @@ export function drawSMPTE(cv: HTMLCanvasElement): void {
   seg(u * 0.42, PAL.grey08); // PLUGE black (7.5 IRE)
   seg(u * 0.42, PAL.grey12); // PLUGE lighter (11.5 IRE)
   seg(w - x, PAL.grey07_131313); // black
-  ctx.fillStyle = 'rgba(160,190,220,.5)';
+  ctx.fillStyle = alpha(PAL.sky75s46, .5);
   ctx.font = '8px Courier New, monospace';
   ctx.fillText('PLUGE', Math.round(u * 4.6), botY + botH - 4);
 }

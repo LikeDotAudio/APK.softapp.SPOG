@@ -10,7 +10,7 @@ import { pluginFor } from '../../editors/registry.js';
 import { decorateRoom } from './authoring.js';
 import { mountDestFixtures } from './dest-fixtures.js';
 import { applyScope } from './auth-panel.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const twistName = (t: string | TwistConfig): string => (typeof t === 'string' ? t : t.name);
 
@@ -114,7 +114,7 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
     const count = (content.match(/twist-container/g) || []).length;
     const gang = isGang(names);
     return `
-      <details class="twist-group ${extraClass}${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
+      <details class="twist-group ${extraClass}${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
         ${summaryFor(name, count, gang)}
         <div class="monitor-row zone-row ${extraClass}" style="margin-top: ${gang ? 0 : 2}px;">${content}</div>
       </details>`;
@@ -130,7 +130,7 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
     const count = (content.match(/twist-container/g) || []).length;
     const gang = isGang(names);
     return `
-      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
+      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
         ${summaryFor(name, count, gang)}
         <div class="zone-row" style="display:flex;flex-wrap:wrap;gap:6px;width:100%;align-items:flex-start;margin-top:${gang ? 0 : 2}px;">${content}</div>
       </details>`;
@@ -142,7 +142,7 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
     const gang = isGang(names);
     const cols = Math.max(1, count);
     return `
-      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
+      <details class="twist-group${gang ? ' gang' : ''}"${openByDefault(count)} style="width: 100%; margin-bottom: 1px; background: ${alpha(PAL.black, .2)}; border-radius: 8px; padding: 1px 4px;${zoneStyle(content)}">
         ${summaryFor(name, count, gang)}
         <div class="zone-row" style="display:grid;grid-template-columns:repeat(${cols},minmax(0,1fr));gap:6px;width:100%;align-items:stretch;margin-top:${gang ? 0 : 2}px;">${content}</div>
       </details>`;

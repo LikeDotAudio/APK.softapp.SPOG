@@ -6,7 +6,7 @@ import type { SourceLeaf } from '../../model/index.js';
 import { stripOrder } from '../sources/format.js';
 
 const PM_CSS = `
-.pm-ov{position:fixed;inset:0;z-index:3100;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,rgba(13,23,48,.92),rgba(3,6,15,.96));font-family:Arial,Helvetica,sans-serif;}
+.pm-ov{position:fixed;inset:0;z-index:3100;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,${alpha(PAL.blue12s57, .92)},${alpha(PAL.blue04, .96)});font-family:Arial,Helvetica,sans-serif;}
 .pm-ov.open{display:flex;}
 .pm-box{width:min(960px,94vw);max-height:90vh;overflow:auto;background:${PAL.blue09s58};border:1px solid ${PAL.blue19};border-radius:16px;padding:26px;}
 .pm-box h2{margin:0 0 2px;color:${PAL.white};font-size:22px;letter-spacing:2px;}
@@ -28,7 +28,7 @@ const PM_CSS = `
 `;
 
 import { putDraft, getDraft } from '../../platform/routes-store.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 let ov: HTMLElement | null = null;
 

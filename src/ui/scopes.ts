@@ -4,7 +4,7 @@
 // Pure-ish drawing functions over a typed ShadingState — no globals, no scraping.
 // The camera console (and any future scope consumer) composes these.
 
-import { PAL } from '../domain/palette.js';
+import { PAL, alpha } from '../domain/palette.js';
 import { withTrueColour } from '../domain/true-colour.js';
 
 export interface ShadingState {
@@ -61,12 +61,12 @@ function paintParade(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): v
   ctx.font = '9px Courier New, monospace';
   for (let c = 0 as 0 | 1 | 2; c < 3; c = (c + 1) as 0 | 1 | 2) {
     const x0 = padL + c * (pw + gap);
-    ctx.fillStyle = 'rgba(255,255,255,.02)';
+    ctx.fillStyle = alpha(PAL.white, .02);
     ctx.fillRect(x0, top, pw, span);
     for (const p of [-10, 0, 25, 50, 75, 100, 110]) {
       const y = ire2y(p);
       const edge = p === -10 || p === 110;
-      ctx.strokeStyle = p === 100 ? 'rgba(255,90,90,.3)' : edge ? 'rgba(120,160,210,.30)' : 'rgba(80,110,150,.16)';
+      ctx.strokeStyle = p === 100 ? alpha(PAL.red68s100, .3) : edge ? alpha(PAL.sky65s50, .3) : alpha(PAL.sky45s30, .16);
       if (edge) ctx.setLineDash([3, 3]);
       ctx.beginPath();
       ctx.moveTo(x0, y);
@@ -74,7 +74,7 @@ function paintParade(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): v
       ctx.stroke();
       ctx.setLineDash([]);
       if (c === 0) {
-        ctx.fillStyle = edge ? 'rgba(155,190,230,.95)' : 'rgba(120,150,190,.7)';
+        ctx.fillStyle = edge ? alpha(PAL.sky75s60, .95) : alpha(PAL.sky61s35, .7);
         ctx.fillText(String(p), 2, y + 3);
       }
     }
@@ -126,7 +126,7 @@ function paintVectorscope(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolea
     const [pb, pr] = ypbpr(r, g, b);
     return [cx + pb * K, cy - pr * K];
   };
-  ctx.strokeStyle = 'rgba(80,110,150,.3)';
+  ctx.strokeStyle = alpha(PAL.sky45s30, .3);
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.arc(cx, cy, R, 0, 7);
@@ -141,14 +141,14 @@ function paintVectorscope(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolea
   ctx.lineTo(cx + R, cy);
   ctx.stroke();
   const [sx, sy] = xy(0.78, 0.55, 0.42);
-  ctx.strokeStyle = 'rgba(255,200,120,.35)';
+  ctx.strokeStyle = alpha(PAL.orange74s100, .35);
   ctx.beginPath();
   ctx.moveTo(cx, cy);
   ctx.lineTo(cx + (sx - cx) * 1.5, cy + (sy - cy) * 1.5);
   ctx.stroke();
   ctx.font = '8px Courier New, monospace';
-  ctx.strokeStyle = 'rgba(150,180,220,.6)';
-  ctx.fillStyle = 'rgba(150,180,220,.7)';
+  ctx.strokeStyle = alpha(PAL.sky73, .6);
+  ctx.fillStyle = alpha(PAL.sky73, .7);
   for (const k of Object.keys(TARGETS)) {
     const [x, y] = xy(...TARGETS[k]!);
     ctx.strokeRect(x - 4, y - 4, 8, 8);
@@ -164,7 +164,7 @@ function paintVectorscope(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolea
     }
   } else {
     const gr = (v: number, k: 'rGain' | 'gGain' | 'bGain'): number => v * (0.62 + s[k] * 0.82);
-    ctx.fillStyle = 'rgba(255,224,96,.85)';
+    ctx.fillStyle = alpha(PAL.amber69, .85);
     for (let i = 0; i < 50; i++) {
       const [x, y] = xy(gr(0.78, 'rGain'), gr(0.55, 'gGain'), gr(0.42, 'bGain'));
       ctx.fillRect(x + (Math.random() - 0.5) * 10, y + (Math.random() - 0.5) * 10, 1.5, 1.5);

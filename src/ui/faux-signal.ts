@@ -6,7 +6,7 @@
 import type { Feed } from '../domain/routing-core/index.js';
 import { drawTsg } from '../domain/tsg/index.js';
 import { paintTimerFeed } from './timer-feed.js';
-import { PAL, HEX, hexOf } from '../domain/palette.js';
+import { PAL, HEX, hexOf, alpha } from '../domain/palette.js';
 import { withTrueColour } from '../domain/true-colour.js';
 
 // We only need identity + colour (+ optional room/media/fault) — accept a Feed or
@@ -95,7 +95,7 @@ function mic(g: CanvasRenderingContext2D, W: number, H: number): void {
   const mx = W * 0.5, my = H * 0.86;
   g.fillStyle = PAL.blue10s25; g.fillRect(mx - W * 0.012, my, W * 0.024, H * 0.14);
   g.fillStyle = PAL.blue21s21; g.beginPath(); g.ellipse(mx, my, W * 0.05, H * 0.075, 0, 0, 7); g.fill();
-  g.strokeStyle = 'rgba(180,200,230,.5)'; g.lineWidth = Math.max(1, W * 0.004);
+  g.strokeStyle = alpha(PAL.blue80s50, .5); g.lineWidth = Math.max(1, W * 0.004);
   for (let i = -2; i <= 2; i++) { g.beginPath(); g.moveTo(mx + i * W * 0.014, my - H * 0.06); g.lineTo(mx + i * W * 0.014, my + H * 0.06); g.stroke(); }
 }
 
@@ -105,7 +105,7 @@ function lowerThird(g: CanvasRenderingContext2D, W: number, H: number, feed: Fau
   const parts = (feed.origin || '').split(/[—–-]/).map((x) => x.trim()).filter(Boolean);
   const roomName = parts.length >= 2 ? parts[parts.length - 2]! : (parts[0] || '');
   const bh = H * 0.17, by = H - bh, acc = hexToRgb(feed.color || PAL.teal59);
-  g.fillStyle = 'rgba(6,12,22,0.68)'; g.fillRect(0, by, W, bh);
+  g.fillStyle = alpha(PAL.blue05_060c16, .68); g.fillRect(0, by, W, bh);
   g.fillStyle = css(acc); g.fillRect(0, by, W * 0.022, bh);
   g.textAlign = 'left'; g.textBaseline = 'alphabetic';
   g.fillStyle = PAL.sky96_eaf4ff; g.font = `700 ${Math.round(bh * 0.4)}px sans-serif`;
@@ -117,7 +117,7 @@ function lowerThird(g: CanvasRenderingContext2D, W: number, H: number, feed: Fau
 function faultSlate(g: CanvasRenderingContext2D, W: number, H: number, rng: () => number): void {
   g.fillStyle = PAL.grey04s0; g.fillRect(0, 0, W, H);
   for (let i = 0; i < (W * H) / 40; i++) { const v = Math.floor(rng() * 255); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(rng() * W, rng() * H, 2, 2); }
-  const bh = H * 0.17; g.fillStyle = 'rgba(178,20,20,0.9)'; g.fillRect(0, H * 0.42, W, bh);
+  const bh = H * 0.17; g.fillStyle = alpha(PAL.red39, .9); g.fillRect(0, H * 0.42, W, bh);
   g.fillStyle = PAL.white; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `700 ${Math.round(bh * 0.48)}px sans-serif`;
   g.fillText('NO SIGNAL', W / 2, H * 0.42 + bh / 2);
 }

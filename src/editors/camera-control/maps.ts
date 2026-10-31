@@ -2,7 +2,7 @@
 // elevation) and their per-frame update. Port of js/editors/camera/maps.js.
 
 import type { CamState } from './state.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function topSVG(): string {
   return `<svg viewBox="0 0 300 290" preserveAspectRatio="xMidYMid meet">
@@ -10,7 +10,7 @@ export function topSVG(): string {
       <text x="40" y="266" fill="${PAL.blue38}" font-size="9" font-family="monospace">DOLLY TRACK</text>
       <rect x="120" y="60" width="60" height="90" rx="14" fill="${PAL.blue16s54}" stroke="${PAL.blue30}"/>
       <text x="133" y="110" fill="${PAL.blue44}" font-size="9" font-family="monospace">TALENT</text>
-      <g id="cc-tcam"><polygon id="cc-tcone" points="0,0 -30,-120 30,-120" fill="rgba(111,200,240,.16)" stroke="rgba(111,200,240,.5)"/><circle r="10" fill="${PAL.sky69}" stroke="${PAL.sky05}" stroke-width="2"/></g>
+      <g id="cc-tcam"><polygon id="cc-tcone" points="0,0 -30,-120 30,-120" fill="${alpha(PAL.sky69, .16)}" stroke="${alpha(PAL.sky69, .5)}"/><circle r="10" fill="${PAL.sky69}" stroke="${PAL.sky05}" stroke-width="2"/></g>
     </svg>`;
 }
 
@@ -23,7 +23,7 @@ export function sideSVG(): string {
       <rect x="190" y="150" width="34" height="100" rx="8" fill="${PAL.blue16s54}" stroke="${PAL.blue30}"/>
       <circle cx="207" cy="140" r="13" fill="${PAL.blue16s54}" stroke="${PAL.blue30}"/>
       <text x="180" y="270" fill="${PAL.blue44}" font-size="9" font-family="monospace">TALENT</text>
-      <g id="cc-scam"><polygon id="cc-scone" points="0,0 150,-26 150,26" fill="rgba(111,200,240,.16)" stroke="rgba(111,200,240,.5)"/><circle r="10" fill="${PAL.sky69}" stroke="${PAL.sky05}" stroke-width="2"/></g>
+      <g id="cc-scam"><polygon id="cc-scone" points="0,0 150,-26 150,26" fill="${alpha(PAL.sky69, .16)}" stroke="${alpha(PAL.sky69, .5)}"/><circle r="10" fill="${PAL.sky69}" stroke="${PAL.sky05}" stroke-width="2"/></g>
     </svg>`;
 }
 

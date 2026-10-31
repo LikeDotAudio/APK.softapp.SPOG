@@ -2,7 +2,7 @@
 // addStyles('twist-editor-multi-viewer', …) CSS block so visuals match 1:1.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectMultiViewerStyles(): void {
   addStyles(
@@ -34,8 +34,8 @@ export function injectMultiViewerStyles(): void {
             letter-spacing:.5px;color:${PAL.blue60s27};text-align:center;padding:2px;height:100%;
             background:repeating-linear-gradient(45deg,${PAL.blue05} 0 8px,${PAL.blue07} 8px 16px);}
         .mv-win.empty{border-color:${PAL.blue16s35};opacity:.5;cursor:default;}
-        .mv-win.pgm{border-color:${PAL.red60};box-shadow:0 0 0 1px ${PAL.red60}, 0 0 16px rgba(255,51,68,.5);}
-        .mv-win.pvw{border-color:${PAL.green53s71};box-shadow:0 0 0 1px ${PAL.green53s71}, 0 0 16px rgba(51,221,102,.45);}
+        .mv-win.pgm{border-color:${PAL.red60};box-shadow:0 0 0 1px ${PAL.red60}, 0 0 16px ${alpha(PAL.red60, .5)};}
+        .mv-win.pvw{border-color:${PAL.green53s71};box-shadow:0 0 0 1px ${PAL.green53s71}, 0 0 16px ${alpha(PAL.green53s71, .45)};}
         .mv-win.dragging{opacity:.4;}
         /* Auto-multiviewer tile: on air via the switcher, read-only (dashed = not hand-routed). */
         .mv-win.mv-auto{cursor:default;border-style:dashed;}

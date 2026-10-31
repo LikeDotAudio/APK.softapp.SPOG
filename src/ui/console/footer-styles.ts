@@ -2,7 +2,7 @@
 // split out of footer.ts to keep that file under the size cap: the LCARS tab
 // palette, a hex→"r,g,b" helper, and the footer's injected CSS.
 
-import { PAL, hexOf } from '../../domain/palette.js';
+import { PAL, hexOf, alpha } from '../../domain/palette.js';
 
 export const LCARS_COLORS = [
   '193,152,176', '180,103,87', '174,105,125', '151,88,123',
@@ -30,9 +30,9 @@ export const FOOTER_CSS = `
   position:absolute;bottom:calc(100% + 8px);left:0;z-index:1550;
   border-top:6px solid rgb(var(--group-lcars));border-radius:12px;
   padding:8px;min-width:max-content;overflow:visible;
-  background:rgba(5,10,21,.95);border-left:1px solid rgba(var(--group-lcars),.35);
+  background:${alpha(PAL.blue05s62, .95)};border-left:1px solid rgba(var(--group-lcars),.35);
   border-right:1px solid rgba(var(--group-lcars),.35);border-bottom:1px solid rgba(var(--group-lcars),.35);
-  box-shadow:0 -10px 34px rgba(0,0,0,.65);}
+  box-shadow:0 -10px 34px ${alpha(PAL.black, .65)};}
 /* Leaf panels (tabs only, no nested groups) cap + scroll; panels holding nested
    groups stay overflow-visible so their side fan-outs are not clipped. */
 .lcars-group:not(.collapsed) > .lcars-group-body:not(:has(.lcars-group)){max-height:72vh;overflow-y:auto;}

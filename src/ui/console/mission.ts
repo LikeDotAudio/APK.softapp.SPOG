@@ -10,7 +10,7 @@ import { addStyles } from '../dom.js';
 import { role } from '../../platform/auth.js';
 import { showSchedule, SCHEDULE, type Slot } from './schedule.js';
 import { openTimeline } from './captains-log-timeline.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const slug = (s: string): string => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const fmt = (h: number): string => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.round((h % 1) * 60)).padStart(2, '0')}`;
@@ -19,7 +19,7 @@ const nowH = (): number => { try { const d = new Date(); return d.getHours() + d
 const MZ_CSS = `
 /* Rides the LANE the credits pill vacated (bottom:6, below the tab pills),
    docked beside the clock column — never over the footer tabs. */
-.mz-bar{position:fixed;bottom:6px;z-index:1500;display:none;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(90deg,rgba(8,16,34,.92),rgba(12,24,48,.92));border:1px solid ${PAL.sky27};border-radius:999px;padding:5px 14px;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky91};font-size:11px;letter-spacing:1px;box-shadow:0 4px 18px rgba(0,0,0,.45);max-width:64vw;}
+.mz-bar{position:fixed;bottom:6px;z-index:1500;display:none;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(90deg,${alpha(PAL.blue08s62, .92)},${alpha(PAL.blue12s60, .92)});border:1px solid ${PAL.sky27};border-radius:999px;padding:5px 14px;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky91};font-size:11px;letter-spacing:1px;box-shadow:0 4px 18px ${alpha(PAL.black, .45)};max-width:64vw;}
 .mz-bar.show{display:inline-flex;}
 .mz-bar:hover{border-color:${PAL.blue51};}
 .mz-where{font-weight:900;color:${PAL.white};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30vw;}
@@ -30,7 +30,7 @@ const MZ_CSS = `
 .mz-live.now{background:${PAL.red62};color:${PAL.white};animation:mzPulse 1.4s ease-in-out infinite;}
 .mz-live.next{background:${PAL.blue19};color:${PAL.sky71};}
 .mz-live.idle{background:${PAL.blue15};color:${PAL.blue53};}
-@keyframes mzPulse{0%,100%{opacity:.8;}50%{opacity:1;box-shadow:0 0 12px rgba(255,59,59,.7);}}`;
+@keyframes mzPulse{0%,100%{opacity:.8;}50%{opacity:1;box-shadow:0 0 12px ${alpha(PAL.red62, .7)};}}`;
 
 interface Ctx { name: string; lineage: string[]; group: string }
 

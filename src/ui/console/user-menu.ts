@@ -18,7 +18,7 @@ import { exportSeat, importSeat, type SeatExport } from '../../platform/prefs.js
 import { tileDataUrl } from '../icon-tiles.js';
 import { toggleCryptoDecoder } from './crypto-decoder.js';
 import { ACCENT, accentRgba } from '../../domain/brand.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const UM_CSS = `
 .um-btn{display:block;z-index:1000;background:${PAL.cyan52};color:${PAL.sky09s75};border:none;
@@ -30,7 +30,7 @@ const UM_CSS = `
 @keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 0 0 ${accentRgba(.5)};}50%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 12px 3px ${accentRgba(.5)};}}
 .um-panel{position:fixed;z-index:2650;display:none;flex-direction:column;gap:7px;padding:12px;
   min-width:250px;background:${PAL.blue08s50};border:1px solid ${PAL.blue22s37};border-radius:14px;
-  box-shadow:0 14px 44px rgba(0,0,0,.7);font-family:Arial,Helvetica,sans-serif;}
+  box-shadow:0 14px 44px ${alpha(PAL.black, .7)};font-family:Arial,Helvetica,sans-serif;}
 .um-panel.open{display:flex;}
 .um-h{font:900 9px 'Courier New',monospace;letter-spacing:2px;color:${PAL.blue44s20};text-transform:uppercase;
   padding:2px 4px;}

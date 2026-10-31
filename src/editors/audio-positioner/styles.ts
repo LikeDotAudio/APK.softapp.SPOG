@@ -1,7 +1,7 @@
 // src/editors/audio-positioner/styles.ts — CSS for the CMDP 3D audio positioner.
 import { addStyles } from '../../ui/dom.js';
 import { ACCENT } from '../../domain/brand.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectAudioPositionerStyles(): void {
   addStyles('audio-positioner-styles', `
@@ -16,7 +16,7 @@ export function injectAudioPositionerStyles(): void {
 
 .ap-pov{flex:1;position:relative;background:${PAL.grey04};border-right:1px solid ${PAL.grey20};}
 .ap-pov:last-child{border-right:none;border-left:1px solid ${PAL.grey20};}
-.ap-pov-title{position:absolute;top:10px;left:10px;font-size:10px;font-weight:bold;color:${PAL.white};background:rgba(0,0,0,0.6);padding:4px 8px;border-radius:4px;pointer-events:none;z-index:2;}
+.ap-pov-title{position:absolute;top:10px;left:10px;font-size:10px;font-weight:bold;color:${PAL.white};background:${alpha(PAL.black, .6)};padding:4px 8px;border-radius:4px;pointer-events:none;z-index:2;}
 .ap-pov canvas {display:block;width:100%;height:100%;position:absolute;inset:0;}
 
 .ap-center{flex:2;position:relative;background:${PAL.grey09};}

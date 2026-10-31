@@ -4,7 +4,7 @@
 // only export — authoring.ts calls it at boot and per-room decorate.
 
 import { addStyles } from '../dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const STYLE_ID = 'tr-authoring';
 
@@ -30,7 +30,7 @@ body.authoring .auth-only{display:flex !important;}
   font:900 12px/1 Arial;letter-spacing:2px;text-transform:uppercase;color:${PAL.black};background:transparent;
   border:none;border-left:4px solid var(--bg-color,${PAL.blue05s62});
   padding:0 20px 0 14px;cursor:pointer;box-shadow:none;}
-.authoring-toggle:hover{background:rgba(0,0,0,.16);}
+.authoring-toggle:hover{background:${alpha(PAL.black, .16)};}
 .authoring-toggle .cnt{background:${PAL.blue04};color:${PAL.sky94};border-radius:8px;padding:2px 6px;font-size:10px;min-width:8px;text-align:center;}
 /* Authoring ON: the segment inverts — black fill, green text — so state is
    unmistakable while still reading as part of the bar. */
@@ -54,11 +54,11 @@ html[data-chirality="right"] .authoring-toggle{padding:0 14px 0 20px;
 
 .twist-container .auth-handle{position:absolute;top:2px;right:2px;z-index:6;gap:3px;}
 .twist-container .auth-handle .h{width:19px;height:19px;border-radius:4px;display:flex;align-items:center;
-  justify-content:center;font:900 12px/1 Arial;color:${PAL.black};cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.5);}
+  justify-content:center;font:900 12px/1 Arial;color:${PAL.black};cursor:pointer;box-shadow:0 1px 3px ${alpha(PAL.black, .5)};}
 .twist-container .auth-handle .edit{background:${PAL.yellow53};}
 .twist-container .auth-handle .del{background:${PAL.red52};color:${PAL.white};}
 
-.auth-modal-bg{position:fixed;inset:0;z-index:2600;background:rgba(3,6,15,.72);display:flex;
+.auth-modal-bg{position:fixed;inset:0;z-index:2600;background:${alpha(PAL.blue04, .72)};display:flex;
   align-items:center;justify-content:center;font-family:Arial;}
 .auth-modal{background:${PAL.blue12s57};border:2px solid ${PAL.purple62};border-radius:12px;min-width:320px;
   max-width:min(94vw,540px);max-height:88vh;overflow:auto;padding:16px 18px;color:${PAL.sky94};}
@@ -90,8 +90,8 @@ body.authoring .program-row.panning{cursor:grabbing;}
 /* drag-to-move a container (audit §4D). Reveal a grab cursor + drop targets. */
 body.authoring .twist-container{cursor:grab;}
 body.authoring .twist-container.twist-dragging{opacity:.35;cursor:grabbing;}
-body.authoring .twist-container.twist-drop-before{box-shadow:-4px 0 0 0 ${PAL.purple62}, 0 0 10px rgba(198,120,198,.6) !important;}
-body.authoring .twist-container.twist-drop-after{box-shadow:4px 0 0 0 ${PAL.purple62}, 0 0 10px rgba(198,120,198,.6) !important;}
+body.authoring .twist-container.twist-drop-before{box-shadow:-4px 0 0 0 ${PAL.purple62}, 0 0 10px ${alpha(PAL.purple62, .6)} !important;}
+body.authoring .twist-container.twist-drop-after{box-shadow:4px 0 0 0 ${PAL.purple62}, 0 0 10px ${alpha(PAL.purple62, .6)} !important;}
 `;
 
 export function ensureStyles(): void { addStyles(STYLE_ID, CSS); }

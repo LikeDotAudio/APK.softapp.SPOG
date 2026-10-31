@@ -10,7 +10,7 @@
 import { el, addStyles } from './dom.js';
 import type { Disposer } from './timers.js';
 import { byGroup, drawTsg, type TsgPattern } from '../domain/tsg/index.js';
-import { PAL } from '../domain/palette.js';
+import { PAL, alpha } from '../domain/palette.js';
 
 const CSS = `
 .tsg-gal{display:flex;flex-direction:column;gap:10px;}
@@ -23,11 +23,11 @@ const CSS = `
 .tsg-tile.sel{border-color:var(--lcars-color,${PAL.orange63});box-shadow:0 0 0 1px var(--lcars-color,${PAL.orange63}) inset;}
 .tsg-tile canvas{display:block;width:100%;aspect-ratio:16/9;background:${PAL.black};}
 .tsg-cap{font:600 10px/1.2 var(--lcars-font,'Antonio',sans-serif);letter-spacing:.4px;
-  color:${PAL.sky91s57};padding:5px 7px;background:rgba(6,12,22,.85);white-space:nowrap;
+  color:${PAL.sky91s57};padding:5px 7px;background:${alpha(PAL.blue05_060c16, .85)};white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;}
 .tsg-doc{position:absolute;top:5px;right:5px;width:18px;height:18px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;font:700 11px/1 sans-serif;
-  color:${PAL.sky89s66};background:rgba(6,12,22,.72);text-decoration:none;border:1px solid ${PAL.blue34s40};}
+  color:${PAL.sky89s66};background:${alpha(PAL.blue05_060c16, .72)};text-decoration:none;border:1px solid ${PAL.blue34s40};}
 .tsg-doc:hover{background:var(--lcars-color,${PAL.orange63});color:${PAL.blue03s41};}
 `;
 

@@ -7,7 +7,7 @@
 
 import { addStyles, el } from '../ui/dom.js';
 import { makeDisposer, type Disposer } from '../ui/timers.js';
-import { PAL } from '../domain/palette.js';
+import { PAL, alpha } from '../domain/palette.js';
 
 const STYLE_ID = 'tr-ed-overlay';
 const CSS = `
@@ -24,10 +24,10 @@ const CSS = `
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ed-close{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:66px;
   cursor:pointer;font-size:30px;font-weight:bold;line-height:1;color:${PAL.black};
-  box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
-.ed-close:hover{background:rgba(0,0,0,.18);}
-.ed-voice{flex:0 0 auto;display:flex;align-items:center;padding:0 15px;background:none;border:none;color:${PAL.red60s100};font-weight:bold;font-size:13px;cursor:pointer;letter-spacing:1px;box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
-.ed-voice:hover{background:rgba(0,0,0,.18);}
+  box-shadow:inset 2px 0 0 ${alpha(PAL.black, .25)};}
+.ed-close:hover{background:${alpha(PAL.black, .18)};}
+.ed-voice{flex:0 0 auto;display:flex;align-items:center;padding:0 15px;background:none;border:none;color:${PAL.red60s100};font-weight:bold;font-size:13px;cursor:pointer;letter-spacing:1px;box-shadow:inset 2px 0 0 ${alpha(PAL.black, .25)};}
+.ed-voice:hover{background:${alpha(PAL.black, .18)};}
 .ed-body{flex:1;min-height:0;overflow:auto;padding:12px 14px 14px;}
 .ed-h{color:var(--cyan,${PAL.cyan50});font-size:11px;font-weight:bold;letter-spacing:2px;
   text-transform:uppercase;margin:0 0 8px;}
@@ -41,7 +41,7 @@ html[data-chirality="left"] .ed-topbar{flex-direction:row-reverse;border-radius:
 html[data-chirality="left"] .ed-back{padding:0 26px 0 4px;}
 html[data-chirality="left"] .ed-back::before{content:'\\203A';}
 html[data-chirality="left"] .ed-title{padding-left:0;padding-right:8px;}
-html[data-chirality="left"] .ed-close{box-shadow:inset -2px 0 0 rgba(0,0,0,.25);}
+html[data-chirality="left"] .ed-close{box-shadow:inset -2px 0 0 ${alpha(PAL.black, .25)};}
 `;
 
 export const slug = (s: string): string =>
@@ -112,7 +112,7 @@ export function openOverlay(
       e.stopPropagation(); // prevent topbar from closing the overlay
       // Remove any existing voice modal
       document.getElementById('ed-voice-modal')?.remove();
-      const modal = el('div', { id: 'ed-voice-modal', style: `position:absolute;top:48px;right:66px;width:350px;background:${PAL.blue16s45};border:2px solid ${PAL.red60s100};border-radius:0 0 8px 8px;padding:12px;z-index:3000;box-shadow:0 10px 30px rgba(0,0,0,0.5);` });
+      const modal = el('div', { id: 'ed-voice-modal', style: `position:absolute;top:48px;right:66px;width:350px;background:${PAL.blue16s45};border:2px solid ${PAL.red60s100};border-radius:0 0 8px 8px;padding:12px;z-index:3000;box-shadow:0 10px 30px ${alpha(PAL.black, .5)};` });
       modal.append(el('div', { class: 'ed-h', style: `color:${PAL.red60s100};margin-bottom:12px;` }, ['VALID VOICE COMMANDS']));
       const list = el('div', { style: 'display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow-y:auto;' });
       for (const [category, words] of Object.entries(vc)) {

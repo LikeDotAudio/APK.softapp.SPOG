@@ -1,5 +1,5 @@
 // src/editors/device/styles.ts — LCARS styling for the Universal Device Editor.
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 export const CSS_ID = 'spog-device-editor-styles';
 
 export const CSS = `
@@ -100,7 +100,7 @@ export const CSS = `
   border-top: 4px solid var(--group-accent, ${PAL.sky60});
   border-radius: 6px;
   padding: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px ${alpha(PAL.black, .5)};
   overflow-y: auto;
 }
 

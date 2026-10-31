@@ -1,7 +1,7 @@
 // src/editors/iso-recorder/styles — verbatim port of the legacy addStyles block.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectIsoRecorderStyles(): void {
   addStyles(
@@ -29,7 +29,7 @@ export function injectIsoRecorderStyles(): void {
         .iso-file{font-size:9px;color:${PAL.blue60s27};text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .rp-wrap{background:${PAL.blue10};border:1px solid ${PAL.blue23s39};border-radius:8px;padding:14px;}
         .rp-timeline{position:relative;height:42px;border-radius:6px;background:${PAL.blue09};overflow:hidden;margin-bottom:14px;}
-        .rp-buffer{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,255,255,.05),rgba(0,255,255,.20));}
+        .rp-buffer{position:absolute;inset:0;background:linear-gradient(90deg,${alpha(PAL.cyan50, .05)},${alpha(PAL.cyan50, .2)});}
         .rp-poi{position:absolute;top:0;bottom:0;width:2px;background:${PAL.amber61};}
         .rp-play{position:absolute;top:0;bottom:0;width:2px;background:${PAL.red60};box-shadow:0 0 8px ${PAL.red60};}
         .rp-row{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap;}

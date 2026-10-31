@@ -3,7 +3,7 @@
 // the shared narratives / selected state and repaints the panel + the badge.
 import { narratives, selected, narKey, entKey, reversible } from './captains-log-state.js';
 import { ACCENT, accentRgba } from '../../domain/brand.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 const esc = (s: string): string => String(s).replace(/[&<>"]/g, (c) => ESC[c] ?? c);
@@ -14,12 +14,12 @@ export const CL_CSS = `
 .cl-btn{display:block;width:100%;z-index:1000;background:${PAL.yellow53};color:${PAL.orange06};border:none;font-family:'Courier New',monospace;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:9px 16px;margin-bottom:10px;border-radius:18px 6px 6px 18px;cursor:pointer;box-shadow:inset 6px 0 0 ${PAL.yellow38};text-align:left;}
 .cl-btn:hover{background:${PAL.amber71s100};color:${PAL.black};}
 .cl-badge{display:inline-block;min-width:16px;margin-left:6px;padding:0 5px;border-radius:8px;background:${PAL.orange06};color:${PAL.yellow53};font-size:10px;}
-.cl-panel{position:fixed;top:0;right:0;width:500px;max-width:94vw;height:100%;z-index:2600;background:${PAL.orange03};color:${PAL.amber71s100};font-family:Arial,Helvetica,sans-serif;display:flex;flex-direction:column;transform:translateX(101%);transition:transform .25s ease;box-shadow:-10px 0 40px rgba(0,0,0,.7);}
+.cl-panel{position:fixed;top:0;right:0;width:500px;max-width:94vw;height:100%;z-index:2600;background:${PAL.orange03};color:${PAL.amber71s100};font-family:Arial,Helvetica,sans-serif;display:flex;flex-direction:column;transform:translateX(101%);transition:transform .25s ease;box-shadow:-10px 0 40px ${alpha(PAL.black, .7)};}
 .cl-panel.open{transform:translateX(0);}
 .cl-head{display:flex;align-items:stretch;height:46px;background:${PAL.yellow53};}
 .cl-title{flex:1;display:flex;align-items:center;padding-left:22px;color:${PAL.black};font-weight:900;letter-spacing:3px;font-size:15px;}
-.cl-x{flex:0 0 auto;width:62px;display:flex;align-items:center;justify-content:center;color:${PAL.black};font-weight:900;letter-spacing:1px;cursor:pointer;box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
-.cl-x:hover{background:rgba(0,0,0,.15);}
+.cl-x{flex:0 0 auto;width:62px;display:flex;align-items:center;justify-content:center;color:${PAL.black};font-weight:900;letter-spacing:1px;cursor:pointer;box-shadow:inset 2px 0 0 ${alpha(PAL.black, .25)};}
+.cl-x:hover{background:${alpha(PAL.black, .15)};}
 .cl-tools{display:flex;gap:8px;padding:10px 12px;background:${PAL.orange05s54};}
 .cl-rev,.cl-new,.cl-tl{font-family:inherit;font-weight:900;font-size:11px;letter-spacing:1px;cursor:pointer;padding:8px 16px;border:none;border-radius:14px;text-transform:uppercase;color:${PAL.black};}
 .cl-rev{background:${PAL.red51};} .cl-new{background:${PAL.green58};} .cl-tl{background:${PAL.cyan52};}

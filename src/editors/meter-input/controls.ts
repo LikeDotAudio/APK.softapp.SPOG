@@ -10,7 +10,7 @@ import type { Disposer } from '../../ui/timers.js';
 import { buildTsgGallery } from '../../ui/tsg-gallery.js';
 import { findPattern, type TsgPattern } from '../../domain/tsg/index.js';
 import type { Feed } from '../../domain/routing-core/index.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export interface SensRef { v: number; }
 export type SetStat = (t: string, warn?: boolean) => void;
@@ -29,8 +29,8 @@ export interface ControlDeps {
 
 const TSG_POP_CSS = `
 .mi-tsgpop{position:absolute;z-index:60;left:8px;top:96px;right:8px;max-height:62%;
-  overflow:auto;padding:12px;background:rgba(6,11,20,.97);border:1px solid ${PAL.sky30};
-  border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.6);display:none;}
+  overflow:auto;padding:12px;background:${alpha(PAL.blue05s54, .97)};border:1px solid ${PAL.sky30};
+  border-radius:10px;box-shadow:0 10px 40px ${alpha(PAL.black, .6)};display:none;}
 .mi-tsgpop.open{display:block;}
 .mi-tsgpop-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .mi-tsgpop-h b{font:700 12px/1 var(--lcars-font,'Antonio',sans-serif);letter-spacing:2px;color:${PAL.sky67};}

@@ -31,7 +31,7 @@ const counted = (f: string): boolean => {
 };
 
 /** rgba()/hsl() spelled in .ts outside the palette machinery: ROAD-3456 sweeps these into `alpha(PAL.*, a)`. */
-const RGBA_CEILING = 402;
+const RGBA_CEILING = 65;
 const RGBA = /\brgba?\(|\bhsla?\(/g;
 const MACHINERY = ['domain/colour-resolve.ts', 'ui/canvas-ink.ts'];
 const LCARS = resolve(SRC, '../lcars.css');

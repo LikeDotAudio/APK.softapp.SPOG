@@ -19,6 +19,6 @@ const pattern: TsgPattern = {
   id: 'bt2111pq', label: 'BT.2111 PQ', name: 'BT.2111 PQ', group: 'HDR', order: 13,
   title: 'ITU-R BT.2111 (PQ): Standardized Rec. 2100 test pattern for verifying Perceptual Quantizer (SMPTE ST 2084) HDR signal transmission and rendering limits.',
   href: 'https://www.itu.int/rec/R-REC-BT.2111/en',
-  draw: (g, W, H) => drawBt2111(g, W, H, 'rgb(102,102,102)', PAL.black),
+  draw: (g, W, H) => drawBt2111(g, W, H, PAL.grey40, PAL.black),
 };
 export default pattern;

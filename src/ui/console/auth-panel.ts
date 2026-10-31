@@ -15,14 +15,14 @@ import { stampIcon } from '../icon-face.js';
 // applyScope (the progressive-disclosure sweep) lives in scope.ts — re-exported
 // here so the ~4 modules that import it from auth-panel stay byte-identical.
 import { applyScope } from './scope.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 export { applyScope };
 
 const AUTH_CSS = `
-.au-focus{position:fixed;left:50%;top:0;transform:translate(-50%,-110%);z-index:1600;background:${PAL.blue09s58};border:1px solid var(--rc,${PAL.orange62});border-top:none;border-radius:0 0 14px 14px;padding:11px 26px;color:${PAL.sky94};font:bold 13px sans-serif;letter-spacing:1px;box-shadow:0 8px 22px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.2,1.2,.4,1);white-space:nowrap;}
+.au-focus{position:fixed;left:50%;top:0;transform:translate(-50%,-110%);z-index:1600;background:${PAL.blue09s58};border:1px solid var(--rc,${PAL.orange62});border-top:none;border-radius:0 0 14px 14px;padding:11px 26px;color:${PAL.sky94};font:bold 13px sans-serif;letter-spacing:1px;box-shadow:0 8px 22px ${alpha(PAL.black, .5)};transition:transform .35s cubic-bezier(.2,1.2,.4,1);white-space:nowrap;}
 .au-focus.show{transform:translate(-50%,0);}
 .au-focus b{color:var(--rc,${PAL.orange62});}
-.au-overlay{position:fixed;inset:0;z-index:3200;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,rgba(13,23,48,.92),rgba(3,6,15,.96));font-family:Arial,Helvetica,sans-serif;}
+.au-overlay{position:fixed;inset:0;z-index:3200;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,${alpha(PAL.blue12s57, .92)},${alpha(PAL.blue04, .96)});font-family:Arial,Helvetica,sans-serif;}
 .au-overlay.open{display:flex;}
 .au-box{width:min(880px,94vw);max-height:90vh;overflow:auto;background:${PAL.blue09s58};border:1px solid ${PAL.blue19};border-radius:16px;padding:26px;}
 .au-box h2{margin:0 0 4px;color:${PAL.white};font-size:22px;letter-spacing:2px;}
@@ -34,7 +34,7 @@ const AUTH_CSS = `
 .au-role b{display:block;color:${PAL.white};font-size:15px;letter-spacing:1px;}
 .au-role .ti{color:${PAL.sky71};font-size:10px;letter-spacing:1px;text-transform:uppercase;margin:2px 0 6px;}
 .au-role .ds{color:${PAL.sky79};font-size:11px;line-height:1.4;}
-.au-role.sel{border-color:${PAL.orange62};box-shadow:0 0 14px rgba(242,183,75,.4);}
+.au-role.sel{border-color:${PAL.orange62};box-shadow:0 0 14px ${alpha(PAL.orange62, .4)};}
 /* Operator-name row in the role picker. */
 .au-namerow{display:flex;align-items:center;gap:12px;margin:0 0 16px;font:900 10px sans-serif;
   letter-spacing:2px;color:${PAL.sky70};}
@@ -56,9 +56,9 @@ const AUTH_CSS = `
 .au-corner .um-btn{flex:0 1 auto;min-width:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;}
 .au-corner button{flex:1 1 auto;min-width:0;border:none;cursor:pointer;font:900 10px sans-serif;letter-spacing:1px;
   text-transform:uppercase;padding:8px 10px;border-radius:6px 14px 14px 6px;white-space:nowrap;}
-.au-c-rights{display:none;background:${PAL.blue15};color:${PAL.amber74};border:1px solid rgba(255,255,255,.22) !important;}
+.au-c-rights{display:none;background:${PAL.blue15};color:${PAL.amber74};border:1px solid ${alpha(PAL.white, .22)} !important;}
 .au-corner.admin .au-c-rights{display:block;}
-.au-c-out{background:${PAL.blue12_0c1730};color:${PAL.blue96};border:1px solid rgba(255,255,255,.22) !important;}
+.au-c-out{background:${PAL.blue12_0c1730};color:${PAL.blue96};border:1px solid ${alpha(PAL.white, .22)} !important;}
 .au-corner button:hover{filter:brightness(1.25);}
 /* ICON face: the corner pair render as tiles (icon-face stamps the artwork). */
 html[data-face="icons"] .au-corner button.has-face-icon{

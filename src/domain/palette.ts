@@ -134,31 +134,21 @@ const P = {
   violet93: '#f2d9ff', white: '#ffffff', yellow37: '#bfbf00', yellow38: '#8f8a35', yellow43: '#a89b35',
   yellow50: '#ffff00', yellow53: '#c2b74b', yellow53s57: '#ccbb44', yellow56: '#e6e23a', yellow60: '#f0e442',
   yellow60s77: '#e8d44a', yellow65: '#f1e05a', yellow75: '#ffff80', yellow97: '#ffffee',
-  blue03s53: '#04070d',
-  blue06s62: '#060d1a',
-  blue10s25: '#141821',
-  blue15s18: '#20242e',
-  blue16s35: '#1a2336',
-  blue21s21: '#2b3242',
-  blue28s30: '#33405e',
-  blue94s100: '#dfeaff',
-  orange30: '#7a3b1f',
-  orange33: '#7a4a2e',
-  red62_ff5a3b: '#ff5a3b',
-  blue10s60: '#0a1428',
-  lime50: '#aaff00',
-  violet50: '#aa00ff',
-  blue02: '#00000a',
-  sky08s100: '#001428',
-  purple78: '#d9b3d9',
-  purple55: '#b266b2',
-  purple84: '#e0cce0',
-  orange61: '#ed864c',
-  amber48: '#f5ad00',
-  sky35s100: '#0072b2',
-  blue20s49: '#1a2a4c',
-  red08: '#2a0000',
-  red32: '#8f1414',
+  blue03s53: '#04070d', blue06s62: '#060d1a', blue10s25: '#141821', blue15s18: '#20242e', blue16s35: '#1a2336',
+  blue21s21: '#2b3242', blue28s30: '#33405e', blue94s100: '#dfeaff', orange30: '#7a3b1f', orange33: '#7a4a2e',
+  red62_ff5a3b: '#ff5a3b', blue10s60: '#0a1428', lime50: '#aaff00', violet50: '#aa00ff', blue02: '#00000a',
+  sky08s100: '#001428', purple78: '#d9b3d9', purple55: '#b266b2', purple84: '#e0cce0', orange61: '#ed864c',
+  amber48: '#f5ad00', sky35s100: '#0072b2', blue20s49: '#1a2a4c', red08: '#2a0000', red32: '#8f1414',
+  blue05_060c16: '#060c16', blue80s50: '#b4c8e6', red39: '#b21414', sky65s50: '#78a0d2', sky45s30: '#506e96',
+  sky75s60: '#9bbee6', sky61s35: '#7896be', orange74s100: '#ffc878', sky73: '#96b4dc', amber69: '#ffe060',
+  red74s100: '#ff7878', green62: '#5ae08c', green70s74: '#78eb96', red66: '#ff5050', sky34s47: '#2e5680',
+  orange50_ffa500: '#ffa500', blue07s41: '#0a0e18', blue08s62: '#081022', sky68: '#5abeff',
+  sky81_a0dcff: '#a0dcff', amber50_ffd600: '#ffd600', sky37: '#3c5a82', red63s100: '#ff4040', green63: '#40ff60',
+  blue69: '#608cff', amber57: '#e6c83c', orange50s76: '#e08a1e', blue89: '#c8dcff', grey73: '#b4b4be',
+  blue69s31: '#96aac8', sky75s36: '#aabed7', sky92: '#d7ebff', blue69s19: '#a0aabe', blue76s25: '#b4bed2',
+  sky93s100: '#dcebff', green45s48: '#3caa5a', pink47s67: '#c82878', red54s70: '#dc3545', sky02: '#00060c',
+  blue04_030912: '#030912', sky75s46: '#a0bedc', blue05s54: '#060b14', grey20s0: '#323232', indigo29: '#46286e',
+  blue06_060c1a: '#060c1a', indigo18: '#281446', grey30: '#4d4d4d', blue03s71: '#02050c',
 } as const;
 
 export type PalName = keyof typeof P;
@@ -174,3 +164,7 @@ export const hexOf = (c: string): string => {
   const m = VAR.exec(c.trim());
   return m && m[1]! in P ? P[m[1] as PalName] : c;
 };
+
+/** A colour at `a` (0..1) opacity, alpha as a field rather than a spelled rgba(): works on a palette
+ *  reference (follows the mode, in CSS and through src/ui/canvas-ink.ts) and on a literal colour. */
+export const alpha = (c: string, a: number): string => `color-mix(in srgb, ${c} ${+(a * 100).toFixed(2)}%, transparent)`;

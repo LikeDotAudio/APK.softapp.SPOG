@@ -1,7 +1,7 @@
 // src/editors/timer/styles — the LCARS chrome for the dual-count timer (split from
 // index.ts, audit §4.5). Injected once via addStyles('twist-editor-timer', CSS).
 
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export const CSS = `
 .rc{display:flex;flex-direction:column;gap:14px;height:100%;min-height:0;overflow:auto;color:${PAL.purple87};
@@ -10,7 +10,7 @@ export const CSS = `
 /* Locked wall-clock header — sticky at the top of the scroll, can't move/close. */
 .rc-clock{position:sticky;top:0;z-index:6;flex:0 0 auto;display:flex;align-items:center;gap:14px;
   background:${PAL.indigo04};border:1px solid ${PAL.purple13};border-radius:14px;padding:8px 12px;
-  box-shadow:0 10px 22px rgba(0,0,0,.6);}
+  box-shadow:0 10px 22px ${alpha(PAL.black, .6)};}
 .rc-clock-lbl{display:flex;flex-direction:column;gap:4px;min-width:118px;}
 .rc-clock-lbl b{font:800 12px 'Courier New',monospace;letter-spacing:2px;color:${PAL.purple59};text-transform:uppercase;}
 .rc-clock-zone{font:700 10px 'Courier New',monospace;letter-spacing:1px;color:${PAL.green75};text-transform:uppercase;}
@@ -46,7 +46,7 @@ export const CSS = `
 .rc-gstat{font:700 10px 'Courier New',monospace;letter-spacing:1px;color:${PAL.grey47};display:flex;gap:14px;flex-wrap:wrap;padding:0 4px;}
 .rc-gstat b{color:${PAL.green75};}
 .rc-bezel{cursor:pointer;}
-.rc-panel.sel{border-color:${PAL.purple59};box-shadow:0 0 0 1px ${PAL.purple59},0 0 16px rgba(200,100,200,.22);}
+.rc-panel.sel{border-color:${PAL.purple59};box-shadow:0 0 0 1px ${PAL.purple59},0 0 16px ${alpha(PAL.purple59, .22)};}
 .rc-panel.sel .rc-phead{color:${PAL.purple75};}
 .rc-phead .kb{margin-left:8px;font:700 9px 'Courier New',monospace;letter-spacing:1px;color:${PAL.purple59};opacity:0;transition:opacity .12s;}
 .rc-panel.sel .rc-phead .kb{opacity:1;}

@@ -2,7 +2,7 @@
 // (js/editors/intercom.js addStyles('twist-editor-intercom', ...)). Injected once.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectIntercomStyles(): void {
   addStyles(
@@ -14,7 +14,7 @@ export function injectIntercomStyles(): void {
             padding:10px;display:flex;flex-direction:column;gap:8px;align-items:stretch;}
         .ic-key .ic-name{font-weight:900;letter-spacing:1px;text-align:center;font-size:13px;color:${PAL.blue91};
             background:${PAL.blue18};border-radius:4px;padding:8px 4px;cursor:pointer;transition:all .1s;}
-        .ic-key.talk .ic-name{background:${PAL.orange50s100};color:${PAL.black};box-shadow:0 0 12px rgba(255,138,0,.6);}
+        .ic-key.talk .ic-name{background:${PAL.orange50s100};color:${PAL.black};box-shadow:0 0 12px ${alpha(PAL.orange50s100, .6)};}
         .ic-key.listen .ic-name{box-shadow:inset 0 0 0 2px ${PAL.green53s71};color:${PAL.green81s100};}
         .ic-key.live .ic-name{outline:2px solid ${PAL.red60};}
         .ic-tl{display:flex;gap:6px;}
@@ -45,7 +45,7 @@ export function injectIntercomStyles(): void {
             transition:all .1s;}
         .ic-group-talk small{font-size:9px;opacity:.7;font-weight:bold;letter-spacing:1px;}
         .ic-group-talk:hover{filter:brightness(1.12);}
-        .ic-group.on .ic-group-talk{background:${PAL.orange50s100};color:${PAL.black};box-shadow:0 0 20px rgba(255,138,0,.75);}
+        .ic-group.on .ic-group-talk{background:${PAL.orange50s100};color:${PAL.black};box-shadow:0 0 20px ${alpha(PAL.orange50s100, .75)};}
         .ic-group-members{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
         .ic-chip{font-size:11px;font-weight:bold;letter-spacing:.5px;background:${PAL.blue18};color:${PAL.blue91};
             padding:6px 11px;border-radius:10px;}

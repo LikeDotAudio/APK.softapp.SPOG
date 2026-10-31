@@ -3,7 +3,7 @@
 // no state, no DOM beyond the passed-in canvas.
 
 /** Confidence-feed waveform — exactly what the earpiece hears. */
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function drawFeed(cv: HTMLCanvasElement, level: number, talk: number): void {
   const w = (cv.width = cv.clientWidth);
@@ -11,7 +11,7 @@ export function drawFeed(cv: HTMLCanvasElement, level: number, talk: number): vo
   const ctx = cv.getContext('2d');
   if (!ctx) return;
   ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = talk ? 'rgba(255,120,120,.9)' : 'rgba(90,224,140,.9)';
+  ctx.strokeStyle = talk ? alpha(PAL.red74s100, .9) : alpha(PAL.green62, .9);
   ctx.lineWidth = 2;
   ctx.beginPath();
   for (let x = 0; x <= w; x += 3) {
@@ -32,7 +32,7 @@ export function drawDuck(cv: HTMLCanvasElement, hist: readonly number[]): void {
   const ctx = cv.getContext('2d');
   if (!ctx) return;
   ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = 'rgba(80,110,150,.25)';
+  ctx.strokeStyle = alpha(PAL.sky45s30, .25);
   ctx.beginPath();
   ctx.moveTo(0, 6);
   ctx.lineTo(w, 6);

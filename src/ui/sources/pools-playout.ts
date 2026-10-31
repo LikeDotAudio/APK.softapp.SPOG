@@ -5,7 +5,7 @@ import type { SourceLeaf, PlayoutPlayer, PlayoutVideo, StreamDef } from '../../m
 import { slugId, monoEmoji, styleSignalNode } from './format.js';
 import { makeMediaGroup } from './media-group.js';
 import { wireFold } from './pools-fold.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // ---- PLAYOUT pool -----------------------------------------------------------
 function buildPlayoutVideoNode(video: PlayoutVideo, color: string, origin: string): HTMLElement {
@@ -59,7 +59,7 @@ export function renderPlayoutPool(data: SourceLeaf, container: HTMLElement): voi
 const STREAM_CSS = `
 .signal-node.stream-node .stream-link{display:block;font-size:9px;letter-spacing:.5px;
     color:${PAL.sky71};text-decoration:none;padding:3px 4px;margin-top:2px;word-break:break-all;
-    background:rgba(0,0,0,.35);border-radius:3px;}
+    background:${alpha(PAL.black, .35)};border-radius:3px;}
 .signal-node.stream-node .stream-link:hover{color:${PAL.white};text-decoration:underline;}`;
 
 function buildStreamNode(stream: StreamDef, color: string, origin: string): HTMLElement {

@@ -5,7 +5,7 @@
 // lane), HOW MANY more operators / rooms, and WHICH shows collide. Pure model + HTML,
 // plus a small drawer the view toggles from the ⚠ STAFFING button or a ×N badge.
 import { el } from '../dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export interface SPlan { s: number; e: number; showName?: string; label?: string }
 export interface SLane { type?: string; name: string; plans: SPlan[] }
@@ -60,7 +60,7 @@ export function staffingHtml(needs: StaffNeed[], scope = ''): string {
 }
 
 export const STAFF_CSS = `
-.tl-staff{position:absolute;right:16px;top:110px;z-index:9;width:340px;max-height:60%;overflow:auto;display:none;background:${PAL.blue08};border:1px solid ${PAL.red71};border-radius:10px;box-shadow:0 12px 36px rgba(0,0,0,.65);font:11px/1.45 'Courier New',monospace;color:${PAL.sky95};}
+.tl-staff{position:absolute;right:16px;top:110px;z-index:9;width:340px;max-height:60%;overflow:auto;display:none;background:${PAL.blue08};border:1px solid ${PAL.red71};border-radius:10px;box-shadow:0 12px 36px ${alpha(PAL.black, .65)};font:11px/1.45 'Courier New',monospace;color:${PAL.sky95};}
 .tl-staff.open{display:block;}
 .tl-staff-h{position:sticky;top:0;display:flex;gap:6px;align-items:center;padding:7px 11px;background:${PAL.red15};color:${PAL.red80};font-weight:bold;letter-spacing:1px;}
 .tl-staff-h .x{margin-left:auto;cursor:pointer;color:${PAL.red67s40};}

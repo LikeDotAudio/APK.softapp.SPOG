@@ -8,6 +8,6 @@ const pattern: TsgPattern = {
   id: 'bt2111hlg', label: 'BT.2111 HLG', name: 'BT.2111 HLG', group: 'HDR', order: 14,
   title: 'ITU-R BT.2111 (HLG): Standardized Rec. 2100 test pattern for verifying Hybrid Log-Gamma HDR broadcasting and backwards compatibility rendering.',
   href: 'https://www.itu.int/rec/R-REC-BT.2111/en',
-  draw: (g, W, H) => drawBt2111(g, W, H, 'rgb(77,77,77)', PAL.white),
+  draw: (g, W, H) => drawBt2111(g, W, H, PAL.grey30, PAL.white),
 };
 export default pattern;

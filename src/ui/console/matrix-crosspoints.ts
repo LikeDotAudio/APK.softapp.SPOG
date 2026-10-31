@@ -6,7 +6,7 @@ import { addStyles } from '../dom.js';
 import { logAction } from './captains-log.js';
 import { publishCrosspoints } from './matrix-place.js';
 import { stampRouted, wireDetailsHold } from './crosspoint-details.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // ---- crosspoints: number each routed feed 1..N (add order) + drag-to-reorder ---
 const XP_CSS = `
@@ -14,13 +14,13 @@ const XP_CSS = `
 .drop-zone > .signal-node{position:relative;}
 .drop-zone > .signal-node::before{content:attr(data-xp);position:absolute;top:-7px;left:-7px;min-width:15px;height:15px;
     box-sizing:border-box;border-radius:8px;background:${PAL.sky69};color:${PAL.sky07s77};font:bold 9px sans-serif;
-    display:flex;align-items:center;justify-content:center;padding:0 3px;z-index:4;box-shadow:0 1px 3px rgba(0,0,0,.55);pointer-events:none;}
+    display:flex;align-items:center;justify-content:center;padding:0 3px;z-index:4;box-shadow:0 1px 3px ${alpha(PAL.black, .55)};pointer-events:none;}
 .drop-zone > .signal-node[draggable=true]{cursor:grab;}
 .drop-zone > .signal-node.xp-drag{opacity:.4;}
 /* Dragging a crosspoint OUT of its drop-zone removes the route — tint it red
    while the pointer is outside so the "drop here to un-route" intent is clear. */
 .drop-zone > .signal-node.xp-remove{opacity:.55;outline:2px dashed ${PAL.red68s100};outline-offset:1px;filter:saturate(1.5) brightness(1.05);}
-.drop-zone.xp-eject{outline:2px dashed rgba(255,90,90,.35);outline-offset:2px;}
+.drop-zone.xp-eject{outline:2px dashed ${alpha(PAL.red68s100, .35)};outline-offset:2px;}
 /* Word-processor insertion caret: a blinking vertical bar marking where the
    dragged feed will land between the existing crosspoints. */
 .drop-zone > .xp-caret{flex:0 0 auto;width:3px;align-self:stretch;min-height:22px;margin:0 -1px;border-radius:2px;

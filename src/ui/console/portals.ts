@@ -11,7 +11,7 @@ import { toggleSuperPool } from '../sources/panel.js';
 import { Footer, type GroupHandle } from './footer.js';
 import { initializeTwists } from './matrix.js';
 import { wireSourceNode } from '../sources/interact.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const COLOR = PAL.green45;
 const PORTALS_CSS = `
@@ -19,8 +19,8 @@ const PORTALS_CSS = `
 .portal-new{display:block;width:100%;margin-bottom:8px;background:${COLOR};color:${PAL.black};border:none;border-radius:14px;font-weight:900;letter-spacing:1px;font-size:12px;padding:9px;cursor:pointer;}
 .portal-new:hover{filter:brightness(1.1);}
 .portal-srcs{display:flex;flex-direction:column;gap:6px;}
-.signal-node.portal-source{border:1px solid ${COLOR};color:${COLOR};border-radius:4px 14px 14px 4px;font-weight:bold;background:rgba(70,160,110,.12);}
-.twist-container.portal-twist{border-color:${COLOR};box-shadow:0 0 8px rgba(70,160,110,.4);}
+.signal-node.portal-source{border:1px solid ${COLOR};color:${COLOR};border-radius:4px 14px 14px 4px;font-weight:bold;background:${alpha(PAL.green45, .12)};}
+.twist-container.portal-twist{border-color:${COLOR};box-shadow:0 0 8px ${alpha(PAL.green45, .4)};}
 .portal-twist .twist-title{color:${COLOR};}
 .portal-empty{font-size:10px;color:${PAL.blue60s27};text-align:center;padding:6px;}`;
 

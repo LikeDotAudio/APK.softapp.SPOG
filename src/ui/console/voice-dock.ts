@@ -1,13 +1,13 @@
 import { addStyles, el } from '../dom.js';
 import { launchDock } from './launch-dock.js';
 import { getBus } from '../../platform/mqtt/index.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const CSS = `
 .voice-launch{position:fixed;right:130px;bottom:76px;z-index:1000;background:${PAL.red60s100};color:${PAL.white};border:none;border-radius:18px 6px 6px 18px;font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:8px 18px 8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:inset 5px 0 0 ${PAL.red38s84};}
 .voice-launch.listening { animation: pulse-mic 1.5s infinite; }
-@keyframes pulse-mic { 0% { transform: scale(1); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 10px rgba(255,51,102,0.6); } 50% { transform: scale(1.05); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 20px rgba(255,51,102,0.9); } 100% { transform: scale(1); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 10px rgba(255,51,102,0.6); } }
-.voice-panel{position:fixed;right:130px;bottom:120px;z-index:2400;width:min(400px,92vw);display:none;flex-direction:column;background:${PAL.blue05s29};border:1px solid ${PAL.sky18};border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.6);overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky89};}
+@keyframes pulse-mic { 0% { transform: scale(1); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 10px ${alpha(PAL.red60s100, .6)}; } 50% { transform: scale(1.05); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 20px ${alpha(PAL.red60s100, .9)}; } 100% { transform: scale(1); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 10px ${alpha(PAL.red60s100, .6)}; } }
+.voice-panel{position:fixed;right:130px;bottom:120px;z-index:2400;width:min(400px,92vw);display:none;flex-direction:column;background:${PAL.blue05s29};border:1px solid ${PAL.sky18};border-radius:14px;box-shadow:0 12px 40px ${alpha(PAL.black, .6)};overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky89};}
 .voice-panel.open{display:flex;}
 .vd-head{display:flex;justify-content:space-between;padding:12px;background:${PAL.blue15s32};border-bottom:1px solid ${PAL.sky18};font-size:14px;}
 .vd-x{background:none;border:none;color:${PAL.sky69s41};cursor:pointer;font-size:18px;}

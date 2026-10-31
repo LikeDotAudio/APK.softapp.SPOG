@@ -2,7 +2,7 @@
 // addStyles('am2-styles', …) CSS block so the confidence monitor matches 1:1.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const CSS = `
 .am2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;height:100%;}
@@ -22,7 +22,7 @@ const CSS = `
 .am2-meter .scale{position:absolute;right:1px;top:0;bottom:0;width:1px;}
 .am2-lab{font:bold 10px 'Courier New',monospace;color:${PAL.sky84};text-align:center;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46px;}
 .am2-cue{width:40px;padding:5px 0;border-radius:6px;border:1px solid ${PAL.blue27s36};background:${PAL.blue12_0c1730};color:${PAL.sky71};font:bold 9px sans-serif;letter-spacing:1px;cursor:pointer;text-align:center;}
-.am2-cue.on{background:${PAL.amber50};color:${PAL.orange06};border-color:${PAL.amber50};box-shadow:0 0 8px rgba(255,212,0,.6);}
+.am2-cue.on{background:${PAL.amber50};color:${PAL.orange06};border-color:${PAL.amber50};box-shadow:0 0 8px ${alpha(PAL.amber50, .6)};}
 .am2-mute{width:40px;padding:4px 0;border-radius:6px;border:1px solid ${PAL.blue27s36};background:${PAL.blue12_0c1730};color:${PAL.blue60s27};font:bold 9px sans-serif;cursor:pointer;text-align:center;}
 .am2-mute.on{background:${PAL.red62};color:${PAL.white};border-color:${PAL.red62};}
 .am2-phase{margin-top:10px;display:flex;gap:10px;align-items:center;}

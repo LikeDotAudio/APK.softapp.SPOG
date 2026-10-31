@@ -3,7 +3,7 @@
 // Both take an explicit canvas + render locals (no closures) so view can thread
 // its per-panel state through the call.
 
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function drawHist(cv: HTMLCanvasElement, hist: number[]): void {
   const w = (cv.width = cv.clientWidth);
@@ -11,7 +11,7 @@ export function drawHist(cv: HTMLCanvasElement, hist: number[]): void {
   const ctx = cv.getContext('2d');
   if (!ctx) return;
   ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = 'rgba(80,110,150,.18)';
+  ctx.strokeStyle = alpha(PAL.sky45s30, .18);
   [0.25, 0.5, 0.75].forEach((p) => {
     const y = h - p * h;
     ctx.beginPath();
@@ -53,8 +53,8 @@ export function drawHPF(cv: HTMLCanvasElement, fc: number, slope: number, win: s
   const dbBot = -36;
   const yOf = (db: number): number => h - ((db - dbBot) / (dbTop - dbBot)) * h;
   ctx.font = '8px Courier New, monospace';
-  ctx.strokeStyle = 'rgba(80,110,150,.16)';
-  ctx.fillStyle = 'rgba(120,150,190,.6)';
+  ctx.strokeStyle = alpha(PAL.sky45s30, .16);
+  ctx.fillStyle = alpha(PAL.sky61s35, .6);
   [-24, -12, 0].forEach((db) => {
     const y = yOf(db);
     ctx.beginPath();
@@ -71,7 +71,7 @@ export function drawHPF(cv: HTMLCanvasElement, fc: number, slope: number, win: s
     ctx.stroke();
     ctx.fillText(freq >= 1000 ? freq / 1000 + 'k' : '' + freq, x + 2, h - 2);
   });
-  ctx.strokeStyle = 'rgba(111,200,240,.4)';
+  ctx.strokeStyle = alpha(PAL.sky69, .4);
   ctx.beginPath();
   ctx.moveTo(xOf(fc), 0);
   ctx.lineTo(xOf(fc), h);
@@ -95,7 +95,7 @@ export function drawHPF(cv: HTMLCanvasElement, fc: number, slope: number, win: s
   ctx.lineTo(w, h);
   ctx.lineTo(22, h);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(111,200,240,.1)';
+  ctx.fillStyle = alpha(PAL.sky69, .1);
   ctx.fill();
   ctx.fillStyle = PAL.sky69;
   ctx.font = 'bold 9px Courier New, monospace';

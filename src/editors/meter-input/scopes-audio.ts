@@ -3,7 +3,7 @@
 // level recorder, analog VU pair and digital dBFS meters. Re-exported through
 // live-input.ts so import sites are unchanged.
 import { ctx2d, fade, applyView, resetView, IDENTITY_VIEW, type View } from './scopes-video.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // Audio goniometer / Lissajous — plots real L (x) vs R (y) sample pairs rotated
 // 45° (mono = vertical), additive with persistence. Zoomable.
@@ -17,7 +17,7 @@ export function drawGonio(cv: HTMLCanvasElement, L: Uint8Array | null, R: Uint8A
   c.fillText('M', cx, cy - R0 + 10); c.fillText('L', cx - R0 * 0.62, cy - R0 * 0.55); c.fillText('R', cx + R0 * 0.62, cy - R0 * 0.55);
   if (L && R) {
     c.globalCompositeOperation = 'lighter';
-    c.fillStyle = 'rgba(120,235,150,0.5)';
+    c.fillStyle = alpha(PAL.green70s74, .5);
     const n = Math.min(L.length, R.length), k = R0 / Math.SQRT2;
     for (let i = 0; i < n; i++) {
       const l = (L[i] ?? 128) / 128 - 1, r = (R[i] ?? 128) / 128 - 1;
@@ -59,9 +59,9 @@ export function drawRecorder(cv: HTMLCanvasElement, histL: number[], histR: numb
   c.font = '8px "Courier New",monospace'; c.textAlign = 'left';
   for (const db of [0, -6, -12, -20, -40, -60]) {
     const yy = y(db);
-    c.strokeStyle = db === -20 ? 'rgba(57,211,83,.35)' : 'rgba(80,110,150,.16)';
+    c.strokeStyle = db === -20 ? alpha(PAL.green53, .35) : alpha(PAL.sky45s30, .16);
     c.beginPath(); c.moveTo(22, yy); c.lineTo(W, yy); c.stroke();
-    c.fillStyle = 'rgba(120,150,190,.65)'; c.fillText(String(db), 1, yy + 3);
+    c.fillStyle = alpha(PAL.sky61s35, .65); c.fillText(String(db), 1, yy + 3);
   }
   const line = (hist: number[], color: string): void => {
     if (!hist.length) return;
@@ -81,7 +81,7 @@ const VU_MARKS: Array<[number, string]> = [[-20, '20'], [-10, '10'], [-7, '7'], 
 function drawOneVU(c: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, db: number, label: string): void {
   c.save();
   c.beginPath(); c.roundRect(x + 2, y + 2, w - 4, h - 4, 8); c.fillStyle = PAL.amber88; c.fill();
-  c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 1; c.stroke();
+  c.strokeStyle = alpha(PAL.black, .25); c.lineWidth = 1; c.stroke();
   const cx = x + w / 2, cy = y + h * 0.9, R = Math.min(w, h) * 0.7;
   const A0 = -Math.PI / 2 - 0.92, A1 = -Math.PI / 2 + 0.92;
   const ang = (vu: number): number => A0 + (A1 - A0) * ((vu - VU_LO) / (VU_HI - VU_LO));

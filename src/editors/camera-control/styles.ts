@@ -1,7 +1,7 @@
 // src/editors/camera-control/styles — all CSS for the CCU/RCP console.
 // Ported verbatim from js/editors/camera/styles.js so visuals match 1:1.
 
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export const CSS = `
 .cc-wrap{display:grid;grid-template-columns:minmax(0,1fr) 580px;grid-template-rows:minmax(0,1fr) auto;gap:12px;height:100%;
@@ -22,7 +22,7 @@ export const CSS = `
 /* the bouncing DVD-style lineage badge (parent › child › grandchild) — big & fast */
 .cc-dvd{position:absolute;left:0;top:0;display:none;padding:12px 22px;border:3px solid currentColor;border-radius:10px;
     font:900 22px 'Courier New',monospace;letter-spacing:2px;color:${PAL.white};white-space:nowrap;z-index:6;pointer-events:none;
-    background:rgba(0,0,0,.4);text-shadow:0 0 8px rgba(0,0,0,.9);box-shadow:0 0 18px currentColor;}
+    background:${alpha(PAL.black, .4)};text-shadow:0 0 8px ${alpha(PAL.black, .9)};box-shadow:0 0 18px currentColor;}
 .cc-dvd.on{display:block;}
 
 .cc-osd{position:absolute;left:50%;transform:translateX(-50%);top:8px;font:bold 12px 'Courier New',monospace;color:${PAL.green90};letter-spacing:1px;text-shadow:0 0 4px ${PAL.black};z-index:5;}
@@ -36,8 +36,8 @@ export const CSS = `
 .cc-scope{position:absolute;z-index:4;}
 .cc-vecbox{left:10px;top:30px;width:172px;height:172px;}
 .cc-vec{display:block;width:100%;height:100%;border-radius:50%;
-    background:radial-gradient(circle,rgba(0,0,0,.5),rgba(0,0,0,.85));border:1px solid ${PAL.blue27s36};}
-.cc-wfbox{left:10px;bottom:10px;width:330px;height:150px;background:rgba(0,6,12,.72);
+    background:radial-gradient(circle,${alpha(PAL.black, .5)},${alpha(PAL.black, .85)});border:1px solid ${PAL.blue27s36};}
+.cc-wfbox{left:10px;bottom:10px;width:330px;height:150px;background:${alpha(PAL.sky02, .72)};
     border:1px solid ${PAL.blue22};border-radius:9px;overflow:hidden;}
 .cc-wf{display:block;width:100%;height:100%;}
 .cc-wf-tag{position:absolute;left:50%;transform:translateX(-50%);top:5px;z-index:2;font:bold 10px 'Courier New',monospace;letter-spacing:2px;color:${PAL.sky69};pointer-events:none;text-shadow:0 0 4px ${PAL.black};}
@@ -46,7 +46,7 @@ export const CSS = `
 .cc-rsz:hover{opacity:1;}
 
 /* robotics maps (camera visualization) — translucent overlays, docked RIGHT */
-.cc-map{position:absolute;right:10px;z-index:4;border:1px solid rgba(111,200,240,.32);border-radius:8px;overflow:hidden;background:rgba(3,9,18,.5);}
+.cc-map{position:absolute;right:10px;z-index:4;border:1px solid ${alpha(PAL.sky69, .32)};border-radius:8px;overflow:hidden;background:${alpha(PAL.blue04_030912, .5)};}
 .cc-map.top{top:30px;width:216px;height:150px;} .cc-map.side{top:190px;width:216px;height:118px;}
 .cc-map .lbl{position:absolute;left:7px;top:4px;z-index:2;font:bold 8px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky69};}
 .cc-map svg{width:100%;height:100%;}
@@ -61,12 +61,12 @@ export const CSS = `
 
 /* motorized rotary encoder: notched bezel, glowing value arc, metallic cap, lit pointer */
 .cc-dial{width:80px;height:80px;border-radius:50%;position:relative;cursor:ns-resize;touch-action:none;
-    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg), ${PAL.blue07s63};box-shadow:0 5px 13px rgba(0,0,0,.55);}
+    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg), ${PAL.blue07s63};box-shadow:0 5px 13px ${alpha(PAL.black, .55)};}
 .cc-dial::before{content:'';position:absolute;inset:9%;border-radius:50%;
     background:conic-gradient(from 225deg,var(--c,${PAL.sky69}) calc(var(--p,50%) * 0.75),${PAL.blue16s48} 0);
     -webkit-mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);filter:drop-shadow(0 0 5px var(--c,${PAL.sky69}));}
 .cc-dial::after{content:'';position:absolute;inset:24%;border-radius:50%;background:radial-gradient(circle at 42% 32%,${PAL.sky40},${PAL.blue15} 72%);
-    box-shadow:inset 0 2px 5px rgba(255,255,255,.2),inset 0 -3px 6px rgba(0,0,0,.55),0 2px 5px rgba(0,0,0,.5);}
+    box-shadow:inset 0 2px 5px ${alpha(PAL.white, .2)},inset 0 -3px 6px ${alpha(PAL.black, .55)},0 2px 5px ${alpha(PAL.black, .5)};}
 .cc-dial .ptr{position:absolute;left:50%;top:50%;width:4px;height:36%;border-radius:3px;background:var(--c,${PAL.sky69});box-shadow:0 0 6px var(--c,${PAL.sky69});
     transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(var(--rot,0deg));z-index:2;}
 .cc-kn span{font-size:11px;color:${PAL.sky71};letter-spacing:.5px;text-align:center;} .cc-kn b{font:bold 13px 'Courier New',monospace;color:${PAL.sky91};}
@@ -83,14 +83,14 @@ export const CSS = `
 
 /* joystick + sliders */
 .cc-stick{position:relative;width:214px;height:214px;margin:2px auto;border-radius:50%;background:radial-gradient(circle,${PAL.blue16s47},${PAL.blue09s58});border:3px solid ${PAL.blue27s36};touch-action:none;cursor:grab;}
-.cc-stick .puck{position:absolute;left:50%;top:50%;width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 35% 30%,${PAL.sky81},${PAL.sky48});box-shadow:0 8px 18px rgba(0,0,0,.6);transform:translate(-50%,-50%);}
-.cc-stick .puck::after{content:'';position:absolute;inset:30%;border-radius:50%;border:2px solid rgba(255,255,255,.35);}
+.cc-stick .puck{position:absolute;left:50%;top:50%;width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 35% 30%,${PAL.sky81},${PAL.sky48});box-shadow:0 8px 18px ${alpha(PAL.black, .6)};transform:translate(-50%,-50%);}
+.cc-stick .puck::after{content:'';position:absolute;inset:30%;border-radius:50%;border:2px solid ${alpha(PAL.white, .35)};}
 .cc-stick .ring{position:absolute;inset:20px;border-radius:50%;border:2px dashed ${PAL.blue27s36};}
 /* RATE — scales how fast the PTZ pans / tilts / recalls */
 .cc-rate{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
 .cc-rate label{font-size:13px;font-weight:900;color:${PAL.sky71};letter-spacing:2px;width:48px;}
 .cc-rate input{flex:1;-webkit-appearance:none;appearance:none;height:18px;border-radius:11px;background:${PAL.blue16s47};box-shadow:inset 0 0 0 1px ${PAL.blue27s36};outline:none;cursor:pointer;}
-.cc-rate input::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:26px;border-radius:9px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.5);}
+.cc-rate input::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:26px;border-radius:9px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;box-shadow:0 3px 8px ${alpha(PAL.black, .5)};}
 .cc-rate input::-moz-range-thumb{width:30px;height:26px;border-radius:9px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;}
 .cc-ratev{font:bold 13px 'Courier New',monospace;color:${PAL.sky81};width:46px;text-align:right;}
 /* Ped (left) + joystick + Zoom (right) on a row; Dolly is the full-width rail below */
@@ -98,12 +98,12 @@ export const CSS = `
 .cc-vside{display:flex;flex-direction:column;align-items:center;gap:8px;}
 .cc-vside label{font-size:13px;font-weight:900;color:${PAL.sky71};letter-spacing:2px;}
 .cc-vbar{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:30px;height:190px;border-radius:16px;background:${PAL.blue16s47};box-shadow:inset 0 0 0 1px ${PAL.blue27s36};outline:none;cursor:pointer;}
-.cc-vbar::-webkit-slider-thumb{-webkit-appearance:none;width:42px;height:34px;border-radius:9px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.5);}
+.cc-vbar::-webkit-slider-thumb{-webkit-appearance:none;width:42px;height:34px;border-radius:9px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;box-shadow:0 3px 8px ${alpha(PAL.black, .5)};}
 .cc-vbar::-moz-range-thumb{width:42px;height:34px;border-radius:9px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;}
 .cc-dollybar{grid-column:1 / -1;width:100%;display:flex;align-items:center;gap:12px;}
 .cc-dollybar label{font-size:13px;font-weight:900;color:${PAL.sky71};letter-spacing:2px;width:60px;}
 .cc-dollybar input{flex:1;-webkit-appearance:none;appearance:none;height:22px;border-radius:13px;background:${PAL.blue16s47};box-shadow:inset 0 0 0 1px ${PAL.blue27s36};outline:none;cursor:pointer;}
-.cc-dollybar input::-webkit-slider-thumb{-webkit-appearance:none;width:48px;height:34px;border-radius:11px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.5);}
+.cc-dollybar input::-webkit-slider-thumb{-webkit-appearance:none;width:48px;height:34px;border-radius:11px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;box-shadow:0 3px 8px ${alpha(PAL.black, .5)};}
 .cc-dollybar input::-moz-range-thumb{width:48px;height:34px;border-radius:11px;background:radial-gradient(circle at 40% 35%,${PAL.sky81},${PAL.sky48});border:2px solid ${PAL.sky05};cursor:pointer;}
 .cc-hint{font-size:11px;color:${PAL.blue53};margin-top:6px;letter-spacing:.5px;text-align:center;}
 
@@ -111,15 +111,15 @@ export const CSS = `
 .cc-key{padding:16px 6px;border-radius:10px;border:1px solid ${PAL.blue27s36};background:${PAL.blue12_0c1730};color:${PAL.sky84};font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;}
 .cc-key:hover{background:${PAL.blue16s47};} .cc-key.on{background:${PAL.sky69};color:${PAL.sky05};border-color:${PAL.sky69};}
 /* telemetry as its own overlaid box on the glass (bottom-left, above waveform) */
-.cc-tel-box{position:absolute;right:10px;bottom:10px;z-index:5;background:rgba(3,9,18,.66);border:1px solid ${PAL.blue22};border-radius:9px;padding:10px 13px;min-width:160px;}
+.cc-tel-box{position:absolute;right:10px;bottom:10px;z-index:5;background:${alpha(PAL.blue04_030912, .66)};border:1px solid ${PAL.blue22};border-radius:9px;padding:10px 13px;min-width:160px;}
 /* glass function buttons */
-.cc-fbtn{position:absolute;z-index:6;padding:13px 20px;border-radius:11px;border:1px solid ${PAL.blue27s36};background:rgba(12,23,48,.86);color:${PAL.sky84};font:900 13px sans-serif;letter-spacing:2px;text-transform:uppercase;cursor:pointer;user-select:none;}
-.cc-fbtn:hover{background:rgba(22,36,61,.92);}
-.cc-fbtn.on{background:${PAL.sky69};color:${PAL.sky05};border-color:${PAL.sky69};box-shadow:0 0 12px rgba(111,200,240,.5);}
+.cc-fbtn{position:absolute;z-index:6;padding:13px 20px;border-radius:11px;border:1px solid ${PAL.blue27s36};background:${alpha(PAL.blue12_0c1730, .86)};color:${PAL.sky84};font:900 13px sans-serif;letter-spacing:2px;text-transform:uppercase;cursor:pointer;user-select:none;}
+.cc-fbtn:hover{background:${alpha(PAL.blue16s47, .92)};}
+.cc-fbtn.on{background:${PAL.sky69};color:${PAL.sky05};border-color:${PAL.sky69};box-shadow:0 0 12px ${alpha(PAL.sky69, .5)};}
 .cc-bars-btn{right:14px;bottom:144px;}
 .cc-wb-btn{left:10px;top:50%;transform:translateY(-50%);overflow:hidden;}
-.cc-wb-btn .fill{position:absolute;left:0;bottom:0;width:100%;height:0;background:rgba(255,212,0,.35);z-index:-1;transition:none;}
-.cc-wb-btn.on{background:${PAL.green53};color:${PAL.green05};border-color:${PAL.green53};box-shadow:0 0 12px rgba(57,211,83,.5);}
+.cc-wb-btn .fill{position:absolute;left:0;bottom:0;width:100%;height:0;background:${alpha(PAL.amber50, .35)};z-index:-1;transition:none;}
+.cc-wb-btn.on{background:${PAL.green53};color:${PAL.green05};border-color:${PAL.green53};box-shadow:0 0 12px ${alpha(PAL.green53, .5)};}
 .cc-tel-box .cap{color:${PAL.sky69};font:bold 9px 'Courier New',monospace;letter-spacing:2px;margin-bottom:5px;}
 .cc-tel{font:12px 'Courier New',monospace;color:${PAL.sky84s100};line-height:1.75;} .cc-tel b{color:${PAL.white};}
 /* camera nickname field */

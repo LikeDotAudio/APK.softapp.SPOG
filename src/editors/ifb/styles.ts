@@ -2,7 +2,7 @@
 // CSS block from js/editors/ifb.js so the IFB visuals match 1:1.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectIfbStyles(): void {
   addStyles(
@@ -24,7 +24,7 @@ export function injectIfbStyles(): void {
 .ifb-feed{flex:1;position:relative;background:${PAL.blue04};border:1px solid ${PAL.blue19};border-radius:10px;overflow:hidden;min-height:200px;}
 .ifb-feed canvas{position:absolute;inset:0;width:100%;height:100%;}
 .ifb-status{position:absolute;left:50%;top:14px;transform:translateX(-50%);font:900 16px sans-serif;letter-spacing:3px;z-index:2;
-    color:${PAL.green53};text-shadow:0 0 8px rgba(0,0,0,.7);}
+    color:${PAL.green53};text-shadow:0 0 8px ${alpha(PAL.black, .7)};}
 .ifb-status.talk{color:${PAL.red71};animation:ifbB 1s steps(2) infinite;}
 @keyframes ifbB{50%{opacity:.35;}}
 .ifb-duckwrap{margin-top:12px;}
@@ -37,10 +37,10 @@ export function injectIfbStyles(): void {
 .ifb-knobs{display:flex;justify-content:space-around;}
 .ifb-kn{display:flex;flex-direction:column;align-items:center;gap:7px;}
 .ifb-dial{width:84px;height:84px;border-radius:50%;position:relative;cursor:ns-resize;touch-action:none;
-    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg),${PAL.blue07s63};box-shadow:0 5px 13px rgba(0,0,0,.55);}
+    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg),${PAL.blue07s63};box-shadow:0 5px 13px ${alpha(PAL.black, .55)};}
 .ifb-dial::before{content:'';position:absolute;inset:9%;border-radius:50%;background:conic-gradient(from 225deg,var(--c,${PAL.sky69}) calc(var(--p,50%) * 0.75),${PAL.blue16s48} 0);
     -webkit-mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);filter:drop-shadow(0 0 5px var(--c,${PAL.sky69}));}
-.ifb-dial::after{content:'';position:absolute;inset:24%;border-radius:50%;background:radial-gradient(circle at 42% 32%,${PAL.sky40},${PAL.blue15} 72%);box-shadow:inset 0 2px 5px rgba(255,255,255,.2),0 2px 5px rgba(0,0,0,.5);}
+.ifb-dial::after{content:'';position:absolute;inset:24%;border-radius:50%;background:radial-gradient(circle at 42% 32%,${PAL.sky40},${PAL.blue15} 72%);box-shadow:inset 0 2px 5px ${alpha(PAL.white, .2)},0 2px 5px ${alpha(PAL.black, .5)};}
 .ifb-dial i{position:absolute;left:50%;top:50%;width:4px;height:36%;border-radius:3px;background:var(--c,${PAL.sky69});box-shadow:0 0 6px var(--c,${PAL.sky69});transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(var(--rot,0deg));}
 .ifb-kn b{font:bold 13px 'Courier New',monospace;color:${PAL.sky91};} .ifb-kn span{font-size:11px;color:${PAL.sky71};}
 .ifb-talks{display:flex;flex-direction:column;gap:10px;}
@@ -48,13 +48,13 @@ export function injectIfbStyles(): void {
 .ifb-talk .pr{width:34px;height:34px;border-radius:8px;background:${PAL.blue15};color:${PAL.sky71};font:900 14px sans-serif;display:flex;align-items:center;justify-content:center;}
 .ifb-talk .nm{flex:1;font:bold 13px sans-serif;color:${PAL.sky91};letter-spacing:1px;} .ifb-talk .nm small{display:block;color:${PAL.blue60s27};font-weight:normal;letter-spacing:0;}
 .ifb-talk.on{background:${PAL.red62};border-color:${PAL.red62};} .ifb-talk.on .pr{background:${PAL.black};color:${PAL.red80};} .ifb-talk.on .nm{color:${PAL.white};}
-.ifb-talk.p1.on{box-shadow:0 0 14px rgba(255,59,59,.7);}
+.ifb-talk.p1.on{box-shadow:0 0 14px ${alpha(PAL.red62, .7)};}
 
 /* delivery split: wired stage-box leg + wireless RF leg, fed by one routing decision */
 .ifb-routes{display:flex;gap:6px;margin-bottom:10px;}
 .ifb-route{flex:1;font:800 10px 'Courier New',monospace;letter-spacing:1px;padding:8px 4px;border:1px solid ${PAL.blue27s36};
     border-radius:8px;background:${PAL.blue12_0c1730};color:${PAL.sky71};cursor:pointer;}
-.ifb-route.sel{background:${PAL.cyan52};border-color:${PAL.cyan52};color:${PAL.cyan09};box-shadow:0 0 10px rgba(63,193,201,.45);}
+.ifb-route.sel{background:${PAL.cyan52};border-color:${PAL.cyan52};color:${PAL.cyan09};box-shadow:0 0 10px ${alpha(PAL.cyan52, .45)};}
 .ifb-leg{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid ${PAL.blue22s39};
     background:${PAL.blue09s58};margin-bottom:8px;opacity:.45;}
 .ifb-leg.on{opacity:1;border-color:${PAL.cyan52};}

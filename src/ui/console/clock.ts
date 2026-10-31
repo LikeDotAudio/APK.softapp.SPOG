@@ -4,12 +4,12 @@
 // TIME to cycle UTC → Unix epoch → date-timecode; click the DOTS to open the
 // production schedule (hook — the schedule editor ports later).
 import { addStyles } from '../dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const CLOCK_CSS = `
 .ptp-clock{position:fixed;right:14px;bottom:42px;z-index:1000;font-family:'Courier New',Consolas,monospace;font-size:13px;font-weight:bold;
     letter-spacing:1px;color:var(--cyan,${PAL.cyan50});background:none;border:none;padding:5px 6px;cursor:pointer;user-select:none;white-space:nowrap;
-    display:inline-flex;align-items:center;gap:9px;text-shadow:0 0 8px rgba(0,0,0,.7);transition:color .2s,filter .2s;}
+    display:inline-flex;align-items:center;gap:9px;text-shadow:0 0 8px ${alpha(PAL.black, .7)};transition:color .2s,filter .2s;}
 .ptp-clock:hover{filter:brightness(1.2);}
 .ck-dots{display:grid;grid-template-columns:repeat(30,2px);grid-auto-rows:2px;gap:1px;align-content:center;}
 .ck-dot{width:2px;height:2px;border-radius:50%;background:${PAL.teal10};}

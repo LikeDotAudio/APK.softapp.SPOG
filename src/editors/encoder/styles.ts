@@ -2,7 +2,7 @@
 // block from js/editors/encoder.js. Kept byte-for-byte so the visuals match.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const CSS = `
 .enc{display:grid;grid-template-columns:280px minmax(0,1fr) 300px;gap:16px;height:100%;}
@@ -54,8 +54,8 @@ const CSS = `
 .enc-health .ok{color:var(--state-good);} .enc-health .bad{color:var(--state-dead);}
 .enc-scte{margin-top:12px;padding:14px;border-radius:9px;border:1px solid ${PAL.red71};background:${PAL.red07};color:${PAL.red80};font:900 13px sans-serif;letter-spacing:2px;text-transform:uppercase;cursor:pointer;text-align:center;}
 .enc-scte:hover{background:${PAL.red12};}
-.enc-scte.on{background:${PAL.red62};color:${PAL.white};border-color:${PAL.red62};box-shadow:0 0 16px rgba(255,59,59,.7);}
-.enc-toast{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(255,59,59,.92);color:${PAL.white};font:bold 11px 'Courier New',monospace;padding:7px 13px;border-radius:7px;z-index:5;white-space:nowrap;animation:encToast 1.8s ease forwards;}
+.enc-scte.on{background:${PAL.red62};color:${PAL.white};border-color:${PAL.red62};box-shadow:0 0 16px ${alpha(PAL.red62, .7)};}
+.enc-toast{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:${alpha(PAL.red62, .92)};color:${PAL.white};font:bold 11px 'Courier New',monospace;padding:7px 13px;border-radius:7px;z-index:5;white-space:nowrap;animation:encToast 1.8s ease forwards;}
 @keyframes encToast{0%{opacity:0;transform:translate(-50%,12px)}15%{opacity:1;transform:translate(-50%,0)}85%{opacity:1}100%{opacity:0}}
 `;
 

@@ -5,7 +5,7 @@
 // The loop reads the live rig (fx) + overlay state (ui) and paints one frame.
 
 import type { Fixture, UiState } from './state.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 /** Heat-map ramp: blue → cyan → yellow → red (verbatim legacy stops). */
 function heatColor(v: number): string {
@@ -41,7 +41,7 @@ export function paintFrame(
   // floor + truss
   g.fillStyle = PAL.blue09s55;
   g.fillRect(0, 0, w, h);
-  g.strokeStyle = 'rgba(60,90,130,.25)';
+  g.strokeStyle = alpha(PAL.sky37, .25);
   for (let i = 1; i < 8; i++) {
     const x = (i / 8) * w;
     g.beginPath();
@@ -102,7 +102,7 @@ export function paintFrame(
   if (ui.frustum) {
     const cxp = 0.5 * w;
     const cyp = 0.98 * h;
-    g.strokeStyle = 'rgba(111,200,240,.7)';
+    g.strokeStyle = alpha(PAL.sky69, .7);
     g.lineWidth = 1.5;
     g.beginPath();
     g.moveTo(cxp, cyp);
@@ -110,7 +110,7 @@ export function paintFrame(
     g.moveTo(cxp, cyp);
     g.lineTo(sx + 130, sy - 40);
     g.stroke();
-    g.fillStyle = 'rgba(111,200,240,.06)';
+    g.fillStyle = alpha(PAL.sky69, .06);
     g.beginPath();
     g.moveTo(cxp, cyp);
     g.lineTo(sx - 130, sy - 40);
@@ -124,7 +124,7 @@ export function paintFrame(
   // talent + shadow (shadow opposite the key)
   const key = fx[0]!;
   const shAng = Math.atan2(sy - key.y * h, sx - key.x * w);
-  g.fillStyle = 'rgba(0,0,0,.4)';
+  g.fillStyle = alpha(PAL.black, .4);
   g.beginPath();
   g.ellipse(sx + Math.cos(shAng) * 26, sy + Math.sin(shAng) * 26, 30, 16, shAng, 0, 7);
   g.fill();

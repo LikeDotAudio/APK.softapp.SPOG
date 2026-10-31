@@ -2,7 +2,7 @@ import { VOICE_COMMANDS } from './VOICE.js';
 import type { EditorPlugin } from '../types.js';
 import { el, ctx2d } from '../../ui/dom.js';
 import { injectWirelessStyles } from './styles.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const plugin: EditorPlugin = {
   id: 'wireless',
@@ -112,7 +112,7 @@ const plugin: EditorPlugin = {
       for (let x = 0; x < w; x += 50) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }
       
       // Draw noise floor
-      g.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      g.strokeStyle = alpha(PAL.white, .2);
       g.beginPath();
       const time = performance.now() / 500;
       for (let x = 0; x < w; x++) {

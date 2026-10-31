@@ -6,13 +6,13 @@
 import { ctx2d } from '../../ui/dom.js';
 import type { Strip } from './dsp.js';
 import { eqResponse } from './dsp.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function drawEq(eqCanvas: HTMLCanvasElement, s: Strip): void {
   const g = ctx2d(eqCanvas); if (!g) return;
   const w = eqCanvas.width = eqCanvas.clientWidth, h = eqCanvas.height = eqCanvas.clientHeight;
   g.clearRect(0, 0, w, h);
-  g.strokeStyle = 'rgba(255,255,255,.10)'; g.lineWidth = 1;
+  g.strokeStyle = alpha(PAL.white, .1); g.lineWidth = 1;
   [-12, -6, 0, 6, 12].forEach((db) => { const y = h / 2 - (db / 15) * (h / 2 - 6); g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); });
   g.beginPath();
   for (let x = 0; x <= w; x++) {
@@ -29,7 +29,7 @@ export function drawComp(compCanvas: HTMLCanvasElement, s: Strip): void {
   const w = compCanvas.width = compCanvas.clientWidth, h = compCanvas.height = compCanvas.clientHeight;
   g.clearRect(0, 0, w, h);
   const map = (db: number): number => (db + 60) / 60;                 // -60..0 → 0..1
-  g.strokeStyle = 'rgba(255,255,255,.10)';
+  g.strokeStyle = alpha(PAL.white, .1);
   g.beginPath(); g.moveTo(0, h); g.lineTo(w, 0); g.stroke();          // unity line
   const on = s.compOn && !s.bypass;
   g.beginPath();
@@ -40,5 +40,5 @@ export function drawComp(compCanvas: HTMLCanvasElement, s: Strip): void {
     x === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
   }
   g.strokeStyle = on ? PAL.green53 : PAL.blue32s28; g.lineWidth = 2.5; g.stroke();
-  if (on) { const tx = map(s.threshold) * w; g.strokeStyle = 'rgba(255,214,0,.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(tx, 0); g.lineTo(tx, h); g.stroke(); }
+  if (on) { const tx = map(s.threshold) * w; g.strokeStyle = alpha(PAL.amber50_ffd600, .5); g.lineWidth = 1; g.beginPath(); g.moveTo(tx, 0); g.lineTo(tx, h); g.stroke(); }
 }

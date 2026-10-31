@@ -14,7 +14,7 @@
 //    the operator picks "follow chirality" (prefs.ts).
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectVisionMixerStyles(): void {
   addStyles(
@@ -51,7 +51,7 @@ export function injectVisionMixerStyles(): void {
         /* Keyer PIP chips fly over the feed via the DVE pose (CSS 3D transform). */
         .vm-pip{position:absolute;inset:22%;display:flex;align-items:center;justify-content:center;
             font:900 12px Arial;letter-spacing:1px;color:${PAL.black};background:var(--sig-video,${PAL.purple70});
-            border:2px solid rgba(0,0,0,.4);border-radius:8px;will-change:transform;pointer-events:none;}
+            border:2px solid ${alpha(PAL.black, .4)};border-radius:8px;will-change:transform;pointer-events:none;}
         .vm-pip.armed{opacity:.55;outline:2px dashed var(--state-ok,${PAL.teal54});}
         .vm-dskrow{position:absolute;bottom:10px;left:16px;display:flex;gap:6px;z-index:2;}
         .vm-dskrow span{background:var(--state-onair,${PAL.amber50s100});color:${PAL.black};font-size:10px;font-weight:bold;
@@ -148,7 +148,7 @@ export function injectVisionMixerStyles(): void {
         .vm-dve-frame{position:absolute;inset:22%;pointer-events:none;}
         .vm-dve-frame .vm-pip{pointer-events:auto;}
         .vm-dve-frame .vm-pip.ghost{opacity:.4;border:2px dashed ${PAL.sky69s41};background:transparent;z-index:1;}
-        .vm-dve-frame .vm-pip.solid{border:2px solid var(--state-ok,${PAL.teal54});background:rgba(57,217,138,0.2);z-index:2;}
+        .vm-dve-frame .vm-pip.solid{border:2px solid var(--state-ok,${PAL.teal54});background:${alpha(PAL.teal54, .2)};z-index:2;}
         .vm-handle.corner{position:absolute;width:12px;height:12px;background:${PAL.white};border:2px solid ${PAL.black};border-radius:50%;cursor:crosshair;z-index:10;}
         .vm-handle.tl{top:-6px;left:-6px;} .vm-handle.tr{top:-6px;right:-6px;}
         .vm-handle.bl{bottom:-6px;left:-6px;} .vm-handle.br{bottom:-6px;right:-6px;}

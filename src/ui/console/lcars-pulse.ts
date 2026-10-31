@@ -7,7 +7,7 @@
 // persisted in prefs.ui.heartbeat.
 import { addStyles } from '../dom.js';
 import { getPrefs, patchPrefs } from '../../platform/prefs.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const WIDTH = 20;
 
@@ -27,9 +27,9 @@ const PULSE_CSS = `
 .lcp-line{height:2px;border-radius:1px;background:${PAL.grey17};transition:background .15s,box-shadow .15s;}
 .lcp-line.dim{background:${PAL.grey11};}
 .lcp-line.mid{background:${PAL.grey23};}
-.lcp-line.blue{background:${PAL.sky61s100};box-shadow:0 0 5px rgba(58,160,255,.8);}
-.lcp-line.red{background:${PAL.red62s100};box-shadow:0 0 5px rgba(255,90,60,.7);}
-.lcp-lines::after{content:'';position:absolute;left:0;right:0;top:0;height:42%;pointer-events:none;background:linear-gradient(to bottom,transparent,rgba(90,190,255,.30),rgba(160,220,255,.10),transparent);animation:lcpPulse 2.6s linear infinite;}
+.lcp-line.blue{background:${PAL.sky61s100};box-shadow:0 0 5px ${alpha(PAL.sky61s100, .8)};}
+.lcp-line.red{background:${PAL.red62s100};box-shadow:0 0 5px ${alpha(PAL.red62s100, .7)};}
+.lcp-lines::after{content:'';position:absolute;left:0;right:0;top:0;height:42%;pointer-events:none;background:linear-gradient(to bottom,transparent,${alpha(PAL.sky68, .3)},${alpha(PAL.sky81_a0dcff, .1)},transparent);animation:lcpPulse 2.6s linear infinite;}
 @keyframes lcpPulse{0%{transform:translateY(140%);}100%{transform:translateY(-160%);}}
 .credit-button{right:${WIDTH + 14}px !important;}
 .rv-btn{right:${WIDTH + 14}px !important;}

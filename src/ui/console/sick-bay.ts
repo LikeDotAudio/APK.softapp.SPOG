@@ -4,7 +4,7 @@ import { listDirectory, fetchJSON } from '../../platform/discovery.js';
 import { isFaultStatus } from '../../domain/routing-core/index.js';
 import type { Production, SourceLeaf } from '../../model/index.js';
 import { monoEmoji, faultTag, slugId } from '../sources/format.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export async function initSickBay(): Promise<void> {
   const groupColor = '255,51,51'; // RED ALERT color
@@ -19,8 +19,8 @@ export async function initSickBay(): Promise<void> {
     style.id = 'sickbay-pulse-styles';
     style.textContent = `
       @keyframes sickbay-pulse {
-        0% { box-shadow: 0 0 5px rgba(255,51,51,0.4); background-color: rgb(255,51,51); color: ${PAL.black}; }
-        100% { box-shadow: 0 0 20px rgba(255,51,51,1); background-color: rgb(255,0,0); color: ${PAL.white}; }
+        0% { box-shadow: 0 0 5px ${alpha(PAL.red60_ff3333, .4)}; background-color: ${PAL.red60_ff3333}; color: ${PAL.black}; }
+        100% { box-shadow: 0 0 20px ${PAL.red60_ff3333}; background-color: ${PAL.red50}; color: ${PAL.white}; }
       }
     `;
     document.head.appendChild(style);
@@ -92,7 +92,7 @@ export async function initSickBay(): Promise<void> {
                 ? `const el = document.querySelector('.lcars-tab[data-tab-id=\\'${f.id}\\']'); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.click(); }`
                 : `const el = document.getElementById('pool-${f.id}'); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.click(); }`;
               return `
-                <div style="flex: 1 1 300px; max-width: 400px; background: rgba(255,0,0,0.1); border: 2px solid ${hexColor}; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 0 10px rgba(255,51,51,0.2); cursor: pointer;" onclick="${clickScript}">
+                <div style="flex: 1 1 300px; max-width: 400px; background: ${alpha(PAL.red50, .1)}; border: 2px solid ${hexColor}; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 0 10px ${alpha(PAL.red60_ff3333, .2)}; cursor: pointer;" onclick="${clickScript}">
                   <div style="font-weight: bold; font-size: 1.2em; color: ${hexColor}; display: flex; justify-content: space-between; align-items: flex-start;">
                     <span>${monoEmoji(f.name)}${f.name}</span>
                     ${faultTag(f.status)}

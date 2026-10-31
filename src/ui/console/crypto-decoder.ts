@@ -1,7 +1,7 @@
 import { el, addStyles } from '../dom.js';
 import { debugDecryptAndDecode } from '../../platform/mqtt/crypto.js';
 import { ACCENT } from '../../domain/brand.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const CSS = `
 .crypto-decoder-modal {
@@ -9,7 +9,7 @@ const CSS = `
   background: ${PAL.blue06s63}; border: 2px solid ${PAL.blue22s37}; border-radius: 12px;
   z-index: 9999; display: flex; flex-direction: column; color: ${PAL.sky84};
   font-family: 'Courier New', monospace; font-size: 11px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  box-shadow: 0 20px 60px ${alpha(PAL.black, .8)};
 }
 .cd-header {
   padding: 12px; background: ${PAL.blue16_16233d}; border-bottom: 2px solid ${PAL.blue22s37};

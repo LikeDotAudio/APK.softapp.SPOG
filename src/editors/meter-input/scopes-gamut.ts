@@ -3,7 +3,7 @@
 // lightness/saturation triangle and the vectorscope — all plot the flat `pts`
 // scatter (not the per-column histograms). Re-exported through live-input.ts.
 import { ctx2d, fade, applyView, resetView, IDENTITY_VIEW, type View } from './scopes-video.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // CIE 1931 xy chromaticity gamut. Each sampled pixel's RGB is linearised (sRGB
 // decode), converted to XYZ (sRGB/D65 matrix), normalised to xy, and plotted
@@ -25,13 +25,13 @@ export function drawCIE(cv: HTMLCanvasElement, pts: number[], view: View = IDENT
   const pad = 18, XMAX = 0.75, YMAX = 0.85;
   const px = (x: number): number => pad + (x / XMAX) * (W - 2 * pad);
   const py = (y: number): number => H - pad - (y / YMAX) * (H - 2 * pad);
-  c.strokeStyle = 'rgba(80,110,150,.13)'; c.lineWidth = 1;
+  c.strokeStyle = alpha(PAL.sky45s30, .13); c.lineWidth = 1;
   for (let g = 0.1; g <= 0.7; g += 0.1) { c.beginPath(); c.moveTo(px(g), py(0)); c.lineTo(px(g), py(YMAX)); c.stroke(); }
   for (let g = 0.1; g <= 0.8; g += 0.1) { c.beginPath(); c.moveTo(px(0), py(g)); c.lineTo(px(XMAX), py(g)); c.stroke(); }
-  c.strokeStyle = 'rgba(200,220,255,.55)'; c.lineWidth = 1.3; c.beginPath();
+  c.strokeStyle = alpha(PAL.blue89, .55); c.lineWidth = 1.3; c.beginPath();
   CIE_LOCUS.forEach(([x, y], i) => { i ? c.lineTo(px(x), py(y)) : c.moveTo(px(x), py(y)); });
   c.closePath(); c.stroke();   // closePath = the "line of purples"
-  c.strokeStyle = 'rgba(180,180,190,.4)'; c.beginPath();
+  c.strokeStyle = alpha(PAL.grey73, .4); c.beginPath();
   c.moveTo(px(REC709.r[0]), py(REC709.r[1])); c.lineTo(px(REC709.g[0]), py(REC709.g[1])); c.lineTo(px(REC709.b[0]), py(REC709.b[1])); c.closePath(); c.stroke();
   c.fillStyle = PAL.white; c.beginPath(); c.arc(px(REC709.w[0]), py(REC709.w[1]), 2, 0, 7); c.fill();
   c.globalCompositeOperation = 'lighter';
@@ -60,12 +60,12 @@ export function drawDiamond(cv: HTMLCanvasElement, pts: number[], view: View = I
     c.setLineDash([]);
   };
   c.lineWidth = 1;
-  c.strokeStyle = 'rgba(150,170,200,.45)'; dia(top, (top + mid) / 2, mid, hw, false); dia(mid, (mid + bot) / 2, bot, hw, false);
-  c.strokeStyle = 'rgba(150,170,200,.28)'; dia(top - 4, (top + mid) / 2, mid, hw + 5, true); dia(mid, (mid + bot) / 2, bot + 4, hw + 5, true);
-  c.fillStyle = 'rgba(170,190,215,.85)'; c.font = '9px Arial';
+  c.strokeStyle = alpha(PAL.blue69s31, .45); dia(top, (top + mid) / 2, mid, hw, false); dia(mid, (mid + bot) / 2, bot, hw, false);
+  c.strokeStyle = alpha(PAL.blue69s31, .28); dia(top - 4, (top + mid) / 2, mid, hw + 5, true); dia(mid, (mid + bot) / 2, bot + 4, hw + 5, true);
+  c.fillStyle = alpha(PAL.sky75s36, .85); c.font = '9px Arial';
   c.textAlign = 'right'; c.fillText('G', cx - hw - 4, (top + mid) / 2 + 3); c.fillText('G', cx - hw - 4, (mid + bot) / 2 + 3);
   c.textAlign = 'left'; c.fillText('R', cx + hw + 4, (top + mid) / 2 + 3); c.fillText('B', cx + hw + 4, (mid + bot) / 2 + 3);
-  c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(215,235,255,.45)';
+  c.globalCompositeOperation = 'lighter'; c.fillStyle = alpha(PAL.sky92, .45);
   for (let i = 0; i < pts.length; i += 5) {
     const r = (pts[i + 2] ?? 0) / 255, g = (pts[i + 3] ?? 0) / 255, b = (pts[i + 4] ?? 0) / 255;
     c.fillRect(cx + (r - g) * hw, mid - ((r + g) / 2) * uh, 1, 1);   // upper: G↔R, luma up
@@ -85,18 +85,18 @@ export function drawHSL(cv: HTMLCanvasElement, pts: number[], view: View = IDENT
   const bx = (l: number): number => padX + l * (W - 2 * padX);
   const by = (chr: number): number => baseY - chr * (baseY - apexY);
   c.lineWidth = 1; c.font = '8px Arial';
-  c.setLineDash([5, 4]); c.strokeStyle = 'rgba(160,170,190,.5)';
+  c.setLineDash([5, 4]); c.strokeStyle = alpha(PAL.blue69s19, .5);
   c.beginPath(); c.moveTo(BLx, baseY); c.lineTo(apexX, apexY); c.lineTo(BRx, baseY); c.closePath(); c.stroke();
   for (const t of [0.25, 0.5, 0.75]) {
     const y = by(t), xl = BLx + t * (apexX - BLx), xr = BRx - t * (BRx - apexX);
     c.beginPath(); c.moveTo(xl, y); c.lineTo(xr, y); c.stroke();
-    c.setLineDash([]); c.fillStyle = 'rgba(180,190,210,.8)';
+    c.setLineDash([]); c.fillStyle = alpha(PAL.blue76s25, .8);
     c.textAlign = 'right'; c.fillText(`${t * 100}% Val`, xl - 3, y + 3);
     c.textAlign = 'left'; c.fillText(`${t * 100}% Sat`, xr + 3, y + 3);
     c.setLineDash([5, 4]);
   }
-  c.setLineDash([]); c.textAlign = 'center'; c.fillStyle = 'rgba(180,190,210,.85)'; c.fillText('Lightness', W / 2, H - 5);
-  c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(220,235,255,.5)';
+  c.setLineDash([]); c.textAlign = 'center'; c.fillStyle = alpha(PAL.blue76s25, .85); c.fillText('Lightness', W / 2, H - 5);
+  c.globalCompositeOperation = 'lighter'; c.fillStyle = alpha(PAL.sky93s100, .5);
   for (let i = 0; i < pts.length; i += 5) {
     const r = (pts[i + 2] ?? 0) / 255, g = (pts[i + 3] ?? 0) / 255, b = (pts[i + 4] ?? 0) / 255;
     const mx = Math.max(r, g, b), mn = Math.min(r, g, b);

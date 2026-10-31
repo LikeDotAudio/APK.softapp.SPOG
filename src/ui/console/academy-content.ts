@@ -3,7 +3,7 @@
 // STEPS, the marker ANCHORS, the ACADEMY_CSS stylesheet and the legacy STORE_KEY.
 
 // Legacy key, kept verbatim for continuity across the JS→TS cutover.
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export const STORE_KEY = 'twist-tutorial-dismissed';
 
@@ -22,7 +22,7 @@ export const STEPS: Array<{ title: string; body: string }> = [
 
 export const ACADEMY_CSS = `
 .tut-overlay{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;
-  background:rgba(2,5,12,.6);backdrop-filter:blur(1.5px);font-family:Arial,Helvetica,sans-serif;}
+  background:${alpha(PAL.blue03s71, .6)};backdrop-filter:blur(1.5px);font-family:Arial,Helvetica,sans-serif;}
 .tut-overlay.open{display:flex;}
 /* Numbered markers dropped onto the live console beneath — each step's badge sits
    on the region it teaches (anchors resolved from the DOM, so they follow chirality). */
@@ -30,20 +30,20 @@ export const ACADEMY_CSS = `
 .tut-mark{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;
   border-radius:14px 5px 14px 5px;background:var(--tut-color,${PAL.orange69});color:${PAL.black};
   font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 0 3px rgba(0,0,0,.55),0 0 24px rgba(255,156,99,.75);transition:scale .15s;}
+  box-shadow:0 0 0 3px ${alpha(PAL.black, .55)},0 0 24px ${alpha(PAL.orange69, .75)};transition:scale .15s;}
 .tut-mark.hot{scale:1.25;}
 .tut-mark::after{content:'';position:absolute;inset:-8px;border-radius:inherit;
   border:2px solid var(--tut-color,${PAL.orange69});animation:tut-pulse 1.6s infinite;}
 @keyframes tut-pulse{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.4);opacity:0}}
 .tut-card{width:min(620px,92vw);max-height:88vh;overflow:auto;background:${PAL.blue06};
-  border:2px solid ${PAL.blue26};border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.6);}
+  border:2px solid ${PAL.blue26};border-radius:18px;box-shadow:0 18px 60px ${alpha(PAL.black, .6)};}
 .tut-head{display:flex;align-items:stretch;height:46px;background:var(--tut-color,${PAL.orange69});
   border-radius:16px 16px 0 0;overflow:hidden;}
 .tut-title{flex:1;display:flex;align-items:center;padding-left:78px;color:${PAL.black};font-weight:900;
   letter-spacing:3px;font-size:15px;text-transform:uppercase;}
 .tut-x{flex:0 0 auto;width:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;
-  color:${PAL.black};font-size:26px;font-weight:bold;box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
-.tut-x:hover{background:rgba(0,0,0,.18);}
+  color:${PAL.black};font-size:26px;font-weight:bold;box-shadow:inset 2px 0 0 ${alpha(PAL.black, .25)};}
+.tut-x:hover{background:${alpha(PAL.black, .18)};}
 .tut-body{padding:18px 22px 8px;}
 .tut-step{display:flex;gap:16px;align-items:flex-start;padding:11px 0;border-bottom:1px solid ${PAL.blue16};}
 .tut-step:last-child{border-bottom:none;}

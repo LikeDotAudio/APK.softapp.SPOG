@@ -1,7 +1,7 @@
 // src/editors/lighting/styles — the DMX console CSS, ported verbatim from
 // js/editors/lighting.js so the rebuilt pane matches the legacy visuals 1:1.
 
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export const CSS = `
 .lt{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;height:100%;}
@@ -11,7 +11,7 @@ export const CSS = `
 .lt-stage{position:relative;flex:1;border-radius:12px;overflow:hidden;min-height:340px;
     background:radial-gradient(circle at 50% 42%, ${PAL.blue21s40} 0%, ${PAL.blue09s55} 70%);}
 .lt-subj{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:70px;height:104px;border-radius:32px 32px 14px 14px;
-    background:linear-gradient(${PAL.orange72},${PAL.orange52});box-shadow:0 10px 26px rgba(0,0,0,.5);}
+    background:linear-gradient(${PAL.orange72},${PAL.orange52});box-shadow:0 10px 26px ${alpha(PAL.black, .5)};}
 .lt-subj::after{content:'';position:absolute;left:50%;top:-34px;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;background:${PAL.orange72};}
 .lt-fix{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:8px;cursor:pointer;
     display:flex;align-items:center;justify-content:center;font:900 10px sans-serif;color:${PAL.sky05};border:2px solid ${PAL.sky05};box-shadow:0 0 14px currentColor;}

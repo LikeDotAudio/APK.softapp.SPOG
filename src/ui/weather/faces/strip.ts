@@ -16,7 +16,7 @@ import {
   fetchForecast, dayparts, decode, toDisplay, round,
   timeInZone, dateInZone, weekdayOf,
 } from '../data.js';
-import { PAL } from '../../../domain/palette.js';
+import { PAL, alpha } from '../../../domain/palette.js';
 
 const STRIP_CSS = `
 .wx-strip{position:relative;display:flex;gap:2px;width:100%;min-height:230px;max-height:56vh;
@@ -32,12 +32,12 @@ const STRIP_CSS = `
 .wx-glyph{color:${PAL.blue92};}
 /* anchor "right now" panel — the big one on the far left */
 .wx-p-now{flex:1.8;align-items:flex-start;justify-content:space-between;
-  background:linear-gradient(160deg,rgba(78,192,255,.10),transparent);}
+  background:linear-gradient(160deg,${alpha(PAL.sky65, .1)},transparent);}
 .wx-p-city{font:800 16px 'Courier New',monospace;letter-spacing:2px;text-transform:uppercase;}
 .wx-p-sub2{font:700 9px 'Courier New',monospace;letter-spacing:1.5px;color:${PAL.sky64};text-transform:uppercase;margin-top:2px;}
 .wx-p-row{display:flex;align-items:center;gap:14px;}
 .wx-p-now .wx-p-temp{font-size:74px;}
-.wx-p-now .wx-glyph{color:${PAL.white};filter:drop-shadow(0 3px 8px rgba(0,0,0,.5));}
+.wx-p-now .wx-glyph{color:${PAL.white};filter:drop-shadow(0 3px 8px ${alpha(PAL.black, .5)});}
 .wx-p-time{font:800 11px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky65};}
 /* 3-day outlook cluster on the far right */
 .wx-out{flex:1.4;display:flex;align-items:stretch;padding:12px 9px;gap:6px;}

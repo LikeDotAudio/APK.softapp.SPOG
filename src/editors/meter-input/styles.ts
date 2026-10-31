@@ -2,7 +2,7 @@
 // LCARS "okudagram" chrome: an EDIT DETECTOR title tab, colour-accented SOURCE /
 // PRESETS / SENS button groups, pill buttons, and solid-colour card headers.
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export function injectMeterInputStyles(): void {
   addStyles('meter-input-styles', `
@@ -29,20 +29,20 @@ export function injectMeterInputStyles(): void {
 /* Selected pill TUCKS INTO the group's colour spine: slides left to meet it and
    squares its left edge so pill + spine read as one continuous LCARS accent bar. */
 .mi-grp .mi-pill.on{margin-left:-11px;padding-left:26px;border-radius:0 14px 14px 0;
-    box-shadow:inset 4px 0 8px rgba(0,0,0,.3),0 0 10px rgba(var(--acc,224,150,60),.5);}
+    box-shadow:inset 4px 0 8px ${alpha(PAL.black, .3)},0 0 10px rgba(var(--acc,224,150,60),.5);}
 .mi-url{font:11px monospace;background:${PAL.blue09};color:${PAL.sky91};border:1px solid ${PAL.blue27s36};border-radius:12px;padding:8px 12px;min-width:200px;}
 .mi-stat{font:11px sans-serif;color:${PAL.orange56};}
 /* ── floating cards ────────────────────────────────────────────────────── */
 .mi-vidcard,.mi-card{background:${PAL.blue09s58};border:1px solid ${PAL.blue19};border-radius:12px;padding:10px 12px 12px;
-    display:flex;flex-direction:column;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.4);min-width:200px;}
+    display:flex;flex-direction:column;gap:8px;box-shadow:0 6px 18px ${alpha(PAL.black, .4)};min-width:200px;}
 .mi-vidcard{min-height:140px;} .mi-card{min-height:120px;}
 .mi-vidcard h4,.mi-card h4{margin:-10px -12px 6px;padding:7px 12px;background:var(--hc,${PAL.sky34});color:${PAL.blue08};
     font:900 11px sans-serif;letter-spacing:2px;text-transform:uppercase;border-radius:11px 11px 0 0;
     cursor:move;user-select:none;display:flex;align-items:center;gap:7px;}
-.mi-vidcard h4::before,.mi-card h4::before{content:'⠿';color:rgba(0,0,0,.4);font-size:12px;}
-.mi-btnicon{cursor:pointer;color:${PAL.blue08};background:rgba(0,0,0,.18);border-radius:6px;font-weight:900;
+.mi-vidcard h4::before,.mi-card h4::before{content:'⠿';color:${alpha(PAL.black, .4)};font-size:12px;}
+.mi-btnicon{cursor:pointer;color:${PAL.blue08};background:${alpha(PAL.black, .18)};border-radius:6px;font-weight:900;
     font-size:12px;line-height:1;padding:3px 6px;}
-.mi-btnicon:hover{background:rgba(0,0,0,.38);}
+.mi-btnicon:hover{background:${alpha(PAL.black, .38)};}
 .mi-x{margin-left:auto;}
 .mi-vid{flex:1 1 auto;min-height:0;width:100%;height:100%;border-radius:8px;background:${PAL.black};display:block;object-fit:contain;}
 .mi-preview{display:none;}
@@ -80,7 +80,7 @@ export function injectMeterInputStyles(): void {
 /* ── layout inspector popup (opened by the LAYOUT pill) ────────────────── */
 .mi-layout{position:fixed;right:16px;top:56px;z-index:9;display:none;max-width:60vw;max-height:64vh;overflow:auto;
     background:${PAL.blue09s58};border:1px solid ${PAL.blue27s36};border-radius:8px;padding:12px 14px;color:${PAL.sky84};
-    font:11px/1.55 'Courier New',monospace;white-space:pre;box-shadow:0 10px 28px rgba(0,0,0,.6);}
+    font:11px/1.55 'Courier New',monospace;white-space:pre;box-shadow:0 10px 28px ${alpha(PAL.black, .6)};}
 .mi-layout.open{display:block;}
 `);
 }

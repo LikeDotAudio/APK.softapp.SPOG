@@ -7,7 +7,7 @@
 // the W×H box at radius min(W,H)·0.46 — pure canvas, no DOM.
 
 import { TAU, type DisplayDef, type DisplayCtx } from '../shared.js';
-import { PAL } from '../../../domain/palette.js';
+import { PAL, alpha } from '../../../domain/palette.js';
 
 function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx): void {
   // The crown pushers (start/stop + reset) poke ~1.4·R above the bezel, so size R to
@@ -41,8 +41,8 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   g.fillStyle = bez; g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fill();
   // Coloured rim reflections (the green + magenta glints on the real chrome).
   g.lineWidth = R * 0.02; g.lineCap = 'round';
-  g.strokeStyle = 'rgba(60,170,90,0.75)'; g.beginPath(); g.arc(cx, cy, R * 0.99, Math.PI * 0.78, Math.PI * 1.02); g.stroke();
-  g.strokeStyle = 'rgba(200,40,120,0.55)'; g.beginPath(); g.arc(cx, cy, R * 0.99, Math.PI * 1.02, Math.PI * 1.2); g.stroke();
+  g.strokeStyle = alpha(PAL.green45s48, .75); g.beginPath(); g.arc(cx, cy, R * 0.99, Math.PI * 0.78, Math.PI * 1.02); g.stroke();
+  g.strokeStyle = alpha(PAL.pink47s67, .55); g.beginPath(); g.arc(cx, cy, R * 0.99, Math.PI * 1.02, Math.PI * 1.2); g.stroke();
 
   // White dial face.
   const rF = R * 0.9;

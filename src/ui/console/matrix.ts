@@ -16,6 +16,7 @@ import { fanOutToInputs, fanOutProductionToStudio, fanOutHostToCamera } from './
 import { logAction } from './captains-log.js';
 import { getBus } from '../../platform/mqtt/index.js';
 import { twistTopic } from '../../platform/mqtt/topics.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // ---- barrel: preserve the module's public surface ------------------------------
 export { publishCrosspoints, enforceTwistLimits, buildDroppedGroup, refreshCrosspoints };
@@ -170,7 +171,7 @@ export function initializeTwists(root: ParentNode, onOpenEditor?: OpenEditor): v
       refreshCrosspoints(dropZone);   // number 1..N + make reorderable
       publishCrosspoints(twist);
       const originalBg = twist.style.backgroundColor;
-      twist.style.backgroundColor = 'rgba(255, 0, 255, 0.2)';
+      twist.style.backgroundColor = alpha(PAL.purple50, .2);
       setTimeout(() => { twist.style.backgroundColor = originalBg; }, 300);
     });
   });

@@ -15,7 +15,7 @@ import {
 } from './state.js';
 import { wireSignalingParams } from './mqtt.js';
 import { mountStudioTsg } from './tsg-frame.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // A trigger's label → snake_case MQTT param name ('GPI 1' → 'gpi_1',
 // 'SCTE-35 Ad Cue' → 'scte_35_ad_cue'). Triggers are momentary GPI/SCTE pulses.
@@ -40,7 +40,7 @@ export function renderSignaling(host: HTMLElement, ctx: EditorContext): void {
           <div class="sg-card"><h4>Studio Test Signal</h4>
             <div class="sg-tsg" title="Studio test pattern — tap to choose the Test Signal Generator output" style="cursor:pointer;border:2px solid ${PAL.sky30};border-radius:10px;overflow:hidden;">
               <canvas class="sg-tsg-cvs" style="display:block;width:100%;aspect-ratio:16/9;background:${PAL.black};"></canvas>
-              <div class="sg-tsg-cap" style="font:700 10px/1 sans-serif;letter-spacing:1px;color:${PAL.sky71};padding:6px 8px;background:rgba(6,12,22,.85);">▦ <span class="sg-tsg-name">TEST SIGNAL</span> · TAP TO CONFIGURE ↗</div>
+              <div class="sg-tsg-cap" style="font:700 10px/1 sans-serif;letter-spacing:1px;color:${PAL.sky71};padding:6px 8px;background:${alpha(PAL.blue05_060c16, .85)};">▦ <span class="sg-tsg-name">TEST SIGNAL</span> · TAP TO CONFIGURE ↗</div>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export function renderSignaling(host: HTMLElement, ctx: EditorContext): void {
     onair.textContent = live ? 'ON AIR' : 'REHEARSAL';
     onlight.style.background = live ? PAL.red13 : PAL.amber13s76;
     onlight.style.color = live ? PAL.red71 : PAL.amber71;
-    onlight.style.boxShadow = live ? '0 0 16px rgba(255,43,43,.5)' : '0 0 12px rgba(255,212,0,.35)';
+    onlight.style.boxShadow = live ? `0 0 16px ${alpha(PAL.red58, .5)}` : `0 0 12px ${alpha(PAL.amber50, .35)}`;
     onlight.textContent = live ? 'DOOR LIGHT · RED (LIVE)' : 'DOOR LIGHT · AMBER (REH)';
   }
 

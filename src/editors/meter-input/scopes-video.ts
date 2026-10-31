@@ -3,6 +3,7 @@
 // (ctx2d / fade / IRE graticule / pan-zoom View) plus every luma/chroma/RGB/
 // gamut painter. Re-exported through live-input.ts so import sites are unchanged.
 import type { FrameData } from './live-input.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // ---- draw helpers (render analysis onto editor canvases) -------------------
 export function ctx2d(cv: HTMLCanvasElement): CanvasRenderingContext2D | null { return cv.getContext('2d'); }
@@ -36,13 +37,13 @@ function drawIRE(c: CanvasRenderingContext2D, x0: number, w: number, H: number):
   c.lineWidth = 1; c.font = 'bold 9px Arial'; c.textAlign = 'left';
   for (const ire of [-10, 110]) {
     const y = ireY(ire, H);
-    c.strokeStyle = 'rgba(224,138,30,0.12)'; c.beginPath(); c.moveTo(x0, y); c.lineTo(x0 + w, y); c.stroke();
+    c.strokeStyle = alpha(PAL.orange50s76, .12); c.beginPath(); c.moveTo(x0, y); c.lineTo(x0 + w, y); c.stroke();
   }
   for (let ire = 0; ire <= 100; ire += 10) {
     const y = ireY(ire, H), major = ire % 20 === 0;
-    c.strokeStyle = major ? 'rgba(224,138,30,0.5)' : 'rgba(224,138,30,0.2)';
+    c.strokeStyle = major ? alpha(PAL.orange50s76, .5) : alpha(PAL.orange50s76, .2);
     c.beginPath(); c.moveTo(x0 + (major ? 18 : 0), y); c.lineTo(x0 + w, y); c.stroke();
-    if (major) { c.fillStyle = 'rgba(224,138,30,0.85)'; c.fillText(String(ire), x0 + 2, y - 2); }
+    if (major) { c.fillStyle = alpha(PAL.orange50s76, .85); c.fillText(String(ire), x0 + 2, y - 2); }
   }
 }
 
@@ -81,8 +82,8 @@ export function drawRGBStacked(cv: HTMLCanvasElement, d: FrameData, view: View =
   chans.forEach(([hist, rgb], p) => {
     const bot = p * lh + lh;
     const yOf = (ire: number): number => bot - ireFrac(ire) * (lh - 2) - 1;
-    c.strokeStyle = 'rgba(224,138,30,0.22)'; c.lineWidth = 1; c.font = '8px Arial'; c.textAlign = 'left';
-    for (const ire of [0, 50, 100]) { const y = yOf(ire); c.beginPath(); c.moveTo(16, y); c.lineTo(W, y); c.stroke(); c.fillStyle = 'rgba(224,138,30,0.7)'; c.fillText(String(ire), 1, y + 3); }
+    c.strokeStyle = alpha(PAL.orange50s76, .22); c.lineWidth = 1; c.font = '8px Arial'; c.textAlign = 'left';
+    for (const ire of [0, 50, 100]) { const y = yOf(ire); c.beginPath(); c.moveTo(16, y); c.lineTo(W, y); c.stroke(); c.fillStyle = alpha(PAL.orange50s76, .7); c.fillText(String(ire), 1, y + 3); }
     c.globalCompositeOperation = 'lighter';
     for (let x = 0; x < W; x++) {
       const col = ((x / W * d.AW) | 0) * BINS;

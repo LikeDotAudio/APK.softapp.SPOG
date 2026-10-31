@@ -6,13 +6,13 @@
 // beyond updating what it shows. `esc` (HTML-escape) is shared by both tip kinds.
 
 import { addStyles, el } from './dom.js';
-import { PAL } from '../domain/palette.js';
+import { PAL, alpha } from '../domain/palette.js';
 
 const STYLE_ID = 'tr-tip';
 const CSS = `
 .tr-tip{position:fixed;z-index:100000;display:none;max-width:340px;pointer-events:none;
   background:${PAL.blue10s55};border:1px solid ${PAL.blue31s44};border-radius:9px;padding:11px 13px;
-  color:${PAL.sky88};font:11px/1.55 Arial,Helvetica,sans-serif;box-shadow:0 12px 34px rgba(0,0,0,.7);}
+  color:${PAL.sky88};font:11px/1.55 Arial,Helvetica,sans-serif;box-shadow:0 12px 34px ${alpha(PAL.black, .7)};}
 .tr-tip.open{display:block;}
 .tr-tip b{color:${PAL.sky69};letter-spacing:1px;text-transform:uppercase;font-size:11px;}
 .tr-tip .r{display:block;margin-top:3px;}

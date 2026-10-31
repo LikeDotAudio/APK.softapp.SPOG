@@ -1,5 +1,5 @@
 // src/ui/merge/observer-styles — LCARS-flavoured chrome for the merge observer.
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export const MERGE_CSS = `
 /* Fallback style if the launcher is NOT adopted into the seat MENU (dev/tests). In
@@ -9,7 +9,7 @@ export const MERGE_CSS = `
 .mrg-launch:hover{background:${PAL.violet23};}
 /* The panel opens centred near the top — clear of the CHAT/VOICE docks + sources rail. */
 .mrg-panel{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:2700;width:360px;max-height:78vh;display:none;flex-direction:column;
-  background:${PAL.indigo05};border:1px solid ${PAL.violet34};border-radius:12px;color:${PAL.violet89};font:13px 'Courier New',monospace;overflow:hidden;box-shadow:0 14px 50px rgba(0,0,0,.7);}
+  background:${PAL.indigo05};border:1px solid ${PAL.violet34};border-radius:12px;color:${PAL.violet89};font:13px 'Courier New',monospace;overflow:hidden;box-shadow:0 14px 50px ${alpha(PAL.black, .7)};}
 .mrg-panel.open{display:flex;}
 .mrg-head{display:flex;align-items:center;gap:8px;padding:9px 12px;background:${PAL.violet17s39};font-weight:800;letter-spacing:1px;}
 .mrg-head .mrg-x{margin-left:auto;cursor:pointer;padding:0 6px;color:${PAL.violet80s44};}
@@ -40,7 +40,7 @@ export const MERGE_CSS = `
 .mrg-arena .mrg-val{width:34px;text-align:right;color:${PAL.white};font-weight:800;}
 .mrg-toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:90;
   background:${PAL.pink11};border:1px solid ${PAL.red71};color:${PAL.red92};font:800 13px 'Courier New',monospace;letter-spacing:1px;
-  padding:10px 18px;border-radius:10px;box-shadow:0 6px 30px rgba(255,80,80,.35);opacity:0;transition:opacity .2s, transform .2s;pointer-events:none;}
+  padding:10px 18px;border-radius:10px;box-shadow:0 6px 30px ${alpha(PAL.red66, .35)};opacity:0;transition:opacity .2s, transform .2s;pointer-events:none;}
 .mrg-toast.show{opacity:1;transform:translateX(-50%) translateY(6px);}
 .mrg-toast.concord{background:${PAL.amber10};border-color:${PAL.amber50};color:${PAL.amber86};}
 `;

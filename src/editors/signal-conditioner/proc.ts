@@ -4,6 +4,7 @@
 // Split out of index.ts verbatim (no behaviour change).
 
 import type { CondState } from './index.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 // The seven 75% SMPTE bars as linear 0..1 RGB (matches the CSS gradient).
 export const BARS: Array<[number, number, number]> = [
@@ -45,7 +46,7 @@ export function drawOverlay(scope: HTMLCanvasElement, s: CondState): void {
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
   g.clearRect(0, 0, w, h);
   // graticule at 0 / 50 / 100 IRE
-  g.strokeStyle = 'rgba(255,255,255,.14)'; g.lineWidth = 1;
+  g.strokeStyle = alpha(PAL.white, .14); g.lineWidth = 1;
   [0, .5, 1].forEach((lvl) => { const y = Math.round(h - lvl * h) + .5; g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); });
   const bw = w / BARS.length;
   g.globalCompositeOperation = 'lighter'; g.lineWidth = 2.5; g.lineCap = 'round';
@@ -55,9 +56,9 @@ export function drawOverlay(scope: HTMLCanvasElement, s: CondState): void {
   BARS.forEach((base, i) => {
     const [R, G, B] = applyProc(s, base[0], base[1], base[2]);
     const x0 = i * bw, x1 = (i + 1) * bw;
-    plot(x0, x1, R, 'rgba(255,64,64,.95)');
-    plot(x0, x1, G, 'rgba(64,255,96,.95)');
-    plot(x0, x1, B, 'rgba(96,140,255,.98)');
+    plot(x0, x1, R, alpha(PAL.red63s100, .95));
+    plot(x0, x1, G, alpha(PAL.green63, .95));
+    plot(x0, x1, B, alpha(PAL.blue69, .98));
   });
   g.globalCompositeOperation = 'source-over';
 }

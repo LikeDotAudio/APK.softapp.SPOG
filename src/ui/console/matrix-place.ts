@@ -7,6 +7,7 @@ import { parseConfig, enforceTwistLimits, ensureDropZone, rid } from './matrix-g
 import { refreshCrosspoints } from './matrix-crosspoints.js';
 import { pauseNarrator, resumeNarrator } from './captains-log-narrate.js';
 import { updateTwistVisuals } from './helix.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 /** Project a twist's current routed set onto its retained crosspoints topic (audit §4). */
 export function publishCrosspoints(twist: HTMLElement): void {
@@ -62,7 +63,7 @@ export function applyCrosspointsFromNetwork(twist: HTMLElement, sourceNames: str
       clone = document.createElement('div');
       clone.className = 'signal-node';
       clone.textContent = name;
-      clone.style.backgroundColor = 'rgba(255,255,255,0.1)';
+      clone.style.backgroundColor = alpha(PAL.white, .1);
       clone.style.padding = '4px 8px';
       clone.style.borderRadius = '4px';
       clone.style.fontSize = '11px';

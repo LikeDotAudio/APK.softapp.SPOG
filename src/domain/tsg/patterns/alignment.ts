@@ -1,6 +1,6 @@
 // SMPTE ST 2046-1 safe-area alignment grid — 40px lattice, centre cross + circle.
 import type { TsgPattern } from '../types.js';
-import { PAL } from '../../palette.js';
+import { PAL, alpha } from '../../palette.js';
 
 const pattern: TsgPattern = {
   id: 'alignment', label: 'ALIGNMENT GRID', name: 'Alignment Grid', group: 'SDR', order: 3,
@@ -9,7 +9,7 @@ const pattern: TsgPattern = {
   draw(g, W, H) {
     g.fillStyle = PAL.black; g.fillRect(0, 0, W, H);
     const step = Math.max(24, Math.min(W, H) / 18);
-    g.strokeStyle = 'rgba(255,255,255,0.5)'; g.lineWidth = 1;
+    g.strokeStyle = alpha(PAL.white, .5); g.lineWidth = 1;
     g.beginPath();
     for (let x = 0; x <= W; x += step) { g.moveTo(x, 0); g.lineTo(x, H); }
     for (let y = 0; y <= H; y += step) { g.moveTo(0, y); g.lineTo(W, y); }

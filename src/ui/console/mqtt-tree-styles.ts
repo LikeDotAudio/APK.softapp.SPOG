@@ -5,20 +5,20 @@
 // bottom:42px). The clock publishes its live width as --ptp-clock-w (clock.ts) so
 // the chip clears the clock as its format cycles (variable width). lcars-pulse.ts
 // nudges both `right` offsets inward past the 20px edge pulse.
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 export const MQ_CSS = `
 .mq-chip{position:fixed;right:calc(28px + var(--ptp-clock-w,180px));bottom:42px;z-index:1600;display:inline-flex;align-items:center;gap:7px;
     background:${PAL.blue12_0c1730};border:1px solid ${PAL.blue27s36};border-radius:6px 14px 14px 6px;color:${PAL.sky84};
     font:bold 10px sans-serif;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;cursor:pointer;
-    box-shadow:0 3px 12px rgba(0,0,0,.5);}
+    box-shadow:0 3px 12px ${alpha(PAL.black, .5)};}
 .mq-chip:hover{border-color:${PAL.blue51};color:${PAL.white};}
-.mq-chip.seat-synced{box-shadow:0 0 10px rgba(57,211,83,.35);border-color:${PAL.green29};}
+.mq-chip.seat-synced{box-shadow:0 0 10px ${alpha(PAL.green53, .35)};border-color:${PAL.green29};}
 .mq-dot{width:9px;height:9px;border-radius:50%;background:${PAL.blue53};box-shadow:0 0 6px currentColor;color:${PAL.blue53};}
 .mq-dot.on{background:${PAL.amber50};color:${PAL.amber50};} .mq-dot.live{background:${PAL.green53};color:${PAL.green53};} .mq-dot.err{background:${PAL.red57};color:${PAL.red57};}
 .mqt{position:fixed;right:14px;bottom:114px;z-index:1601;display:none;flex-direction:column;
     width:min(820px,94vw);height:min(70vh,720px);background:${PAL.orange03};color:${PAL.amber71s100};
-    border:1px solid ${PAL.amber15};border-radius:10px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.7);
+    border:1px solid ${PAL.amber15};border-radius:10px;overflow:hidden;box-shadow:0 14px 40px ${alpha(PAL.black, .7)};
     font:13px/1.4 'Courier New',monospace;}
 .mqt.open{display:flex;}
 .mqt-head{display:flex;align-items:center;gap:12px;padding:9px 14px;background:${PAL.yellow53};color:${PAL.orange06};

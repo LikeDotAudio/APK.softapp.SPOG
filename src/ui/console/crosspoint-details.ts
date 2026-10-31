@@ -5,11 +5,11 @@
 // name come off the node itself (data-origin + its label + video/audio/control kind).
 import { addStyles } from '../dom.js';
 import { operator } from '../../platform/auth.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const CSS = `
 .xp-details{position:fixed;z-index:4000;min-width:220px;max-width:320px;background:${PAL.blue08};color:${PAL.sky91};
-  border:1px solid ${PAL.blue26s37};border-radius:10px;box-shadow:0 10px 34px rgba(0,0,0,.6);
+  border:1px solid ${PAL.blue26s37};border-radius:10px;box-shadow:0 10px 34px ${alpha(PAL.black, .6)};
   font:12px/1.5 'Courier New',monospace;padding:0;overflow:hidden;}
 .xp-details-h{display:flex;align-items:center;gap:8px;padding:8px 12px;background:${PAL.blue16_16233d};color:${PAL.sky69};
   font-weight:bold;letter-spacing:2px;text-transform:uppercase;font-size:11px;}

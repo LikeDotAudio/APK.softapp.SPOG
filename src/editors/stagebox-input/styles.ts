@@ -2,7 +2,7 @@
 // addStyles('sb-styles', …) CSS block so the Stage Box Input visuals match 1:1.
 
 import { addStyles } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const CSS = `
 .sb{display:grid;grid-template-columns:300px minmax(0,1fr) 280px;gap:16px;height:100%;}
@@ -16,16 +16,16 @@ const CSS = `
 .sb-knrow{display:flex;justify-content:space-around;margin:6px 0;}
 .sb-kn{display:flex;flex-direction:column;align-items:center;gap:7px;}
 .sb-dial{width:84px;height:84px;border-radius:50%;position:relative;cursor:ns-resize;touch-action:none;
-    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg),${PAL.blue07s63};box-shadow:0 5px 13px rgba(0,0,0,.55);}
+    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg),${PAL.blue07s63};box-shadow:0 5px 13px ${alpha(PAL.black, .55)};}
 .sb-dial::before{content:'';position:absolute;inset:9%;border-radius:50%;background:conic-gradient(from 225deg,var(--c,${PAL.sky69}) calc(var(--p,50%) * 0.75),${PAL.blue16s48} 0);
     -webkit-mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);filter:drop-shadow(0 0 5px var(--c,${PAL.sky69}));}
-.sb-dial::after{content:'';position:absolute;inset:24%;border-radius:50%;background:radial-gradient(circle at 42% 32%,${PAL.sky40},${PAL.blue15} 72%);box-shadow:inset 0 2px 5px rgba(255,255,255,.2),0 2px 5px rgba(0,0,0,.5);}
+.sb-dial::after{content:'';position:absolute;inset:24%;border-radius:50%;background:radial-gradient(circle at 42% 32%,${PAL.sky40},${PAL.blue15} 72%);box-shadow:inset 0 2px 5px ${alpha(PAL.white, .2)},0 2px 5px ${alpha(PAL.black, .5)};}
 .sb-dial i{position:absolute;left:50%;top:50%;width:4px;height:36%;border-radius:3px;background:var(--c,${PAL.sky69});box-shadow:0 0 6px var(--c,${PAL.sky69});transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(var(--rot,0deg));}
 .sb-kn b{font:bold 14px 'Courier New',monospace;color:${PAL.sky91};} .sb-kn span{font-size:11px;color:${PAL.sky71};}
 .sb-key{display:block;width:100%;padding:14px;border-radius:10px;border:1px solid ${PAL.blue27s36};background:${PAL.blue12_0c1730};color:${PAL.sky84};font:bold 13px sans-serif;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;margin-top:10px;}
-.sb-key.on{background:${PAL.green53};color:${PAL.green05};border-color:${PAL.green53};box-shadow:0 0 10px rgba(57,211,83,.5);}
+.sb-key.on{background:${PAL.green53};color:${PAL.green05};border-color:${PAL.green53};box-shadow:0 0 10px ${alpha(PAL.green53, .5)};}
 .sb-key.conf.on{background:${PAL.sky69};color:${PAL.sky05};border-color:${PAL.sky69};}
-.sb-warn{margin-top:10px;padding:10px;border-radius:8px;background:rgba(255,59,59,.12);border:1px solid ${PAL.red62};color:${PAL.red80};font:bold 11px sans-serif;display:none;}
+.sb-warn{margin-top:10px;padding:10px;border-radius:8px;background:${alpha(PAL.red62, .12)};border:1px solid ${PAL.red62};color:${PAL.red80};font:bold 11px sans-serif;display:none;}
 .sb-warn.on{display:block;}
 /* centre: meter + history */
 .sb-mid{display:flex;flex-direction:column;gap:14px;}

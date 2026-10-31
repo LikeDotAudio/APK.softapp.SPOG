@@ -1,7 +1,7 @@
 // src/editors/audio-monitor/painters — the loudness-history + Lissajous canvas
 // painters driven by the audio-monitor animation loop (view.ts).
 
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 // Loudness-over-time plot, with the −23 LUFS broadcast target line.
 export function drawLoud(cv: HTMLCanvasElement, hist: number[]): void {
   const w = (cv.width = cv.clientWidth);
@@ -16,12 +16,12 @@ export function drawLoud(cv: HTMLCanvasElement, hist: number[]): void {
   ctx.font = '8px Courier New, monospace';
   [-12, -18, -23, -30].forEach((v) => {
     const yy = y(v);
-    ctx.strokeStyle = v === -23 ? 'rgba(57,211,83,.45)' : 'rgba(80,110,150,.18)';
+    ctx.strokeStyle = v === -23 ? alpha(PAL.green53, .45) : alpha(PAL.sky45s30, .18);
     ctx.beginPath();
     ctx.moveTo(20, yy);
     ctx.lineTo(w, yy);
     ctx.stroke();
-    ctx.fillStyle = v === -23 ? 'rgba(120,235,150,.8)' : 'rgba(120,150,190,.6)';
+    ctx.fillStyle = v === -23 ? alpha(PAL.green70s74, .8) : alpha(PAL.sky61s35, .6);
     ctx.fillText(String(v), 1, yy + 3);
   });
   ctx.beginPath();
@@ -41,14 +41,14 @@ export function drawLiss(cv: HTMLCanvasElement, corr: number, frame: number, amp
   const w = cv.width;
   const h = cv.height;
   ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = 'rgba(80,110,150,.25)';
+  ctx.strokeStyle = alpha(PAL.sky45s30, .25);
   ctx.beginPath();
   ctx.moveTo(w / 2, 4);
   ctx.lineTo(w / 2, h - 4);
   ctx.moveTo(4, h / 2);
   ctx.lineTo(w - 4, h / 2);
   ctx.stroke();
-  ctx.strokeStyle = corr < 0 ? 'rgba(255,90,90,.85)' : 'rgba(120,235,150,.85)';
+  ctx.strokeStyle = corr < 0 ? alpha(PAL.red68s100, .85) : alpha(PAL.green70s74, .85);
   ctx.lineWidth = 1.4;
   ctx.beginPath();
   const a = (0.5 + amp * 0.5) * (w / 2 - 8);

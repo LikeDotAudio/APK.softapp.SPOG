@@ -4,13 +4,13 @@
 // (1) CSS-force loaded content open, (2) click unloaded headers to render them,
 // (3) re-apply as async content streams in (MutationObserver).
 import { addStyles } from '../dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, alpha } from '../../domain/palette.js';
 
 const SF_CSS = `
 .src-filter{margin-bottom:12px;}
 .src-filter-input{width:100%;box-sizing:border-box;background:${PAL.blue08s52};border:2px solid ${PAL.orange69};border-left:12px solid ${PAL.orange69};border-radius:0 16px 16px 0;color:${PAL.sky94};font-family:'Courier New',monospace;font-weight:bold;letter-spacing:2px;text-transform:uppercase;padding:9px 14px;outline:none;}
 .src-filter-input::placeholder{color:${PAL.blue80s39};letter-spacing:1px;}
-.src-filter-input:focus{box-shadow:0 0 10px rgba(255,156,99,.5);}
+.src-filter-input:focus{box-shadow:0 0 10px ${alpha(PAL.orange69, .5)};}
 .ingress-panel.filtering .super-pool-content{display:block !important;}
 .ingress-panel.filtering .media-group-content{display:block !important;}
 .ingress-panel.filtering .pool-content{display:grid !important;}
