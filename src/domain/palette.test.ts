@@ -32,8 +32,8 @@ const counted = (f: string): boolean => {
 
 /** rgba()/hsl() spelled in .ts outside the palette machinery: ROAD-3456 swept the literals into
  *  `alpha(PAL.*, a)`, ROAD-3463 the computed ones (formatColour / hslColour / tripleColour, setInkVar's
- *  `<prop>-c`). What is left is the clock-faces repository's own (src/ui/clock-faces). */
-const RGBA_CEILING = 27;
+ *  `<prop>-c`), and the clock-faces repository's into its own alpha(). None is left. */
+const RGBA_CEILING = 0;
 const RGBA = /\brgba?\(|\bhsla?\(/g;
 const MACHINERY = ['domain/colour-resolve.ts', 'ui/canvas-ink.ts', 'ui/ink-var.ts'];
 const LCARS = resolve(SRC, '../lcars.css');
