@@ -10,10 +10,13 @@ import { join, relative, resolve } from 'node:path';
 import { PAL } from './palette.js';
 
 const SRC = resolve(__dirname, '..');
+const PALETTES = ['domain/palette.ts', 'ui/clock-faces/src/palette.ts'];
+const ownFile = (f: string): boolean => !relative(SRC, f).startsWith('ui/clock-faces/');
 /** The literals still spelled outside the palette: none since ROAD-3449's last sweep (audio-monitor, multi-viewer, faux-signal). */
 const CEILING = 0;
 // The same measure as ROAD-3449's proof: *.ts under src/, minus tests and vendored copies,
-// minus the palette itself and src/ui/clock-faces (its own repository, its own gate).
+// minus the two palettes: this one and src/ui/clock-faces/src/palette.ts (that repository's
+// own, held by its own test/palette.test.mjs).
 const HEX = /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g;
 const files = (dir: string): string[] =>
   readdirSync(dir).flatMap((n) => {
@@ -22,7 +25,7 @@ const files = (dir: string): string[] =>
   });
 const counted = (f: string): boolean => {
   const r = relative(SRC, f);
-  return !/test|vendor/.test(r) && r !== 'domain/palette.ts' && !r.startsWith('ui/clock-faces/');
+  return !/test|vendor/.test(r) && !PALETTES.includes(r);
 };
 
 describe('palette ratchet (ROAD-3449)', () => {
@@ -35,7 +38,7 @@ describe('palette ratchet (ROAD-3449)', () => {
     expect(total, `the count fell to ${total}: lower CEILING to match`).toBe(CEILING);
   });
   it('every palette colour is used, and spelled once', () => {
-    const text = all.filter((f) => relative(SRC, f) !== 'domain/palette.ts' && !f.endsWith('.test.ts')).map((f) => readFileSync(f, 'utf8')).join('\n');
+    const text = all.filter((f) => ownFile(f) && relative(SRC, f) !== 'domain/palette.ts' && !f.endsWith('.test.ts')).map((f) => readFileSync(f, 'utf8')).join('\n');
     expect(Object.keys(PAL).filter((k) => !new RegExp(`PAL\\.${k}\\b`).test(text))).toEqual([]);
     const vals = Object.values(PAL);
     expect(vals.length).toBe(new Set(vals).size);
