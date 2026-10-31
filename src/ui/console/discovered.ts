@@ -81,10 +81,24 @@ function scheduleRebuild(): void {
   rebuildTimer = setTimeout(() => { void applyLayer().then(redraw); }, 750);
 }
 
-/** BEFORE the console first renders: read the engine's list once, so the first
- *  draw already carries the devices. Never blocks boot for long, never throws. */
-export async function loadDiscovered(editor?: OpenEditor, timeoutMs = 2000): Promise<number> {
-  openEditor = editor;
+const seenAt = new Map<string, number>();
+/** A setup not refreshed for this long is gone: the engine re-sends every live
+ *  one each minute (SETUP_RESEND_SECS), and nothing unverified for five minutes
+ *  is trusted. This is what clears a device the public lane cannot erase. */
+export const STALE_MS = 5 * 60_000;
+const POLL_MS = 60_000;
+
+/** One setup heard (bus or HTTP); true when it changed what SPOG draws. */
+function note(d: DeviceSetup): boolean {
+  seenAt.set(d.key, Date.now());
+  const before = JSON.stringify(devices.get(d.key) ?? null);
+  devices.set(d.key, d);
+  return before !== JSON.stringify(d);
+}
+
+/** The engine's list over HTTP — the bench path, and the one with no broker. */
+async function fetchList(timeoutMs: number): Promise<boolean> {
+  let changed = false;
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -92,26 +106,38 @@ export async function loadDiscovered(editor?: OpenEditor, timeoutMs = 2000): Pro
     clearTimeout(t);
     if (res.ok) {
       const list = JSON.parse(await res.text()) as unknown;
-      if (Array.isArray(list)) for (const d of list) if (isSetup(d)) devices.set(d.key, d);
+      if (Array.isArray(list)) for (const d of list) if (isSetup(d) && note(d)) changed = true;
     }
   } catch { /* no engine behind this host — the console runs without it */ }
+  return changed;
+}
+
+/** BEFORE the console first renders: read the engine's list once, so the first
+ *  draw already carries the devices. Never blocks boot for long, never throws. */
+export async function loadDiscovered(editor?: OpenEditor, timeoutMs = 2000): Promise<number> {
+  openEditor = editor;
+  await fetchList(timeoutMs);
   await applyLayer();
   if (devices.size) console.info(`[SPOG] ${devices.size} device(s) from the Discovery Engine`);
   return devices.size;
 }
 
-/** AFTER boot: keep it live off the bus — a setup arriving adds or replaces its
- *  device, an empty one (the engine's erase) removes it. */
+/** AFTER boot: keep it live — the bus (a setup arriving adds or replaces its
+ *  device, an empty one, the engine's erase, removes it), a minute's HTTP poll,
+ *  and the decay that drops whatever stopped being said. */
 export function followDiscovered(bus: TwistBus): () => void {
-  return bus.subscribe(SETUP_TOPIC, (topic, payload) => {
+  const off = bus.subscribe(SETUP_TOPIC, (topic, payload) => {
     const key = topic.split('/').pop() ?? '';
     if (!key) return;
-    if (isSetup(payload)) {
-      const before = JSON.stringify(devices.get(key) ?? null);
-      devices.set(key, payload);
-      if (before !== JSON.stringify(payload)) scheduleRebuild();
-    } else if (devices.delete(key)) {
-      scheduleRebuild();
-    }
+    if (isSetup(payload)) { if (note(payload)) scheduleRebuild(); }
+    else if (devices.delete(key)) { seenAt.delete(key); scheduleRebuild(); }
   });
+  const poll = setInterval(() => { void fetchList(5000).then((c) => { if (c) scheduleRebuild(); }); }, POLL_MS);
+  const decay = setInterval(() => {
+    const cutoff = Date.now() - STALE_MS;
+    let gone = false;
+    for (const [key, at] of seenAt) if (at < cutoff) { seenAt.delete(key); gone = devices.delete(key) || gone; }
+    if (gone) scheduleRebuild();
+  }, 30_000);
+  return () => { off(); clearInterval(poll); clearInterval(decay); };
 }
