@@ -14,6 +14,7 @@ import { STATE_TONES, TONE_NAMES } from '../../domain/state.js';
 import { paintPalette } from './palette-paint.js';
 import { ink } from '../canvas-ink.js';
 import { repaintInkVars } from '../ink-var.js';
+import { applyEmojiGrey } from './emoji-grey.js';
 
 /** The current scheme, read back from the <html> attributes (default-filled). */
 export function getScheme(): ColourScheme {
@@ -62,6 +63,7 @@ function paint(s: ColourScheme): void {
   paintPalette({ chroma: s.chroma, vision: s.vision, monoHue: s.monoHue });
   applyPaletteTokens(s.cvd);
   repaintInkVars();     // data colours (Routes JSON) written through ink-var follow too
+  applyEmojiGrey(s.chroma === 'grey');   // colour-emoji glyphs: no token reaches them (ROAD-3463)
   applyStateGlyphs(s);   // `auto` glyphs follow chroma/vision; fail-soft
 }
 

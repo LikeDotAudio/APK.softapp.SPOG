@@ -149,7 +149,7 @@ const P = {
   sky93s100: '#dcebff', green45s48: '#3caa5a', pink47s67: '#c82878', red54s70: '#dc3545', sky02: '#00060c',
   blue04_030912: '#030912', sky75s46: '#a0bedc', blue05s54: '#060b14', grey20s0: '#323232', indigo29: '#46286e',
   blue06_060c1a: '#060c1a', indigo18: '#281446', grey30: '#4d4d4d', blue03s71: '#02050c',
-  orange56s73: '#e0963c', violet71s44: '#ba96d6', red62s68: '#e06e5a', amber91: '#fff0d2',
+  orange56s73: '#e0963c', violet71s44: '#ba96d6', red62s68: '#e06e5a', amber91: '#fff0d2', sky50: '#0075ff',
 } as const;
 
 export type PalName = keyof typeof P;

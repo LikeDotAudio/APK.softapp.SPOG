@@ -6,6 +6,7 @@ import { slugId, monoEmoji, styleSignalNode } from './format.js';
 import { makeMediaGroup } from './media-group.js';
 import { wireFold } from './pools-fold.js';
 import { PAL, alpha } from '../../domain/palette.js';
+import { inkAttr, inkValue } from '../ink-var.js';
 
 // ---- PLAYOUT pool -----------------------------------------------------------
 function buildPlayoutVideoNode(video: PlayoutVideo, color: string, origin: string): HTMLElement {
@@ -36,7 +37,7 @@ export function renderPlayoutPool(data: SourceLeaf, container: HTMLElement): voi
   const group = document.createElement('div');
   group.className = 'input-group';
   group.innerHTML = `
-    <div class="foldable-header" style="--lcars-color: ${color}; background-color: ${color}; font-size: 11px; margin-bottom: 4px;">
+    <div class="foldable-header" ${inkAttr({ '--lcars-color': color })} style="--lcars-color: ${inkValue(color)}; background-color: var(--lcars-color); font-size: 11px; margin-bottom: 4px;">
       <span>${monoEmoji(data.name)}${data.name}</span>
       <span class="fold-icon" style="transform: rotate(-90deg); display: inline-block; transition: transform 0.2s;">▼</span>
     </div>
@@ -99,7 +100,7 @@ export function renderStreamsPool(data: SourceLeaf, container: HTMLElement): voi
   const group = document.createElement('div');
   group.className = 'input-group';
   group.innerHTML = `
-    <div class="foldable-header" style="--lcars-color: ${color}; background-color: ${color}; font-size: 11px; margin-bottom: 4px;">
+    <div class="foldable-header" ${inkAttr({ '--lcars-color': color })} style="--lcars-color: ${inkValue(color)}; background-color: var(--lcars-color); font-size: 11px; margin-bottom: 4px;">
       <span>${monoEmoji(data.name)}${data.name}</span>
       <span class="fold-icon" style="transform: rotate(-90deg); display: inline-block; transition: transform 0.2s;">▼</span>
     </div>

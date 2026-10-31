@@ -7,6 +7,7 @@ import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { slugId, faultTag, monoEmoji, styleSignalNode, shadeColor } from './format.js';
 import { wireFold, tagOrigin } from './pools-fold.js';
 import { PAL } from '../../domain/palette.js';
+import { inkAttr, inkValue } from '../ink-var.js';
 
 // A prompter feed reads as a beam-splitter/prompter-glass silhouette (angled
 // trapezoid hood) so it is instantly distinguishable from a plain video node,
@@ -91,7 +92,7 @@ export function renderVideoPool(data: SourceLeaf, container: HTMLElement): void 
   const group = document.createElement('div');
   group.className = 'input-group';
   group.innerHTML = `
-    <div class="foldable-header${faulted ? ' fault' : ''}" title="${data.status || 'OK'}" style="--lcars-color: ${data.color || 'var(--lcars-color)'}; font-size: 11px; margin-bottom: 4px;">
+    <div class="foldable-header${faulted ? ' fault' : ''}" title="${data.status || 'OK'}" ${inkAttr({ '--lcars-color': data.color || 'var(--lcars-color)' })} style="--lcars-color: ${inkValue(data.color || 'var(--lcars-color)')}; font-size: 11px; margin-bottom: 4px;">
       <span>${monoEmoji(data.name)}${data.name}${faultTag(data.status)}</span>
       <span class="fold-icon" style="transform: rotate(-90deg); display: inline-block; transition: transform 0.2s;">▼</span>
     </div>

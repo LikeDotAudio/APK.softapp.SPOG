@@ -6,6 +6,7 @@ import { slugId, faultTag, monoEmoji, styleSignalNode } from './format.js';
 import { wireFold, tagOrigin } from './pools-fold.js';
 import { addStyles } from '../dom.js';
 import { PAL } from '../../domain/palette.js';
+import { inkAttr, inkValue } from '../ink-var.js';
 
 // Host / co-host / panelist … person labels hug the SQUARE (spine) edge, not the
 // rounded outer edge. lcars.css forces every signal-node text-align:left in
@@ -22,7 +23,7 @@ export function renderAudioPool(data: SourceLeaf, container: HTMLElement, color?
   const group = document.createElement('div');
   group.className = 'input-group';
   group.innerHTML = `
-    <div class="foldable-header${faulted ? ' fault' : ''}" title="${data.status || 'OK'}" style="--lcars-color: ${poolColor}; background-color: ${poolColor}; font-size: 11px; margin-bottom: 4px;">
+    <div class="foldable-header${faulted ? ' fault' : ''}" title="${data.status || 'OK'}" ${inkAttr({ '--lcars-color': poolColor })} style="--lcars-color: ${inkValue(poolColor)}; background-color: var(--lcars-color); font-size: 11px; margin-bottom: 4px;">
       <span>${monoEmoji(data.name)}${data.name}${faultTag(data.status)}</span>
       <span class="fold-icon" style="transform: rotate(-90deg); display: inline-block; transition: transform 0.2s;">▼</span>
     </div>
@@ -71,7 +72,7 @@ export function renderPersonPool(data: SourceLeaf, container: HTMLElement, color
   const group = document.createElement('div');
   group.className = 'input-group';
   group.innerHTML = `
-    <div class="foldable-header${faulted ? ' fault' : ''}" title="${data.status || 'OK'}" style="--lcars-color: ${poolColor}; background-color: ${poolColor}; font-size: 11px; margin-bottom: 4px;">
+    <div class="foldable-header${faulted ? ' fault' : ''}" title="${data.status || 'OK'}" ${inkAttr({ '--lcars-color': poolColor })} style="--lcars-color: ${inkValue(poolColor)}; background-color: var(--lcars-color); font-size: 11px; margin-bottom: 4px;">
       <span>${monoEmoji(data.name)}${data.name}${faultTag(data.status)}</span>
       <span class="fold-icon" style="transform: rotate(-90deg); display: inline-block; transition: transform 0.2s;">▼</span>
     </div>

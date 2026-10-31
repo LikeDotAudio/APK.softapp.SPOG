@@ -12,7 +12,8 @@ export function makeMediaGroup(container: HTMLElement, title: string, color: str
   const header = document.createElement('div');
   header.className = 'foldable-header media-group-header';
   // Indent is a token so the bracket can flip side under chirality (see lcars.css).
-  header.style.cssText = `--lcars-color:${color}; background-color:${color}; font-size:11px; margin-bottom:6px; font-weight:bold; cursor:pointer; --mg-head-indent:${depth * 10}px;`;
+  header.style.cssText = `background-color:var(--lcars-color); font-size:11px; margin-bottom:6px; font-weight:bold; cursor:pointer; --mg-head-indent:${depth * 10}px;`;
+  setInkVar(header, '--lcars-color', color);   // data colour, through the mode (ROAD-3463)
   header.innerHTML = `<span>${monoEmoji(title)}${title}</span><span class="fold-icon" style="transform:rotate(-90deg);display:inline-block;transition:transform .2s;">▼</span>`;
 
   const content = document.createElement('div');

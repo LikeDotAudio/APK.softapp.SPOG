@@ -3,6 +3,7 @@
 import { addStyles } from '../dom.js';
 import type { SourceLeaf, ProductionBox } from '../../model/index.js';
 import { slugId } from './format.js';
+import { inkAttr, inkValue, setInkVar } from '../ink-var.js';
 import { wireFold } from './pools-fold.js';
 import { PAL } from '../../domain/palette.js';
 
@@ -28,10 +29,11 @@ export function renderProductionInputs(data: SourceLeaf, container: HTMLElement)
   const outs = data.outputs || {};
   const group = document.createElement('div');
   group.className = 'input-group';
+  setInkVar(group, '--lcars-color', color);   // data colour, through the mode (ROAD-3463)
   // Collect by KIND (not by box), so each category renders as one contiguous grid.
   const vids: string[] = [], auds: string[] = [], ctrls: string[] = [];
   const vNode = (label: string, id: string, orig: string): string =>
-    `<div class="signal-node video video-main" draggable="true" data-origin="${orig}" id="${id}" style="border-color:${color};color:${color};">${label}</div>`;
+    `<div class="signal-node video video-main" draggable="true" data-origin="${orig}" id="${id}" style="border-color:var(--lcars-color);color:var(--lcars-color);">${label}</div>`;
   const aNode = (label: string, id: string, orig: string, cls = 'audio-studio'): string =>
     `<div class="signal-node audio ${cls}" draggable="true" data-origin="${orig}" id="${id}">${label}</div>`;
   const cNode = (label: string, id: string, orig: string): string =>
@@ -54,10 +56,10 @@ export function renderProductionInputs(data: SourceLeaf, container: HTMLElement)
   // Each category is a labelled sub-section (only if it has feeds); video uses the
   // 2-col video grid, audio + control the 3-col audio grid — matching their shapes.
   const section = (label: string, gridClass: string, nodes: string[]): string =>
-    nodes.length ? `<div class="prod-src-cat" style="color:${color}">${label}</div><div class="${gridClass}">${nodes.join('')}</div>` : '';
+    nodes.length ? `<div class="prod-src-cat" style="color:var(--lcars-color)">${label}</div><div class="${gridClass}">${nodes.join('')}</div>` : '';
 
   group.innerHTML = `
-    <div class="foldable-header signal-node multiplex production" draggable="true" id="prodsrc-${data.id}-bundle" data-origin="${data.name}" style="--lcars-color: ${color}; background-color: ${color}; font-size: 11px; margin-bottom: 4px;">
+    <div class="foldable-header signal-node multiplex production" draggable="true" id="prodsrc-${data.id}-bundle" data-origin="${data.name}" ${inkAttr({ '--lcars-color': color })} style="--lcars-color: ${inkValue(color)}; background-color: var(--lcars-color); font-size: 11px; margin-bottom: 4px;">
       <span>${data.name}</span>
       <span class="fold-icon" style="transform: rotate(-90deg); display: inline-block; transition: transform 0.2s;">▼</span>
     </div>
