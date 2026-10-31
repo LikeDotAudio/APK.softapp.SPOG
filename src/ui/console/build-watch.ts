@@ -7,14 +7,14 @@
 
 import { addStyles } from '../dom.js';
 import type { TwistBus } from '../../platform/mqtt/types.js';
-import { ACCENT, accentRgba } from '../../domain/brand.js';
+import { ACCENT, accentAlpha } from '../../domain/brand.js';
 import { PAL } from '../../domain/palette.js';
 
 interface BuildStamp { buildId?: { short?: string; full?: string }; routesHash?: string; ts?: number }
 
 const BW_CSS = `
 .app-version.stale{background:${ACCENT};color:${PAL.yellow97};cursor:pointer;animation:bw-pulse 1.2s infinite;}
-@keyframes bw-pulse{0%,100%{box-shadow:0 0 0 0 ${accentRgba(.55)};}50%{box-shadow:0 0 10px 3px ${accentRgba(.55)};}}
+@keyframes bw-pulse{0%,100%{box-shadow:0 0 0 0 ${accentAlpha(.55)};}50%{box-shadow:0 0 10px 3px ${accentAlpha(.55)};}}
 `;
 
 export function initBuildWatch(bus: TwistBus, running: { short: string; full: string; ts?: number }): void {

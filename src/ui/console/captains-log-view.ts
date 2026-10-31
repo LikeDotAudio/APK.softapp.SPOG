@@ -2,7 +2,7 @@
 // Owns the `listEl` DOM ref (set by the orchestrator's build()); render() reads
 // the shared narratives / selected state and repaints the panel + the badge.
 import { narratives, selected, narKey, entKey, reversible } from './captains-log-state.js';
-import { ACCENT, accentRgba } from '../../domain/brand.js';
+import { ACCENT, accentAlpha } from '../../domain/brand.js';
 import { PAL, alpha } from '../../domain/palette.js';
 
 const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
@@ -35,7 +35,7 @@ export const CL_CSS = `
 .cl-mid{flex:1;min-width:0;padding:7px 11px;font-size:12px;line-height:1.42;color:${PAL.amber85};}
 .cl-val{flex:0 0 auto;align-self:stretch;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;padding:4px 13px;background:${PAL.orange07s56};color:${PAL.amber71s100};font-family:'Courier New',monospace;font-weight:bold;font-size:12px;min-width:78px;text-align:right;}
 .cl-val small{font-size:8px;color:${PAL.amber36s48};letter-spacing:1px;}
-.cl-entry.sel{outline:2px solid ${ACCENT};outline-offset:-2px;background:${accentRgba(0.15)};}
+.cl-entry.sel{outline:2px solid ${ACCENT};outline-offset:-2px;background:${accentAlpha(0.15)};}
 .cl-entry.sel .cl-cap{background:${ACCENT} !important;color:${PAL.white};}
 .cl-entry.reversed{opacity:.4;}
 .cl-entry.reversed .cl-mid{text-decoration:line-through;}

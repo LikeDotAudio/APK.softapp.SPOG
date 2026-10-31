@@ -17,7 +17,7 @@ import { addStyles } from '../dom.js';
 import { exportSeat, importSeat, type SeatExport } from '../../platform/prefs.js';
 import { tileDataUrl } from '../icon-tiles.js';
 import { toggleCryptoDecoder } from './crypto-decoder.js';
-import { ACCENT, accentRgba } from '../../domain/brand.js';
+import { ACCENT, accentAlpha } from '../../domain/brand.js';
 import { PAL, alpha } from '../../domain/palette.js';
 
 const UM_CSS = `
@@ -27,7 +27,7 @@ const UM_CSS = `
   box-shadow:inset 6px 0 0 ${PAL.cyan37s55};text-align:left;white-space:nowrap;}
 .um-btn:hover{background:${PAL.cyan71};color:${PAL.black};}
 .um-btn.stale{animation:um-pulse 1.2s infinite;background:${ACCENT};color:${PAL.yellow97};}
-@keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 0 0 ${accentRgba(.5)};}50%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 12px 3px ${accentRgba(.5)};}}
+@keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 0 0 ${accentAlpha(.5)};}50%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 12px 3px ${accentAlpha(.5)};}}
 .um-panel{position:fixed;z-index:2650;display:none;flex-direction:column;gap:7px;padding:12px;
   min-width:250px;background:${PAL.blue08s50};border:1px solid ${PAL.blue22s37};border-radius:14px;
   box-shadow:0 14px 44px ${alpha(PAL.black, .7)};font-family:Arial,Helvetica,sans-serif;}

@@ -11,29 +11,36 @@
  *  `data-true-colour`, or drawing inside `withTrueColour(ctx, …)` (src/domain/true-colour.ts), gets palette references as
  *  their true hex and every literal untouched. */
 
-import { HEX, type PalName } from '../domain/palette.js';
+import { HEX } from '../domain/palette.js';
+import { ACCENT_HEX } from '../domain/brand.js';
 import { resolveColour, type Mode } from '../domain/colour-resolve.js';
 import { isTrueColour } from '../domain/true-colour.js';
 
+/** Every colour token the engine paints, custom-property name (no `--`) → true colour: the
+ *  palette's `pal-*` and the contract's `brand-accent` (ROAD-3463). */
+export const TRUE_VARS: Readonly<Record<string, string>> = {
+  ...Object.fromEntries(Object.entries(HEX).map(([k, v]) => [`pal-${k}`, v])),
+  'brand-accent': ACCENT_HEX,
+};
 const IDENTITY: Mode = { chroma: 'full', vision: 'normal' };
 let mode: Mode = IDENTITY;
-let resolved: Record<string, string> = { ...HEX };
+let resolved: Record<string, string> = { ...TRUE_VARS };
 let cache = new Map<string, string>();
 
-const VAR = /var\(--pal-([A-Za-z0-9_]+)\)/g;
+const VAR = /var\(--([A-Za-z0-9_-]+)\)/g;
 const LITERAL = /#[0-9a-fA-F]{3,8}\b|rgba?\([^()]*\)/g;
 
-/** The palette as the current mode paints it: name → colour. */
-export const resolvedPalette = (): Readonly<Record<string, string>> => resolved;
+/** The tokens as the current mode paints them: custom-property name (no `--`) → colour. */
+export const resolvedVars = (): Readonly<Record<string, string>> => resolved;
 
 /** Point ink() (and so every interface canvas) at a mode. */
 export function setInkMode(m: Mode): void {
   mode = m;
-  resolved = Object.fromEntries(Object.entries(HEX).map(([k, v]) => [k, resolveColour(v, m)]));
+  resolved = Object.fromEntries(Object.entries(TRUE_VARS).map(([k, v]) => [k, resolveColour(v, m)]));
   cache = new Map();
 }
 
-const trueOf = (c: string): string => (c.includes('var(') ? c.replace(VAR, (s, k: string) => HEX[k as PalName] ?? s) : c);
+const trueOf = (c: string): string => (c.includes('var(') ? c.replace(VAR, (s, k: string) => TRUE_VARS[k] ?? s) : c);
 
 /** A colour as the interface paints it now; `trueColour` keeps signal content as spelled. */
 export function ink(c: string, trueColour = false): string {

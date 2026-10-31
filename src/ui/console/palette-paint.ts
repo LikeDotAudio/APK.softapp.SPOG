@@ -8,24 +8,23 @@
  *  its true colour while the interface around it follows the mode. Points the canvas setters
  *  (src/ui/canvas-ink.ts) at the same mode. */
 
-import { HEX } from '../../domain/palette.js';
 import type { Mode } from '../../domain/colour-resolve.js';
-import { installCanvasInk, setInkMode, resolvedPalette } from '../canvas-ink.js';
+import { installCanvasInk, setInkMode, resolvedVars, TRUE_VARS } from '../canvas-ink.js';
 
 const block = (sel: string, vals: Readonly<Record<string, string>>): string =>
-  `${sel}{${Object.entries(vals).map(([k, v]) => `--pal-${k}:${v};`).join('')}}`;
+  `${sel}{${Object.entries(vals).map(([k, v]) => `--${k}:${v};`).join('')}}`;
 
-/** Paint the palette for `mode`; returns the resolved colours (name → colour). */
+/** Paint the palette (and `--brand-accent`) for `mode`; returns the resolved colours (property → colour). */
 export function paintPalette(mode: Mode): Readonly<Record<string, string>> {
   installCanvasInk();
   setInkMode(mode);
-  const res = resolvedPalette();
+  const res = resolvedVars();
   let tag = document.getElementById('pal-tokens');
   if (!tag) {
     tag = document.createElement('style');
     tag.id = 'pal-tokens';
     document.head.appendChild(tag);
   }
-  tag.textContent = `${block(':root', res)}\n${block('[data-true-colour]', HEX)}`;
+  tag.textContent = `${block(':root', res)}\n${block('[data-true-colour]', TRUE_VARS)}`;
   return res;
 }
