@@ -105,7 +105,7 @@ const plugin: EditorPlugin = {
     // conditioning applied to the actual received picture), with an RGB OVERLAY
     // scope on top reading the R/G/B levels of the (proc-amped) reference bars.
     const previewBars = el('canvas', { class: 'sc-bars' });
-    const previewScope = el('canvas', { class: 'sc-scope' });
+    const previewScope = el('canvas', { class: 'sc-scope', dataset: { trueColour: '' } });   // a scope: true colour
     const preview = el('div', { class: 'sc-preview' }, [previewBars, previewScope]);
     const procCard = el('div', { class: 'sc-card sc-wide', style: `--hc:${PAL.teal59}` }, [
       el('h4', {}, ['Proc Amp · Colour Legalize']),

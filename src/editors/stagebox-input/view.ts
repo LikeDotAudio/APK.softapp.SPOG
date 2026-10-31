@@ -8,6 +8,7 @@ import type { EditorServices } from '../types.js';
 import { MICS, STANDS, initState } from './state.js';
 import type { PanelState } from './state.js';
 import { drawHist, drawHPF } from './charts.js';
+import { onSchemeChange } from '../../ui/ink-var.js';
 import { panelTemplate } from './template.js';
 import { buildDials } from './dials.js';
 
@@ -122,6 +123,7 @@ export function buildPanel(
   });
   const tid = setTimeout(redrawHPF, 0); // after layout so the canvas has a size
   dispose.add(() => clearTimeout(tid));
+  dispose.add(onSchemeChange(body, redrawHPF)); // the response chart is drawn on change, not per frame
   applyMic(); // seeds the initial gain + phantom publish
 
   // Initial retained publish for the alias (applyMic already seeded gain/phantom).

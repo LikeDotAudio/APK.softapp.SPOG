@@ -15,6 +15,7 @@ import { injectPersonStyles } from './styles.js';
 import type { Strip } from './dsp.js';
 import { BASE, PRESETS, clamp } from './dsp.js';
 import { drawEq, drawComp } from './draw.js';
+import { onSchemeChange } from '../../ui/ink-var.js';
 import { PAL } from '../../domain/palette.js';
 
 const plugin: EditorPlugin = {
@@ -174,6 +175,7 @@ const plugin: EditorPlugin = {
       if (eqCanvas.clientWidth !== lastW) { lastW = eqCanvas.clientWidth; paint(); }
     });
 
+    ctx.dispose.add(onSchemeChange(eqCanvas, paint));   // EQ / comp curves are drawn on change, not per frame
     applyPreset('Voice');
   },
 };
