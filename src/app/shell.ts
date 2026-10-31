@@ -43,6 +43,7 @@ import { initMergeObserver } from '../ui/merge/observer.js';
 import { initMergeBadge, describeEvent } from '../ui/merge/badge.js';
 import { mergeManager } from '../platform/merge/manager.js';
 import { logAction } from '../ui/console/captains-log.js';
+import { PAL } from '../domain/palette.js';
 
 /** The Vite-injected build stamp (see main.ts / vite.config.ts). */
 type BuildStamp = { short: string; full: string; ts?: number };
@@ -106,7 +107,7 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   if (peopleGroup) {
     const mgrIcon = document.createElement('span');
     mgrIcon.innerHTML = 'ℹ️ MGR';
-    mgrIcon.style.cssText = 'margin-left:8px; font-size:10px; cursor:pointer; color:#d8b4e2; background:#2c1a3b; padding:2px 5px; border-radius:4px; font-weight:bold;';
+    mgrIcon.style.cssText = `margin-left:8px; font-size:10px; cursor:pointer; color:${PAL.violet80s44}; background:${PAL.violet17s39}; padding:2px 5px; border-radius:4px; font-weight:bold;`;
     mgrIcon.addEventListener('click', (e) => {
       e.stopPropagation();
       showPeopleManager();

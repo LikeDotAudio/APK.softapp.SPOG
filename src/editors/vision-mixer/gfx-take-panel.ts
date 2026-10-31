@@ -14,8 +14,9 @@ import { el } from '../../ui/dom.js';
 import { tip } from '../../ui/tip.js';
 import { gfxSets, armDsk, armedDsks, beginTake, fadeLevel, settle, takeMsg, fadesFromTake, type GfxFade } from './gfx-take.js';
 import type { Surface } from './surface.js';
+import { PAL } from '../../domain/palette.js';
 
-const ARMED = '2px dashed var(--state-ok,#39d98a)';
+const ARMED = `2px dashed var(--state-ok,${PAL.teal54})`;
 const CHIP = 'font-size:10px;font-weight:bold;padding:2px 9px;border-radius:8px;letter-spacing:1px;';
 
 /** Build the GFX SETS row + its monitor overlays and start its frame loop. */
@@ -35,8 +36,8 @@ export function buildGfxTake(s: Surface, mons: { pgmMon: HTMLElement; pvwMon: HT
 
   const rate = el('input', { class: 'vm-num', type: 'number', min: '0', max: '300', value: '24' }) as HTMLInputElement;
   tip(rate, { title: 'GFX RATE', lead: 'Graphics fade duration in frames (0 = cut).' });
-  const cutBtn = el('div', { class: 'vm-tbtn take', style: 'background: var(--state-alarm,#ff3b3b); color: #fff;' }, ['CUT GFX']);
-  const autoBtn = el('div', { class: 'vm-tbtn take', style: 'background: var(--sig-audio,#FF9C63); color: #000;' }, ['AUTO GFX']);
+  const cutBtn = el('div', { class: 'vm-tbtn take', style: `background: var(--state-alarm,${PAL.red62}); color: ${PAL.white};` }, ['CUT GFX']);
+  const autoBtn = el('div', { class: 'vm-tbtn take', style: `background: var(--sig-audio,${PAL.orange69}); color: ${PAL.black};` }, ['AUTO GFX']);
   tip(cutBtn, { title: 'CUT GFX', lead: 'Take every armed graphic to PROGRAM at once.' });
   tip(autoBtn, { title: 'AUTO GFX', lead: 'Fade every armed graphic to PROGRAM over the rate. Every seat on this switcher sees the take.' });
   const take = (ms: number): void => {
@@ -83,10 +84,10 @@ export function buildGfxTake(s: Surface, mons: { pgmMon: HTMLElement; pvwMon: HT
       b.style.outline = armed.has(i) ? ARMED : '';
     });
     pvwRow.replaceChildren(...[...armed].map((i) =>
-      el('span', { style: `${CHIP}background:transparent;color:var(--state-ok,#39d98a);outline:${ARMED};` }, [sets[i]!.name])));
+      el('span', { style: `${CHIP}background:transparent;color:var(--state-ok,${PAL.teal54});outline:${ARMED};` }, [sets[i]!.name])));
     pgmRow.replaceChildren(...fades.map((f) => {
       const t = fadeLevel(f, now);
-      return el('span', { style: `${CHIP}background:var(--state-onair,#ffaa00);color:#000;opacity:${(f.to ? t : 1 - t).toFixed(2)};` }, [sets[f.dsk]?.name ?? '']);
+      return el('span', { style: `${CHIP}background:var(--state-onair,${PAL.amber50s100});color:${PAL.black};opacity:${(f.to ? t : 1 - t).toFixed(2)};` }, [sets[f.dsk]?.name ?? '']);
     }));
   }
 

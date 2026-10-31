@@ -16,13 +16,14 @@ import { el } from '../../ui/dom.js';
 import { hint } from '../../ui/tip.js';
 import type { OnAirGraphic } from '../../platform/gfx-monitor.js';
 import type { Win } from './panes.js';
+import { PAL } from '../../domain/palette.js';
 
 // Under the seat's `twist.vm.` prefix so seat export/import carries it.
 const PREF_KEY = 'twist.vm.mvAutoGfx';
 const RESERVE_KEY = 'twist.vm.mvAutoGfxReserve';
 /** The RSV button's cycle: how many cells this seat holds for AUTO tiles. */
 export const RESERVE_STEPS = [0, 1, 2, 4] as const;
-const GFX_COLOR = '#ffaa00';
+const GFX_COLOR = PAL.amber50s100;
 
 function urlOverride(): boolean | null {
   try {
