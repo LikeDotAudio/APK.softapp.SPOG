@@ -19,6 +19,8 @@ export interface Win {
   channels?: string[];
   /** Device lineage ("Floor — Room — Device") — feeds the faux-signal room caption. */
   origin?: string;
+  /** A routed PRODUCTION TIMERS feed: the pane shows the production's RC1000 timer. */
+  timer?: boolean;
 }
 
 export const next = (t: Tally): Tally => (t === 'off' ? 'pgm' : t === 'pgm' ? 'pvw' : 'off');

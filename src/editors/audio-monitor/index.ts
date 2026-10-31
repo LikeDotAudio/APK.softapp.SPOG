@@ -13,6 +13,7 @@ import type { EditorPlugin, Sibling } from '../types.js';
 import { gridCells } from '../../ui/grid.js';
 import { injectAudioMonitorStyles } from './styles.js';
 import { buildOne } from './view.js';
+import { mountListen } from './listen.js';
 
 const plugin: EditorPlugin = {
   id: 'audio-monitor',
@@ -33,7 +34,9 @@ const plugin: EditorPlugin = {
     const selfIdx = panels.findIndex((p) => p.name === ctx.twist.name);
     panels.forEach((panel, i) => {
       const cell = cells[i];
-      if (cell) buildOne(cell, panel, ctx.dispose, i === selfIdx ? ctx.services : undefined);
+      if (!cell) return;
+      buildOne(cell, panel, ctx.dispose, i === selfIdx ? ctx.services : undefined);
+      mountListen(cell, ctx.dispose);   // LISTEN to the cued channel's line-up tone
     });
   },
 };

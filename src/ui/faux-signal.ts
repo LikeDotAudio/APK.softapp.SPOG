@@ -5,11 +5,13 @@
 // always looks the same and distinct sources look different. Pure canvas 2D.
 import type { Feed } from '../domain/routing-core/index.js';
 import { drawTsg } from '../domain/tsg/index.js';
+import { paintTimerFeed } from './timer-feed.js';
 
 // We only need identity + colour (+ optional room/media/fault) — accept a Feed or
 // any lightweight source-like object. `tsg` (a pattern id) makes this feed paint a
-// standardised Test Signal Generator pattern instead of the person-in-a-room cartoon.
-export type FauxSource = Partial<Feed> & { label?: string; tsg?: string };
+// standardised Test Signal Generator pattern instead of the person-in-a-room cartoon;
+// a `timer` feed with `timerDest` paints that destination's RC1000 timer (timer-feed.ts).
+export type FauxSource = Partial<Feed> & { label?: string; tsg?: string; timerDest?: string };
 
 // --- deterministic seed (FNV-1a hash → mulberry32 PRNG) ---
 const hashStr = (s: string): number => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
@@ -124,6 +126,9 @@ function faultSlate(g: CanvasRenderingContext2D, W: number, H: number, rng: () =
 export function drawFauxSignal(canvas: HTMLCanvasElement, feed: FauxSource, t = 0): void {
   // A Test Signal Generator feed paints its standardised pattern, not the cartoon.
   if (feed.tsg) { drawTsg(canvas, feed.tsg, t); return; }
+  // A routed PRODUCTION TIMERS feed paints the RC1000 read-out on EVERY surface
+  // (monitor, multiviewer, switcher); a failed paint falls through to the cartoon.
+  if (feed.timer && feed.timerDest && paintTimerFeed(canvas, feed.timerDest, feed.label ?? '')) return;
   const dpr = window.devicePixelRatio || 1;
   const cw = canvas.clientWidth, ch = canvas.clientHeight;
   const laidOut = cw > 0 && ch > 0;

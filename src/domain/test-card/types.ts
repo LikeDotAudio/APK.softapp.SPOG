@@ -48,4 +48,6 @@ export interface CardSpec {
   media?: 'audio' | 'video' | 'control';
   /** A faulted source shows a "NO SIGNAL" slate instead of the person-in-a-room. */
   faulted?: boolean;
+  /** A routed PRODUCTION TIMERS feed: the destination whose counters_timer it paints. */
+  timerDest?: string;
 }

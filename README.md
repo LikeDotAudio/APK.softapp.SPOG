@@ -60,8 +60,9 @@ rooms. The rest of this document is mostly about those rooms.
 
 - **Room fixtures** — every destination carries standing fixtures whatever its twists
   (`ui/console/dest-fixtures.ts`): a MONITOR of the routed source (a routed PRODUCTION TIMERS
-  feed paints the RC1000 dual-timer, `?timergfx=off` turns that off; `?tone=1` adds LISTEN to
-  the source's line-up tone), a CLOCK, dual counters and a room chat.
+  feed paints the RC1000 dual-timer — so do multiviewer panes and the switcher's PGM/PVW,
+  `?timergfx=off` turns that off; LISTEN voices the source's line-up tone, as it does on the
+  Audio Monitor, `?tone=0` removes it), a CLOCK, dual counters and a room chat.
 
 - **Role-based access** — a "single pane of glass" gateway (see [Roles & access](#roles--access))
   scopes which controls each operator sees.

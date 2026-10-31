@@ -16,6 +16,7 @@ import { timeSync } from '../../platform/time-sync.js';
 import { isTimerSnap, liveFrames, resetSnap, toggleRun } from '../../domain/timer-core/graphic.js';
 import { formatValue } from '../../domain/timer-core/index.js';
 import { PAL } from '../../domain/palette.js';
+import { setTimerSnapshotSource } from '../timer-feed.js';
 
 interface CState { running: boolean; base: number; startedAt: number; }
 // A + B are the dual counters; S is the standalone stopwatch's own count.
@@ -43,8 +44,9 @@ function countersOf(id: string): { A: CState; B: CState; S: CState; T?: any } {
   return s;
 }
 
-/** The raw counters_timer snapshot (unvalidated) — read by the MONITOR's timer graphic. */
+/** The raw counters_timer snapshot (unvalidated) — read by every surface's timer graphic. */
 export function timerSnapshotOf(id: string): unknown { return countersOf(id).T; }
+setTimerSnapshotSource(timerSnapshotOf);
 
 function syncCounters(id: string): void {
   const s = counterStore.get(id);

@@ -19,7 +19,7 @@ How to use SPOG and how it works inside. The user-facing tour of every editor is
    and log. Without one, everything runs locally.
 
 URL switches (per seat, default off or unchanged): `?preroute=matrix|list`, `?automv=1|0`,
-`?glyphs=on|off`, `?tone=1`, `?timergfx=off`, `?wire=v2`, `?mergelog=keep`.
+`?glyphs=on|off`, `?tone=0`, `?timergfx=off`, `?wire=v2`, `?mergelog=keep`.
 
 ## Entry points
 

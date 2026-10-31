@@ -19,5 +19,6 @@ export function drawCard(canvas: HTMLCanvasElement, spec: CardSpec, frame: numbe
     origin: spec.origin,
     media: spec.media,
     faulted: spec.faulted,
+    ...(spec.timerDest ? { timer: true, timerDest: spec.timerDest } : {}),
   }, t);
 }

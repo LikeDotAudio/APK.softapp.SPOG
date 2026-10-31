@@ -8,7 +8,7 @@
 // refs the closure already built, plus the shared `Surface`.
 
 import { el } from '../../ui/dom.js';
-import { drawFauxSignal } from '../../ui/faux-signal.js';
+import { drawFauxSignal, type FauxSource } from '../../ui/faux-signal.js';
 import { srcLabel, tallySet } from './me.js';
 import { poseAt, applyPose } from './dve.js';
 import { emulateTransition } from './transitions/index.js';
@@ -57,7 +57,14 @@ export function createProjection(s: Surface, refs: ProjectionRefs): { sync: () =
     const chan = (n: number): string => { const k = (n + h / 30) % 12; const x = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * x).toString(16).padStart(2, '0'); };
     return `#${chan(0)}${chan(8)}${chan(4)}`;
   };
-  const sourceFor = (i: number): { label: string; color: string } => ({ label: srcLabel(i, def), color: inputColor(i) });
+  // A routed PRODUCTION TIMERS feed on input i paints this production's RC1000 timer
+  // (ui/timer-feed.ts via drawFauxSignal), keyed by the routed label it shows.
+  const sourceFor = (i: number): FauxSource => {
+    const routed = s.ctx.sources[i];
+    return routed?.timer
+      ? { label: routed.label, color: inputColor(i), timer: true, timerDest: s.ctx.production.id }
+      : { label: srcLabel(i, def), color: inputColor(i) };
+  };
 
   /** The PIP chips over the monitors — one per active keyer of the delegated bank. */
   function rebuildPips(): void {
@@ -104,8 +111,16 @@ export function createProjection(s: Surface, refs: ProjectionRefs): { sync: () =
   }
 
   function startAnimation(): void {
+    let timerPaint = 0;
     s.ctx.dispose.raf(() => {
       const now = performance.now();
+      // A timer on PGM/PVW counts between syncs: repaint those feeds at ~5 Hz.
+      if (now - timerPaint > 200) {
+        timerPaint = now;
+        const m = s.me();
+        if (s.ctx.sources[m.pgm]?.timer) drawFauxSignal(pgmCv, sourceFor(m.pgm), now);
+        if (s.ctx.sources[m.pvw]?.timer) { drawFauxSignal(pvwCv, sourceFor(m.pvw), now); drawFauxSignal(nextCv, sourceFor(m.pvw), now); }
+      }
       for (const chipHost of [stage.pgmPips, stage.pvwPips]) {
         for (const chip of chipHost.children) {
           const f = s.flights.get((chip as HTMLElement).dataset.fk ?? '');

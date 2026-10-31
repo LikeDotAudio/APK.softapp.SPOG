@@ -47,7 +47,8 @@ function routedFeeds(twistEl: HTMLElement): Feed[] {
       : n.classList.contains('video') ? 'video' as const
       : n.classList.contains('control') || n.classList.contains('camera-control') ? 'control' as const
       : undefined;
-    out.push({ id: n.id || `xp-${i}`, label, color, type, origin: n.dataset.origin, media });
+    const timer = n.classList.contains('timer-source') || undefined;
+    out.push({ id: n.id || `xp-${i}`, label, color, type, origin: n.dataset.origin, media, timer });
   };
   dz.querySelectorAll<HTMLElement>(':scope > .signal-node').forEach((n, i) => {
     if (n.classList.contains('dropped-group')) {

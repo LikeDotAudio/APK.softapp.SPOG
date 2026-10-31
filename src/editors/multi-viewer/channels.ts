@@ -15,6 +15,8 @@ export interface ChannelSpec {
   /** Device lineage ("Floor — Room — Device") — feeds the faux-signal room caption. */
   origin?: string;
   media?: 'audio' | 'video' | 'control';
+  /** A routed PRODUCTION TIMERS feed — its pane paints the RC1000 timer. */
+  timer?: boolean;
 }
 
 // Channels for the wall: real routed sources, else the twist's input slots,
@@ -36,7 +38,7 @@ export function channelsFor(ctx: EditorContext): ChannelSpec[] {
         }
         g.channels.push(f.label);
       } else {
-        out.push({ label: f.label, color: f.color, origin: f.origin, media: f.media });
+        out.push({ label: f.label, color: f.color, origin: f.origin, media: f.media, ...(f.timer ? { timer: true } : {}) });
       }
     }
     return out;

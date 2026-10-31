@@ -26,7 +26,7 @@ export * from '../../domain/test-card/types.js';
 export function testCardFor(
   label: string,
   color?: string,
-  extra?: { origin?: string; media?: 'audio' | 'video' | 'control'; faulted?: boolean },
+  extra?: { origin?: string; media?: 'audio' | 'video' | 'control'; faulted?: boolean; timerDest?: string },
 ): CardSpec {
   return { ident: identFor(label, color), format: MEZZANINE, color: color || '#4d94ff', ...extra };
 }
