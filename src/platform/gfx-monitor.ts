@@ -12,12 +12,18 @@
 // to localStorage instead (the same-browser path: a later or other tab reads it,
 // live via the `storage` event) — localStorage is never written while a bus is up.
 //
+// Liveness (ROAD-3455, gfx-liveness.ts): a retained set outlives its switcher, so a reader
+// trusts one only while its announcer's presence beats (that presence carries the MQTT Last
+// Will) and while its `ts` is inside TRUST_MS; otherwise the wall reads it as empty. The
+// announcer re-stamps a non-empty set every REFRESH_MS so a live one never ages out.
+//
 // Fail-soft by design: a listener that throws, a full/blocked localStorage or a
 // malformed payload never breaks the announcer or the other watchers — the
 // switcher keeps switching and the wall keeps drawing.
 
 import type { TwistBus } from './mqtt/types.js';
 import { gfxOnAirTopic } from './mqtt/topics.js';
+import { createLiveness, originOf, REFRESH_MS, TICK_MS, TRUST_MS } from './gfx-liveness.js';
 
 /** One graphic on air somewhere on the switcher. */
 export interface OnAirGraphic {
@@ -64,6 +70,34 @@ export function createGfxMonitor(getBus: () => TwistBus | null): GfxMonitor {
   const lastKey = new Map<string, string>();
   const mine = new Set<string>();   // productions THIS seat announced
   const live = (): TwistBus | null => { const b = getBus(); return b && b.status().enabled ? b : null; };
+  /** The last set heard per production, with who announced it and when ('' = this seat). */
+  const heard = new Map<string, { list: OnAirGraphic[]; origin: string; ts: number }>();
+  const lastPub = new Map<string, number>();
+  const liveness = createLiveness(live, () => { for (const p of heard.keys()) judge(p); });
+  let tick: ReturnType<typeof setInterval> | null = null;
+
+  /** What a production's wall may show: the heard set while its announcer is trusted, else nothing. */
+  function judge(production: string): boolean {
+    const h = heard.get(production);
+    if (!h) return false;
+    const trusted = h.origin === '' || (Date.now() - h.ts <= TRUST_MS && liveness.alive(h.origin));
+    adopt(production, trusted ? h.list : []);
+    return trusted && h.list.length > 0;
+  }
+
+  /** Every TICK_MS: age what was heard, re-stamp what this seat has on air; stops when idle. */
+  function ensureTick(): void {
+    if (tick) return;
+    tick = setInterval(() => {
+      for (const p of [...heard.keys()]) if (!judge(p)) heard.delete(p);   // a live set is re-stamped and re-heard
+      for (const p of mine) {
+        if ((current.get(p) ?? []).length && live() && Date.now() - (lastPub.get(p) ?? 0) >= REFRESH_MS) publish(p, current.get(p)!);
+      }
+      liveness.prune(new Set([...heard.values()].map((h) => h.origin)));
+      if (!heard.size) { clearInterval(tick!); tick = null; }
+    }, TICK_MS);
+    (tick as { unref?: () => void }).unref?.();
+  }
 
   /** Adopt a set (from any transport) and tell this tab's watchers — once per change. */
   function adopt(production: string, list: OnAirGraphic[]): boolean {
@@ -82,6 +116,7 @@ export function createGfxMonitor(getBus: () => TwistBus | null): GfxMonitor {
     if (bus) {
       const env: OnAirEnvelope = { v: 1, ts: Date.now(), production, full_id: bus.sessionId, list };
       bus.publishRaw(gfxOnAirTopic(production), env, { retain: true });
+      lastPub.set(production, env.ts);
     } else {
       try { localStorage.setItem(LS_KEY(production), JSON.stringify(list)); } catch { /* no storage — same-tab still works */ }
     }
@@ -94,7 +129,11 @@ export function createGfxMonitor(getBus: () => TwistBus | null): GfxMonitor {
     busSubs.set(production, bus.subscribe(gfxOnAirTopic(production), (_t, p) => {
       const env = p as Partial<OnAirEnvelope> | null;
       if (!env || env.v !== 1 || env.production !== production) return;
-      adopt(production, sanitize(env.list));
+      const origin = originOf(env.full_id);
+      heard.set(production, { list: sanitize(env.list), origin, ts: typeof env.ts === 'number' ? env.ts : Date.now() });
+      liveness.follow(origin);
+      judge(production);
+      ensureTick();
     }));
   }
 
@@ -102,7 +141,9 @@ export function createGfxMonitor(getBus: () => TwistBus | null): GfxMonitor {
     announce(production, list) {
       const clean = sanitize(list);
       mine.add(production);
+      heard.set(production, { list: clean, origin: '', ts: Date.now() });
       if (adopt(production, clean)) publish(production, clean);
+      ensureTick();
     },
 
     rebind() {
@@ -111,6 +152,7 @@ export function createGfxMonitor(getBus: () => TwistBus | null): GfxMonitor {
     },
 
     current(production) {
+      judge(production);
       const mem = current.get(production);
       if (mem) return mem;
       if (live()) return [];   // the bus replays the retained set to watchers
