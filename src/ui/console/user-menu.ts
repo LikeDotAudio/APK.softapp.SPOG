@@ -16,6 +16,7 @@
 import { addStyles } from '../dom.js';
 import { exportSeat, importSeat, type SeatExport } from '../../platform/prefs.js';
 import { tileDataUrl } from '../icon-tiles.js';
+import { onSchemeChange } from '../ink-var.js';
 import { toggleCryptoDecoder } from './crypto-decoder.js';
 import { ACCENT, accentAlpha } from '../../domain/brand.js';
 import { PAL, alpha } from '../../domain/palette.js';
@@ -152,6 +153,8 @@ export function initUserMenu(): void {
     img.src = url;
     img.alt = '';
     n.prepend(img);
+    // The tile is drawn in the mode's accents: redraw it on every mode change (ROAD-3465).
+    onSchemeChange(img, () => { img.src = tileDataUrl(tileId) ?? img.src; });
   };
   ([['.tut-help', '', 'academy'], ['.rv-btn', '', '1990s-view'],
     ['.palette-toggle', 'COLOUR & VISION', 'settings'], ['.chir-toggle', 'CHIRALITY', 'chirality'],

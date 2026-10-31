@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { hexOf } from '../../domain/palette.js';
+import { ink } from '../../ui/canvas-ink.js';
 
 export interface SpatialState {
   format: string; // '9.1.4' | '5.1.2' | '5.1' | 'stereo'
@@ -79,7 +79,7 @@ export class SpatialScene {
       let mesh = this.faderMeshes.get(f.id);
       if (!mesh) {
         const geo = new THREE.SphereGeometry(10, 16, 16);
-        const mat = new THREE.MeshLambertMaterial({ color: f.color });
+        const mat = new THREE.MeshLambertMaterial();
         mesh = new THREE.Mesh(geo, mat);
         this.faderMeshes.set(f.id, mesh);
         this.scene.add(mesh);
@@ -88,8 +88,8 @@ export class SpatialScene {
       mesh.visible = true;
       // Map x, y (from polar azimuth/depth) and z (height) to 3D coords
       mesh.position.set(f.x, f.z, f.y);
-      // Update color in case it changed
-      (mesh.material as THREE.MeshLambertMaterial).color.setStyle(hexOf(f.color));
+      // The fader's TRUE colour through the current mode, every render (WebGL never sees canvas-ink).
+      (mesh.material as THREE.MeshLambertMaterial).color.setStyle(ink(f.color));
     }
     
     // Hide removed faders

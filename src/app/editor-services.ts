@@ -20,7 +20,7 @@ function openSystemEditor(
 ): void {
   const plugin = pluginFor(pluginKey);
   if (!plugin) return;
-  openOverlay({ title: opts.title, color: opts.color, prodName: opts.prodName, twistName: opts.twistName, voiceCommands: plugin.voiceCommands }, (body, dispose) => {
+  openOverlay({ title: opts.title, color: opts.color, ink: opts.color, prodName: opts.prodName, twistName: opts.twistName, voiceCommands: plugin.voiceCommands }, (body, dispose) => {
     const ctx: any = {
       twist: { name: opts.twistName, config: opts.config },
       sources: [],

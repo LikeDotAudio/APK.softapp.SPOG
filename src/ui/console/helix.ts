@@ -4,6 +4,7 @@
 // if any source is faulted. The right lip folds the strand away.
 import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { PAL } from '../../domain/palette.js';
+import { inkAttr, inkValue, trueColourOf } from '../ink-var.js';
 
 let gradSeq = 0;
 
@@ -15,7 +16,8 @@ export function getDNAHtml(cycles: number, width: number, colors: string[]): str
   let gradientStops = '';
   colors.forEach((c, i) => {
     const percent = (i / (numColors > 1 ? numColors - 1 : 1)) * 100;
-    gradientStops += `<stop offset="${percent}%" stop-color="${c}" />`;
+    // TRUE colour on data-ink, painted through the mode and repainted on every change (ROAD-3465).
+    gradientStops += `<stop offset="${percent}%" ${inkAttr({ 'stop-color': c })} style="stop-color:${inkValue(c)}" />`;
   });
   const gradientId = 'dna-grad-' + (gradSeq++).toString(36);
   let svg = `<defs><linearGradient id="${gradientId}" x1="0%" y1="0%" x2="100%" y2="0%">${gradientStops}</linearGradient></defs>`;
@@ -100,7 +102,7 @@ export function updateTwistVisuals(twist: HTMLElement): void {
     svg.setAttribute('viewBox', `0 0 ${width} 100`);
     const corrupted = swimmers.some((s) => isFaultStatus(s.dataset.status));
     twist.classList.toggle('corrupted', corrupted);
-    const sourceColors = swimmers.map((s) => (corrupted ? PAL.red62 : getComputedStyle(s).color));
+    const sourceColors = swimmers.map((s) => (corrupted ? PAL.red62 : trueColourOf(s)));
     svg.innerHTML = getDNAHtml(cycles, width, sourceColors);
     svg.style.height = isMonitor ? '55px' : '100px';
     svg.style.marginTop = isMonitor ? '6px' : '10px';

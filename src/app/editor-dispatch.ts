@@ -60,7 +60,10 @@ export function openEditorForTwist(twistEl: HTMLElement): void {
               : pluginFor(name);
   if (!plugin) return;
   const prodName = twistEl.dataset.prodName ?? '';
-  const color = (twistEl.style.getPropertyValue('--lcars-color').trim() || PAL.blue60) as Hex;
+  // The production's TRUE colour (ROAD-3465): the editor resolves it for the mode and repaints it
+  // on every mode change; the twist's --lcars-color is only the paint of the mode it was drawn in.
+  const ink = trueInkVar(twistEl, '--lcars-color');
+  const color = (ink || twistEl.style.getPropertyValue('--lcars-color').trim() || PAL.blue60) as Hex;
   // Room/floor/person-level hover tip authored in the Routes JSON, threaded here as
   // data attributes by destinations.renderPrograms (see ui/tip expectationTip).
   let prodTip: TipSpec | undefined;
@@ -71,7 +74,7 @@ export function openEditorForTwist(twistEl: HTMLElement): void {
   };
   const twistSvc = twistServices(prodName, name);
   openOverlay(
-    { title: prodName ? `${prodName} · ${plugin.title}` : plugin.title, color, ink: trueInkVar(twistEl, '--lcars-color'), prodName, twistName: name, voiceCommands: plugin.voiceCommands },
+    { title: prodName ? `${prodName} · ${plugin.title}` : plugin.title, color, ink, prodName, twistName: name, voiceCommands: plugin.voiceCommands },
     (body, dispose) => {
       const ctx = buildContext(prod, twist, dispose, twistSvc, twistEl);
       // "What the production expects of this window" — a hover tip on the title rail,

@@ -12,6 +12,7 @@ import { csv, parseWorkbook, columnMap, cleanName, type Sheet } from './router-i
 import { toJson, fromJson } from './router-io-json.js';
 import { applyRoutes, type Route, type ImportMode, type ApplySummary } from './router-io-apply.js';
 import { authorDevices } from './router-io-devices.js';
+import { trueInkVar } from '../ink-var.js';
 
 export type ImportSummary = ApplySummary & { created: number };
 
@@ -32,7 +33,8 @@ function typeOf(node: HTMLElement | null | undefined, label: string): string {
 function buildSourcesSheet(): Sheet {
   const rows: string[][] = [];
   gatherSenderNodes().forEach((labels, origin) => labels.forEach((node, label) => {
-    const color = node?.style.color || node?.style.borderColor || '';
+    // The feed's data colour, never its paint (style.color is var(--sig-node), resolved per mode).
+    const color = (node && (trueInkVar(node, '--sig-node') ?? trueInkVar(node, 'border-color'))) || '';
     rows.push([origin, label, typeOf(node, label), color, node?.dataset.status || '']);
   }));
   rows.sort((a, b) => (a[0]!).localeCompare(b[0]!) || (a[1]!).localeCompare(b[1]!));

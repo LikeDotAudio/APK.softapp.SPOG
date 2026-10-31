@@ -12,6 +12,7 @@ import { pluginFor } from '../editors/registry.js';
 import { can } from '../platform/auth.js';
 import type { Disposer } from '../ui/timers.js';
 import { PAL } from '../domain/palette.js';
+import { trueColourOf } from '../ui/ink-var.js';
 
 const twistName = (t: string | TwistConfig): string => (typeof t === 'string' ? t : t.name);
 const twistConfig = (t: string | TwistConfig): TwistConfig | null => (typeof t === 'string' ? null : t);
@@ -33,7 +34,7 @@ function resolveSources(config: TwistConfig | null, color: Hex): Feed[] {
 
 /** Feeds actually routed into a twist's crosspoints (DOM), so editors reflect the
  *  live trickle-down cascade. Groups expand to their children; each node's own
- *  colour is kept so the positioner/console bundle by source. */
+ *  TRUE colour is kept so the positioner/console bundle by source. */
 function routedFeeds(twistEl: HTMLElement): Feed[] {
   const dz = twistEl.querySelector<HTMLElement>('.drop-zone');
   if (!dz) return [];
@@ -41,7 +42,9 @@ function routedFeeds(twistEl: HTMLElement): Feed[] {
   const push = (n: HTMLElement, i: number): void => {
     const label = (n.textContent ?? '').trim().split('\n')[0]?.trim() ?? '';
     if (!label) return;
-    const color = (n.style.color || n.style.borderColor || getComputedStyle(n).color || PAL.blue65);
+    // The node's TRUE colour, never its paint: editors resolve it for the mode as they draw and
+    // repaint on every mode change (ROAD-3465; ui/ink-inline, canvas-ink).
+    const color = trueColourOf(n) || PAL.blue65;
     const type = n.dataset.type;
     const media = n.classList.contains('audio') ? 'audio' as const
       : n.classList.contains('video') ? 'video' as const

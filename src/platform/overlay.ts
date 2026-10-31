@@ -8,6 +8,7 @@
 import { addStyles, el } from '../ui/dom.js';
 import { makeDisposer, type Disposer } from '../ui/timers.js';
 import { setInkVar, dropInkVar } from '../ui/ink-var.js';
+import { inkInline } from '../ui/ink-inline.js';
 import { PAL, alpha } from '../domain/palette.js';
 
 const STYLE_ID = 'tr-ed-overlay';
@@ -147,6 +148,9 @@ export function openOverlay(
   const query = qIdx >= 0 ? location.hash.slice(qIdx) : '';
   history.replaceState(null, '', '#/' + [slug(opts.prodName), slug(opts.twistName)].filter(Boolean).join('/') + query);
   build(h.body, dispose);
+  // The editor paints TRUE colours (its context's); every literal one in an inline style is seen
+  // through the mode and repainted on each mode change while it is open (ROAD-3465).
+  dispose.add(inkInline(h.body));
   h.root.classList.add('open');
   return dispose;
 }

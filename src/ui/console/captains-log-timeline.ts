@@ -15,6 +15,7 @@ import { buildGrid } from './captains-log-timeline-render.js';
 import { makeStaffing, needsStaffing, STAFF_CSS } from './captains-log-timeline-staffing.js';
 import { showSchedule } from './schedule.js';
 import { PAL } from '../../domain/palette.js';
+import { inkAttr, inkValue, trueInkVar } from '../ink-var.js';
 
 const PLAN = PAL.blue45;
 const MIN_SPAN_MIN = 60, GUTTER = 220;
@@ -88,8 +89,8 @@ function renderInto(body: HTMLElement, resetScroll = true): void {
     const groups = [...new Set(all.filter((l) => l.type === 'where' || l.type === 'how').map((l) => l.group))];
     chips.innerHTML = `<button class="tl-chip all${!selectedGroups.size && !filter ? ' on' : ''}" data-group="">◎ SHOW ALL</button>` + groups.map((g) => {
       const tw = twists.find((t) => (t.dataset['prodName'] || '').toUpperCase() === g);
-      const c = (tw && getComputedStyle(tw).getPropertyValue('--lcars-color').trim()) || PAL.cyan52;
-      return `<button class="tl-chip${selectedGroups.has(g.toLowerCase()) ? ' on' : ''}" data-group="${esc(g)}" style="--c:${c}">${esc(g)}</button>`;
+      const c = (tw && trueInkVar(tw, '--lcars-color')) || PAL.cyan52;   // TRUE colour, repainted per mode (ROAD-3465)
+      return `<button class="tl-chip${selectedGroups.has(g.toLowerCase()) ? ' on' : ''}" data-group="${esc(g)}" ${inkAttr({ '--c': c })} style="--c:${inkValue(c)}">${esc(g)}</button>`;
     }).join('');
   }
   // Minimap: the whole span compressed, with event marks, a NOW tick, and a viewport box.

@@ -55,19 +55,24 @@ export function dropInkVar(el: HTMLElement, prop: string): void {
 }
 
 /** The TRUE colour `el` paints its text in now, for a copy that must follow later mode changes (a
- *  dropped group takes its source's colour, ROAD-3464). Read with the element marked
- *  `data-true-colour`, so palette tokens come back as spelled; when that equals the resolved data
- *  colour of the nearest `--lcars-color` on the way up, the source paints that one: its true colour. */
+ *  dropped group takes its source's colour, ROAD-3464; an editor's feed, ROAD-3465). Read with the
+ *  element marked `data-true-colour`, so palette tokens come back as spelled; when that equals the
+ *  resolved value of a data colour on the way up (the node's own `--sig-node`, the nearest
+ *  `--lcars-color`, where the walk stops), the element paints that one: its true colour. */
 export function trueColourOf(el: HTMLElement): string {
   const had = el.hasAttribute('data-true-colour');
   if (!had) el.setAttribute('data-true-colour', '');
   const seen = getComputedStyle(el).color;
   if (!had) el.removeAttribute('data-true-colour');
-  for (let a: HTMLElement | null = el; a; a = a.parentElement) {
-    const lc = read(a).get('--lcars-color');
-    if (lc === undefined) continue;
-    const [x, y] = [parseColour(seen), parseColour(ink(lc))];
-    return x && y && x.slice(0, 3).every((v, i) => Math.round(v) === Math.round(y[i]!)) ? lc : seen;
+  const x = parseColour(seen);
+  for (let a: HTMLElement | null = el; a && x; a = a.parentElement) {
+    const m = read(a);
+    for (const v of m.values()) {
+      const c = TRIPLE.test(v) ? tripleColour(v) : v;
+      const y = parseColour(ink(c));
+      if (y && x.slice(0, 3).every((n, i) => Math.round(n) === Math.round(y[i]!))) return c;
+    }
+    if (m.has('--lcars-color')) break;
   }
   return seen;
 }

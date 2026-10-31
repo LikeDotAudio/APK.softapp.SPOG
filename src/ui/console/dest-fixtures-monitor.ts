@@ -23,6 +23,7 @@ import { drawFauxSignal, type FauxSource } from '../faux-signal.js';
 import { patternForLabel } from '../../domain/tsg/index.js';
 import { toneEnabled, listenToggle } from '../test-tone-player.js';
 import { animate, card } from './dest-fixtures-shared.js';
+import { trueColourOf } from '../ink-var.js';
 import { PAL } from '../../domain/palette.js';
 
 type MonitorFeed = FauxSource;
@@ -36,7 +37,7 @@ function routedFeed(body: HTMLElement): MonitorFeed | null {
   for (const n of nodes) {
     const label = (n.textContent ?? '').trim().split('\n')[0]?.trim() ?? '';
     if (!label) continue;
-    const color = n.style.color || n.style.borderColor || PAL.blue65;
+    const color = trueColourOf(n) || PAL.blue65;   // a picture: its TRUE colour (n.style.color is var(--sig-node))
     const media = n.classList.contains('audio') ? 'audio' as const
       : n.classList.contains('video') ? 'video' as const
       : n.classList.contains('control') || n.classList.contains('camera-control') ? 'control' as const
