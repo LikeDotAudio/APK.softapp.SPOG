@@ -161,3 +161,10 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
 - **Kept by design: `stripOrder`/`slug` re-implemented in `platform/mqtt/topics.ts`** — the layering
   rule (`src/README.md`, `layering.test.ts`) forbids platform importing ui; it is one repo, not a
   cross-repo duplicate.
+- **Recorded when the roadmap page became a pointer (2026-10-31)** — shipped and not in CHANGELOG.md:
+  the 24-hour newsroom schedule (20 shows over London / Tokyo / Sydney bureaus, a prime-time peak
+  of 5 concurrent productions, a 45-minute rehearsal band per slot, `×N` overlap stacking;
+  `ui/console/schedule.ts`, `captains-log-timeline-data.ts`); the Heartbeat edge pulse off by
+  default, per seat under Colour & Vision (`ui/console/lcars-pulse.ts`, `prefs.ui.heartbeat`);
+  the on-air weather forecast strip face (`ui/weather/faces/strip.ts`, the Graphics Engine's
+  forecast template).

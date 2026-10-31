@@ -8,5 +8,5 @@ Nothing to do is kept here: every roadmap item lives in the APK.audio monorepo's
 | Page | What |
 |---|---|
 | [IMPROVEMENTS.md](IMPROVEMENTS.md) | 🛣 Improvements — WEB.SPOG (from the 2026-10-30 architecture audit) |
-| [roadmap.md](roadmap.md) | SPOG Roadmap |
+| [roadmap.md](roadmap.md) | 🛣 Roadmap — WEB.SPOG |
 <!-- /wiki:index -->
