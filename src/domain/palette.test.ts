@@ -30,8 +30,26 @@ const counted = (f: string): boolean => {
   return !/test|vendor/.test(r) && !PALETTES.includes(r);
 };
 
-describe('palette ratchet (ROAD-3449)', () => {
+/** rgba()/hsl() spelled in .ts outside the palette machinery: ROAD-3456 sweeps these into `alpha(PAL.*, a)`. */
+const RGBA_CEILING = 402;
+const RGBA = /\brgba?\(|\bhsla?\(/g;
+const MACHINERY = ['domain/colour-resolve.ts', 'ui/canvas-ink.ts'];
+const LCARS = resolve(SRC, '../lcars.css');
+
+describe('palette ratchet (ROAD-3449, ROAD-3456)', () => {
   const all = files(SRC);
+  it(`rgba()/hsl() outside the palette stay at or below ${RGBA_CEILING}`, () => {
+    const per = all.filter((f) => counted(f) && !MACHINERY.includes(relative(SRC, f)))
+      .map((f) => [relative(SRC, f), (readFileSync(f, 'utf8').match(RGBA) ?? []).length] as const).filter(([, n]) => n > 0);
+    const total = per.reduce((a, [, n]) => a + n, 0);
+    expect(total, `over the ceiling — spell them alpha(PAL.<name>, a):\n${per.map(([f, n]) => `${n}\t${f}`).join('\n')}`).toBeLessThanOrEqual(RGBA_CEILING);
+    expect(total, `the count fell to ${total}: lower RGBA_CEILING to match`).toBe(RGBA_CEILING);
+  });
+  it('lcars.css spells no colour: every one is var(--pal-*) (ROAD-3456)', () => {
+    const css = readFileSync(LCARS, 'utf8');
+    expect(css.match(HEX) ?? []).toEqual([]);
+    expect(css.match(RGBA) ?? []).toEqual([]);
+  });
   it(`hex literals outside src/domain/palette.ts stay at or below ${CEILING}`, () => {
     const per = all.filter(counted).map((f) => [relative(SRC, f), (readFileSync(f, 'utf8').match(HEX) ?? []).length] as const)
       .filter(([, n]) => n > 0);
@@ -41,7 +59,8 @@ describe('palette ratchet (ROAD-3449)', () => {
   });
   it('every palette colour is used, and spelled once', () => {
     const text = all.filter((f) => ownFile(f) && relative(SRC, f) !== 'domain/palette.ts' && !f.endsWith('.test.ts')).map((f) => readFileSync(f, 'utf8')).join('\n');
-    expect(Object.keys(TRUE).filter((k) => !new RegExp(`(PAL|HEX)\\.${k}\\b`).test(text))).toEqual([]);
+    const css = readFileSync(LCARS, 'utf8');
+    expect(Object.keys(TRUE).filter((k) => !new RegExp(`(PAL|HEX)\\.${k}\\b`).test(text) && !css.includes(`var(--pal-${k})`))).toEqual([]);
     const vals = Object.values(TRUE);
     expect(vals.length).toBe(new Set(vals).size);
   });

@@ -145,6 +145,20 @@ const P = {
   orange30: '#7a3b1f',
   orange33: '#7a4a2e',
   red62_ff5a3b: '#ff5a3b',
+  blue10s60: '#0a1428',
+  lime50: '#aaff00',
+  violet50: '#aa00ff',
+  blue02: '#00000a',
+  sky08s100: '#001428',
+  purple78: '#d9b3d9',
+  purple55: '#b266b2',
+  purple84: '#e0cce0',
+  orange61: '#ed864c',
+  amber48: '#f5ad00',
+  sky35s100: '#0072b2',
+  blue20s49: '#1a2a4c',
+  red08: '#2a0000',
+  red32: '#8f1414',
 } as const;
 
 export type PalName = keyof typeof P;
