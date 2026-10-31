@@ -78,7 +78,7 @@ rooms. The rest of this document is mostly about those rooms.
   broker config sets plaintext. The default broker is the deployment's own (`spog-config.js`, else `/mqtt` on a
   bench-address origin, else none); no public broker is compiled in. Concurrent writes to one param
   are arbitrated by the merge mediator (higher seat rank wins, `platform/merge/`).
-  `?wire=compact` opts into the smaller v3 wire. With no broker, everything still works locally.
+  The bus writes the compact v3 wire; `?wire=v2` writes the old one for a release. With no broker, everything still works locally.
 
 ---
 
@@ -114,7 +114,7 @@ The rules the code actually follows, and where each one lives.
   `src/ui/console/colour-engine.ts`.
 - **Ship behind the seat.** New behaviour lands as a per-seat preference
   (`src/platform/prefs.ts`) or a URL switch (`?preroute=`, `?automv=`, `?glyphs=`, `?tone=`,
-  `?timergfx=`, `?wire=compact`, `?mergelog=keep`), default off or unchanged, so it can be rolled back.
+  `?timergfx=`, `?wire=v2`, `?mergelog=keep`), default off or unchanged, so it can be rolled back.
 - **Small files.** Source files stay ≤200 lines; `SETUP/check-file-size.mjs` runs before every
   build (`npm run sizecheck`, `prebuild`), with a short grandfathered list.
 

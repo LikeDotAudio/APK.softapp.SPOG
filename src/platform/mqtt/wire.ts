@@ -1,13 +1,14 @@
 // src/platform/mqtt/wire — the v3 compact wire (payload-optimisation, roadmap §3.7).
 //
-// Behind a reversible switch: `?wire=compact` (or localStorage `spog.wire` =
-// `compact`) makes THIS console's encoder write
+// v3 is the encoder DEFAULT since ROAD-3451 (2026-10-31): THIS console writes
 //   • crosspoints FRONT-CODED — each entry interned against the previous one
 //     (`CAM 1, CAM 2` → `CAM 1` + {4, "2"}), and
 //   • Captain's Log entries as a protobuf LogMsg instead of JSON in json_fallback.
-// Every build's DECODER reads v3 regardless, so a compact seat is understood by
-// any console on this build; a console on an OLDER build skips the new fields
-// (crosspoints read as empty, log entries as absent) — hence opt-in, not default.
+// Every build from v111 decodes v2 and v3 alike, so the flip waited until every
+// deployed seat was on v111+. Reversible for one release: `?wire=v2` (or
+// localStorage `spog.wire` = `v2`) writes the old wire. The DECODER keeps reading
+// v2 regardless. A build older than v111 skips the v3 fields (crosspoints read as
+// empty, log entries as absent) — see CHANGELOG.md.
 
 import type { spog } from './schema.js';
 
@@ -18,13 +19,13 @@ let cached: boolean | null = null;
 export function wireCompact(): boolean {
   if (override !== null) return override;
   if (cached !== null) return cached;
-  let on = false;
-  try { on = new URLSearchParams(globalThis.location?.search ?? '').get('wire') === 'compact'; } catch { /* no location */ }
-  try { on = on || globalThis.localStorage?.getItem('spog.wire') === 'compact'; } catch { /* private mode */ }
-  return (cached = on);
+  let pick: string | null = null;
+  try { pick = new URLSearchParams(globalThis.location?.search ?? '').get('wire'); } catch { /* no location */ }
+  try { pick = pick ?? globalThis.localStorage?.getItem('spog.wire') ?? null; } catch { /* private mode */ }
+  return (cached = pick !== 'v2');   // v3 unless the seat asked for v2 (`compact` still names v3)
 }
-/** Force the switch (tests, diagnostics); null returns to URL / localStorage. */
-export function setWireCompact(on: boolean | null): void { override = on; }
+/** Force the switch (tests, diagnostics); null returns to URL / localStorage and re-reads them. */
+export function setWireCompact(on: boolean | null): void { override = on; if (on === null) cached = null; }
 
 /** Common prefix length in UTF-16 units, never splitting a surrogate pair. */
 function shared(a: string, b: string): number {

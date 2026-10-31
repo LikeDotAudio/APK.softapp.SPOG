@@ -86,7 +86,7 @@ export async function encodeAndEncrypt(payloadObj: any): Promise<Uint8Array> {
     if (typeof payloadObj.seat === 'number') vm.seat = payloadObj.seat >>> 0;   // merge rank rides the wire
     if (payloadObj.label) vm.label = String(payloadObj.label);
     // F2: a non-empty string array (routing crosspoints) rides as repeated strings,
-    // not JSON-in-a-string; v3 (?wire=compact) interns them front-coded.
+    // not JSON-in-a-string; v3 (the default; ?wire=v2 opts out) interns them front-coded.
     // Empty arrays / objects still use the JSON string_value.
     if (Array.isArray(value) && value.length > 0 && value.every((v) => typeof v === 'string')) {
       if (wireCompact()) Object.assign(vm, frontCode(value));

@@ -1,10 +1,10 @@
 // src/platform/mqtt/wire.test — the v3 compact wire: crosspoint interning, the
 // protobuf LogMsg arm, seat/label on ValueMsg, full_id shrink in json_fallback —
-// plus a payload-bytes measurement of v2 (default) vs v3 (?wire=compact).
+// plus a payload-bytes measurement of v2 (?wire=v2) vs v3 (the default since ROAD-3451).
 
 import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
 import { encodeAndEncrypt, decryptAndDecode, setBusKey } from './crypto.js';
-import { setWireCompact, frontCode, frontDecode } from './wire.js';
+import { setWireCompact, wireCompact, frontCode, frontDecode } from './wire.js';
 import { spog } from './schema.js';
 
 const FID = 'a1b2c3d4:TWIST:1761830000000', TS = 1761830123456;
@@ -25,6 +25,29 @@ const round = async (p: unknown): Promise<any> => decryptAndDecode(await encodeA
 beforeAll(() => setBusKey('wire-test-key'));
 afterAll(() => setBusKey(undefined));
 afterEach(() => setWireCompact(null));
+
+describe('wire selection', () => {
+  const at = (search: string, stored: string | null): boolean => {
+    const g = globalThis as any, loc = g.location, ls = g.localStorage;
+    g.location = { search };
+    g.localStorage = { getItem: () => stored };
+    try { setWireCompact(null); return wireCompact(); } finally { g.location = loc; g.localStorage = ls; setWireCompact(null); }
+  };
+  it('writes v3 by default', () => expect(at('', null)).toBe(true));
+  it('?wire=v2 (or spog.wire=v2) keeps the old encoder for a release', () => {
+    expect(at('?wire=v2', null)).toBe(false);
+    expect(at('', 'v2')).toBe(false);
+  });
+  it('the URL outranks the stored choice; ?wire=compact still means v3', () => {
+    expect(at('?wire=compact', 'v2')).toBe(true);
+    expect(at('?wire=v2', 'compact')).toBe(false);
+  });
+  it('v2 bytes still decode (the decoder reads both)', async () => {
+    setWireCompact(false);
+    expect((await round(CASES['crosspoints ×6'])).value).toEqual(XP);
+    expect((await round(LOG)).dest).toBe('Vision Mixer');
+  });
+});
 
 describe('frontCode (crosspoint interning)', () => {
   it('round-trips and keeps only what differs from the previous entry', () => {

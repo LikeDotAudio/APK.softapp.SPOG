@@ -4,6 +4,11 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 
 ## [Unreleased]
 
+Wire: **v3 is the default on the bus** (ROAD-3451). Every build from v111 (2026-10-30) reads it, and spog.like.audio served 20261031.1735 · git e40f008 when it flipped. **A build older than v111 can no longer read crosspoints or Captain's Log entries** written by this one (it skips the v3 fields: crosspoints read as empty, log entries as absent); parameters, presence and chat are unchanged. `?wire=v2` (or `localStorage['spog.wire']='v2'`) writes the old wire for this release; every build still decodes v2.
+
+### Changed
+- **v3 compact wire is the encoder default** (`platform/mqtt/wire.ts`): `?wire=v2` opts out; `?wire=compact` is accepted and means the default.
+
 ## [v111] — 2026-10-30
 
 Wire: v2 is the default on the bus; v3 (`?wire=compact`) is opt-in and every build from v111 decodes both. A build older than v111 reads v2 only.
