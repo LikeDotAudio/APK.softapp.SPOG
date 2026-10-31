@@ -1,6 +1,7 @@
 // src/editors/audio-monitor/painters — the loudness-history + Lissajous canvas
 // painters driven by the audio-monitor animation loop (view.ts).
 
+import { PAL } from '../../domain/palette.js';
 // Loudness-over-time plot, with the −23 LUFS broadcast target line.
 export function drawLoud(cv: HTMLCanvasElement, hist: number[]): void {
   const w = (cv.width = cv.clientWidth);
@@ -29,7 +30,7 @@ export function drawLoud(cv: HTMLCanvasElement, hist: number[]): void {
     const yy = y(v);
     i ? ctx.lineTo(x, yy) : ctx.moveTo(x, yy);
   });
-  ctx.strokeStyle = '#6FC8F0';
+  ctx.strokeStyle = PAL.sky69;
   ctx.lineWidth = 1.6;
   ctx.stroke();
 }

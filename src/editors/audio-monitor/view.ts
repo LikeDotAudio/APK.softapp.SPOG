@@ -19,7 +19,7 @@ export function buildOne(body: HTMLElement, sib: Sibling, dispose: Disposer, ser
   const chans = channelsFor(sib.sources, sib.config, 'CH', 8).slice(0, 24);
   const st: ChState[] = chans.map((c, i) => ({
     label: c.label,
-    color: c.color || '#39d353',
+    color: c.color,   // channelsFor() already defaults it
     level: 0.2,
     target: 0.35,
     peak: 0.2,

@@ -10,8 +10,8 @@ import { join, relative, resolve } from 'node:path';
 import { PAL } from './palette.js';
 
 const SRC = resolve(__dirname, '..');
-/** The literals still spelled outside the palette (the files ROAD-3448 had open during the sweep). */
-const CEILING = 140;
+/** The literals still spelled outside the palette: none since ROAD-3449's last sweep (audio-monitor, multi-viewer, faux-signal). */
+const CEILING = 0;
 // The same measure as ROAD-3449's proof: *.ts under src/, minus tests and vendored copies,
 // minus the palette itself and src/ui/clock-faces (its own repository, its own gate).
 const HEX = /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g;

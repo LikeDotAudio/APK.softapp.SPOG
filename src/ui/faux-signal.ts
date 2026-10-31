@@ -6,6 +6,7 @@
 import type { Feed } from '../domain/routing-core/index.js';
 import { drawTsg } from '../domain/tsg/index.js';
 import { paintTimerFeed } from './timer-feed.js';
+import { PAL } from '../domain/palette.js';
 
 // We only need identity + colour (+ optional room/media/fault) — accept a Feed or
 // any lightweight source-like object. `tsg` (a pattern id) makes this feed paint a
@@ -19,7 +20,7 @@ const mulberry32 = (a: number): (() => number) => () => { a = a + 0x6D2B79F5 | 0
 
 type RGB = [number, number, number];
 const hexToRgb = (hex: string): RGB => {
-  const h = (hex || '#888').replace('#', '');
+  const h = (hex || PAL.grey53).replace('#', '');
   const n = h.length === 3 ? h.split('').map((c) => c + c).join('') : h.padEnd(6, '8');
   const v = parseInt(n.slice(0, 6), 16); const w = Number.isNaN(v) ? 0x888888 : v;
   return [(w >> 16) & 255, (w >> 8) & 255, w & 255];
@@ -44,7 +45,7 @@ function room(g: CanvasRenderingContext2D, W: number, H: number, rng: () => numb
   g.beginPath(); g.moveTo(fx, fy); g.lineTo(fx + fw, fy + fh); g.moveTo(fx + fw, fy); g.lineTo(fx, fy + fh); g.stroke();
   if (rng() < 0.6) {   // a potted plant on the opposite side
     const px = fx < W * 0.4 ? W * 0.85 : W * 0.14, py = horizon;
-    g.fillStyle = '#7a4a2e'; g.fillRect(px - W * 0.03, py - H * 0.06, W * 0.06, H * 0.06);
+    g.fillStyle = PAL.orange33; g.fillRect(px - W * 0.03, py - H * 0.06, W * 0.06, H * 0.06);
     g.fillStyle = css(mix([46, 120, 64], accent, 0.15));
     g.beginPath(); g.ellipse(px, py - H * 0.09, W * 0.055, H * 0.07, 0, 0, 7); g.fill();
   }
@@ -80,7 +81,7 @@ function person(g: CanvasRenderingContext2D, W: number, H: number, rng: () => nu
   else { g.ellipse(cx, headY - headR * 0.55, headR * 0.9, headR * (style === 1 ? 0.55 : 0.4), 0, 0, Math.PI, true); g.fill(); }
   // eyes + brows + smile
   const ey = headY + headR * 0.05, ex = headR * 0.34;
-  g.fillStyle = '#20242e';
+  g.fillStyle = PAL.blue15s18;
   g.beginPath(); g.ellipse(cx - ex, ey, headR * 0.09, headR * 0.12, 0, 0, 7); g.ellipse(cx + ex, ey, headR * 0.09, headR * 0.12, 0, 0, 7); g.fill();
   g.strokeStyle = css(mix(hair, [0, 0, 0], 0.2)); g.lineWidth = Math.max(1, headR * 0.06); g.lineCap = 'round';
   g.beginPath(); g.moveTo(cx - ex * 1.4, ey - headR * 0.3); g.lineTo(cx - ex * 0.6, ey - headR * 0.36); g.moveTo(cx + ex * 0.6, ey - headR * 0.36); g.lineTo(cx + ex * 1.4, ey - headR * 0.3); g.stroke();
@@ -91,8 +92,8 @@ function person(g: CanvasRenderingContext2D, W: number, H: number, rng: () => nu
 // A desk microphone for AUDIO-medium feeds.
 function mic(g: CanvasRenderingContext2D, W: number, H: number): void {
   const mx = W * 0.5, my = H * 0.86;
-  g.fillStyle = '#141821'; g.fillRect(mx - W * 0.012, my, W * 0.024, H * 0.14);
-  g.fillStyle = '#2b3242'; g.beginPath(); g.ellipse(mx, my, W * 0.05, H * 0.075, 0, 0, 7); g.fill();
+  g.fillStyle = PAL.blue10s25; g.fillRect(mx - W * 0.012, my, W * 0.024, H * 0.14);
+  g.fillStyle = PAL.blue21s21; g.beginPath(); g.ellipse(mx, my, W * 0.05, H * 0.075, 0, 0, 7); g.fill();
   g.strokeStyle = 'rgba(180,200,230,.5)'; g.lineWidth = Math.max(1, W * 0.004);
   for (let i = -2; i <= 2; i++) { g.beginPath(); g.moveTo(mx + i * W * 0.014, my - H * 0.06); g.lineTo(mx + i * W * 0.014, my + H * 0.06); g.stroke(); }
 }
@@ -102,21 +103,21 @@ function lowerThird(g: CanvasRenderingContext2D, W: number, H: number, feed: Fau
   const label = (feed.label || feed.id || 'SOURCE').toUpperCase();
   const parts = (feed.origin || '').split(/[—–-]/).map((x) => x.trim()).filter(Boolean);
   const roomName = parts.length >= 2 ? parts[parts.length - 2]! : (parts[0] || '');
-  const bh = H * 0.17, by = H - bh, acc = hexToRgb(feed.color || '#64c8a0');
+  const bh = H * 0.17, by = H - bh, acc = hexToRgb(feed.color || PAL.teal59);
   g.fillStyle = 'rgba(6,12,22,0.68)'; g.fillRect(0, by, W, bh);
   g.fillStyle = css(acc); g.fillRect(0, by, W * 0.022, bh);
   g.textAlign = 'left'; g.textBaseline = 'alphabetic';
-  g.fillStyle = '#eaf4ff'; g.font = `700 ${Math.round(bh * 0.4)}px sans-serif`;
+  g.fillStyle = PAL.sky96_eaf4ff; g.font = `700 ${Math.round(bh * 0.4)}px sans-serif`;
   g.fillText(label, W * 0.055, by + bh * (roomName ? 0.45 : 0.62), W * 0.9);
-  if (roomName) { g.fillStyle = '#9fb6cc'; g.font = `${Math.round(bh * 0.28)}px sans-serif`; g.fillText(roomName, W * 0.055, by + bh * 0.82, W * 0.9); }
+  if (roomName) { g.fillStyle = PAL.sky71; g.font = `${Math.round(bh * 0.28)}px sans-serif`; g.fillText(roomName, W * 0.055, by + bh * 0.82, W * 0.9); }
 }
 
 // A "no signal" slate for faulted feeds (static + red bar).
 function faultSlate(g: CanvasRenderingContext2D, W: number, H: number, rng: () => number): void {
-  g.fillStyle = '#0a0a0a'; g.fillRect(0, 0, W, H);
+  g.fillStyle = PAL.grey04s0; g.fillRect(0, 0, W, H);
   for (let i = 0; i < (W * H) / 40; i++) { const v = Math.floor(rng() * 255); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(rng() * W, rng() * H, 2, 2); }
   const bh = H * 0.17; g.fillStyle = 'rgba(178,20,20,0.9)'; g.fillRect(0, H * 0.42, W, bh);
-  g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `700 ${Math.round(bh * 0.48)}px sans-serif`;
+  g.fillStyle = PAL.white; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `700 ${Math.round(bh * 0.48)}px sans-serif`;
   g.fillText('NO SIGNAL', W / 2, H * 0.42 + bh / 2);
 }
 
@@ -140,7 +141,7 @@ export function drawFauxSignal(canvas: HTMLCanvasElement, feed: FauxSource, t = 
   g.clearRect(0, 0, W, H);
   const rng = mulberry32(hashStr(`${feed.id || feed.label || 'src'}|${feed.color || ''}`));
   if (feed.faulted) { faultSlate(g, W, H, rng); return; }
-  room(g, W, H, rng, hexToRgb(feed.color || '#64c8a0'));
+  room(g, W, H, rng, hexToRgb(feed.color || PAL.teal59));
   person(g, W, H, rng, t);
   if (feed.media === 'audio') mic(g, W, H);
   lowerThird(g, W, H, feed);

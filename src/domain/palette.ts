@@ -131,6 +131,17 @@ const P = {
   violet93: '#f2d9ff', white: '#ffffff', yellow37: '#bfbf00', yellow38: '#8f8a35', yellow43: '#a89b35',
   yellow50: '#ffff00', yellow53: '#c2b74b', yellow53s57: '#ccbb44', yellow56: '#e6e23a', yellow60: '#f0e442',
   yellow60s77: '#e8d44a', yellow65: '#f1e05a', yellow75: '#ffff80', yellow97: '#ffffee',
+  blue03s53: '#04070d',
+  blue06s62: '#060d1a',
+  blue10s25: '#141821',
+  blue15s18: '#20242e',
+  blue16s35: '#1a2336',
+  blue21s21: '#2b3242',
+  blue28s30: '#33405e',
+  blue94s100: '#dfeaff',
+  orange30: '#7a3b1f',
+  orange33: '#7a4a2e',
+  red62_ff5a3b: '#ff5a3b',
 } as const;
 
 /** Typed as `#${string}` (not each literal) so a default parameter set from it stays any colour. */

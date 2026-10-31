@@ -5,6 +5,7 @@
 // AUDIO feeds collapse by origin into a single VU-bank pane each.
 
 import type { EditorContext } from '../types.js';
+import { PAL } from '../../domain/palette.js';
 
 /** One resolved pane spec: an UMD label + colour, and — for an audio group —
  *  the channel labels that feed its VU bank. */
@@ -44,6 +45,6 @@ export function channelsFor(ctx: EditorContext): ChannelSpec[] {
     return out;
   }
   const inputs = ctx.twist.config?.inputs;
-  if (inputs && inputs.length) return inputs.map((i) => ({ label: i, color: '#4d94ff' }));
-  return Array.from({ length: 9 }, (_, i) => ({ label: `MV ${i + 1}`, color: '#4d94ff' }));
+  if (inputs && inputs.length) return inputs.map((i) => ({ label: i, color: PAL.blue65 }));
+  return Array.from({ length: 9 }, (_, i) => ({ label: `MV ${i + 1}`, color: PAL.blue65 }));
 }

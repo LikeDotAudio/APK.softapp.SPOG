@@ -3,6 +3,7 @@
 
 import type { TwistConfig } from '../../model/index.js';
 import type { Feed } from '../../domain/routing-core/index.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Block format cycle shown on the per-group QUAD button. */
 export const FORMATS = ['QUAD', '2× STEREO', '3.1 GROUP', '4× MONO'] as const;
@@ -47,13 +48,13 @@ export function channelsFor(
   fallbackCount: number,
 ): Chan[] {
   if (sources.length) {
-    return sources.map((s) => ({ label: s.label, color: s.color || '#39d353' }));
+    return sources.map((s) => ({ label: s.label, color: s.color || PAL.green53 }));
   }
   if (config && Array.isArray(config.inputs) && config.inputs.length) {
-    return config.inputs.map((i) => ({ label: i, color: '#4d94ff' }));
+    return config.inputs.map((i) => ({ label: i, color: PAL.blue65 }));
   }
   return Array.from({ length: fallbackCount }, (_, i) => ({
     label: `${fallbackPrefix} ${i + 1}`,
-    color: '#4d94ff',
+    color: PAL.blue65,
   }));
 }
