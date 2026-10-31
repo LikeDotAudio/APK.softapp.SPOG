@@ -39,6 +39,7 @@ import { initMqttTree } from '../ui/console/mqtt-tree.js';
 import { onRoleChange } from '../platform/auth.js';
 import { showPeopleManager } from '../ui/console/people-manager.js';
 import { loadDiscovered, followDiscovered } from '../ui/console/discovered.js';
+import { initDiscoveredGui } from '../ui/console/discovered-gui.js';
 import { openEditorForTwist } from './editor-dispatch.js';
 import { initMergeObserver } from '../ui/merge/observer.js';
 import { initMergeBadge, describeEvent } from '../ui/merge/badge.js';
@@ -162,6 +163,7 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   // mirror the operator role; publish a final presence on unload.
   const bus = getBus();
   followDiscovered(bus);   // the engine's setups, live: devices come and go as it finds and loses them
+  initDiscoveredGui(bus);  // and each device's own GUI panel on its tab (System/Gui/Panels/+)
   initMqttTree(bus);   // bottom-right chip (above the clock) → live topic tree + broker config
   // Merge mediator surfaces: the contested toast + a highlighted Captain's Log entry
   // whenever a window held a real fight. (The ⚖ observer launcher is created above and

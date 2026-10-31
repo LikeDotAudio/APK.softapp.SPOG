@@ -13,6 +13,15 @@ import { renderPrograms } from './render-programs.js';
 // Re-export so existing importers of console/destinations keep resolving.
 export { renderPrograms } from './render-programs.js';
 
+/** Called after a destination pane is drawn, with its data — how a module adds
+ *  to panes it does not render (the discovered devices' GUI, discovered-gui.ts). */
+type AfterRender = (data: Production, pane: HTMLElement) => void;
+const afterRender = new Set<AfterRender>();
+export function onDestinationRendered(cb: AfterRender): () => void {
+  afterRender.add(cb);
+  return () => afterRender.delete(cb);
+}
+
 /** Populate a destination category folder: subfolders → nested footer groups, *.json → lazy tabs. */
 export async function addDestinationTree(
   baseUrl: string, parentGroup: GroupHandle | null, groupColorRgb: string, parentName: string | undefined, openEditor?: OpenEditor,
@@ -42,7 +51,9 @@ export async function addDestinationTree(
             if (category) data.category = category;
             data.color = color;
             const pane = document.getElementById('tab-' + id);
-            if (pane) renderPrograms(data, pane, openEditor, baseUrl + f.href);
+            if (!pane) return;
+            renderPrograms(data, pane, openEditor, baseUrl + f.href);
+            afterRender.forEach((cb) => { try { cb(data, pane); } catch (e) { console.warn('destination after-render:', e); } });
           });
         },
       });
