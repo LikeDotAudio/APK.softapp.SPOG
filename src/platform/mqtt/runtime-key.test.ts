@@ -6,7 +6,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { encodeAndEncrypt, decryptAndDecode, setBusKey, hasBusKey, busKeyString } from './crypto.js';
-import { resolveBrokerUrl, getBrokerSetting } from './config.js';
+import { resolveBrokerUrl, getBrokerSetting, isBenchHost } from './config.js';
 
 afterEach(() => { setBusKey(undefined); vi.unstubAllGlobals(); });
 
@@ -37,9 +37,23 @@ describe('bus key', () => {
 
 describe('default broker is local-first', () => {
   it('defaults to /mqtt on the page origin', () => {
-    vi.stubGlobal('location', { host: 'bench.local:8080', protocol: 'https:', search: '' });
+    vi.stubGlobal('location', { host: 'bench.local:8080', hostname: 'bench.local', protocol: 'https:', search: '' });
     expect(getBrokerSetting()).toBe('bench.local:8080/mqtt');
     expect(resolveBrokerUrl()).toBe('wss://bench.local:8080/mqtt');
+  });
+  it('has no broker at all on a public origin', () => {
+    vi.stubGlobal('location', { host: 'apk.audio', hostname: 'apk.audio', protocol: 'https:', search: '' });
+    expect(getBrokerSetting()).toBe('');
+    expect(resolveBrokerUrl()).toBeNull();
+  });
+  it('treats only bench addresses as bench hosts (apk-bus.js BENCH_HOST)', () => {
+    for (const h of ['localhost', '127.0.0.1', '10.1.2.3', '192.168.0.9', '172.16.0.1', '172.31.9.9', '[::1]', 'thin.local']) expect(isBenchHost(h)).toBe(true);
+    for (const h of ['apk.audio', 'spog.like.audio', '172.32.0.1', '8.8.8.8', 'test.mosquitto.org']) expect(isBenchHost(h)).toBe(false);
+  });
+  it('reads `same-origin` in the runtime config as /mqtt on this page', () => {
+    vi.stubGlobal('location', { host: 'apk.audio', hostname: 'apk.audio', protocol: 'https:', search: '' });
+    vi.stubGlobal('window', { SPOG_CONFIG: { broker: 'same-origin' } });
+    expect(resolveBrokerUrl()).toBe('wss://apk.audio/mqtt');
   });
   it('lets the deployment name its broker', () => {
     vi.stubGlobal('location', { host: 'spog.example', protocol: 'https:', search: '' });

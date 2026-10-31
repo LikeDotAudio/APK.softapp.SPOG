@@ -24,10 +24,19 @@ declare global {
   interface Window { mqtt?: MqttModule; OA_MQTT_DEBUG?: boolean; }
 }
 
-/** Load mqtt.js: use an already-present global, else inject the BUNDLED script. */
+/** The OS shell's mqtt.js when this page is a same-origin frame of it (the one
+ *  vendored copy WEB.Frontend-Assets serves) — so SPOG inside APK.audio loads no
+ *  second client. A cross-origin parent throws on access: no shell, use our own. */
+function shellMqtt(): MqttModule | undefined {
+  try { return window.parent !== window ? (window.parent as Window).mqtt : undefined; } catch { return undefined; }
+}
+
+/** Load mqtt.js: this page's global, else the framing shell's, else inject the BUNDLED
+ *  script (the standalone site, spog.like.audio, has no shell to borrow from). */
 export function loadMqtt(): Promise<MqttModule | null> {
   if (typeof window === 'undefined') return Promise.resolve(null);
-  if (window.mqtt) return Promise.resolve(window.mqtt);
+  const ready = window.mqtt ?? shellMqtt();
+  if (ready) return Promise.resolve(ready);
   return new Promise((resolve) => {
     const s = document.createElement('script');
     s.src = mqttJsUrl;   // self-hosted — no unpkg, no third-party single point of failure

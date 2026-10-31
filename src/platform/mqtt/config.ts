@@ -7,20 +7,31 @@
 import { runtimeConfig } from '../runtime-config.js';
 
 const DEFAULT_PORT = 8081;
-// Default host, LOCAL FIRST (the same policy as WEB.Frontend-Assets'
-// comMQTT/connectionPool.js): the deployment's own broker from spog-config.js
-// (`SPOG_CONFIG.broker`), else the broker behind the origin that served this page,
-// `/mqtt` on the page's own host and port (the APK.audio gateway proxies it).
-// No public broker is compiled in any more: `test.mosquitto.org` was the default
-// while SPOG was a sandbox, and anyone on it could read the bus. A site that still
-// wants the sandbox broker names it in its runtime config (SPOG_BROKER at deploy).
+// Default host — the same decision WEB.Frontend-Assets' shared bus helper makes
+// (SRC/FrontEnd/shared/apk-bus.js, and comMQTT/connectionPool.js before it):
+//   1. the deployment's own broker from spog-config.js (`SPOG_CONFIG.broker`;
+//      the word `same-origin` means `/mqtt` on this page's host and port);
+//   2. `/mqtt` on the page's own origin, ONLY when the host is a bench address
+//      (loopback, RFC 1918, `.local`) — the APK.audio gateway proxies it there;
+//   3. otherwise NO broker: on a public origin the bus is a no-op, by design.
+// No public broker is ever a default: the public sandbox broker was compiled in while
+// SPOG was a sandbox (owner flag of 2026-07-08), and anyone on it could read the
+// bus. A site that still wants the sandbox broker names it in SPOG_BROKER at deploy.
 // Override per-session with `?mqtt=<host[:port]>`, localStorage.twistMqtt, or the
 // connection form, as before.
+// Kept equal to apk-bus.js BENCH_HOST (runtime-key.test.ts pins the cases): SPOG ships
+// standalone to spog.like.audio too, where that helper is not served, so it cannot load it.
+const BENCH_HOST = /^(?:localhost|0\.0\.0\.0|127(?:\.\d{1,3}){3}|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|\[?::1\]?)$/;
+export const isBenchHost = (hostname: string): boolean => {
+  const h = String(hostname || '').toLowerCase();
+  return BENCH_HOST.test(h) || /\.local$/.test(h);
+};
 function defaultHost(): string {
-  const rc = runtimeConfig().broker;
-  if (rc) return rc;
   const host = typeof location !== 'undefined' ? location.host : '';
-  return host ? `${host}/mqtt` : '';
+  const rc = runtimeConfig().broker;
+  if (rc) return rc === 'same-origin' ? (host ? `${host}/mqtt` : '') : rc;
+  const hostname = typeof location !== 'undefined' ? (location.hostname ?? host.replace(/:\d+$/, '')) : '';
+  return host && isBenchHost(hostname) ? `${host}/mqtt` : '';
 }
 
 const LS_KEY = 'twistMqtt';

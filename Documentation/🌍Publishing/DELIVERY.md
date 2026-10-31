@@ -136,6 +136,23 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
   `ALL_FACES` / `FACE_API` instead of globbing `src/*.ts`; the submodule is the same repo the
   root mounts at `Softapps/TIME/TIME.clockFaces`, both checkouts on one commit
   (`npm run check:clock-faces`). Verified: `tsc`, vitest, clockFaces `npm test`.
+- **WB-02 / WS-05 Broker and mqtt.js by the shell's rules** (from the SDK/contracts audit) —
+  `config.ts` now makes `apk-bus.js`'s decision: the deployment's broker (`SPOG_CONFIG.broker`,
+  `same-origin` = `/mqtt` here), else `/mqtt` on the page's origin only when the host is a bench
+  address (`isBenchHost`, the same `BENCH_HOST` set, pinned by `runtime-key.test.ts`), else no
+  broker — on a public origin the bus is a no-op. No public broker is a default anywhere.
+  `mqtt-load.ts` reuses the framing shell's `window.mqtt` (the one vendored copy WEB.Frontend-Assets
+  serves) before loading its own. Verify grep (`:9001|test\.mosquitto|from 'mqtt'|vendor/mqtt.min.js`
+  over `src/`) is empty. Kept by design: the npm `mqtt` dependency stays, as the bundled fallback
+  for spog.like.audio, a standalone static site where neither the shell nor
+  `/FrontEnd/shared/apk-bus.js` is served (written down in PRINCIPLES.md); there is no vendored copy
+  in this repo. Verified: vitest 34 files / 191 tests, `tsc`.
+- **WB-01 Stack shape** (from the SDK/contracts audit) — `Docker/` now exists (`dist.Dockerfile`,
+  the build stage WEB.Frontend-Assets consumes). Kept by design: the app stays at the repo root,
+  not under `SRC/` — SPOG is a static build input deployed on its own to spog.like.audio by its own
+  GitHub workflows, not a container stack (it has no compose file and runs no service); moving it
+  would break its CI paths and its consumers for no runtime gain. The root's WB-01 loop should
+  treat a `Docker/` with no `docker-compose.yml` as a build input (handoff filed).
 - **Kept by design: audit files stay local** — `.gitignore` excludes `Documentation/🔍Audits/*`
   except `INDEX.md` (`78d6f0c`); the audit page is edited in the working copy only.
 - **Kept by design: `stripOrder`/`slug` re-implemented in `platform/mqtt/topics.ts`** — the layering

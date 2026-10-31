@@ -53,13 +53,15 @@ click twist → app/editor-dispatch.ts → editors/registry.ts match → app/con
   `SPOG/devices/<id>/…` (`platform/device/receiver.ts`); payloads are AES-GCM-encrypted protobuf
   (`schema.proto`, `wire.ts`, `crypto.ts`) when the console has a bus key, plain JSON when it has
   none or the broker config says plaintext; per-topic trailing throttle (`throttle.ts`);
-  Captain's Log bridge (`log-bridge.ts`). mqtt.js is the npm `mqtt` package, emitted as an asset
-  and injected on demand (`mqtt-load.ts`).
+  Captain's Log bridge (`log-bridge.ts`). mqtt.js is the framing shell's `window.mqtt` when
+  there is one, else the npm `mqtt` package emitted as an asset and injected on demand
+  (`mqtt-load.ts`).
 - **Runtime config** (`src/platform/runtime-config.ts`, `public/spog-config.js`): the bundle
   carries no broker and no key. A deployment serves `spog-config.js` beside the entry
   (`window.SPOG_CONFIG = { broker, busKey }`; `SETUP/deploy.py` writes it from `SPOG_BROKER` /
-  `SPOG_BUS_KEY`). Broker order: `?mqtt=`, `localStorage.twistMqtt`, `SPOG_CONFIG.broker`, then
-  `/mqtt` on the page's own origin (local-first, as WEB.Frontend-Assets' `connectionPool.js`).
+  `SPOG_BUS_KEY`). Broker order: `?mqtt=`, `localStorage.twistMqtt`, `SPOG_CONFIG.broker`
+  (`same-origin` = `/mqtt` here), then `/mqtt` on the page's own origin when it is a bench address,
+  else none (the rule of WEB.Frontend-Assets' `shared/apk-bus.js`).
   Key order: `SPOG_CONFIG.busKey`, then `localStorage.twistBusKey`.
 - **Merge** (`src/platform/merge/`): concurrent writes to a param are bucketed per window and
   resolved by `resolveWindow()` (higher seat rank, then `full_id`).
