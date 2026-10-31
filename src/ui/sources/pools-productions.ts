@@ -4,6 +4,7 @@ import { addStyles } from '../dom.js';
 import type { SourceLeaf, ProductionBox } from '../../model/index.js';
 import { slugId } from './format.js';
 import { wireFold } from './pools-fold.js';
+import { PAL } from '../../domain/palette.js';
 
 // ---- PRODUCTIONS-as-source pool (port of renderProductionInputs) ------------
 const DEFAULT_OUTPUTS: { video: string[]; audio: string[]; intercom: string[]; control: string[] } = {
@@ -23,7 +24,7 @@ const PROD_SRC_CAT_CSS = `
 .prod-src-cat:first-child{margin-top:2px;}`;
 
 export function renderProductionInputs(data: SourceLeaf, container: HTMLElement): void {
-  const color = data.color || '#7CFC00';
+  const color = data.color || PAL.green49s100;
   const outs = data.outputs || {};
   const group = document.createElement('div');
   group.className = 'input-group';

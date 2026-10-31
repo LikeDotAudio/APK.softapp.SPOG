@@ -4,10 +4,11 @@ import { listDirectory, fetchJSON } from '../../platform/discovery.js';
 import { isFaultStatus } from '../../domain/routing-core/index.js';
 import type { Production, SourceLeaf } from '../../model/index.js';
 import { monoEmoji, faultTag, slugId } from '../sources/format.js';
+import { PAL } from '../../domain/palette.js';
 
 export async function initSickBay(): Promise<void> {
   const groupColor = '255,51,51'; // RED ALERT color
-  const hexColor = '#ff3333';
+  const hexColor = PAL.red60_ff3333;
   const group = Footer.addGroup('SICK BAY', { color: groupColor, collapsed: true });
   if (!group) return;
 
@@ -18,8 +19,8 @@ export async function initSickBay(): Promise<void> {
     style.id = 'sickbay-pulse-styles';
     style.textContent = `
       @keyframes sickbay-pulse {
-        0% { box-shadow: 0 0 5px rgba(255,51,51,0.4); background-color: rgb(255,51,51); color: #000; }
-        100% { box-shadow: 0 0 20px rgba(255,51,51,1); background-color: rgb(255,0,0); color: #fff; }
+        0% { box-shadow: 0 0 5px rgba(255,51,51,0.4); background-color: rgb(255,51,51); color: ${PAL.black}; }
+        100% { box-shadow: 0 0 20px rgba(255,51,51,1); background-color: rgb(255,0,0); color: ${PAL.white}; }
       }
     `;
     document.head.appendChild(style);
@@ -69,7 +70,7 @@ export async function initSickBay(): Promise<void> {
 
       if (faults.length === 0) {
         pane.innerHTML = `
-          <div style="padding: 24px; color: #888;">
+          <div style="padding: 24px; color: ${PAL.grey53};">
             <h2 style="color: ${hexColor}; margin-top: 0; display: flex; align-items: center; gap: 8px;">
               <span style="font-size: 1.5em;">⚕</span> SICK BAY
             </h2>
@@ -96,13 +97,13 @@ export async function initSickBay(): Promise<void> {
                     <span>${monoEmoji(f.name)}${f.name}</span>
                     ${faultTag(f.status)}
                   </div>
-                  <div style="color: #ccc; font-size: 0.9em; text-transform: uppercase;">${f.type}</div>
-                  <div style="color: #999; font-size: 0.8em; word-break: break-all;">${f.path}</div>
-                  <div style="background: #000; border: 2px solid #555; border-radius: 6px; padding: 12px; text-align: center; margin-top: 8px;">
+                  <div style="color: ${PAL.grey80}; font-size: 0.9em; text-transform: uppercase;">${f.type}</div>
+                  <div style="color: ${PAL.grey60s0}; font-size: 0.8em; word-break: break-all;">${f.path}</div>
+                  <div style="background: ${PAL.black}; border: 2px solid ${PAL.grey33}; border-radius: 6px; padding: 12px; text-align: center; margin-top: 8px;">
                     <div style="color: ${hexColor}; font-family: monospace; font-size: 1.2em; font-weight: bold; letter-spacing: 2px;">
                       ${f.status}
                     </div>
-                    <div style="color: #aaa; font-family: monospace; font-size: 0.85em; margin-top: 4px;">
+                    <div style="color: ${PAL.grey67}; font-family: monospace; font-size: 0.85em; margin-top: 4px;">
                       ${tipString || 'NO SIGNAL DATA'}
                     </div>
                   </div>

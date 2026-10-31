@@ -5,6 +5,7 @@
 import { el } from '../dom.js';
 import { commit } from './authoring-commit.js';
 import type { Production, TwistConfig, Accepts } from '../../model/index.js';
+import { PAL } from '../../domain/palette.js';
 
 // ---- the grab-bag: the editor roster as container factories (audit §3A) ------
 // Each tool emits a TwistConfig whose `name` an editor's match() will claim, so a
@@ -79,7 +80,7 @@ const numOrUndef = (s: string): number | undefined => { const n = parseInt(s, 10
 export function editRoom(pgm: Production, url: string, rerender: () => void): void {
   openForm('Edit Room / Production', [
     { key: 'name', label: 'Name', kind: 'text', value: pgm.name ?? '' },
-    { key: 'color', label: 'Colour', kind: 'color', value: pgm.color ?? '#ffaa00' },
+    { key: 'color', label: 'Colour', kind: 'color', value: pgm.color ?? PAL.amber50s100 },
     { key: 'status', label: 'Status', kind: 'select', value: pgm.status ?? 'OK', options: ['OK', 'FAULT', 'OFFLINE', 'STANDBY'] },
   ], (v) => {
     commit(pgm, url, rerender, () => `room set to "${pgm.name}" · ${pgm.status}`, () => {

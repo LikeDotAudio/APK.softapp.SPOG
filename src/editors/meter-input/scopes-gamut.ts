@@ -3,6 +3,7 @@
 // lightness/saturation triangle and the vectorscope — all plot the flat `pts`
 // scatter (not the per-column histograms). Re-exported through live-input.ts.
 import { ctx2d, fade, applyView, resetView, IDENTITY_VIEW, type View } from './scopes-video.js';
+import { PAL } from '../../domain/palette.js';
 
 // CIE 1931 xy chromaticity gamut. Each sampled pixel's RGB is linearised (sRGB
 // decode), converted to XYZ (sRGB/D65 matrix), normalised to xy, and plotted
@@ -32,7 +33,7 @@ export function drawCIE(cv: HTMLCanvasElement, pts: number[], view: View = IDENT
   c.closePath(); c.stroke();   // closePath = the "line of purples"
   c.strokeStyle = 'rgba(180,180,190,.4)'; c.beginPath();
   c.moveTo(px(REC709.r[0]), py(REC709.r[1])); c.lineTo(px(REC709.g[0]), py(REC709.g[1])); c.lineTo(px(REC709.b[0]), py(REC709.b[1])); c.closePath(); c.stroke();
-  c.fillStyle = '#fff'; c.beginPath(); c.arc(px(REC709.w[0]), py(REC709.w[1]), 2, 0, 7); c.fill();
+  c.fillStyle = PAL.white; c.beginPath(); c.arc(px(REC709.w[0]), py(REC709.w[1]), 2, 0, 7); c.fill();
   c.globalCompositeOperation = 'lighter';
   for (let i = 0; i < pts.length; i += 5) {
     const R = pts[i + 2] ?? 0, G = pts[i + 3] ?? 0, B = pts[i + 4] ?? 0;
@@ -108,9 +109,9 @@ export function drawVectorReal(cv: HTMLCanvasElement, pts: number[], view: View 
   const c = ctx2d(cv); if (!c) return; const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2, R = Math.min(W, H) / 2 - 6;
   if (R < 4) return;   // hidden / collapsed card
   resetView(c); fade(c, W, H, 0.18); applyView(c, view);
-  c.strokeStyle = '#0e2436'; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.stroke();
+  c.strokeStyle = PAL.sky13; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.stroke();
   c.beginPath(); c.moveTo(cx - R, cy); c.lineTo(cx + R, cy); c.moveTo(cx, cy - R); c.lineTo(cx, cy + R); c.stroke();
-  c.strokeStyle = '#24401f'; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + R * Math.cos(-2.15), cy + R * Math.sin(-2.15)); c.stroke();
+  c.strokeStyle = PAL.green19; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + R * Math.cos(-2.15), cy + R * Math.sin(-2.15)); c.stroke();
   const sc = R / 140;
   c.globalCompositeOperation = 'lighter';
   for (let i = 0; i < pts.length; i += 5) {

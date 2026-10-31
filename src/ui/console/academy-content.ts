@@ -3,6 +3,8 @@
 // STEPS, the marker ANCHORS, the ACADEMY_CSS stylesheet and the legacy STORE_KEY.
 
 // Legacy key, kept verbatim for continuity across the JS→TS cutover.
+import { PAL } from '../../domain/palette.js';
+
 export const STORE_KEY = 'twist-tutorial-dismissed';
 
 export const STEPS: Array<{ title: string; body: string }> = [
@@ -26,45 +28,45 @@ export const ACADEMY_CSS = `
    on the region it teaches (anchors resolved from the DOM, so they follow chirality). */
 .tut-marks{position:absolute;inset:0;pointer-events:none;}
 .tut-mark{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;
-  border-radius:14px 5px 14px 5px;background:var(--tut-color,#FF9C63);color:#000;
+  border-radius:14px 5px 14px 5px;background:var(--tut-color,${PAL.orange69});color:${PAL.black};
   font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;
   box-shadow:0 0 0 3px rgba(0,0,0,.55),0 0 24px rgba(255,156,99,.75);transition:scale .15s;}
 .tut-mark.hot{scale:1.25;}
 .tut-mark::after{content:'';position:absolute;inset:-8px;border-radius:inherit;
-  border:2px solid var(--tut-color,#FF9C63);animation:tut-pulse 1.6s infinite;}
+  border:2px solid var(--tut-color,${PAL.orange69});animation:tut-pulse 1.6s infinite;}
 @keyframes tut-pulse{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.4);opacity:0}}
-.tut-card{width:min(620px,92vw);max-height:88vh;overflow:auto;background:#070c18;
-  border:2px solid #2c3a5a;border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.6);}
-.tut-head{display:flex;align-items:stretch;height:46px;background:var(--tut-color,#FF9C63);
+.tut-card{width:min(620px,92vw);max-height:88vh;overflow:auto;background:${PAL.blue06};
+  border:2px solid ${PAL.blue26};border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.6);}
+.tut-head{display:flex;align-items:stretch;height:46px;background:var(--tut-color,${PAL.orange69});
   border-radius:16px 16px 0 0;overflow:hidden;}
-.tut-title{flex:1;display:flex;align-items:center;padding-left:78px;color:#000;font-weight:900;
+.tut-title{flex:1;display:flex;align-items:center;padding-left:78px;color:${PAL.black};font-weight:900;
   letter-spacing:3px;font-size:15px;text-transform:uppercase;}
 .tut-x{flex:0 0 auto;width:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;
-  color:#000;font-size:26px;font-weight:bold;box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
+  color:${PAL.black};font-size:26px;font-weight:bold;box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
 .tut-x:hover{background:rgba(0,0,0,.18);}
 .tut-body{padding:18px 22px 8px;}
-.tut-step{display:flex;gap:16px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #16223c;}
+.tut-step{display:flex;gap:16px;align-items:flex-start;padding:11px 0;border-bottom:1px solid ${PAL.blue16};}
 .tut-step:last-child{border-bottom:none;}
 .tut-num{flex:0 0 auto;width:40px;height:40px;border-radius:12px 4px 12px 4px;
-  background:var(--tut-color,#FF9C63);color:#000;font-weight:900;font-size:18px;
+  background:var(--tut-color,${PAL.orange69});color:${PAL.black};font-weight:900;font-size:18px;
   display:flex;align-items:center;justify-content:center;}
-.tut-text h4{margin:2px 0 3px;color:#e0f0ff;font-size:14px;letter-spacing:1px;}
-.tut-text p{margin:0;color:#9fb6cc;font-size:13px;line-height:1.45;}
+.tut-text h4{margin:2px 0 3px;color:${PAL.sky94};font-size:14px;letter-spacing:1px;}
+.tut-text p{margin:0;color:${PAL.sky71};font-size:13px;line-height:1.45;}
 .tut-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;
   padding:12px 22px 20px;flex-wrap:wrap;}
-.tut-again{display:flex;align-items:center;gap:8px;color:#7e93b5;font-size:12px;cursor:pointer;user-select:none;}
-.tut-again input{width:16px;height:16px;accent-color:var(--tut-color,#FF9C63);cursor:pointer;}
-.tut-go{border:none;border-radius:18px;background:var(--tut-color,#FF9C63);color:#000;
+.tut-again{display:flex;align-items:center;gap:8px;color:${PAL.blue60s27};font-size:12px;cursor:pointer;user-select:none;}
+.tut-again input{width:16px;height:16px;accent-color:var(--tut-color,${PAL.orange69});cursor:pointer;}
+.tut-go{border:none;border-radius:18px;background:var(--tut-color,${PAL.orange69});color:${PAL.black};
   font-weight:900;letter-spacing:2px;font-size:13px;padding:12px 30px;cursor:pointer;}
 .tut-go:hover{filter:brightness(1.1);}
-.tut-new{margin:0 22px 10px;padding:9px 12px;border-radius:10px;background:#0d1322;
-  color:#9fb6cc;font-size:11px;line-height:1.5;}
-.tut-new b{color:var(--tut-color,#FF9C63);letter-spacing:1px;}
+.tut-new{margin:0 22px 10px;padding:9px 12px;border-radius:10px;background:${PAL.blue09s45};
+  color:${PAL.sky71};font-size:11px;line-height:1.5;}
+.tut-new b{color:var(--tut-color,${PAL.orange69});letter-spacing:1px;}
 /* ACADEMY button: static pill — rides the credit-row or the seat menu. */
 .credit-row .tut-help,.um-panel .tut-help{position:static;border:none;border-radius:18px 6px 6px 18px;
-  background:var(--tut-color,#FF9C63);color:#000;font-weight:900;letter-spacing:2px;
+  background:var(--tut-color,${PAL.orange69});color:${PAL.black};font-weight:900;letter-spacing:2px;
   font-size:11px;text-transform:uppercase;padding:6px 14px 6px 12px;cursor:pointer;
-  box-shadow:inset 4px 0 0 #c97a16;white-space:nowrap;}
+  box-shadow:inset 4px 0 0 ${PAL.orange44};white-space:nowrap;}
 .tut-help:hover{filter:brightness(1.1);}
 `;
 

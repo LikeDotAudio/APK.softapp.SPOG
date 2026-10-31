@@ -6,6 +6,7 @@
 import { el, ctx2d } from '../../ui/dom.js';
 import { drawSegString } from '../../ui/seven-seg.js';
 import type { TimerEngine, ChanId, GpiWhen } from './engine.js';
+import { PAL } from '../../domain/palette.js';
 
 const W = 470, H = 96;
 
@@ -82,7 +83,7 @@ export function buildPanel(engine: TimerEngine, id: ChanId, dpr: number): TimerP
     const rem = engine.secondsRemaining(id);
     const on = Math.floor(performance.now() / 350) % 2 === 0;
     const sep: boolean[] = [rem <= 10 ? on : true, rem <= 5 ? on : true];
-    if (g) drawSegString(g, W, H, engine.displayString(id), 'seg', 'red', '#000', sep);
+    if (g) drawSegString(g, W, H, engine.displayString(id), 'seg', 'red', PAL.black, sep);
     cvs.style.opacity = String(0.42 + (S.brightness / 14) * 0.58);
     dir.textContent = c.direction === 'up' ? '▲ UP' : '▼ DN';
     run.textContent = c.running ? '▶' : '‖'; run.classList.toggle('hot', c.running);

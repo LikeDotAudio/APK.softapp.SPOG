@@ -1,3 +1,5 @@
+import { PAL } from '../../domain/palette.js';
+
 export class PrompterEngine {
   public speed = 40;
   public size = 34;
@@ -7,8 +9,8 @@ export class PrompterEngine {
   public uppercase = true;
   public stripCues = false;
   public lineHeight = 1.6;
-  public textColor = '#ffffff';
-  public bgColor = '#000000';
+  public textColor: string = PAL.white;
+  public bgColor: string = PAL.black;
   public showLineNumbers = false;
 
   public y = 300;

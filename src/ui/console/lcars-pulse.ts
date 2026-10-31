@@ -7,6 +7,7 @@
 // persisted in prefs.ui.heartbeat.
 import { addStyles } from '../dom.js';
 import { getPrefs, patchPrefs } from '../../platform/prefs.js';
+import { PAL } from '../../domain/palette.js';
 
 const WIDTH = 20;
 
@@ -18,16 +19,16 @@ let onResize: (() => void) | undefined;
 export function isLcarsPulseOn(): boolean { return getPrefs().ui.heartbeat === true; }
 
 const PULSE_CSS = `
-.lcp-strip{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:${WIDTH}px;z-index:950;background:#050505;display:flex;flex-direction:column;overflow:hidden;pointer-events:none;}
-.lcp-cap{flex:0 0 auto;height:26px;background:#c1502a;}
+.lcp-strip{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:${WIDTH}px;z-index:950;background:${PAL.grey02};display:flex;flex-direction:column;overflow:hidden;pointer-events:none;}
+.lcp-cap{flex:0 0 auto;height:26px;background:${PAL.orange46s64};}
 .lcp-cap.top{border-radius:0 0 0 11px;}
 .lcp-cap.bot{border-radius:11px 0 0 0;}
 .lcp-lines{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:space-between;padding:5px 0;overflow:hidden;}
-.lcp-line{height:2px;border-radius:1px;background:#2c2c2c;transition:background .15s,box-shadow .15s;}
-.lcp-line.dim{background:#1c1c1c;}
-.lcp-line.mid{background:#3a3a3a;}
-.lcp-line.blue{background:#3aa0ff;box-shadow:0 0 5px rgba(58,160,255,.8);}
-.lcp-line.red{background:#ff5a3c;box-shadow:0 0 5px rgba(255,90,60,.7);}
+.lcp-line{height:2px;border-radius:1px;background:${PAL.grey17};transition:background .15s,box-shadow .15s;}
+.lcp-line.dim{background:${PAL.grey11};}
+.lcp-line.mid{background:${PAL.grey23};}
+.lcp-line.blue{background:${PAL.sky61s100};box-shadow:0 0 5px rgba(58,160,255,.8);}
+.lcp-line.red{background:${PAL.red62s100};box-shadow:0 0 5px rgba(255,90,60,.7);}
 .lcp-lines::after{content:'';position:absolute;left:0;right:0;top:0;height:42%;pointer-events:none;background:linear-gradient(to bottom,transparent,rgba(90,190,255,.30),rgba(160,220,255,.10),transparent);animation:lcpPulse 2.6s linear infinite;}
 @keyframes lcpPulse{0%{transform:translateY(140%);}100%{transform:translateY(-160%);}}
 .credit-button{right:${WIDTH + 14}px !important;}

@@ -1,7 +1,8 @@
 // EBU Tech 3219 colour bars — seven 75%-amplitude vertical bars.
 import type { TsgPattern } from '../types.js';
+import { PAL } from '../../palette.js';
 
-const BARS = ['#FFFFFF', '#BFBF00', '#00BFBF', '#00BF00', '#BF00BF', '#BF0000', '#0000BF'];
+const BARS = [PAL.white, PAL.yellow37, PAL.cyan37, PAL.green37, PAL.purple37, PAL.red37, PAL.blue37];
 
 const pattern: TsgPattern = {
   id: 'ebubars', label: 'EBU BARS', name: 'EBU Colour Bars', group: 'SDR', order: 2,

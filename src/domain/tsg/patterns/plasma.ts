@@ -1,13 +1,14 @@
 // Dynamic noise / plasma — three drifting radial washes to exercise adjacent
 // pixels (motion smear + OLED image-retention mitigation). `t` drives the drift.
 import type { TsgPattern } from '../types.js';
+import { PAL } from '../../palette.js';
 
 const pattern: TsgPattern = {
   id: 'plasma', label: 'PLASMA (BURN-IN)', name: 'Plasma / Burn-in', group: 'SDR', order: 10,
   title: 'Dynamic Noise Pattern: Exercises adjacent pixels to test motion smearing and helps mitigate temporary image retention (burn-in) on OLED panels.',
   href: 'https://en.wikipedia.org/wiki/Image_persistence',
   draw(g, W, H, t) {
-    g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+    g.fillStyle = PAL.black; g.fillRect(0, 0, W, H);
     const s = t / 2600;
     const blobs: Array<[number, number, string]> = [
       [0.2 + 0.15 * Math.sin(s), 0.3 + 0.15 * Math.cos(s * 1.3), 'rgba(255,0,0,0.8)'],

@@ -15,6 +15,7 @@ import { reentryOf, srcLabel, KEYER_TYPES } from './me.js';
 import { TIPS } from './tips.js';
 import { gfxName } from './gfx-route.js';
 import type { Surface } from './surface.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Build the keyer-row rebuilder over the shared surface. */
 export function createKeyers(s: Surface, keyerRow: HTMLElement): () => void {
@@ -28,7 +29,7 @@ export function createKeyers(s: Surface, keyerRow: HTMLElement): () => void {
         `USK ${ki + 1} · ${k.type.toUpperCase()}${gfx ? ` · ⬡ ${gfx}` : ''}`,
       ]);
 
-      const paramRow = el('div', { class: 'vm-drawer', style: 'position: absolute; top: 100%; left: 0; z-index: 50; width: max-content; margin-top: 5px; flex-direction: column; align-items: stretch; gap: 4px; background: #17233c; padding: 6px; border-radius: 8px;' });
+      const paramRow = el('div', { class: 'vm-drawer', style: `position: absolute; top: 100%; left: 0; z-index: 50; width: max-content; margin-top: 5px; flex-direction: column; align-items: stretch; gap: 4px; background: ${PAL.blue16s45}; padding: 6px; border-radius: 8px;` });
       paramRow.style.display = (s.activeKeyerParam === ki) ? 'flex' : 'none';
 
       const typeSel = el('select', { class: 'vm-sel' }) as HTMLSelectElement;

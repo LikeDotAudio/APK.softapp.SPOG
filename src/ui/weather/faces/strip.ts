@@ -16,40 +16,41 @@ import {
   fetchForecast, dayparts, decode, toDisplay, round,
   timeInZone, dateInZone, weekdayOf,
 } from '../data.js';
+import { PAL } from '../../../domain/palette.js';
 
 const STRIP_CSS = `
 .wx-strip{position:relative;display:flex;gap:2px;width:100%;min-height:230px;max-height:56vh;
-  border-radius:14px;overflow:hidden;border:1px solid #1d3a52;
-  background:linear-gradient(160deg,#0a1a2b 0%,#06101b 60%,#050a12 100%);color:#eaf4ff;}
+  border-radius:14px;overflow:hidden;border:1px solid ${PAL.sky22};
+  background:linear-gradient(160deg,${PAL.sky10s62} 0%,${PAL.sky06} 60%,${PAL.blue05s57} 100%);color:${PAL.sky96_eaf4ff};}
 .wx-p{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:7px;padding:16px 10px;text-align:center;min-width:0;}
-.wx-p + .wx-p,.wx-out{border-left:1px solid #12263a;}
-.wx-p-lab{font:800 10px 'Courier New',monospace;letter-spacing:2px;color:#4EC0FF;text-transform:uppercase;}
-.wx-p-sub{font:700 9px 'Courier New',monospace;letter-spacing:1.5px;color:#7ea6c8;text-transform:uppercase;}
-.wx-p-temp{font:200 40px/0.9 'Helvetica Neue',Arial,sans-serif;letter-spacing:-1px;color:#fff;}
-.wx-p-cond{font:800 10px 'Courier New',monospace;letter-spacing:1px;color:#cfe6fb;text-transform:uppercase;}
-.wx-glyph{color:#dfe8f5;}
+.wx-p + .wx-p,.wx-out{border-left:1px solid ${PAL.sky15_12263a};}
+.wx-p-lab{font:800 10px 'Courier New',monospace;letter-spacing:2px;color:${PAL.sky65};text-transform:uppercase;}
+.wx-p-sub{font:700 9px 'Courier New',monospace;letter-spacing:1.5px;color:${PAL.sky64};text-transform:uppercase;}
+.wx-p-temp{font:200 40px/0.9 'Helvetica Neue',Arial,sans-serif;letter-spacing:-1px;color:${PAL.white};}
+.wx-p-cond{font:800 10px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky90};text-transform:uppercase;}
+.wx-glyph{color:${PAL.blue92};}
 /* anchor "right now" panel — the big one on the far left */
 .wx-p-now{flex:1.8;align-items:flex-start;justify-content:space-between;
   background:linear-gradient(160deg,rgba(78,192,255,.10),transparent);}
 .wx-p-city{font:800 16px 'Courier New',monospace;letter-spacing:2px;text-transform:uppercase;}
-.wx-p-sub2{font:700 9px 'Courier New',monospace;letter-spacing:1.5px;color:#7ea6c8;text-transform:uppercase;margin-top:2px;}
+.wx-p-sub2{font:700 9px 'Courier New',monospace;letter-spacing:1.5px;color:${PAL.sky64};text-transform:uppercase;margin-top:2px;}
 .wx-p-row{display:flex;align-items:center;gap:14px;}
 .wx-p-now .wx-p-temp{font-size:74px;}
-.wx-p-now .wx-glyph{color:#fff;filter:drop-shadow(0 3px 8px rgba(0,0,0,.5));}
-.wx-p-time{font:800 11px 'Courier New',monospace;letter-spacing:1px;color:#4EC0FF;}
+.wx-p-now .wx-glyph{color:${PAL.white};filter:drop-shadow(0 3px 8px rgba(0,0,0,.5));}
+.wx-p-time{font:800 11px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky65};}
 /* 3-day outlook cluster on the far right */
 .wx-out{flex:1.4;display:flex;align-items:stretch;padding:12px 9px;gap:6px;}
 .wx-out-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-  background:#07131f;border:1px solid #12263a;border-radius:9px;padding:9px 4px;min-width:0;}
-.wx-out-d{font:800 10px 'Courier New',monospace;letter-spacing:1px;color:#cfe6fb;}
-.wx-out-t{font:800 11px 'Courier New',monospace;color:#eaf4ff;white-space:nowrap;}
-.wx-out-t .lo{color:#6f92b0;}
-.wx-strip-msg{margin:auto;padding:34px;font:700 12px 'Courier New',monospace;letter-spacing:1px;color:#7ea6c8;}
-.wx-strip-msg.err{color:#ff9db0;}
+  background:${PAL.sky07s63};border:1px solid ${PAL.sky15_12263a};border-radius:9px;padding:9px 4px;min-width:0;}
+.wx-out-d{font:800 10px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky90};}
+.wx-out-t{font:800 11px 'Courier New',monospace;color:${PAL.sky96_eaf4ff};white-space:nowrap;}
+.wx-out-t .lo{color:${PAL.sky56s29};}
+.wx-strip-msg{margin:auto;padding:34px;font:700 12px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky64};}
+.wx-strip-msg.err{color:${PAL.red81};}
 /* severe-weather banner (WMO 95/96/99) — glyph+text, never colour alone */
-.wx-strip.severe{outline:2px solid #ff5a6e;outline-offset:-2px;}
-.wx-strip-banner{position:absolute;left:0;right:0;bottom:0;background:#c8283c;color:#fff;padding:5px;
+.wx-strip.severe{outline:2px solid ${PAL.red68_ff5a6e};outline-offset:-2px;}
+.wx-strip-banner{position:absolute;left:0;right:0;bottom:0;background:${PAL.red47};color:${PAL.white};padding:5px;
   font:800 10px 'Courier New',monospace;letter-spacing:2px;text-transform:uppercase;text-align:center;}
 `;
 

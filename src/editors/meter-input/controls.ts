@@ -10,6 +10,7 @@ import type { Disposer } from '../../ui/timers.js';
 import { buildTsgGallery } from '../../ui/tsg-gallery.js';
 import { findPattern, type TsgPattern } from '../../domain/tsg/index.js';
 import type { Feed } from '../../domain/routing-core/index.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface SensRef { v: number; }
 export type SetStat = (t: string, warn?: boolean) => void;
@@ -28,12 +29,12 @@ export interface ControlDeps {
 
 const TSG_POP_CSS = `
 .mi-tsgpop{position:absolute;z-index:60;left:8px;top:96px;right:8px;max-height:62%;
-  overflow:auto;padding:12px;background:rgba(6,11,20,.97);border:1px solid #2c4a6e;
+  overflow:auto;padding:12px;background:rgba(6,11,20,.97);border:1px solid ${PAL.sky30};
   border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.6);display:none;}
 .mi-tsgpop.open{display:block;}
 .mi-tsgpop-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.mi-tsgpop-h b{font:700 12px/1 var(--lcars-font,'Antonio',sans-serif);letter-spacing:2px;color:#8fa9c8;}
-.mi-tsgpop-x{cursor:pointer;color:#9fb6cc;font:700 16px/1 sans-serif;padding:0 6px;}`;
+.mi-tsgpop-h b{font:700 12px/1 var(--lcars-font,'Antonio',sans-serif);letter-spacing:2px;color:${PAL.sky67};}
+.mi-tsgpop-x{cursor:pointer;color:${PAL.sky71};font:700 16px/1 sans-serif;padding:0 6px;}`;
 
 // Wire every control-bar interaction and return `setStat` so the render loop can
 // still surface source-status messages (e.g. a tainted cross-origin warning).
@@ -66,7 +67,7 @@ export function wireControls(deps: ControlDeps): SetStat {
   });
   host.append(layoutPop);
 
-  const setStat: SetStat = (t, warn = false) => { stat.textContent = t; stat.style.color = warn ? '#ff6a6a' : '#e6a13a'; };
+  const setStat: SetStat = (t, warn = false) => { stat.textContent = t; stat.style.color = warn ? PAL.red71 : PAL.orange56; };
   const clearOnPGM = (): void => { bBars.classList.remove('on'); bTsg.classList.remove('on'); };
   bBars.addEventListener('click', () => {
     li.useBars(); li.setTsgPattern(null); bTsg.classList.remove('on'); bBars.classList.add('on');

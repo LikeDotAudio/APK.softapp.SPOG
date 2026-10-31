@@ -5,6 +5,7 @@
 import type { Disposer } from '../../ui/timers.js';
 import { qs } from '../../ui/dom.js';
 import type { DialKey, IfbState } from './state.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Build the encoder dials; returns a per-key repaint fn for inbound bus writes. */
 export function buildDials(
@@ -15,9 +16,9 @@ export function buildDials(
 ): Map<DialKey, () => void> {
   const knobs = qs(body, '.ifb-knobs');
   const dialDefs: ReadonlyArray<[DialKey, string, string]> = [
-    ['progGain', 'Program', '#39d353'],
-    ['intGain', 'Interrupt', '#ff6a6a'],
-    ['threshold', 'Threshold', '#ffd400'],
+    ['progGain', 'Program', PAL.green53],
+    ['intGain', 'Interrupt', PAL.red71],
+    ['threshold', 'Threshold', PAL.amber50],
   ];
   const dialPaint = new Map<DialKey, () => void>();
   for (const [key, label, c] of dialDefs) {

@@ -7,15 +7,16 @@ import { isFaultStatus } from '../../domain/routing-core/index.js';
 import type { PoolKind, SourceLeaf } from '../../model/index.js';
 import { slugId, styleSignalNode } from './format.js';
 import { fillVideoCameras } from './pools.js';
+import { PAL } from '../../domain/palette.js';
 
 const GANG_CSS = `
-.gang-cap{font-size:10px;font-weight:bold;letter-spacing:2px;color:#9fb6cc;margin:2px 0 4px 4px;text-transform:uppercase;}
+.gang-cap{font-size:10px;font-weight:bold;letter-spacing:2px;color:${PAL.sky71};margin:2px 0 4px 4px;text-transform:uppercase;}
 .gang-grid{display:grid;grid-template-columns:1fr;gap:4px;margin:0 0 10px;align-items:start;}
 .signal-node.gang-cell{border-radius:3px;padding:0;cursor:grab;display:flex;align-items:center;
     justify-content:center;min-height:34px;background:rgba(0,0,0,.55);}
 .signal-node.gang-cell .multiplex-header{font-size:13px;font-weight:bold;letter-spacing:1px;padding:9px 2px;width:100%;text-align:center;}
 .signal-node.gang-cell .multiplex-children{display:none;flex-direction:column;gap:2px;padding:2px;}
-.signal-node.gang-cell.fault{outline:2px solid var(--state-alarm,#ff3b3b);}
+.signal-node.gang-cell.fault{outline:2px solid var(--state-alarm,${PAL.red62});}
 .signal-node.gang-cell.expanded{grid-column:1 / -1;flex-direction:column;align-items:stretch;justify-content:flex-start;}
 .signal-node.gang-cell.expanded > .multiplex-children{display:flex;flex-direction:row;flex-wrap:wrap;gap:4px;}
 .signal-node.gang-cell.expanded .gang-cam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;width:100%;}
@@ -23,7 +24,7 @@ const GANG_CSS = `
 .signal-node.gang-cell .multiplex-children > .signal-node.control{flex-basis:100%;width:100%;order:99;min-height:30px;}
 .signal-node.gang-cell.expanded{cursor:pointer;}
 .signal-node.gang-cell.expanded .gang-cam-grid > .signal-node.multiplex{
-    background:rgba(46,86,128,.32);border:1px solid #4f86b8;border-radius:6px;box-shadow:0 2px 7px rgba(0,0,0,.45);}
+    background:rgba(46,86,128,.32);border:1px solid ${PAL.sky52};border-radius:6px;box-shadow:0 2px 7px rgba(0,0,0,.45);}
 .signal-node.gang-cell.expanded > .multiplex-header{background:rgba(0,0,0,.35);border-radius:4px;margin-bottom:4px;}`;
 
 const escapeRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

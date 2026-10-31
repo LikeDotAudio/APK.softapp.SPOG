@@ -3,6 +3,7 @@
 // the drag-move/resize `floatCard` behaviour. Pure DOM — no render-loop state.
 import { el } from '../../ui/dom.js';
 import { hint } from '../../ui/tip.js';
+import { PAL } from '../../domain/palette.js';
 
 // A card becomes drag-move (via its header) + resize (native corner handle); its
 // position/size is set by a layout preset (see PRESETS / applyPreset). Double-
@@ -33,10 +34,10 @@ export function floatCard(card: HTMLElement, bringToFront: () => number, onResto
 // Per-card LCARS header colour (the "okudagram" palette) — the edit-detector
 // trio gets the amber/blue/orange of the mock; the scopes cycle the LCARS hues.
 export const HC: Record<string, string> = {
-  video: '#f2b25c', lumin: '#8fcdf0', editlog: '#f2955c',
-  parade: '#c19eb0', wave: '#b46757', chroma: '#ae697d', vec: '#97587b',
-  aud: '#c67d3a', meter: '#b28452', vu: '#c2b74b', gonio: '#bcb9df', rec: '#b0679b',
-  rgba: '#c19eb0', stack: '#97587b', cie: '#c2b74b', diamond: '#b46757', hsl: '#ae697d', loud: '#8fcdf0',
+  video: PAL.orange65, lumin: PAL.sky75, editlog: PAL.orange65s85,
+  parade: PAL.pink69, wave: PAL.red52, chroma: PAL.pink55, vec: PAL.pink47,
+  aud: PAL.orange50s55, meter: PAL.orange51, vu: PAL.yellow53, gonio: PAL.blue80s37, rec: PAL.pink55s32,
+  rgba: PAL.pink69, stack: PAL.pink47, cie: PAL.yellow53, diamond: PAL.red52, hsl: PAL.pink55, loud: PAL.sky75,
 };
 
 export interface MeterCards {

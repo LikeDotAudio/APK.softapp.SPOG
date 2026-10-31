@@ -3,6 +3,8 @@
 // loudness.js so the Audio Monitor and the Meter Input tool derive the SAME
 // integrated-loudness reading and draw the SAME volume-over-time graph.
 
+import { PAL } from '../domain/palette.js';
+
 export interface LoudnessTracker {
   readonly lufs: number;
   readonly history: number[];
@@ -58,7 +60,7 @@ export function drawLoudnessPlot(cv: HTMLCanvasElement, hist: number[], opts: { 
     const yy = y(v);
     i ? ctx.lineTo(x, yy) : ctx.moveTo(x, yy);
   });
-  ctx.strokeStyle = '#6FC8F0';
+  ctx.strokeStyle = PAL.sky69;
   ctx.lineWidth = 1.6;
   ctx.stroke();
 }

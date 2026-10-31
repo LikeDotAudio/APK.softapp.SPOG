@@ -32,47 +32,48 @@ const hueShift = (hex: string, deg: number): string => {
 
 // ── glyph library (extracted to a sibling module to keep this file small) ────
 import { GLYPHS } from './icon-glyphs.js';
+import { PAL } from '../domain/palette.js';
 
 // ── palette hookup: each icon's accent = a SEMANTIC token of the active palette
 // (colour-scheme.ts writes these inline on <html>), so palette choices re-tint
 // the tiles. Fallback hexes cover a cold start before the engine paints.
 const TOKENS: Record<string, [token: string, fallback: string]> = {
-  'sound':        ['--sig-audio', '#FF9C63'],
-  'video':        ['--sig-video', '#CC99CC'],
-  'studios':      ['--sig-video', '#CC99CC'],
-  'wireless':     ['--sig-audio', '#FF9C63'],
-  'remotes':      ['--state-onair', '#ffaa00'],
-  'streams':      ['--sig-program', '#646DCC'],
-  'play':         ['--state-ok', '#39d98a'],
-  'prod':         ['--state-onair', '#ffaa00'],
-  'graphics':     ['--sig-program', '#646DCC'],
-  'prompter':     ['--sig-video', '#CC99CC'],
-  'portals':      ['--state-ok', '#39d98a'],
-  'people':       ['--sig-audio', '#FF9C63'],
-  'control-rooms': ['--sig-program', '#646DCC'],
-  'floors':       ['--sig-video', '#CC99CC'],
-  'encoders':     ['--state-alarm', '#ff3b3b'],
-  'edit-suites':  ['--state-ok', '#39d98a'],
-  'test-tools':   ['--state-onair', '#ffaa00'],
-  'captains-log': ['--state-onair', '#ffaa00'],
-  'chat':         ['--state-ok', '#39d98a'],
-  'voice':        ['--state-alarm', '#ff3366'],
-  'mqtt':         ['--sig-program', '#646DCC'],
-  'chirality':    ['--sig-video', '#CC99CC'],
-  'settings':     ['--sig-program', '#646DCC'],
-  '1990s-view':   ['--sig-audio', '#FF9C63'],
-  'academy':      ['--sig-audio', '#FF9C63'],
-  'rights':       ['--state-onair', '#ffaa00'],
-  'log-out':      ['--state-alarm', '#ff3b3b'],
-  'menu':         ['--sig-program', '#646DCC'],
-  'credits':      ['--sig-video', '#CC99CC'],
-  'sick-bay':     ['--state-alarm', '#ff3b3b'],
+  'sound':        ['--sig-audio', PAL.orange69],
+  'video':        ['--sig-video', PAL.purple70],
+  'studios':      ['--sig-video', PAL.purple70],
+  'wireless':     ['--sig-audio', PAL.orange69],
+  'remotes':      ['--state-onair', PAL.amber50s100],
+  'streams':      ['--sig-program', PAL.blue60],
+  'play':         ['--state-ok', PAL.teal54],
+  'prod':         ['--state-onair', PAL.amber50s100],
+  'graphics':     ['--sig-program', PAL.blue60],
+  'prompter':     ['--sig-video', PAL.purple70],
+  'portals':      ['--state-ok', PAL.teal54],
+  'people':       ['--sig-audio', PAL.orange69],
+  'control-rooms': ['--sig-program', PAL.blue60],
+  'floors':       ['--sig-video', PAL.purple70],
+  'encoders':     ['--state-alarm', PAL.red62],
+  'edit-suites':  ['--state-ok', PAL.teal54],
+  'test-tools':   ['--state-onair', PAL.amber50s100],
+  'captains-log': ['--state-onair', PAL.amber50s100],
+  'chat':         ['--state-ok', PAL.teal54],
+  'voice':        ['--state-alarm', PAL.red60s100],
+  'mqtt':         ['--sig-program', PAL.blue60],
+  'chirality':    ['--sig-video', PAL.purple70],
+  'settings':     ['--sig-program', PAL.blue60],
+  '1990s-view':   ['--sig-audio', PAL.orange69],
+  'academy':      ['--sig-audio', PAL.orange69],
+  'rights':       ['--state-onair', PAL.amber50s100],
+  'log-out':      ['--state-alarm', PAL.red62],
+  'menu':         ['--sig-program', PAL.blue60],
+  'credits':      ['--sig-video', PAL.purple70],
+  'sick-bay':     ['--state-alarm', PAL.red62],
 };
 
 export const hasTile = (id: string): boolean => id in GLYPHS;
 
 function accentFor(id: string): string {
-  const [token, fallback] = TOKENS[id] ?? ['--sig-program', '#646DCC'];
+  const [token, fallback] = TOKENS[id] ?? ['--sig-program', PAL.blue60];
   const v = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
   return /^#[0-9a-fA-F]{6}$/.test(v) ? v : fallback;
 }
@@ -86,18 +87,18 @@ function tileSvg(accent: string, glyph: string): string {
       <stop offset="0" stop-color="${hi}"/><stop offset="1" stop-color="${lo}"/>
     </linearGradient>
     <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
-      <stop offset=".5" stop-color="#ffffff" stop-opacity=".04"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0" stop-color="${PAL.white}" stop-opacity=".18"/>
+      <stop offset=".5" stop-color="${PAL.white}" stop-opacity=".04"/>
+      <stop offset="1" stop-color="${PAL.white}" stop-opacity="0"/>
     </linearGradient>
     <filter id="gsh" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.35"/>
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="${PAL.black}" flood-opacity="0.35"/>
     </filter>
   </defs>
   <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#bg)"/>
   <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#sheen)"/>
-  <rect x="22" y="22" width="468" height="468" rx="102" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3"/>
-  <g filter="url(#gsh)" fill="#F4F8FF" stroke="#F4F8FF">${glyph}</g>
+  <rect x="22" y="22" width="468" height="468" rx="102" fill="none" stroke="${PAL.white}" stroke-opacity=".18" stroke-width="3"/>
+  <g filter="url(#gsh)" fill="${PAL.blue98}" stroke="${PAL.blue98}">${glyph}</g>
 </svg>`;
 }
 
@@ -110,12 +111,12 @@ function mouseTileSvg(accent: string, glyph: string): string {
       <stop offset="0" stop-color="${hi}"/><stop offset="1" stop-color="${lo}"/>
     </linearGradient>
     <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity=".26"/>
-      <stop offset=".5" stop-color="#ffffff" stop-opacity=".07"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0" stop-color="${PAL.white}" stop-opacity=".26"/>
+      <stop offset=".5" stop-color="${PAL.white}" stop-opacity=".07"/>
+      <stop offset="1" stop-color="${PAL.white}" stop-opacity="0"/>
     </linearGradient>
     <filter id="gsh" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.35"/>
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="${PAL.black}" flood-opacity="0.35"/>
     </filter>
     <filter id="halo" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur stdDeviation="8"/>
@@ -125,7 +126,7 @@ function mouseTileSvg(accent: string, glyph: string): string {
   <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#bg)"/>
   <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#sheen)"/>
   <rect x="22" y="22" width="468" height="468" rx="102" fill="none" stroke="${glow}" stroke-opacity=".65" stroke-width="4"/>
-  <g filter="url(#gsh)" fill="#FFFFFF" stroke="#FFFFFF">${glyph}</g>
+  <g filter="url(#gsh)" fill="${PAL.white}" stroke="${PAL.white}">${glyph}</g>
 </svg>`;
 }
 

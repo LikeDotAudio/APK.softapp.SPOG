@@ -1,5 +1,6 @@
 // src/editors/audio-positioner/fader.ts — the CMDP circular Fader model + group builder.
 import type { EditorContext } from '../types.js';
+import { PAL } from '../../domain/palette.js';
 
 export const NEAR_RADIUS = 120;
 export const FAR_RADIUS = 380;
@@ -18,8 +19,8 @@ export function buildGroups(ctx: EditorContext): { groups: Group[]; chans: Chan[
   const feeds: Array<{ label: string; color: string }> = ctx.sources.length
     ? ctx.sources.map((f) => ({ label: f.label, color: f.color }))
     : (ctx.twist.config?.inputs?.length
-        ? ctx.twist.config.inputs.map((l) => ({ label: l, color: '#4d94ff' }))
-        : Array.from({ length: 8 }, (_, i) => ({ label: `CH ${i + 1}`, color: '#4d94ff' })));
+        ? ctx.twist.config.inputs.map((l) => ({ label: l, color: PAL.blue65 }))
+        : Array.from({ length: 8 }, (_, i) => ({ label: `CH ${i + 1}`, color: PAL.blue65 })));
 
   const order: string[] = [];
   const byColor = new Map<string, Array<{ label: string; color: string }>>();
@@ -62,9 +63,9 @@ export class Fader {
     c.rotate((this.angle + 90) * Math.PI / 180);
     const tl = this.trackLen;
     c.lineCap = 'round';
-    c.lineWidth = 6; c.strokeStyle = '#000'; c.beginPath(); c.moveTo(0, -tl / 2); c.lineTo(0, tl / 2); c.stroke();
-    c.lineWidth = 2; c.strokeStyle = '#222'; c.beginPath(); c.moveTo(0, -tl / 2); c.lineTo(0, tl / 2); c.stroke();
-    c.lineWidth = 1; c.strokeStyle = '#666';
+    c.lineWidth = 6; c.strokeStyle = PAL.black; c.beginPath(); c.moveTo(0, -tl / 2); c.lineTo(0, tl / 2); c.stroke();
+    c.lineWidth = 2; c.strokeStyle = PAL.grey13; c.beginPath(); c.moveTo(0, -tl / 2); c.lineTo(0, tl / 2); c.stroke();
+    c.lineWidth = 1; c.strokeStyle = PAL.grey40;
     for (let i = 0; i <= 10; i++) {
       const ly = -tl / 2 + tl * (i / 10), len = i % 5 === 0 ? 10 : 5;
       c.beginPath(); c.moveTo(-15, ly); c.lineTo(-15 - len, ly); c.stroke();
@@ -74,7 +75,7 @@ export class Fader {
     c.translate(0, capY);
     c.rotate(-((this.angle + 90) * Math.PI / 180));
     const r = 22;
-    c.fillStyle = '#333'; c.strokeStyle = this.hovered ? '#fff' : this.color; c.lineWidth = this.hovered ? 3 : 2;
+    c.fillStyle = PAL.grey20; c.strokeStyle = this.hovered ? PAL.white : this.color; c.lineWidth = this.hovered ? 3 : 2;
     c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); c.stroke();
     const startDeg = 135, curDeg = 135 + (this.rot / 100) * 270, ar = r - 5;
     c.strokeStyle = this.color; c.lineWidth = 4;
@@ -82,8 +83,8 @@ export class Fader {
     const indRad = curDeg * Math.PI / 180;
     c.lineWidth = 3; c.beginPath(); c.moveTo(0, 0); c.lineTo((r - 2) * Math.cos(indRad), (r - 2) * Math.sin(indRad)); c.stroke();
     c.beginPath(); c.arc(0, 0, 3, 0, Math.PI * 2); c.fillStyle = this.color; c.fill();
-    c.font = '10px Arial'; c.fillStyle = '#fff'; c.textAlign = 'center'; c.fillText('Z:' + this.height.toFixed(0), 0, -30); // Show height on cap
-    c.fillStyle = '#aaa'; c.font = '9px Arial'; c.fillText(this.val.toFixed(0), 0, 35);
+    c.font = '10px Arial'; c.fillStyle = PAL.white; c.textAlign = 'center'; c.fillText('Z:' + this.height.toFixed(0), 0, -30); // Show height on cap
+    c.fillStyle = PAL.grey67; c.font = '9px Arial'; c.fillText(this.val.toFixed(0), 0, 35);
     c.restore();
     c.save();
     const labRad = this.angle * Math.PI / 180, active = this.dragging || this.hovered;

@@ -6,6 +6,7 @@ import type { SourceLeaf } from '../../model/index.js';
 import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { slugId, faultTag, monoEmoji, styleSignalNode, shadeColor } from './format.js';
 import { wireFold, tagOrigin } from './pools-fold.js';
+import { PAL } from '../../domain/palette.js';
 
 // A prompter feed reads as a beam-splitter/prompter-glass silhouette (angled
 // trapezoid hood) so it is instantly distinguishable from a plain video node,
@@ -53,7 +54,7 @@ const CLOCK_NODE_CSS = `
 export function fillVideoCameras(
   grid: HTMLElement, prefix: string, count: number, extraClass: string, color: string, status?: string,
 ): void {
-  const poolColor = color || '#CC99CC';
+  const poolColor = color || PAL.purple70;
   const faulted = isFaultStatus(status);
   for (let i = 1; i <= count; i++) {
     const id = prefix + i.toString().padStart(2, '0');
@@ -104,7 +105,7 @@ export function renderVideoPool(data: SourceLeaf, container: HTMLElement): void 
     // dedicated `video[]` field (kept SEPARATE from audio `items[]`) and render as
     // plain draggable video nodes; otherwise fall back to the camera-stack fill.
     if (data.video && data.video.length > 0) {
-      const poolColor = data.color || '#CC99CC';
+      const poolColor = data.color || PAL.purple70;
       addStyles('prompter-node-shape', PROMPTER_NODE_CSS);
       addStyles('clock-node-shape', CLOCK_NODE_CSS);
       // (clock-node-shape carries both clock-source and chronos-source rules)

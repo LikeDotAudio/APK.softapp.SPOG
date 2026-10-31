@@ -11,6 +11,7 @@ import { applyPreset, capturePreset } from './me.js';
 import { captureScene, recallScene, saveUserScenes } from './scenes.js';
 import { TIPS } from './tips.js';
 import type { Surface } from './surface.js';
+import { PAL } from '../../domain/palette.js';
 
 export function buildLooks(s: Surface): {
   meRow: HTMLElement;
@@ -22,7 +23,7 @@ export function buildLooks(s: Surface): {
 
   // ---- M/E LOOKS ----------------------------------------------------------------
   const meRow = el('div', { class: 'vm-transrow' });
-  const meSave = el('div', { class: 'vm-btn', style: 'color: #ff9c63;' }, ['SAVE LOOK']);
+  const meSave = el('div', { class: 'vm-btn', style: `color: ${PAL.orange69};` }, ['SAVE LOOK']);
 
   function rebuildMeRow(): void {
     meRow.replaceChildren(

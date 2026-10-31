@@ -7,6 +7,7 @@
 // simply winds the ring the other way). When a down count lands, the rim pulses red.
 
 import { TAU, roundRect, type DisplayDef, type DisplayCtx } from '../shared.js';
+import { PAL } from '../../../domain/palette.js';
 
 function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx): void {
   const cx = W / 2, cy = H / 2, S = Math.min(W, H);
@@ -16,7 +17,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   const bR = S * 0.47;
   roundRect(g, cx - bR, cy - bR, bR * 2, bR * 2, S * 0.1);
   const body = g.createLinearGradient(0, cy - bR, 0, cy + bR);
-  body.addColorStop(0, '#ffffff'); body.addColorStop(1, '#e4e6e9');
+  body.addColorStop(0, PAL.white); body.addColorStop(1, PAL.grey90);
   g.fillStyle = body; g.fill();
   g.strokeStyle = 'rgba(0,0,0,0.14)'; g.lineWidth = S * 0.006; g.stroke();
 
@@ -31,10 +32,10 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   for (let i = 0; i < 60; i++) {
     const a = -Math.PI / 2 + (i / 60) * TAU, major = i % 5 === 0;
     const rO = R, rI = R * (major ? 0.87 : 0.93);
-    g.strokeStyle = '#151515'; g.lineWidth = major ? S * 0.008 : S * 0.0028;
+    g.strokeStyle = PAL.grey08; g.lineWidth = major ? S * 0.008 : S * 0.0028;
     g.beginPath(); g.moveTo(Math.cos(a) * rI, Math.sin(a) * rI); g.lineTo(Math.cos(a) * rO, Math.sin(a) * rO); g.stroke();
   }
-  g.fillStyle = '#151515'; g.font = `800 ${Math.round(S * 0.072)}px Arial,Helvetica,sans-serif`;
+  g.fillStyle = PAL.grey08; g.font = `800 ${Math.round(S * 0.072)}px Arial,Helvetica,sans-serif`;
   for (let n = 0; n < 60; n += 5) {
     const a = -Math.PI / 2 + (n / 60) * TAU;
     g.save();
@@ -60,12 +61,12 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   const kw = S * 0.1, kh = S * 0.34;
   roundRect(g, cx - kw / 2, cy - kh / 2, kw, kh, kw * 0.5);
   const kg = g.createLinearGradient(cx - kw / 2, 0, cx + kw / 2, 0);
-  kg.addColorStop(0, '#e9e9e9'); kg.addColorStop(0.5, '#ffffff'); kg.addColorStop(1, '#d6d6d6');
+  kg.addColorStop(0, PAL.grey91); kg.addColorStop(0.5, PAL.white); kg.addColorStop(1, PAL.grey84);
   g.fillStyle = kg; g.fill();
   g.strokeStyle = 'rgba(0,0,0,0.16)'; g.lineWidth = S * 0.003; g.stroke();
 
   // Fixed red triangle pointer at 12 o'clock.
-  g.fillStyle = '#e01f1f';
+  g.fillStyle = PAL.red50s76;
   const tTip = cy - R * 0.86, tBase = cy - R * 1.0, tw = S * 0.045;
   g.beginPath(); g.moveTo(cx, tTip); g.lineTo(cx - tw, tBase); g.lineTo(cx + tw, tBase); g.closePath(); g.fill();
 }

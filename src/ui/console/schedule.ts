@@ -3,6 +3,7 @@ import { fetchJSON } from '../../platform/discovery.js';
 import { putDraft } from '../../platform/routes-store.js';
 import { role } from '../../platform/auth.js';
 import { SCHED_CSS } from './schedule-css.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface Slot { s: number; e: number; show: string; room: string; floor?: string; controlRoom?: string; crew: string[]; resources?: string[] }
 
@@ -26,9 +27,9 @@ export async function loadSchedule(): Promise<void> {
 }
 
 export const SHOW_COLORS = [
-  '#FF9C63', '#3FC1C9', '#A06EB4', '#6cdf4a', '#6FC8F0', '#C2B74B', '#ff5fa2', '#cc6a3a',
-  '#9C6B9C', '#39d353', '#e0524a', '#5b8def', '#e0b53a', '#d8b4e2', '#4ad6c0', '#f08fb0',
-  '#b0d04a', '#8f9cf0', '#f0a24a', '#7ad0f0',
+  PAL.orange69, PAL.cyan52, PAL.violet57, PAL.green58, PAL.sky69, PAL.yellow53, PAL.pink69s100, PAL.orange51s59,
+  PAL.purple52, PAL.green53, PAL.red58s71, PAL.blue65s82, PAL.amber55s73, PAL.violet80s44, PAL.teal56, PAL.pink75,
+  PAL.lime55, PAL.blue75s76, PAL.orange62s85, PAL.sky71s80,
 ];
 const showColorMap = new Map<string, string>();
 export function showColor(show: string): string {
@@ -40,9 +41,9 @@ export function setShowColor(show: string, color: string): void { showColorMap.s
 const fmt = (h: number): string => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.round((h % 1) * 60)).padStart(2, '0')}`;
 
 function division(role: string): [string, string] {
-  if (/captain|first officer|director|conn|helm|\btd\b/i.test(role)) return ['Command', '#e0524a'];
-  if (/science|metadata|analytics|medical|counselor/i.test(role)) return ['Sciences', '#5b8def'];
-  return ['Operations', '#e0b53a'];
+  if (/captain|first officer|director|conn|helm|\btd\b/i.test(role)) return ['Command', PAL.red58s71];
+  if (/science|metadata|analytics|medical|counselor/i.test(role)) return ['Sciences', PAL.blue65s82];
+  return ['Operations', PAL.amber55s73];
 }
 
 
@@ -59,7 +60,7 @@ function ensure(): HTMLElement {
   ov.innerHTML = `<div class="sc-box">
     <h2>PRODUCTION SCHEDULE <button class="toggle-edit-btn">Toggle Edit Mode</button></h2>
     <p>TODAY · TIMELINE · ROOM & CREW BOOKING</p>
-    <div class="sc-legend"><span style="color:#e0524a">■ Command</span><span style="color:#e0b53a">■ Operations</span><span style="color:#5b8def">■ Sciences</span><span style="color:#d8b4e2">■ Booked Resources</span></div>
+    <div class="sc-legend"><span style="color:${PAL.red58s71}">■ Command</span><span style="color:${PAL.amber55s73}">■ Operations</span><span style="color:${PAL.blue65s82}">■ Sciences</span><span style="color:${PAL.violet80s44}">■ Booked Resources</span></div>
     <div class="sc-list"></div>
     <div class="sc-hint">Crew shown as ROLES booked to the slot — the access system loads each operator's scope from here. Resources are automatically reserved and relinquished by the schedule.</div>
   </div>`;
@@ -107,7 +108,7 @@ function saveScheduleData(): void {
 function renderEditor(sl: Slot, idx: number, list: HTMLElement): void {
   const elBox = document.createElement('div');
   elBox.className = 'sc-slot';
-  elBox.style.borderLeft = `4px solid #4a2d6b`;
+  elBox.style.borderLeft = `4px solid ${PAL.violet30}`;
   
   elBox.innerHTML = `
     <div class="sc-editor">
@@ -131,7 +132,7 @@ function renderEditor(sl: Slot, idx: number, list: HTMLElement): void {
       <label>Room (legacy) <input type="text" class="ed-room" value="${sl.room||''}" /></label>
       <label style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
         Crew Members 
-        <button type="button" class="add-crew-btn" style="padding:4px 8px;font-size:10px;background:#39D353;color:#000;border:none;border-radius:4px;cursor:pointer;">+ Add Crew</button>
+        <button type="button" class="add-crew-btn" style="padding:4px 8px;font-size:10px;background:${PAL.green53};color:${PAL.black};border:none;border-radius:4px;cursor:pointer;">+ Add Crew</button>
       </label>
       <div class="crew-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;"></div>
       <label>Resources (comma separated) <input type="text" class="ed-res" value="${(sl.resources||[]).join(', ')}" /></label>
@@ -155,7 +156,7 @@ function renderEditor(sl: Slot, idx: number, list: HTMLElement): void {
     sel.innerHTML = `<option value="">-- Select Role --</option>` + roles.map(r => `<option value="${r}" ${val===r?'selected':''}>${r}</option>`).join('');
     const del = document.createElement('button');
     del.type = 'button'; del.textContent = 'X'; 
-    del.style.padding = '4px 8px'; del.style.background = '#B46757'; del.style.color = '#fff'; del.style.border = 'none'; del.style.borderRadius = '4px'; del.style.cursor = 'pointer';
+    del.style.padding = '4px 8px'; del.style.background = PAL.red52; del.style.color = PAL.white; del.style.border = 'none'; del.style.borderRadius = '4px'; del.style.cursor = 'pointer';
     del.onclick = () => row.remove();
     row.appendChild(sel); row.appendChild(del);
     crewList.appendChild(row);

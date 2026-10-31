@@ -12,6 +12,7 @@ import { renderSourcesPanel } from '../sources/panel.js';
 import { wireSourceNodes } from '../sources/interact.js';
 import { gatherSenderNodes, splitParent } from './router-view-gather.js';
 import { norm, columnMap, type Sheet } from './router-io-sheet.js';
+import { PAL } from '../../domain/palette.js';
 
 const FOLDER = '009_Imported';
 const ROOT = 'Routes/Sources/index.json';
@@ -47,7 +48,7 @@ export async function authorDevices(srcSheet: Sheet): Promise<DeviceResult> {
     const base = slugId(splitParent(origin)[1] || origin) || 'device';
     const mk = (suffix: string, extra: Record<string, unknown>): void => {
       const file = `${String(i).padStart(3, '0')}_${base}${suffix}.json`;
-      putDraft(DIR + file, { id: `imported-${slugId(origin)}${suffix}`, name: origin, color: g.color || '#8FA9C8', status: g.status || 'OK', ...extra });
+      putDraft(DIR + file, { id: `imported-${slugId(origin)}${suffix}`, name: origin, color: g.color || PAL.sky67, status: g.status || 'OK', ...extra });
       manifest.push(file); i++;
     };
     // Split media so the person heuristic (video[] AND items[] on one leaf) never fires;

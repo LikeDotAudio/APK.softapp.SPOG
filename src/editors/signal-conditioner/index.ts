@@ -16,6 +16,7 @@ import { el, addStyles } from '../../ui/dom.js';
 import { drawFauxSignal } from '../../ui/faux-signal.js';
 import { CSS } from './styles.js';
 import { drawOverlay } from './proc.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface CondState {
   bypass: boolean;
@@ -76,7 +77,7 @@ const plugin: EditorPlugin = {
     const led = el('span', { class: 'sc-led' });
     const lockTxt = el('span', {}, ['LOCKED']);
     const timing = el('span', { class: 'sc-note' }, ['input timing: +0.0 ms']);
-    const refCard = el('div', { class: 'sc-card sc-refcard', style: '--hc:#8fd0f0' }, [
+    const refCard = el('div', { class: 'sc-card sc-refcard', style: `--hc:${PAL.sky75s76}` }, [
       el('h4', {}, ['Frame Sync · Reference']),
       el('div', { class: 'sc-body' }, [
         el('div', { class: 'sc-ref' }, refBtns.map(([b]) => b)),
@@ -89,7 +90,7 @@ const plugin: EditorPlugin = {
     // Delay
     const [delRow, delIn, delVal] = slider('A/V Delay', 0, 1000, 1);
     const delFrames = el('div', { class: 'sc-note' });
-    const delayCard = el('div', { class: 'sc-card', style: '--hc:#c2b74b' }, [
+    const delayCard = el('div', { class: 'sc-card', style: `--hc:${PAL.yellow53}` }, [
       el('h4', {}, ['Delay · Lip-sync']),
       el('div', { class: 'sc-body' }, [delRow, delFrames]),
     ]);
@@ -106,13 +107,13 @@ const plugin: EditorPlugin = {
     const previewBars = el('canvas', { class: 'sc-bars' });
     const previewScope = el('canvas', { class: 'sc-scope' });
     const preview = el('div', { class: 'sc-preview' }, [previewBars, previewScope]);
-    const procCard = el('div', { class: 'sc-card sc-wide', style: '--hc:#64c8a0' }, [
+    const procCard = el('div', { class: 'sc-card sc-wide', style: `--hc:${PAL.teal59}` }, [
       el('h4', {}, ['Proc Amp · Colour Legalize']),
       el('div', { class: 'sc-body sc-proc-body' }, [preview, el('div', { class: 'sc-proc-controls' }, [gRow, bRow, sRow, hRow])]),
     ]);
 
     // Presets
-    const presetCard = el('div', { class: 'sc-card sc-wide', style: '--hc:#b46757' }, [
+    const presetCard = el('div', { class: 'sc-card sc-wide', style: `--hc:${PAL.red52}` }, [
       el('h4', {}, ['Presets']),
       el('div', { class: 'sc-body' }, [
         el('div', { class: 'sc-presets' }, Object.keys(PRESETS).map((name) => {

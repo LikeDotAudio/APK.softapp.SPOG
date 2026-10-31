@@ -12,6 +12,7 @@ import { el } from '../../ui/dom.js';
 import { hint } from '../../ui/tip.js';
 import { knob, fader, meter } from '../../ui/widgets.js';
 import type { Channel, MixerState } from './state.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface StripOpts {
   master?: boolean;
@@ -47,7 +48,7 @@ export function stripEl(rc: StripCtx, c: Channel, idx: number, opts: StripOpts):
 
   const name = el('div', {
     class: 'am-name',
-    style: `color:${master ? '#d8c8ff' : c.color}`,
+    style: `color:${master ? PAL.indigo89 : c.color}`,
   });
   if (master) {
     name.textContent = 'MASTER';
@@ -82,7 +83,7 @@ export function stripEl(rc: StripCtx, c: Channel, idx: number, opts: StripOpts):
     stateKnob(rc, eq, 'MID', c.color, `ch${n}_eq_mid`, () => st.eqMid, (v) => (st.eqMid = v));
     stateKnob(rc, eq, 'LO', c.color, `ch${n}_eq_lo`, () => st.eqLo, (v) => (st.eqLo = v));
     rot.append(eq);
-    stateKnob(rc, rot, 'PAN', '#9fb6cc', `ch${n}_pan`, () => st.pan, (v) => (st.pan = v));
+    stateKnob(rc, rot, 'PAN', PAL.sky71, `ch${n}_pan`, () => st.pan, (v) => (st.pan = v));
 
     // Aux sends: mix-minus bank (MM 1–4) then monitor bank (MON 1–4).
     const aux = el('div', { class: 'am-aux' });
@@ -90,11 +91,11 @@ export function stripEl(rc: StripCtx, c: Channel, idx: number, opts: StripOpts):
     const ag = el('div', { class: 'am-aux-grid' });
     for (let j = 0; j < 4; j++) {
       const k = j; // capture
-      stateKnob(rc, ag, `MM ${k + 1}`, '#FF9C63', `ch${n}_mm${k + 1}`, () => st.mm[k]!, (v) => (st.mm[k] = v));
+      stateKnob(rc, ag, `MM ${k + 1}`, PAL.orange69, `ch${n}_mm${k + 1}`, () => st.mm[k]!, (v) => (st.mm[k] = v));
     }
     for (let j = 0; j < 4; j++) {
       const k = j;
-      stateKnob(rc, ag, `MON ${k + 1}`, '#3FC1C9', `ch${n}_mon${k + 1}`, () => st.mon[k]!, (v) => (st.mon[k] = v));
+      stateKnob(rc, ag, `MON ${k + 1}`, PAL.cyan52, `ch${n}_mon${k + 1}`, () => st.mon[k]!, (v) => (st.mon[k] = v));
     }
     aux.append(ag);
     rot.append(aux);
@@ -129,12 +130,12 @@ export function stripEl(rc: StripCtx, c: Channel, idx: number, opts: StripOpts):
     ms.append(mute, solo);
     strip.append(ms);
   } else {
-    stateKnob(rc, strip, 'BAL', '#d8c8ff', 'master_bal', () => state.master.bal, (v) => (state.master.bal = v));
+    stateKnob(rc, strip, 'BAL', PAL.indigo89, 'master_bal', () => state.master.bal, (v) => (state.master.bal = v));
   }
 
   const fa = el('div', { class: 'am-fadarea' });
   if (master) {
-    const fd = fader('', state.master.gain, '#c3a8ff', (v) => { state.master.gain = v; rc.pub('master_gain', v); });
+    const fd = fader('', state.master.gain, PAL.indigo83, (v) => { state.master.gain = v; rc.pub('master_gain', v); });
     rc.controls.set('master_gain', fd.setValue);
     fa.append(fd);
   } else {

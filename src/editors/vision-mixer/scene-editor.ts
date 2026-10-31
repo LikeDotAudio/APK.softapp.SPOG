@@ -7,6 +7,7 @@
 import { el } from '../../ui/dom.js';
 import { captureScene } from './scenes.js';
 import type { Surface } from './surface.js';
+import { PAL } from '../../domain/palette.js';
 
 /**
  * Build the scene-editor drawer + its toolbar toggle. Returns `rebuildSel` so the
@@ -17,9 +18,9 @@ export function buildSceneEditor(s: Surface): {
   sceneEdToggle: HTMLElement;
   rebuildSel: () => void;
 } {
-  const sceneEditorDrawer = el('div', { class: 'vm-drawer', style: 'display:none; padding: 16px; background: #0a0f1c; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;' });
+  const sceneEditorDrawer = el('div', { class: 'vm-drawer', style: `display:none; padding: 16px; background: ${PAL.blue07}; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;` });
   const sceneEdSel = el('select', { class: 'vm-sel' }) as HTMLSelectElement;
-  const sceneEdJson = el('textarea', { style: 'width: 100%; height: 300px; background: #000; color: #0f0; font-family: monospace; padding: 8px; border-radius: 8px;' }) as HTMLTextAreaElement;
+  const sceneEdJson = el('textarea', { style: `width: 100%; height: 300px; background: ${PAL.black}; color: ${PAL.green50}; font-family: monospace; padding: 8px; border-radius: 8px;` }) as HTMLTextAreaElement;
   const sceneEdApply = el('button', { class: 'vm-tbtn', type: 'button' }, ['SAVE SCENE']);
   const sceneEdCapture = el('button', { class: 'vm-tbtn', type: 'button' }, ['CAPTURE CURRENT STATE']);
 

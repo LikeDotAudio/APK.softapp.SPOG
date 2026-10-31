@@ -18,20 +18,21 @@ import { exportSeat, importSeat, type SeatExport } from '../../platform/prefs.js
 import { tileDataUrl } from '../icon-tiles.js';
 import { toggleCryptoDecoder } from './crypto-decoder.js';
 import { ACCENT, accentRgba } from '../../domain/brand.js';
+import { PAL } from '../../domain/palette.js';
 
 const UM_CSS = `
-.um-btn{display:block;z-index:1000;background:#3FC1C9;color:#06202a;border:none;
+.um-btn{display:block;z-index:1000;background:${PAL.cyan52};color:${PAL.sky09s75};border:none;
   font-family:'Courier New',monospace;font-weight:900;letter-spacing:2px;text-transform:uppercase;
   padding:9px 16px;margin-bottom:10px;border-radius:18px 6px 6px 18px;cursor:pointer;
-  box-shadow:inset 6px 0 0 #2a8b91;text-align:left;white-space:nowrap;}
-.um-btn:hover{background:#7fe3e9;color:#000;}
-.um-btn.stale{animation:um-pulse 1.2s infinite;background:${ACCENT};color:#ffe;}
-@keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 #b36314,0 0 0 0 ${accentRgba(.5)};}50%{box-shadow:inset 6px 0 0 #b36314,0 0 12px 3px ${accentRgba(.5)};}}
+  box-shadow:inset 6px 0 0 ${PAL.cyan37s55};text-align:left;white-space:nowrap;}
+.um-btn:hover{background:${PAL.cyan71};color:${PAL.black};}
+.um-btn.stale{animation:um-pulse 1.2s infinite;background:${ACCENT};color:${PAL.yellow97};}
+@keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 0 0 ${accentRgba(.5)};}50%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 12px 3px ${accentRgba(.5)};}}
 .um-panel{position:fixed;z-index:2650;display:none;flex-direction:column;gap:7px;padding:12px;
-  min-width:250px;background:#0a0f1e;border:1px solid #24304e;border-radius:14px;
+  min-width:250px;background:${PAL.blue08s50};border:1px solid ${PAL.blue22s37};border-radius:14px;
   box-shadow:0 14px 44px rgba(0,0,0,.7);font-family:Arial,Helvetica,sans-serif;}
 .um-panel.open{display:flex;}
-.um-h{font:900 9px 'Courier New',monospace;letter-spacing:2px;color:#5a6a86;text-transform:uppercase;
+.um-h{font:900 9px 'Courier New',monospace;letter-spacing:2px;color:${PAL.blue44s20};text-transform:uppercase;
   padding:2px 4px;}
 /* Adopted chrome buttons: strip their fixed-corner positioning, make each a
    full-width menu row. Their own colours/handlers/icon tiles ride along. */
@@ -46,10 +47,10 @@ const UM_CSS = `
 /* Small toggles carry no words of their own — label them inside the menu. */
 .um-panel [data-um-label]::after{content:attr(data-um-label);
   font:900 11px 'Courier New',monospace;letter-spacing:2px;}
-.um-seat{display:flex;align-items:center;gap:8px;border-top:1px solid #1a2440;padding-top:10px;
-  color:#5a6a86;font:900 9px 'Courier New',monospace;letter-spacing:2px;}
+.um-seat{display:flex;align-items:center;gap:8px;border-top:1px solid ${PAL.blue18s42};padding-top:10px;
+  color:${PAL.blue44s20};font:900 9px 'Courier New',monospace;letter-spacing:2px;}
 .um-seat button{border:none;border-radius:10px;padding:7px 13px;cursor:pointer;
-  font:900 10px 'Courier New',monospace;letter-spacing:1px;background:#16233d;color:#bcd3ee;}
+  font:900 10px 'Courier New',monospace;letter-spacing:1px;background:${PAL.blue16_16233d};color:${PAL.sky84};}
 .um-seat button:hover{filter:brightness(1.3);}
 /* ICON FACE: lcars.css turns these chrome buttons into 34px tiles pinned to the
    clock row (position:fixed !important, font-size:0). Inside the menu they must
@@ -63,12 +64,12 @@ html[data-face="icons"] .um-panel .palette-toggle.has-face-icon{
   top:auto !important;bottom:auto !important;
   width:100% !important;min-width:0 !important;height:auto !important;
   display:flex !important;align-items:center;justify-content:flex-start;gap:10px;
-  background:#0d1322 !important;color:#bcd3ee !important;
+  background:${PAL.blue09s45} !important;color:${PAL.sky84} !important;
   font-size:11px !important;letter-spacing:2px !important;font-weight:900;
   padding:9px 14px !important;border-radius:10px !important;}
 html[data-face="icons"] .um-panel .credit-button.has-face-icon{
   position:static !important;width:100% !important;height:auto !important;
-  background:#0d1322 !important;color:#bcd3ee !important;font-size:10px !important;}
+  background:${PAL.blue09s45} !important;color:${PAL.sky84} !important;font-size:10px !important;}
 `;
 
 function seatRow(): HTMLElement {
@@ -78,7 +79,7 @@ function seatRow(): HTMLElement {
     <button data-um-export title="Download every preference, layout and draft on this seat (.spog)">EXPORT</button>
     <button data-um-import title="Restore a .spog seat file (reloads the console)">IMPORT</button>
     <button data-um-crypto title="Open the Magic Decoder Ring for Protobuf and MQTT payload diagnosis">DECODER</button>
-    <button data-um-purge title="Wipe all local settings, drafts, and service worker caches, then hard reload" style="background:#b32d2d;color:#fff;">PURGE</button>`;
+    <button data-um-purge title="Wipe all local settings, drafts, and service worker caches, then hard reload" style="background:${PAL.red44s60};color:${PAL.white};">PURGE</button>`;
   row.querySelector('[data-um-export]')?.addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(exportSeat(), null, 2)], { type: 'application/json' });
     const a = document.createElement('a');

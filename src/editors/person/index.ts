@@ -15,6 +15,7 @@ import { injectPersonStyles } from './styles.js';
 import type { Strip } from './dsp.js';
 import { BASE, PRESETS, clamp } from './dsp.js';
 import { drawEq, drawComp } from './draw.js';
+import { PAL } from '../../domain/palette.js';
 
 const plugin: EditorPlugin = {
   id: 'person',
@@ -65,7 +66,7 @@ const plugin: EditorPlugin = {
       const dec = (String(step).split('.')[1] || '').length;
       const valEl = el('span', { class: 'k-val' });
       const toNorm = (v: number): number => (v - min) / (max - min);
-      const ctrl = rotary(label, toNorm(s[key] as number), '#F2B74B', (n) => {
+      const ctrl = rotary(label, toNorm(s[key] as number), PAL.orange62, (n) => {
         const raw = min + n * (max - min);
         (s[key] as number) = +((Math.round(raw / step) * step).toFixed(dec));
         syncFromKnob();

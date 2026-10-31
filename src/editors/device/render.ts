@@ -6,6 +6,7 @@ import type { EditorContext } from '../types.js';
 import type { DeviceManifest } from '../../platform/device/types.js';
 import { getDiscoveredDevices, getDevice, onDevicesChanged } from '../../platform/device/receiver.js';
 import { createControlWidget } from './controls.js';
+import { PAL } from '../../domain/palette.js';
 
 export function renderDeviceEditor(host: HTMLElement, ctx: EditorContext): void {
   addStyles(CSS_ID, CSS);
@@ -23,7 +24,7 @@ export function renderDeviceEditor(host: HTMLElement, ctx: EditorContext): void 
     activeDevId = manifest.id;
 
     // 1. Top Rail: Device Identity & Device Switcher Tabs
-    const topRail = el('div', { class: 'dev-top-rail', style: `--lcars-accent: ${manifest.color || ctx.production.color || '#ff9900'}` });
+    const topRail = el('div', { class: 'dev-top-rail', style: `--lcars-accent: ${manifest.color || ctx.production.color || PAL.orange50}` });
     const metaBlock = el('div', { class: 'dev-meta-block' });
     metaBlock.append(
       el('span', { class: 'dev-badge', textContent: manifest.category || 'GEAR' }),
@@ -63,7 +64,7 @@ function resolveTargetDeviceId(ctx: EditorContext): string | null {
 }
 
 function renderGroups(body: HTMLElement, m: DeviceManifest, ctx: EditorContext): void {
-  const accent = m.color || ctx.production.color || '#38bdf8';
+  const accent = m.color || ctx.production.color || PAL.sky60;
   const groupMap = new Map<string, { in: typeof m.inputs; out: typeof m.outputs; name: string }>();
 
   // Ensure default groups exist
@@ -117,7 +118,7 @@ function makeDemoDevice(): DeviceManifest {
     id: 'stagebox-8ch',
     name: 'BROADCAST STAGEBOX 8CH',
     category: 'AUDIO STAGEBOX',
-    color: '#ff9900',
+    color: PAL.orange50,
     groups: [
       { id: 'bank1', name: 'Preamps 1-4' },
       { id: 'bank2', name: 'Preamps 5-8' },

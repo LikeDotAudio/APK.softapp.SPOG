@@ -12,6 +12,7 @@ import { take, srcLabel } from './me.js';
 import { TIPS } from './tips.js';
 import type { TransitionKind } from '../../model/index.js';
 import type { Surface } from './surface.js';
+import { PAL } from '../../domain/palette.js';
 
 /** The in-flight auto-transition: which bank, when it started, and its duration. */
 export interface AutoToken { bank: number; t0: number; ms: number; }
@@ -48,8 +49,8 @@ export function buildTransition(
   const rate = el('input', { class: 'vm-num', type: 'number', min: '1', max: '300' }) as HTMLInputElement;
   rate.addEventListener('input', () => { s.me().rate = Math.max(1, +rate.value || 24); s.publish(`me.${s.delegate + 1}.rate`, s.me().rate); });
   tip(rate, TIPS.rate!);
-  const cutBtn = el('div', { class: 'vm-tbtn take', style: 'background: var(--state-alarm,#ff3b3b); color: #fff;' }, ['CUT']);
-  const autoBtn = el('div', { class: 'vm-tbtn take', style: 'background: var(--sig-audio,#FF9C63); color: #000;' }, ['AUTO']);
+  const cutBtn = el('div', { class: 'vm-tbtn take', style: `background: var(--state-alarm,${PAL.red62}); color: ${PAL.white};` }, ['CUT']);
+  const autoBtn = el('div', { class: 'vm-tbtn take', style: `background: var(--sig-audio,${PAL.orange69}); color: ${PAL.black};` }, ['AUTO']);
   tip(cutBtn, TIPS.take!);
   tip(autoBtn, 'Trigger the selected transition over the given rate.');
 

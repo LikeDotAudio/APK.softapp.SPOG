@@ -7,6 +7,7 @@
 import type { EditorContext } from '../types.js';
 import { qs } from '../../ui/dom.js';
 import type { TileRef } from './state.js';
+import { PAL } from '../../domain/palette.js';
 
 interface HealthUI {
   drm: boolean;
@@ -39,6 +40,6 @@ export function startHealthMonitor(
       `Audio Silence &nbsp;<span class="ok">OK</span><br>` +
       `Failover &nbsp;<span class="ok">${ui.failPrimary ? 'PRIMARY' : 'SECONDARY'}</span><br>` +
       `Encryption &nbsp;<span class="${ui.drm ? 'ok' : 'bad'}">${ui.drm ? 'AES-128' : 'CLEAR'}</span><br>` +
-      `Egress Total &nbsp;<b style="color:#cfe6ff">${totalMbps.toFixed(1)} Mbps</b>`;
+      `Egress Total &nbsp;<b style="color:${PAL.sky91}">${totalMbps.toFixed(1)} Mbps</b>`;
   }, 220);
 }

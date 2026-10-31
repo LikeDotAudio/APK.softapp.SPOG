@@ -1,7 +1,8 @@
 // Hue spectrum sweep — a continuous gamut ramp across the visible hues.
 import type { TsgPattern } from '../types.js';
+import { PAL } from '../../palette.js';
 
-const HUES = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000'];
+const HUES = [PAL.red50, PAL.yellow50, PAL.green50, PAL.cyan50, PAL.blue50, PAL.purple50, PAL.red50];
 
 /** Paint the full-width hue sweep (shared with the grid variant). */
 export function sweepFill(g: CanvasRenderingContext2D, W: number, H: number): void {

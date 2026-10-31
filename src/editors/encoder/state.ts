@@ -9,6 +9,7 @@
 // audio feeds become the embedded tracks.
 
 import type { EditorContext } from '../types.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface Rendition {
   name: string;
@@ -78,10 +79,10 @@ export function deriveFeeds(ctx: EditorContext): { streams: Stream[]; tracks: Tr
 
   if (!vids.length) {
     const inputs = ctx.twist.config?.inputs;
-    if (inputs && inputs.length) vids = inputs.map((label) => ({ label, color: '#6FC8F0' }));
+    if (inputs && inputs.length) vids = inputs.map((label) => ({ label, color: PAL.sky69 }));
   }
 
-  const streams: Stream[] = vids.length ? vids : [{ label: '(no video routed)', color: '#7e93b5' }];
+  const streams: Stream[] = vids.length ? vids : [{ label: '(no video routed)', color: PAL.blue60s27 }];
   const tracks: Track[] = auds.length
     ? auds.map((a, i) => ({ n: a.label, t: i === 0 ? 'PGM' : 'A' + (i + 1) }))
     : AUDIO.map((a) => ({ n: a.n, t: a.t }));

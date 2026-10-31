@@ -15,6 +15,7 @@ import { getBus } from '../../platform/mqtt/index.js';
 import { timeSync } from '../../platform/time-sync.js';
 import { isTimerSnap, liveFrames, resetSnap, toggleRun } from '../../domain/timer-core/graphic.js';
 import { formatValue } from '../../domain/timer-core/index.js';
+import { PAL } from '../../domain/palette.js';
 
 interface CState { running: boolean; base: number; startedAt: number; }
 // A + B are the dual counters; S is the standalone stopwatch's own count.
@@ -86,24 +87,24 @@ function stopwatchCtl(destId: string, s: CState, offline: boolean, k = 1): HTMLC
     const crown = (ang: number, size: number, cap: string): void => {
       const bx = cx + Math.cos(ang) * R, by = cy + Math.sin(ang) * R;
       const k = knobAt(ang, size);
-      g.strokeStyle = '#9aa0aa'; g.lineWidth = size * 0.7; g.lineCap = 'round';
+      g.strokeStyle = PAL.grey64; g.lineWidth = size * 0.7; g.lineCap = 'round';
       g.beginPath(); g.moveTo(bx, by); g.lineTo(k.x, k.y); g.stroke();
       const kn = g.createRadialGradient(k.x - size * 0.3, k.y - size * 0.3, size * 0.2, k.x, k.y, size);
-      kn.addColorStop(0, '#f4f6f8'); kn.addColorStop(0.6, cap); kn.addColorStop(1, '#31343a');
+      kn.addColorStop(0, PAL.sky96); kn.addColorStop(0.6, cap); kn.addColorStop(1, PAL.grey21);
       g.fillStyle = kn; g.beginPath(); g.arc(k.x, k.y, size, 0, TAU); g.fill();
     };
-    crown(angTop, topSize, s.running ? '#e0219a' : '#3a3d44');   // start/stop (lit when running)
-    crown(angSide, sideSize, '#5b6f86');                          // blue reset pusher
+    crown(angTop, topSize, s.running ? PAL.pink50 : PAL.grey25);   // start/stop (lit when running)
+    crown(angSide, sideSize, PAL.sky44);                          // blue reset pusher
     // Chrome bezel + white dial.
     const bez = g.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.2, cx, cy, R * 1.05);
-    bez.addColorStop(0, '#fdfefe'); bez.addColorStop(0.42, '#c9ccd2'); bez.addColorStop(0.7, '#7d828c'); bez.addColorStop(1, '#565a62');
+    bez.addColorStop(0, PAL.cyan99); bez.addColorStop(0.42, PAL.grey81); bez.addColorStop(0.7, PAL.grey52); bez.addColorStop(1, PAL.grey36);
     g.fillStyle = bez; g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fill();
     const rF = R * 0.86;
-    g.fillStyle = '#f6f7f4'; g.beginPath(); g.arc(cx, cy, rF, 0, TAU); g.fill();
+    g.fillStyle = PAL.lime96; g.beginPath(); g.arc(cx, cy, rF, 0, TAU); g.fill();
     // 12 dial ticks (60 won't read at this size).
     for (let i = 0; i < 12; i++) {
       const a = -Math.PI / 2 + (i / 12) * TAU, major = i % 3 === 0;
-      g.strokeStyle = '#141414'; g.lineWidth = (major ? 1.4 : 0.7) * k;
+      g.strokeStyle = PAL.grey08s0; g.lineWidth = (major ? 1.4 : 0.7) * k;
       g.beginPath();
       g.moveTo(cx + Math.cos(a) * rF * (major ? 0.72 : 0.82), cy + Math.sin(a) * rF * (major ? 0.72 : 0.82));
       g.lineTo(cx + Math.cos(a) * rF * 0.94, cy + Math.sin(a) * rF * 0.94);
@@ -119,9 +120,9 @@ function stopwatchCtl(destId: string, s: CState, offline: boolean, k = 1): HTMLC
       g.lineTo(cx + Math.cos(a) * len, cy + Math.sin(a) * len);
       g.stroke();
     };
-    hand(((totalS / 60) % 60) / 60, rF * 0.5, 1.4 * k, '#3a3d44');
-    hand((totalS % 60) / 60, rF * 0.88, 1.1 * k, '#e0219a', rF * 0.18);
-    g.fillStyle = '#e0219a'; g.beginPath(); g.arc(cx, cy, 1.8 * k, 0, TAU); g.fill();
+    hand(((totalS / 60) % 60) / 60, rF * 0.5, 1.4 * k, PAL.grey25);
+    hand((totalS % 60) / 60, rF * 0.88, 1.1 * k, PAL.pink50, rF * 0.18);
+    g.fillStyle = PAL.pink50; g.beginPath(); g.arc(cx, cy, 1.8 * k, 0, TAU); g.fill();
   };
   animate(cvs, drawWatch);
 

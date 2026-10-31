@@ -11,6 +11,7 @@ import type { Feed } from '../domain/routing-core/index.js';
 import { pluginFor } from '../editors/registry.js';
 import { can } from '../platform/auth.js';
 import type { Disposer } from '../ui/timers.js';
+import { PAL } from '../domain/palette.js';
 
 const twistName = (t: string | TwistConfig): string => (typeof t === 'string' ? t : t.name);
 const twistConfig = (t: string | TwistConfig): TwistConfig | null => (typeof t === 'string' ? null : t);
@@ -40,7 +41,7 @@ function routedFeeds(twistEl: HTMLElement): Feed[] {
   const push = (n: HTMLElement, i: number): void => {
     const label = (n.textContent ?? '').trim().split('\n')[0]?.trim() ?? '';
     if (!label) return;
-    const color = (n.style.color || n.style.borderColor || getComputedStyle(n).color || '#4d94ff');
+    const color = (n.style.color || n.style.borderColor || getComputedStyle(n).color || PAL.blue65);
     const type = n.dataset.type;
     const media = n.classList.contains('audio') ? 'audio' as const
       : n.classList.contains('video') ? 'video' as const
@@ -103,7 +104,7 @@ export function buildContext(
 ): EditorContext {
   const name = twistName(twist);
   const config = twistConfig(twist);
-  const color = (prod.color ?? '#646DCC') as Hex;
+  const color = (prod.color ?? PAL.blue60) as Hex;
   // Prefer live routed crosspoints (the cascade); fall back to configured inputs.
   const routed = twistEl ? routedFeeds(twistEl) : [];
   // Declared twists first; else read same-kind siblings out of the rendered row.

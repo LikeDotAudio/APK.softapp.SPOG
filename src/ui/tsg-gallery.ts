@@ -10,24 +10,25 @@
 import { el, addStyles } from './dom.js';
 import type { Disposer } from './timers.js';
 import { byGroup, drawTsg, type TsgPattern } from '../domain/tsg/index.js';
+import { PAL } from '../domain/palette.js';
 
 const CSS = `
 .tsg-gal{display:flex;flex-direction:column;gap:10px;}
 .tsg-grp-h{font:700 11px/1 var(--lcars-font,'Antonio',sans-serif);letter-spacing:2px;
-  color:#8fa9c8;margin:4px 2px 0;text-transform:uppercase;}
+  color:${PAL.sky67};margin:4px 2px 0;text-transform:uppercase;}
 .tsg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;}
-.tsg-tile{position:relative;border:2px solid #223047;border-radius:8px;overflow:hidden;
-  background:#05070c;cursor:pointer;transition:border-color .12s,transform .12s;}
-.tsg-tile:hover{transform:translateY(-1px);border-color:#3f628f;}
-.tsg-tile.sel{border-color:var(--lcars-color,#ff9640);box-shadow:0 0 0 1px var(--lcars-color,#ff9640) inset;}
-.tsg-tile canvas{display:block;width:100%;aspect-ratio:16/9;background:#000;}
+.tsg-tile{position:relative;border:2px solid ${PAL.blue21s35};border-radius:8px;overflow:hidden;
+  background:${PAL.blue03s41};cursor:pointer;transition:border-color .12s,transform .12s;}
+.tsg-tile:hover{transform:translateY(-1px);border-color:${PAL.sky40s39};}
+.tsg-tile.sel{border-color:var(--lcars-color,${PAL.orange63});box-shadow:0 0 0 1px var(--lcars-color,${PAL.orange63}) inset;}
+.tsg-tile canvas{display:block;width:100%;aspect-ratio:16/9;background:${PAL.black};}
 .tsg-cap{font:600 10px/1.2 var(--lcars-font,'Antonio',sans-serif);letter-spacing:.4px;
-  color:#dbe7f5;padding:5px 7px;background:rgba(6,12,22,.85);white-space:nowrap;
+  color:${PAL.sky91s57};padding:5px 7px;background:rgba(6,12,22,.85);white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;}
 .tsg-doc{position:absolute;top:5px;right:5px;width:18px;height:18px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;font:700 11px/1 sans-serif;
-  color:#cfe0f5;background:rgba(6,12,22,.72);text-decoration:none;border:1px solid #34517a;}
-.tsg-doc:hover{background:var(--lcars-color,#ff9640);color:#05070c;}
+  color:${PAL.sky89s66};background:rgba(6,12,22,.72);text-decoration:none;border:1px solid ${PAL.blue34s40};}
+.tsg-doc:hover{background:var(--lcars-color,${PAL.orange63});color:${PAL.blue03s41};}
 `;
 
 export interface TsgGallery {

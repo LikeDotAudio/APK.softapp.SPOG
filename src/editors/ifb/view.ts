@@ -13,6 +13,7 @@ import { PRIO, dB, initialState, resolveFeeds, DIAL_PARAM, TALK_VALUES, ROUTE_VA
 import { drawFeed, drawDuck } from './painters.js';
 import { buildDials } from './dials.js';
 import { ifbTemplate } from './template.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Build one full IFB editor into `body` for a single talent (sibling) twist.
  *  `services` + `idx` scope this strip's MQTT params to the flat `t<N>_…` topics
@@ -79,8 +80,8 @@ export function buildOne(
     b.addEventListener('click', () => { s.route = b.dataset.route as IfbRoute; applyRoute(true); });
   });
   const legOpen = (leg: string): void => {
-    if (leg === 'wireless') services.openWirelessMic?.(`${sib.name} · IFB RF`, '#3FC1C9');
-    else services.openStageBox(`${sib.name} · IFB RETURN`, '#F2B74B', [`${sib.name} IFB`]);
+    if (leg === 'wireless') services.openWirelessMic?.(`${sib.name} · IFB RF`, PAL.cyan52);
+    else services.openStageBox(`${sib.name} · IFB RETURN`, PAL.orange62, [`${sib.name} IFB`]);
   };
   body.querySelectorAll<HTMLElement>('.ifb-leg').forEach((l) => {
     l.querySelector('.open')?.addEventListener('click', (e) => { e.stopPropagation(); legOpen(l.dataset.leg || 'wired'); });

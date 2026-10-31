@@ -4,6 +4,8 @@
 // Pure-ish drawing functions over a typed ShadingState — no globals, no scraping.
 // The camera console (and any future scope consumer) composes these.
 
+import { PAL } from '../domain/palette.js';
+
 export interface ShadingState {
   pan: number; iris: number; mgain: number; mblack: number; gamma: number;
   rGain: number; gGain: number; bGain: number;
@@ -146,7 +148,7 @@ export function drawVectorscope(cv: HTMLCanvasElement, s: ShadingState, barsOn: 
   if (barsOn) {
     for (const c of [[0.75, 0.75, 0.75] as const, ...Object.values(TARGETS)]) {
       const [x, y] = xy(...c);
-      ctx.fillStyle = '#dff0ff';
+      ctx.fillStyle = PAL.sky94s100;
       ctx.beginPath();
       ctx.arc(x, y, 2.6, 0, 7);
       ctx.fill();
@@ -159,7 +161,7 @@ export function drawVectorscope(cv: HTMLCanvasElement, s: ShadingState, barsOn: 
       ctx.fillRect(x + (Math.random() - 0.5) * 10, y + (Math.random() - 0.5) * 10, 1.5, 1.5);
     }
     const [nx, ny] = xy(gr(0.5, 'rGain'), gr(0.5, 'gGain'), gr(0.5, 'bGain'));
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = PAL.white;
     ctx.beginPath();
     ctx.arc(nx, ny, 3, 0, 7);
     ctx.fill();

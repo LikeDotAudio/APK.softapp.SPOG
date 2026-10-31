@@ -7,12 +7,13 @@ import { knob, fader, meter } from '../../ui/widgets.js';
 import type { DeviceIO } from '../../platform/device/types.js';
 import { onDeviceValue, publishDeviceValue } from '../../platform/device/receiver.js';
 import type { Disposer } from '../../ui/timers.js';
+import { PAL } from '../../domain/palette.js';
 
 export function createControlWidget(
   devId: string,
   io: DeviceIO,
   dispose: Disposer,
-  accentColor = '#ff9900',
+  accentColor: string = PAL.orange50,
 ): HTMLElement {
   const strip = el('div', { class: 'dev-strip' });
   const label = el('div', { class: 'dev-strip-name', textContent: io.name });
@@ -83,7 +84,7 @@ export function createControlWidget(
     // Readout / indicator / patch point
     const box = el('div', {
       class: 'dev-toggle-btn',
-      style: 'background: #0b1322; border: 1px solid #1e293b; color: #38bdf8;',
+      style: `background: ${PAL.blue09s51}; border: 1px solid ${PAL.blue17}; color: ${PAL.sky60};`,
       textContent: formatVal(io.value ?? '—', io.unit),
     });
     dispose.add(onDeviceValue(devId, io.id, (v) => {

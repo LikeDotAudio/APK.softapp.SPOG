@@ -10,6 +10,7 @@ import {
   type Zone, type Resolution, type FaceState, type FaceDef,
   RESOLUTIONS, ZONES, zoneOf, offsetLabel, zoneIdxForOffset,
 } from '../../ui/clock-faces/src/shared.js';
+import { PAL } from '../../domain/palette.js';
 
 export type Rect = [number, number, number, number];
 
@@ -75,7 +76,7 @@ export function createWindows(C: ClockCtx): WindowsApi {
     d.face = f;
     if (d.faceSel) d.faceSel.value = f;
     if (d.cvs) d.cvs.style.background = C.faceById(f).lightBg
-      ? 'radial-gradient(circle at 50% 42%, #e8ecf2, #c2cad6)' : 'transparent';
+      ? `radial-gradient(circle at 50% 42%, ${PAL.blue93}, ${PAL.blue80})` : 'transparent';
   };
 
   const icon = (cls: string, txt: string, title: string, onClick: () => void): HTMLElement => {

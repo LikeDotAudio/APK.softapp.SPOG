@@ -5,8 +5,9 @@
 // bands (scheduled shows). Split out of captains-log-timeline (200-line rule).
 import { narratives, type Entry } from './captains-log-state.js';
 import { SCHEDULE, showColor } from './schedule.js';
+import { PAL } from '../../domain/palette.js';
 
-const OP_COLORS = ['#FF9C63', '#3FC1C9', '#A06EB4', '#6cdf4a', '#6FC8F0', '#C2B74B', '#ff5fa2', '#cc6a3a', '#9C6B9C', '#39d353'];
+const OP_COLORS = [PAL.orange69, PAL.cyan52, PAL.violet57, PAL.green58, PAL.sky69, PAL.yellow53, PAL.pink69s100, PAL.orange51s59, PAL.purple52, PAL.green53];
 
 export interface Keyframe { ts: number; text: string; rev: boolean; op: string; color: string }
 export interface Plan { s: number; e: number; label: string; showName: string; reh?: boolean; tear?: boolean; color?: string }

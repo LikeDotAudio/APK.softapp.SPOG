@@ -15,6 +15,7 @@ import { buildConsole } from './shell.js';
 import { openFromHash } from './editor-dispatch.js';
 import { handleDestDeepLink } from '../ui/console/footer-deeplink.js';
 import { initDeviceReceiver } from '../platform/device/receiver.js';
+import { PAL } from '../domain/palette.js';
 
 // Real build stamp shown beside the credit byline — injected by Vite's `define`
 // at build time (see vite.config.ts `buildId`), so it changes on every deploy.
@@ -27,7 +28,7 @@ buildConsole(BUILD).then(() => {
   handleDestDeepLink();
   openFromHash();
 }).catch((e: unknown) => {
-  document.body.innerHTML = `<pre style="color:#ff6a6a">console boot failed: ${String(e)}</pre>`;
+  document.body.innerHTML = `<pre style="color:${PAL.red71}">console boot failed: ${String(e)}</pre>`;
 });
 // `#on/<floor>/<production>` jumps to a destination; `#/<prod>/<twist>` opens an editor.
 window.addEventListener('hashchange', () => { handleDestDeepLink(); openFromHash(); });

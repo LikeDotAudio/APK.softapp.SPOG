@@ -5,6 +5,7 @@
 // lane), HOW MANY more operators / rooms, and WHICH shows collide. Pure model + HTML,
 // plus a small drawer the view toggles from the ⚠ STAFFING button or a ×N badge.
 import { el } from '../dom.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface SPlan { s: number; e: number; showName?: string; label?: string }
 export interface SLane { type?: string; name: string; plans: SPlan[] }
@@ -59,16 +60,16 @@ export function staffingHtml(needs: StaffNeed[], scope = ''): string {
 }
 
 export const STAFF_CSS = `
-.tl-staff{position:absolute;right:16px;top:110px;z-index:9;width:340px;max-height:60%;overflow:auto;display:none;background:#0a1120;border:1px solid #ff6a6a;border-radius:10px;box-shadow:0 12px 36px rgba(0,0,0,.65);font:11px/1.45 'Courier New',monospace;color:#e6f2ff;}
+.tl-staff{position:absolute;right:16px;top:110px;z-index:9;width:340px;max-height:60%;overflow:auto;display:none;background:${PAL.blue08};border:1px solid ${PAL.red71};border-radius:10px;box-shadow:0 12px 36px rgba(0,0,0,.65);font:11px/1.45 'Courier New',monospace;color:${PAL.sky95};}
 .tl-staff.open{display:block;}
-.tl-staff-h{position:sticky;top:0;display:flex;gap:6px;align-items:center;padding:7px 11px;background:#3a1010;color:#ff9a9a;font-weight:bold;letter-spacing:1px;}
-.tl-staff-h .x{margin-left:auto;cursor:pointer;color:#c88;}
-.tl-staff-row{padding:6px 11px;border-bottom:1px solid #1d2942;cursor:pointer;}
-.tl-staff-row:hover{background:#16233d;}
-.tl-staff-row em{font-style:normal;font-weight:900;color:#ff6a6a;}
-.tl-staff-row i{color:#6FC8F0;font-style:normal;}
-.tl-staff-shows{color:#8a99a8;font-size:10px;}
-.tl-staff-none{padding:10px 11px;color:#7e93b5;}
+.tl-staff-h{position:sticky;top:0;display:flex;gap:6px;align-items:center;padding:7px 11px;background:${PAL.red15};color:${PAL.red80};font-weight:bold;letter-spacing:1px;}
+.tl-staff-h .x{margin-left:auto;cursor:pointer;color:${PAL.red67s40};}
+.tl-staff-row{padding:6px 11px;border-bottom:1px solid ${PAL.blue19};cursor:pointer;}
+.tl-staff-row:hover{background:${PAL.blue16_16233d};}
+.tl-staff-row em{font-style:normal;font-weight:900;color:${PAL.red71};}
+.tl-staff-row i{color:${PAL.sky69};font-style:normal;}
+.tl-staff-shows{color:${PAL.sky60s15};font-size:10px;}
+.tl-staff-none{padding:10px 11px;color:${PAL.blue60s27};}
 .tl-conflict{cursor:pointer;}
 `;
 

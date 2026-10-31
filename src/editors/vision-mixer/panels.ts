@@ -7,6 +7,7 @@
 import { el } from '../../ui/dom.js';
 import { srcLabel } from './me.js';
 import type { Surface } from './surface.js';
+import { PAL } from '../../domain/palette.js';
 
 /** The AUX panel: one source select per aux bus. Returns the selects for sync. */
 export function buildAuxRow(s: Surface): { auxRow: HTMLElement; auxSelects: HTMLSelectElement[] } {
@@ -36,7 +37,7 @@ export function buildAuxRow(s: Surface): { auxRow: HTMLElement; auxSelects: HTML
 /** The MACRO row: record / select / play over the surface's macro recorder. */
 export function buildMacroRow(s: Surface): { macroRow: HTMLElement } {
   const macroRow = el('div', { class: 'vm-transrow' });
-  const recBtn = el('button', { class: 'vm-tbtn', type: 'button', style: 'color: #f55' }, ['⏺ RECORD']);
+  const recBtn = el('button', { class: 'vm-tbtn', type: 'button', style: `color: ${PAL.red67}` }, ['⏺ RECORD']);
   const macroSel = el('select', { class: 'vm-sel' }) as HTMLSelectElement;
   const playBtn = el('button', { class: 'vm-tbtn', type: 'button' }, ['▶ PLAY']);
   const rebuildMacroSel = () => { macroSel.replaceChildren(...s.macroRecorder.macros.map(m => el('option', { value: m.id }, [m.name]))); };

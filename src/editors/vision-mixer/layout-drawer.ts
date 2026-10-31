@@ -7,14 +7,15 @@
 
 import { el } from '../../ui/dom.js';
 import type { Dashboard } from './dashboard.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Build the layout drawer + its toolbar toggle over the dashboard. */
 export function buildLayoutDrawer(d: Dashboard): { lmDrawer: HTMLElement; lmToggle: HTMLElement } {
-  const lmDrawer = el('div', { class: 'vm-drawer', style: 'display:none; padding: 16px; background: #0a0f1c; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;' });
+  const lmDrawer = el('div', { class: 'vm-drawer', style: `display:none; padding: 16px; background: ${PAL.blue07}; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;` });
   const lmChecks = el('div', { style: 'display:flex; gap:16px; flex-wrap:wrap;' });
   const rebuildLmChecks = () => {
     lmChecks.replaceChildren(...Object.keys(d.modules).map(id => {
-      const lbl = el('label', { style: 'cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:bold; color: #cfe0ff;' }, [id.toUpperCase()]);
+      const lbl = el('label', { style: `cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:bold; color: ${PAL.blue91};` }, [id.toUpperCase()]);
       const chk = el('input', { type: 'checkbox', checked: !d.layout.hidden.includes(id) }) as HTMLInputElement;
       chk.addEventListener('change', () => {
         if (chk.checked) d.layout.hidden = d.layout.hidden.filter(x => x !== id);
@@ -62,7 +63,7 @@ export function buildLayoutDrawer(d: Dashboard): { lmDrawer: HTMLElement; lmTogg
     rebuildLmPresetSel();
   });
 
-  const jsonView = el('textarea', { style: 'width: 100%; height: 150px; background: #000; color: #0f0; font-family: monospace; padding: 8px; border-radius: 8px;' }) as HTMLTextAreaElement;
+  const jsonView = el('textarea', { style: `width: 100%; height: 150px; background: ${PAL.black}; color: ${PAL.green50}; font-family: monospace; padding: 8px; border-radius: 8px;` }) as HTMLTextAreaElement;
   d.jsonView = jsonView;
   jsonView.value = JSON.stringify(d.layout, null, 2);
 
@@ -86,8 +87,8 @@ export function buildLayoutDrawer(d: Dashboard): { lmDrawer: HTMLElement; lmTogg
   layoutLockBtn.addEventListener('click', () => {
     d.locked = !d.locked;
     layoutLockBtn.textContent = d.locked ? '🔒 UNLOCK LAYOUT DRAG' : '🔓 LOCK LAYOUT DRAG';
-    layoutLockBtn.style.background = d.locked ? '' : 'var(--state-alarm,#ff3b3b)';
-    layoutLockBtn.style.color = d.locked ? '' : '#fff';
+    layoutLockBtn.style.background = d.locked ? '' : `var(--state-alarm,${PAL.red62})`;
+    layoutLockBtn.style.color = d.locked ? '' : PAL.white;
     d.el.classList.toggle('tips-disabled', d.locked);
     Object.values(d.modules).forEach(mod => {
       mod.style.resize = d.locked ? 'none' : 'both';

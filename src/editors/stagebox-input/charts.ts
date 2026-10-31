@@ -3,6 +3,8 @@
 // Both take an explicit canvas + render locals (no closures) so view can thread
 // its per-panel state through the call.
 
+import { PAL } from '../../domain/palette.js';
+
 export function drawHist(cv: HTMLCanvasElement, hist: number[]): void {
   const w = (cv.width = cv.clientWidth);
   const h = (cv.height = cv.clientHeight);
@@ -24,11 +26,11 @@ export function drawHist(cv: HTMLCanvasElement, hist: number[]): void {
     if (i) ctx.lineTo(x, y);
     else ctx.moveTo(x, y);
   });
-  ctx.strokeStyle = '#39d353';
+  ctx.strokeStyle = PAL.green53;
   ctx.lineWidth = 1.5;
   ctx.stroke();
   // red peak markers
-  ctx.fillStyle = '#ff3b3b';
+  ctx.fillStyle = PAL.red62;
   hist.forEach((v, i) => {
     if (v > 0.95) ctx.fillRect((i / 300) * w, 2, 2, 6);
   });
@@ -87,7 +89,7 @@ export function drawHPF(cv: HTMLCanvasElement, fc: number, slope: number, win: s
     if (px === 22) ctx.moveTo(px, y);
     else ctx.lineTo(px, y);
   }
-  ctx.strokeStyle = '#6FC8F0';
+  ctx.strokeStyle = PAL.sky69;
   ctx.lineWidth = 2;
   ctx.stroke();
   ctx.lineTo(w, h);
@@ -95,7 +97,7 @@ export function drawHPF(cv: HTMLCanvasElement, fc: number, slope: number, win: s
   ctx.closePath();
   ctx.fillStyle = 'rgba(111,200,240,.1)';
   ctx.fill();
-  ctx.fillStyle = '#6FC8F0';
+  ctx.fillStyle = PAL.sky69;
   ctx.font = 'bold 9px Courier New, monospace';
   ctx.fillText(`${win} · ${fc}Hz · ${slope}dB/oct`, 26, 11);
 }

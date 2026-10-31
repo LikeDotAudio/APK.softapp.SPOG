@@ -6,6 +6,8 @@
 // data table. Each fixture carries an LED intensity + colour-temperature value.
 
 /** A fixture's static definition (position on the top-down rig + base colour). */
+import { PAL } from '../../domain/palette.js';
+
 export interface FixtureDef {
   k: string;
   sub: string;
@@ -21,12 +23,12 @@ export interface Fixture extends FixtureDef {
 }
 
 export const FIXTURES: readonly FixtureDef[] = [
-  { k: 'KEY', sub: 'Key · 30–45°', x: 32, y: 30, color: '#ffd9a0' },
-  { k: 'FILL', sub: 'Fill · soft', x: 68, y: 30, color: '#cfe0ff' },
-  { k: 'BACK', sub: 'Back / Hair', x: 50, y: 14, color: '#ffffff' },
-  { k: 'BG', sub: 'Background', x: 50, y: 82, color: '#9fd6ff' },
-  { k: 'CYC', sub: 'Cyclorama', x: 16, y: 70, color: '#7ad0ff' },
-  { k: 'FX', sub: 'Effect / Gobo', x: 84, y: 70, color: '#c79bff' },
+  { k: 'KEY', sub: 'Key · 30–45°', x: 32, y: 30, color: PAL.orange81 },
+  { k: 'FILL', sub: 'Fill · soft', x: 68, y: 30, color: PAL.blue91 },
+  { k: 'BACK', sub: 'Back / Hair', x: 50, y: 14, color: PAL.white },
+  { k: 'BG', sub: 'Background', x: 50, y: 82, color: PAL.sky81s100 },
+  { k: 'CYC', sub: 'Cyclorama', x: 16, y: 70, color: PAL.sky74 },
+  { k: 'FX', sub: 'Effect / Gobo', x: 84, y: 70, color: PAL.violet80 },
 ];
 
 /** Fresh fixture state with the legacy default intensities (Key hot, Fill soft). */

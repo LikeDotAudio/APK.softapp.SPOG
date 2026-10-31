@@ -5,6 +5,7 @@ import type { SourceLeaf, PlayoutPlayer, PlayoutVideo, StreamDef } from '../../m
 import { slugId, monoEmoji, styleSignalNode } from './format.js';
 import { makeMediaGroup } from './media-group.js';
 import { wireFold } from './pools-fold.js';
+import { PAL } from '../../domain/palette.js';
 
 // ---- PLAYOUT pool -----------------------------------------------------------
 function buildPlayoutVideoNode(video: PlayoutVideo, color: string, origin: string): HTMLElement {
@@ -30,7 +31,7 @@ function buildPlayoutVideoNode(video: PlayoutVideo, color: string, origin: strin
 }
 
 export function renderPlayoutPool(data: SourceLeaf, container: HTMLElement): void {
-  const color = data.color || '#646DCC';
+  const color = data.color || PAL.blue60;
   const players: PlayoutPlayer[] = Array.isArray(data.players) ? data.players : [];
   const group = document.createElement('div');
   group.className = 'input-group';
@@ -57,9 +58,9 @@ export function renderPlayoutPool(data: SourceLeaf, container: HTMLElement): voi
 // ---- STREAMS pool (port of js/poolStreams.js) -------------------------------
 const STREAM_CSS = `
 .signal-node.stream-node .stream-link{display:block;font-size:9px;letter-spacing:.5px;
-    color:#9fb6cc;text-decoration:none;padding:3px 4px;margin-top:2px;word-break:break-all;
+    color:${PAL.sky71};text-decoration:none;padding:3px 4px;margin-top:2px;word-break:break-all;
     background:rgba(0,0,0,.35);border-radius:3px;}
-.signal-node.stream-node .stream-link:hover{color:#fff;text-decoration:underline;}`;
+.signal-node.stream-node .stream-link:hover{color:${PAL.white};text-decoration:underline;}`;
 
 function buildStreamNode(stream: StreamDef, color: string, origin: string): HTMLElement {
   const sid = stream.id || slugId(stream.name);
@@ -93,7 +94,7 @@ function buildStreamNode(stream: StreamDef, color: string, origin: string): HTML
 }
 
 export function renderStreamsPool(data: SourceLeaf, container: HTMLElement): void {
-  const color = data.color || '#C864C8';
+  const color = data.color || PAL.purple59;
   const streams: StreamDef[] = Array.isArray(data.streams) ? data.streams : [];
   const group = document.createElement('div');
   group.className = 'input-group';

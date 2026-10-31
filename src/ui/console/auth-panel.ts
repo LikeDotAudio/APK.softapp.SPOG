@@ -15,38 +15,39 @@ import { stampIcon } from '../icon-face.js';
 // applyScope (the progressive-disclosure sweep) lives in scope.ts — re-exported
 // here so the ~4 modules that import it from auth-panel stay byte-identical.
 import { applyScope } from './scope.js';
+import { PAL } from '../../domain/palette.js';
 export { applyScope };
 
 const AUTH_CSS = `
-.au-focus{position:fixed;left:50%;top:0;transform:translate(-50%,-110%);z-index:1600;background:#0a1326;border:1px solid var(--rc,#F2B74B);border-top:none;border-radius:0 0 14px 14px;padding:11px 26px;color:#e0f0ff;font:bold 13px sans-serif;letter-spacing:1px;box-shadow:0 8px 22px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.2,1.2,.4,1);white-space:nowrap;}
+.au-focus{position:fixed;left:50%;top:0;transform:translate(-50%,-110%);z-index:1600;background:${PAL.blue09s58};border:1px solid var(--rc,${PAL.orange62});border-top:none;border-radius:0 0 14px 14px;padding:11px 26px;color:${PAL.sky94};font:bold 13px sans-serif;letter-spacing:1px;box-shadow:0 8px 22px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.2,1.2,.4,1);white-space:nowrap;}
 .au-focus.show{transform:translate(-50%,0);}
-.au-focus b{color:var(--rc,#F2B74B);}
+.au-focus b{color:var(--rc,${PAL.orange62});}
 .au-overlay{position:fixed;inset:0;z-index:3200;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,rgba(13,23,48,.92),rgba(3,6,15,.96));font-family:Arial,Helvetica,sans-serif;}
 .au-overlay.open{display:flex;}
-.au-box{width:min(880px,94vw);max-height:90vh;overflow:auto;background:#0a1326;border:1px solid #1d2942;border-radius:16px;padding:26px;}
-.au-box h2{margin:0 0 4px;color:#fff;font-size:22px;letter-spacing:2px;}
-.au-box p{margin:0 0 20px;color:#7e93b5;font-size:12px;letter-spacing:1px;}
+.au-box{width:min(880px,94vw);max-height:90vh;overflow:auto;background:${PAL.blue09s58};border:1px solid ${PAL.blue19};border-radius:16px;padding:26px;}
+.au-box h2{margin:0 0 4px;color:${PAL.white};font-size:22px;letter-spacing:2px;}
+.au-box p{margin:0 0 20px;color:${PAL.blue60s27};font-size:12px;letter-spacing:1px;}
 .au-roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
-.au-role{text-align:left;border-radius:12px;border:1px solid #2c3e5e;background:#0c1730;padding:14px;cursor:pointer;transition:.15s;}
-.au-role:hover{background:#13233c;transform:translateY(-2px);}
-.au-role .tag{display:inline-block;font:900 9px sans-serif;letter-spacing:1px;text-transform:uppercase;color:#0a1206;border-radius:5px;padding:3px 7px;margin-bottom:8px;}
-.au-role b{display:block;color:#fff;font-size:15px;letter-spacing:1px;}
-.au-role .ti{color:#9fb6cc;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin:2px 0 6px;}
-.au-role .ds{color:#aec6e4;font-size:11px;line-height:1.4;}
-.au-role.sel{border-color:#F2B74B;box-shadow:0 0 14px rgba(242,183,75,.4);}
+.au-role{text-align:left;border-radius:12px;border:1px solid ${PAL.blue27s36};background:${PAL.blue12_0c1730};padding:14px;cursor:pointer;transition:.15s;}
+.au-role:hover{background:${PAL.blue15};transform:translateY(-2px);}
+.au-role .tag{display:inline-block;font:900 9px sans-serif;letter-spacing:1px;text-transform:uppercase;color:${PAL.green05s50};border-radius:5px;padding:3px 7px;margin-bottom:8px;}
+.au-role b{display:block;color:${PAL.white};font-size:15px;letter-spacing:1px;}
+.au-role .ti{color:${PAL.sky71};font-size:10px;letter-spacing:1px;text-transform:uppercase;margin:2px 0 6px;}
+.au-role .ds{color:${PAL.sky79};font-size:11px;line-height:1.4;}
+.au-role.sel{border-color:${PAL.orange62};box-shadow:0 0 14px rgba(242,183,75,.4);}
 /* Operator-name row in the role picker. */
 .au-namerow{display:flex;align-items:center;gap:12px;margin:0 0 16px;font:900 10px sans-serif;
-  letter-spacing:2px;color:#8fb4d8;}
-.au-name{flex:1;background:#03060f;border:1px solid #35507a;border-radius:6px;color:#e0f0ff;
+  letter-spacing:2px;color:${PAL.sky70};}
+.au-name{flex:1;background:${PAL.blue04};border:1px solid ${PAL.blue34s39};border-radius:6px;color:${PAL.sky94};
   padding:9px 12px;font:14px Arial;}
-.au-name:focus{outline:none;border-color:var(--rc,#F2B74B);}
+.au-name:focus{outline:none;border-color:var(--rc,${PAL.orange62});}
 /* MY SEAT — portable-preferences export/import (moved out of the Academy). */
-.au-seat{display:flex;align-items:center;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #1d2942;
-  font:900 10px sans-serif;letter-spacing:2px;color:#8fb4d8;}
-.au-seat button{border:1px solid #35507a;background:#0c1730;color:#EAF2FF;cursor:pointer;
+.au-seat{display:flex;align-items:center;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid ${PAL.blue19};
+  font:900 10px sans-serif;letter-spacing:2px;color:${PAL.sky70};}
+.au-seat button{border:1px solid ${PAL.blue34s39};background:${PAL.blue12_0c1730};color:${PAL.blue96};cursor:pointer;
   font:900 10px sans-serif;letter-spacing:1px;text-transform:uppercase;padding:7px 13px;border-radius:6px 12px 12px 6px;}
 .au-seat button:hover{filter:brightness(1.3);}
-.au-seat span{font-weight:normal;letter-spacing:1px;color:#7e93b5;text-transform:none;}
+.au-seat span{font-weight:normal;letter-spacing:1px;color:${PAL.blue60s27};text-transform:none;}
 /* RIGHTS + LOG OUT corner pills — head of the sources rail, ONE row with the
    log button (captains-log.ts seats .cl-btn as this row's first child). */
 .au-corner{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:stretch;}
@@ -55,9 +56,9 @@ const AUTH_CSS = `
 .au-corner .um-btn{flex:0 1 auto;min-width:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;}
 .au-corner button{flex:1 1 auto;min-width:0;border:none;cursor:pointer;font:900 10px sans-serif;letter-spacing:1px;
   text-transform:uppercase;padding:8px 10px;border-radius:6px 14px 14px 6px;white-space:nowrap;}
-.au-c-rights{display:none;background:#13233c;color:#FFD97A;border:1px solid rgba(255,255,255,.22) !important;}
+.au-c-rights{display:none;background:${PAL.blue15};color:${PAL.amber74};border:1px solid rgba(255,255,255,.22) !important;}
 .au-corner.admin .au-c-rights{display:block;}
-.au-c-out{background:#0c1730;color:#EAF2FF;border:1px solid rgba(255,255,255,.22) !important;}
+.au-c-out{background:${PAL.blue12_0c1730};color:${PAL.blue96};border:1px solid rgba(255,255,255,.22) !important;}
 .au-corner button:hover{filter:brightness(1.25);}
 /* ICON face: the corner pair render as tiles (icon-face stamps the artwork). */
 html[data-face="icons"] .au-corner button.has-face-icon{
@@ -66,13 +67,13 @@ html[data-face="icons"] .au-corner button.has-face-icon{
 html[data-face="icons"] .au-corner button.has-face-icon:hover{
   background-image:var(--face-icon-hover,var(--face-icon)) !important;filter:none;}
 .au-matrix{display:grid;gap:6px;align-items:center;}
-.au-mh{font:bold 9px sans-serif;color:#9fb6cc;letter-spacing:1px;text-transform:uppercase;text-align:center;}
-.au-mr{font:bold 13px sans-serif;color:#cfe6ff;padding-right:8px;}
-.au-mr small{display:block;color:#7e93b5;font-size:9px;font-weight:normal;letter-spacing:1px;text-transform:uppercase;}
-.au-cell{height:32px;border-radius:6px;border:1px solid #2c3e5e;background:#0c1730;cursor:pointer;transition:.1s;}
-.au-cell:hover{border-color:#6FC8F0;} .au-cell.on{background:var(--cc,#39d353);border-color:var(--cc,#39d353);}
+.au-mh{font:bold 9px sans-serif;color:${PAL.sky71};letter-spacing:1px;text-transform:uppercase;text-align:center;}
+.au-mr{font:bold 13px sans-serif;color:${PAL.sky91};padding-right:8px;}
+.au-mr small{display:block;color:${PAL.blue60s27};font-size:9px;font-weight:normal;letter-spacing:1px;text-transform:uppercase;}
+.au-cell{height:32px;border-radius:6px;border:1px solid ${PAL.blue27s36};background:${PAL.blue12_0c1730};cursor:pointer;transition:.1s;}
+.au-cell:hover{border-color:${PAL.sky69};} .au-cell.on{background:var(--cc,${PAL.green53});border-color:var(--cc,${PAL.green53});}
 .au-cell.lock{opacity:.45;cursor:not-allowed;}
-.au-rnote{margin-top:14px;color:#6b82a3;font-size:11px;letter-spacing:1px;}`;
+.au-rnote{margin-top:14px;color:${PAL.blue53};font-size:11px;letter-spacing:1px;}`;
 
 const CAPS: Array<[Capability, string]> = [
   ['switch', 'Switch'], ['route', 'Route'], ['signal', 'Signal'], ['shade', 'Shade'], ['audio', 'Audio'],

@@ -3,14 +3,16 @@
 // credits, 1990s view). Split from icon-glyphs.ts (source/destination
 // category glyphs) to honour the 200-line rule; icon-glyphs.ts spread-merges
 // this map into the single GLYPHS namespace consumed by icon-tiles.ts.
+import { PAL } from '../domain/palette.js';
+
 export const CHROME_GLYPHS: Record<string, string> = {
   'captains-log': `
     <path d="M 256 160 q -50 -28 -108 -18 v 196 q 58 -10 108 18 z" fill-opacity=".8" stroke="none"/>
     <path d="M 256 160 q 50 -28 108 -18 v 196 q -58 -10 -108 18 z" stroke="none"/>
-    <line x1="284" y1="196" x2="336" y2="188" stroke-width="10" stroke-linecap="round" stroke="#0a1326" opacity=".55"><animate attributeName="opacity" values=".55;.15;.55" dur="3s" begin="0s" repeatCount="indefinite"/></line>
-    <line x1="284" y1="232" x2="336" y2="224" stroke-width="10" stroke-linecap="round" stroke="#0a1326" opacity=".55"><animate attributeName="opacity" values=".55;.15;.55" dur="3s" begin=".5s" repeatCount="indefinite"/></line>
-    <line x1="284" y1="268" x2="336" y2="260" stroke-width="10" stroke-linecap="round" stroke="#0a1326" opacity=".55"><animate attributeName="opacity" values=".55;.15;.55" dur="3s" begin="1s" repeatCount="indefinite"/></line>
-    <path d="M 300 138 v 44 l 16 -12 16 12 v -50 q -16 2 -32 6 z" stroke="none" fill="#0a1326" opacity=".7"/>`,
+    <line x1="284" y1="196" x2="336" y2="188" stroke-width="10" stroke-linecap="round" stroke="${PAL.blue09s58}" opacity=".55"><animate attributeName="opacity" values=".55;.15;.55" dur="3s" begin="0s" repeatCount="indefinite"/></line>
+    <line x1="284" y1="232" x2="336" y2="224" stroke-width="10" stroke-linecap="round" stroke="${PAL.blue09s58}" opacity=".55"><animate attributeName="opacity" values=".55;.15;.55" dur="3s" begin=".5s" repeatCount="indefinite"/></line>
+    <line x1="284" y1="268" x2="336" y2="260" stroke-width="10" stroke-linecap="round" stroke="${PAL.blue09s58}" opacity=".55"><animate attributeName="opacity" values=".55;.15;.55" dur="3s" begin="1s" repeatCount="indefinite"/></line>
+    <path d="M 300 138 v 44 l 16 -12 16 12 v -50 q -16 2 -32 6 z" stroke="none" fill="${PAL.blue09s58}" opacity=".7"/>`,
   'chat': `
     <path d="M 128 160 h 190 q 22 0 22 22 v 84 q 0 22 -22 22 h -104 l -46 40 v -40 h -40 q -22 0 -22 -22 v -84 q 0 -22 22 -22 z" stroke="none" opacity=".75"><animate attributeName="opacity" values=".75;.4;.75" dur="2.6s" repeatCount="indefinite"/></path>
     <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -8;0 0" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
@@ -28,11 +30,11 @@ export const CHROME_GLYPHS: Record<string, string> = {
   'settings': `
     <g><animateTransform attributeName="transform" type="rotate" from="0 256 256" to="360 256 256" dur="14s" repeatCount="indefinite"/>
     <path d="M 256 140 l 14 34 a 88 88 0 0 1 30 12 l 35 -12 20 34 -26 26 a 88 88 0 0 1 0 32 l 26 26 -20 34 -35 -12 a 88 88 0 0 1 -30 12 l -14 34 -14 -34 a 88 88 0 0 1 -30 -12 l -35 12 -20 -34 26 -26 a 88 88 0 0 1 0 -32 l -26 -26 20 -34 35 12 a 88 88 0 0 1 30 -12 z" stroke="none"/>
-    <circle cx="256" cy="256" r="44" fill="#0a1326" stroke="none"/></g>`,
+    <circle cx="256" cy="256" r="44" fill="${PAL.blue09s58}" stroke="none"/></g>`,
   'academy': `
     <path d="M 176 244 v 66 q 80 46 160 0 v -66 l -80 36 z" stroke="none" opacity=".8"/>
     <path d="M 256 148 L 408 214 256 280 104 214 z" stroke="none"/>
-    <circle cx="256" cy="214" r="12" fill="#0a1326" stroke="none"/>
+    <circle cx="256" cy="214" r="12" fill="${PAL.blue09s58}" stroke="none"/>
     <g><animateTransform attributeName="transform" type="rotate" values="0 400 214;7 400 214;-7 400 214;0 400 214" dur="3.4s" repeatCount="indefinite"/>
     <line x1="400" y1="222" x2="400" y2="304" stroke-width="12" stroke-linecap="round"/>
     <circle cx="400" cy="320" r="14" stroke="none"/></g>`,
@@ -61,7 +63,7 @@ export const CHROME_GLYPHS: Record<string, string> = {
   '1990s-view': `
     <rect x="122" y="150" width="268" height="212" rx="8" fill="none" stroke-width="14"/>
     <rect x="122" y="150" width="268" height="46" stroke="none"/>
-    <rect x="348" y="162" width="24" height="22" fill="#0a1326" stroke="none"/>
+    <rect x="348" y="162" width="24" height="22" fill="${PAL.blue09s58}" stroke="none"/>
     <line x1="196" y1="222" x2="196" y2="336" stroke-width="10"/>
     <line x1="270" y1="222" x2="270" y2="336" stroke-width="10"/>
     <line x1="148" y1="264" x2="364" y2="264" stroke-width="10"/>

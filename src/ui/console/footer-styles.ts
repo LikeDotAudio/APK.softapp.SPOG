@@ -2,6 +2,8 @@
 // split out of footer.ts to keep that file under the size cap: the LCARS tab
 // palette, a hex→"r,g,b" helper, and the footer's injected CSS.
 
+import { PAL } from '../../domain/palette.js';
+
 export const LCARS_COLORS = [
   '193,152,176', '180,103,87', '174,105,125', '151,88,123',
   '198,120,37', '178,132,82', '194,183,75', '190,188,223',
@@ -17,7 +19,7 @@ export function hexToRgb(hex: string | undefined): string | null {
 export const FOOTER_CSS = `
 .lcars-topbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;padding:8px;margin-bottom:16px;border:none;}
 .lcars-group{--group-lcars:255,170,0;display:flex;align-items:flex-end;gap:6px;padding:4px;border-radius:20px;background:rgba(var(--group-lcars),0.08);position:relative;}
-.lcars-group-label{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:12px;line-height:1;color:#000;background:rgb(var(--group-lcars));padding:11px 18px;border-radius:16px 4px 4px 16px;white-space:nowrap;cursor:pointer;}
+.lcars-group-label{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:12px;line-height:1;color:${PAL.black};background:rgb(var(--group-lcars));padding:11px 18px;border-radius:16px 4px 4px 16px;white-space:nowrap;cursor:pointer;}
 .lcars-group-caret{font-size:10px;transition:transform 0.2s;}
 .lcars-group:not(.collapsed) > .lcars-group-label .lcars-group-caret{transform:rotate(90deg);}
 .lcars-group.collapsed > .lcars-group-body{display:none;}
@@ -48,7 +50,7 @@ html[data-chirality="right"] .lcars-group-body .lcars-group:not(.collapsed) > .l
    Both hands stack alphanumerically top-down (tab 1 at the top). */
 html[data-chirality="right"] .lcars-group-tabs{flex-direction:column;}
 .lcars-group-tabs .lcars-tab{text-align:left;}
-.lcars-tab{--lcars:0,0,0;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:13px;line-height:1;color:#000;background:rgb(var(--lcars));opacity:0.45;padding:9px 26px;border:none;border-radius:0 999px 999px 0;cursor:pointer;user-select:none;white-space:nowrap;transition:opacity .2s,box-shadow .2s,transform .08s;}
+.lcars-tab{--lcars:0,0,0;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:13px;line-height:1;color:${PAL.black};background:rgb(var(--lcars));opacity:0.45;padding:9px 26px;border:none;border-radius:0 999px 999px 0;cursor:pointer;user-select:none;white-space:nowrap;transition:opacity .2s,box-shadow .2s,transform .08s;}
 .lcars-tab:hover:not(.active){opacity:0.8;}
 .lcars-tab.active{opacity:1;box-shadow:0 0 12px rgba(var(--lcars),0.75);}
 .lcars-tab:active{transform:translateY(1px);}`;

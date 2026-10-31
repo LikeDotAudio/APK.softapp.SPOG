@@ -14,8 +14,9 @@ import { wireNav } from './captains-log-timeline-nav.js';
 import { buildGrid } from './captains-log-timeline-render.js';
 import { makeStaffing, needsStaffing, STAFF_CSS } from './captains-log-timeline-staffing.js';
 import { showSchedule } from './schedule.js';
+import { PAL } from '../../domain/palette.js';
 
-const PLAN = '#5a6a8c';
+const PLAN = PAL.blue45;
 const MIN_SPAN_MIN = 60, GUTTER = 220;
 let pxPerMin = 5;          // horizontal zoom (px per minute) — driven by wheel + nav handles
 let curWidth = 0;          // last rendered content width (for the nav zoom maths)
@@ -87,7 +88,7 @@ function renderInto(body: HTMLElement, resetScroll = true): void {
     const groups = [...new Set(all.filter((l) => l.type === 'where' || l.type === 'how').map((l) => l.group))];
     chips.innerHTML = `<button class="tl-chip all${!selectedGroups.size && !filter ? ' on' : ''}" data-group="">◎ SHOW ALL</button>` + groups.map((g) => {
       const tw = twists.find((t) => (t.dataset['prodName'] || '').toUpperCase() === g);
-      const c = (tw && getComputedStyle(tw).getPropertyValue('--lcars-color').trim()) || '#3FC1C9';
+      const c = (tw && getComputedStyle(tw).getPropertyValue('--lcars-color').trim()) || PAL.cyan52;
       return `<button class="tl-chip${selectedGroups.has(g.toLowerCase()) ? ' on' : ''}" data-group="${esc(g)}" style="--c:${c}">${esc(g)}</button>`;
     }).join('');
   }
@@ -111,7 +112,7 @@ function showDetail(idx: number, cx: number, cy: number): void {
   const ev = evList[idx]; if (!ev || !panel) return;
   const card = el('div', { class: 'tl-detail' }, []);
   card.innerHTML = `<div class="tl-detail-h">LOG EVENT<span class="x">✕</span></div>
-    <div class="tl-detail-b"><div>${esc(new Date(ev.ts).toLocaleString())} · by ${esc(ev.op)}${ev.rev ? ' <span class="rev">[reversed]</span>' : ''}</div><div style="margin-top:6px;color:#cfe6ff">${esc(ev.text)}</div></div>`;
+    <div class="tl-detail-b"><div>${esc(new Date(ev.ts).toLocaleString())} · by ${esc(ev.op)}${ev.rev ? ' <span class="rev">[reversed]</span>' : ''}</div><div style="margin-top:6px;color:${PAL.sky91}">${esc(ev.text)}</div></div>`;
   panel.appendChild(card);
   const r = card.getBoundingClientRect();
   card.style.left = `${Math.min(cx + 8, window.innerWidth - r.width - 8)}px`;

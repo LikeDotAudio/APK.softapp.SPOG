@@ -2,6 +2,7 @@
 // one per 75% colour bar, additively blended for a lively burn-in / motion-smear
 // exerciser that stays inside the broadcast bar gamut.
 import type { TsgPattern } from '../types.js';
+import { PAL } from '../../palette.js';
 
 // The seven EBU/SMPTE 75% bars: white, yellow, cyan, green, magenta, red, blue.
 const BARS = ['191,191,191', '191,191,0', '0,191,191', '0,191,0', '191,0,191', '191,0,0', '0,0,191'];
@@ -11,7 +12,7 @@ const pattern: TsgPattern = {
   title: 'Dynamic Noise Pattern (SMPTE palette): drifting colour-bar washes exercise adjacent pixels to test motion smearing and mitigate temporary image retention (burn-in), staying within the 75% broadcast bar gamut.',
   href: 'https://en.wikipedia.org/wiki/Image_persistence',
   draw(g, W, H, t) {
-    g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+    g.fillStyle = PAL.black; g.fillRect(0, 0, W, H);
     const s = t / 2600, r = Math.max(W, H) * 0.42;
     g.globalCompositeOperation = 'lighter';
     BARS.forEach((rgb, i) => {

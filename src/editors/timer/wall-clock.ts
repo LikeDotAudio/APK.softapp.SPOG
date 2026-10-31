@@ -11,6 +11,7 @@ import {
   RESOLUTIONS, ZONES, zoneOf, offsetLabel, detectZoneIdx, zoneIdxForOffset, parseZone,
 } from '../../ui/clock-faces/src/shared.js';
 import { ALL_FACES, FACE_API } from '../../ui/clock-faces/src/index.js';
+import { PAL } from '../../domain/palette.js';
 
 // ---- wall-clock faces: the SAME registry the clock bench uses (ALL_FACES from the TIME.clockFaces submodule) ----
 // ALL_FACES is TIME.clockFaces' one face list, already in UI order (FaceDef.order);
@@ -85,7 +86,7 @@ export function buildWallClock(ctx: EditorContext): WallClock {
     ckFace = faceById(f).id;
     faceSel.value = ckFace;
     ckCvs.style.background = faceById(ckFace).lightBg
-      ? 'radial-gradient(circle at 50% 42%, #e8ecf2, #c2cad6)' : 'transparent';
+      ? `radial-gradient(circle at 50% 42%, ${PAL.blue93}, ${PAL.blue80})` : 'transparent';
     saveCk();
     if (publish) ctx.services.publishParam?.('clock.face', ckFace, { throttle: false });
   };

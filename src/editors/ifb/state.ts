@@ -3,18 +3,19 @@
 
 import type { Sibling } from '../types.js';
 import type { Feed } from '../../domain/routing-core/index.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Resolve the feeds for this IFB — sources, then config.inputs, then a default. */
 export function resolveFeeds(sib: Sibling): Feed[] {
   if (sib.sources.length) return sib.sources;
   const inputs = sib.config?.inputs;
   if (inputs && inputs.length) {
-    return inputs.map((label, i) => ({ id: `in${i}`, label, color: '#4d94ff' }));
+    return inputs.map((label, i) => ({ id: `in${i}`, label, color: PAL.blue65 }));
   }
   return Array.from({ length: 4 }, (_, i) => ({
     id: `ifb${i + 1}`,
     label: `IFB ${i + 1}`,
-    color: '#4d94ff',
+    color: PAL.blue65,
   }));
 }
 
@@ -61,9 +62,9 @@ export interface Prio {
 
 /** Talk hierarchy: P1 Director (breaks program) · P2 TD · P3 Production Asst. */
 export const PRIO: readonly Prio[] = [
-  { p: 1, nm: 'DIRECTOR', sub: 'Breaks program', c: '#ff3b3b' },
-  { p: 2, nm: 'TECH DIRECTOR', sub: 'Urgent technical', c: '#ffd400' },
-  { p: 3, nm: 'PRODUCTION ASST', sub: 'Timing cues', c: '#6FC8F0' },
+  { p: 1, nm: 'DIRECTOR', sub: 'Breaks program', c: PAL.red62 },
+  { p: 2, nm: 'TECH DIRECTOR', sub: 'Urgent technical', c: PAL.amber50 },
+  { p: 3, nm: 'PRODUCTION ASST', sub: 'Timing cues', c: PAL.sky69 },
 ];
 
 /** Linear level → relative dB readout (verbatim from the legacy editor). */

@@ -16,13 +16,18 @@
 import { addStyles } from '../dom.js';
 import { getPrefs, patchPrefs } from '../../platform/prefs.js';
 import type { Chroma, Vision } from './colour-palettes.js';
+import { STATE_WORDS, TONE_GLYPHS, type Tone } from '../../domain/state.js';
+import { PAL } from '../../domain/palette.js';
 
 export type GlyphMode = 'auto' | 'on' | 'off';
 export const GLYPH_MODES: readonly GlyphMode[] = ['auto', 'on', 'off'];
 export const isGlyphMode = (v: unknown): v is GlyphMode => (GLYPH_MODES as readonly unknown[]).includes(v);
 
-/** The state → glyph vocabulary (monochrome text glyphs; U+FE0E forces text, not emoji). */
-export const STATE_GLYPHS = { alarm: '⚠︎', ok: '✓', onair: '●' } as const;
+/** The state → glyph vocabulary (monochrome text glyphs; U+FE0E forces text, not emoji).
+ *  alarm / ok / kinda are the contract's dead / good / kinda tones (domain/state.ts). */
+export const STATE_GLYPHS = {
+  alarm: TONE_GLYPHS.dead, ok: TONE_GLYPHS.good, kinda: TONE_GLYPHS.kinda, onair: '●', muted: '⊘',
+} as const;
 
 /** Read a `glyphs=` override from a query string (on/1/true · off/0/false), else null. */
 export function urlGlyphOverride(search: string): boolean | null {
@@ -48,6 +53,9 @@ export function resolveStateGlyphs(
 
 const G = `content:'${STATE_GLYPHS.alarm}';-webkit-text-fill-color:currentColor;font-weight:900;`;
 const ON = 'html[data-state-glyphs]';
+/** A live-console surface leads with its state's glyph (on-air ● · muted ⊘ · ok ✓ · kinda ◐ · fault ⚠). */
+const live = (g: keyof typeof STATE_GLYPHS, ...sel: string[]): string =>
+  `${sel.map((x) => `${ON} ${x}::before`).join(',')}{content:'${STATE_GLYPHS[g]}';margin-right:4px;font-weight:900;}`;
 const CSS = `
 ${ON} :not(.drop-zone) > .signal-node.fault::before,${ON} .sub-stream.fault::before{${G}position:static;display:inline;
   width:auto;height:auto;background:none;border:0;animation:none;margin-right:4px;}
@@ -57,10 +65,17 @@ ${ON} .foldable-header.fault::before{${G}margin-right:6px;}
 ${ON} .program-row.fault .program-title::before{${G}margin-right:6px;}
 ${ON} .twist-container.corrupted .twist-title::before{${G}margin-right:4px;}
 ${ON} .cse-win-states b{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
-  font:900 9px/1 Arial,sans-serif;color:#04101e;}
+  font:900 9px/1 Arial,sans-serif;color:${PAL.sky07};}
 ${ON} .cse-win-states .d-alarm::before{content:'!';}
 ${ON} .cse-win-states .d-ok::before{content:'${STATE_GLYPHS.ok}';}
 ${ON} .cse-win-states .d-onair::before{content:'${STATE_GLYPHS.onair}';font-size:7px;}
+${live('onair', '.vm-buslabel.pgm', '.vm-key.on', '.sg-onair.live', '.r-badge.onair', '.sc-slot.live .sc-time .badge',
+    '.cc-tally.live')}
+${live('muted', '.am-ms button.mute.on')}
+${live('ok', '.enc-health .ok', '.mqt-eff b.ok', '.status-ok')}
+${live('kinda', '.mqt-eff b.warn', '.status-warn')}
+${live('alarm', '.enc-health .bad', '.mqt-eff b.bad', '.status-err')}
+${(Object.keys(STATE_WORDS)).map((w) => `${ON} [data-apk-state="${w}" i]::before{content:'${TONE_GLYPHS[STATE_WORDS[w] as Tone]} ';}`).join('\n')}
 `;
 
 /** This seat's glyph mode (default auto). */

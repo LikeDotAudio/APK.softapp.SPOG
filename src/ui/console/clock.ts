@@ -4,21 +4,22 @@
 // TIME to cycle UTC → Unix epoch → date-timecode; click the DOTS to open the
 // production schedule (hook — the schedule editor ports later).
 import { addStyles } from '../dom.js';
+import { PAL } from '../../domain/palette.js';
 
 const CLOCK_CSS = `
 .ptp-clock{position:fixed;right:14px;bottom:42px;z-index:1000;font-family:'Courier New',Consolas,monospace;font-size:13px;font-weight:bold;
-    letter-spacing:1px;color:var(--cyan,#00ffff);background:none;border:none;padding:5px 6px;cursor:pointer;user-select:none;white-space:nowrap;
+    letter-spacing:1px;color:var(--cyan,${PAL.cyan50});background:none;border:none;padding:5px 6px;cursor:pointer;user-select:none;white-space:nowrap;
     display:inline-flex;align-items:center;gap:9px;text-shadow:0 0 8px rgba(0,0,0,.7);transition:color .2s,filter .2s;}
 .ptp-clock:hover{filter:brightness(1.2);}
 .ck-dots{display:grid;grid-template-columns:repeat(30,2px);grid-auto-rows:2px;gap:1px;align-content:center;}
-.ck-dot{width:2px;height:2px;border-radius:50%;background:#10241c;}
-.ck-dot.on{background:#33dd66;animation:ckP 1.4s ease-in-out infinite;}
-.ck-dot.now{background:#daffe8;box-shadow:0 0 5px #6dffa0;animation:ckN .9s ease-in-out infinite;}
+.ck-dot{width:2px;height:2px;border-radius:50%;background:${PAL.teal10};}
+.ck-dot.on{background:${PAL.green53s71};animation:ckP 1.4s ease-in-out infinite;}
+.ck-dot.now{background:${PAL.green93};box-shadow:0 0 5px ${PAL.green71};animation:ckN .9s ease-in-out infinite;}
 @keyframes ckP{0%,100%{opacity:.5;}50%{opacity:1;}}
 @keyframes ckN{0%,100%{transform:scale(1);opacity:.75;}50%{transform:scale(1.7);opacity:1;}}
-.ptp-clock.num{color:#ffaa00;}
-.ptp-clock.num .ck-time{color:#ffaa00;}
-.ptp-clock .ptp-dot{color:#33dd66;}`;
+.ptp-clock.num{color:${PAL.amber50s100};}
+.ptp-clock.num .ck-time{color:${PAL.amber50s100};}
+.ptp-clock .ptp-dot{color:${PAL.green53s71};}`;
 
 const pad = (n: number): string => String(n).padStart(2, '0');
 const MODES = ['dots', 'unix', 'datetime'] as const;

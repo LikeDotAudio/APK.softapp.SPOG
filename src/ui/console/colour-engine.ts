@@ -10,6 +10,7 @@ import {
   isVision, isChroma, isFace, isCvd,
 } from './colour-palettes.js';
 import { applyStateGlyphs } from './state-glyphs.js';
+import { STATE_TONES, TONE_NAMES } from '../../domain/state.js';
 
 /** The current scheme, read back from the <html> attributes (default-filled). */
 export function getScheme(): ColourScheme {
@@ -39,6 +40,9 @@ function applyPaletteTokens(id: string): void {
   s.setProperty('--state-alarm', t.alarm);
   s.setProperty('--state-ok', t.ok);
   s.setProperty('--state-onair', t.onair);
+  // The contract's three tones (good / kinda / dead), the same in every palette: a state word
+  // means one thing whichever palette the seat picked (contracts/tokens/state.json).
+  for (const k of TONE_NAMES) s.setProperty(`--state-${k}`, STATE_TONES[k].hex);
 }
 
 function paint(s: ColourScheme): void {

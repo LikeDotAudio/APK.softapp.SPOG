@@ -10,10 +10,11 @@ import { pluginFor } from '../../editors/registry.js';
 import { decorateRoom } from './authoring.js';
 import { mountDestFixtures } from './dest-fixtures.js';
 import { applyScope } from './auth-panel.js';
+import { PAL } from '../../domain/palette.js';
 
 const twistName = (t: string | TwistConfig): string => (typeof t === 'string' ? t : t.name);
 
-const acceptColor: Record<string, string> = { video: '#CC99CC', audio: '#FF9C63', both: '#CC99CC', camera: '#6FC8F0' };
+const acceptColor: Record<string, string> = { video: PAL.purple70, audio: PAL.orange69, both: PAL.purple70, camera: PAL.sky69 };
 
 /** Render one production into its tab-content pane (#tab-<id>). `srcUrl` is the file
  *  the room was loaded from — threaded so the authoring layer can draft edits back
@@ -22,7 +23,7 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
   const pgmTwists = pgm.twists ?? ['Processing', 'Recording', 'Switcher', 'Audio Mixer', 'Intercom'];
   const titleText = pgm.parentName ? `${pgm.parentName.toUpperCase()} — ${pgm.name}` : pgm.name;
   const faulted = isFaultStatus(pgm.status);
-  const pColor = pgm.color ?? '#ffaa00';
+  const pColor = pgm.color ?? PAL.amber50s100;
 
   const rows: Record<string, string> = {};
   const rowNames: Record<string, string[]> = {};
@@ -40,8 +41,8 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
       cfgAttr = `data-config='${JSON.stringify(t).replace(/'/g, '&#39;')}'`;
       if (t.accepts && acceptColor[t.accepts]) lcars = acceptColor[t.accepts] as string;
       rowKey = t.row || (t.monitor ? 'monitors' : null);
-      if (rowKey === 'remotes') lcars = '#64C8A0';   // signal-conditioner green, distinct from camera blue
-      if (rowKey === 'graphics') lcars = '#39D353';   // graphics engines — green, horizontal small row
+      if (rowKey === 'remotes') lcars = PAL.teal59;   // signal-conditioner green, distinct from camera blue
+      if (rowKey === 'graphics') lcars = PAL.green53;   // graphics engines — green, horizontal small row
     }
     // The audio trio (monitor console / positioner / intercom) group under SOUND —
     // derived from the twist name, so it works for string twists and needs no

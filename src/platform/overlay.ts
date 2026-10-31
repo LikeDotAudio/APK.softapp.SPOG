@@ -7,28 +7,29 @@
 
 import { addStyles, el } from '../ui/dom.js';
 import { makeDisposer, type Disposer } from '../ui/timers.js';
+import { PAL } from '../domain/palette.js';
 
 const STYLE_ID = 'tr-ed-overlay';
 const CSS = `
 .ed-overlay{position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;
-  background:radial-gradient(circle at 50% 30%,#0d1730 0%,#03060f 85%);
-  font-family:Arial,Helvetica,sans-serif;color:#e0f0ff;}
+  background:radial-gradient(circle at 50% 30%,${PAL.blue12s57} 0%,${PAL.blue04} 85%);
+  font-family:Arial,Helvetica,sans-serif;color:${PAL.sky94};}
 .ed-overlay.open{display:flex;}
 .ed-topbar{flex:0 0 auto;display:flex;align-items:stretch;height:48px;cursor:pointer;
-  background:var(--ed-color,#646DCC);border-radius:0 0 16px 44px;overflow:hidden;}
+  background:var(--ed-color,${PAL.blue60});border-radius:0 0 16px 44px;overflow:hidden;}
 .ed-topbar:hover{filter:brightness(1.06);}
-.ed-back{display:flex;align-items:center;font-size:32px;font-weight:bold;color:#000;padding:0 4px 0 26px;line-height:1;}
+.ed-back{display:flex;align-items:center;font-size:32px;font-weight:bold;color:${PAL.black};padding:0 4px 0 26px;line-height:1;}
 .ed-title{flex:1;display:flex;align-items:center;font-weight:900;letter-spacing:3px;
-  font-size:17px;text-transform:uppercase;color:#000;padding-left:8px;
+  font-size:17px;text-transform:uppercase;color:${PAL.black};padding-left:8px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ed-close{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:66px;
-  cursor:pointer;font-size:30px;font-weight:bold;line-height:1;color:#000;
+  cursor:pointer;font-size:30px;font-weight:bold;line-height:1;color:${PAL.black};
   box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
 .ed-close:hover{background:rgba(0,0,0,.18);}
-.ed-voice{flex:0 0 auto;display:flex;align-items:center;padding:0 15px;background:none;border:none;color:#ff3366;font-weight:bold;font-size:13px;cursor:pointer;letter-spacing:1px;box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
+.ed-voice{flex:0 0 auto;display:flex;align-items:center;padding:0 15px;background:none;border:none;color:${PAL.red60s100};font-weight:bold;font-size:13px;cursor:pointer;letter-spacing:1px;box-shadow:inset 2px 0 0 rgba(0,0,0,.25);}
 .ed-voice:hover{background:rgba(0,0,0,.18);}
 .ed-body{flex:1;min-height:0;overflow:auto;padding:12px 14px 14px;}
-.ed-h{color:var(--cyan,#00ffff);font-size:11px;font-weight:bold;letter-spacing:2px;
+.ed-h{color:var(--cyan,${PAL.cyan50});font-size:11px;font-weight:bold;letter-spacing:2px;
   text-transform:uppercase;margin:0 0 8px;}
 /* The back chevron is a pseudo so it can SWAP (‹→›), not mirror, under chirality
    (platform layer can't import the ui chirality module — CSS reads the attribute). */
@@ -97,7 +98,7 @@ export function openOverlay(
   if (activeDisposer) activeDisposer.dispose();
   const dispose = makeDisposer();
   activeDisposer = dispose;
-  h.root.style.setProperty('--ed-color', opts.color || '#646DCC');
+  h.root.style.setProperty('--ed-color', opts.color || PAL.blue60);
   h.title.textContent = opts.title;
   h.body.innerHTML = '';
   
@@ -111,18 +112,18 @@ export function openOverlay(
       e.stopPropagation(); // prevent topbar from closing the overlay
       // Remove any existing voice modal
       document.getElementById('ed-voice-modal')?.remove();
-      const modal = el('div', { id: 'ed-voice-modal', style: 'position:absolute;top:48px;right:66px;width:350px;background:#17233c;border:2px solid #ff3366;border-radius:0 0 8px 8px;padding:12px;z-index:3000;box-shadow:0 10px 30px rgba(0,0,0,0.5);' });
-      modal.append(el('div', { class: 'ed-h', style: 'color:#ff3366;margin-bottom:12px;' }, ['VALID VOICE COMMANDS']));
+      const modal = el('div', { id: 'ed-voice-modal', style: `position:absolute;top:48px;right:66px;width:350px;background:${PAL.blue16s45};border:2px solid ${PAL.red60s100};border-radius:0 0 8px 8px;padding:12px;z-index:3000;box-shadow:0 10px 30px rgba(0,0,0,0.5);` });
+      modal.append(el('div', { class: 'ed-h', style: `color:${PAL.red60s100};margin-bottom:12px;` }, ['VALID VOICE COMMANDS']));
       const list = el('div', { style: 'display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow-y:auto;' });
       for (const [category, words] of Object.entries(vc)) {
         list.append(el('div', { style: 'display:flex;flex-direction:column;gap:4px;' }, [
-          el('span', { style: 'font-weight:bold;color:#6FC8F0;font-size:14px;text-transform:uppercase;' }, [category]),
-          el('span', { style: 'color:#d6e6ef;font-size:13px;font-family:monospace;line-height:1.4;' }, [words])
+          el('span', { style: `font-weight:bold;color:${PAL.sky69};font-size:14px;text-transform:uppercase;` }, [category]),
+          el('span', { style: `color:${PAL.sky89};font-size:13px;font-family:monospace;line-height:1.4;` }, [words])
         ]));
       }
       modal.append(list);
       
-      const closeBtn = el('button', { style: 'margin-top:12px;width:100%;padding:6px;background:none;border:1px solid #8fb0d0;color:#fff;border-radius:4px;cursor:pointer;' }, ['CLOSE']);
+      const closeBtn = el('button', { style: `margin-top:12px;width:100%;padding:6px;background:none;border:1px solid ${PAL.sky69s41};color:${PAL.white};border-radius:4px;cursor:pointer;` }, ['CLOSE']);
       closeBtn.addEventListener('click', () => modal.remove());
       modal.append(closeBtn);
       

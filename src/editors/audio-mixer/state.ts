@@ -6,6 +6,7 @@
 //   routed sources → config.inputs → prefix + N.
 
 import type { EditorContext } from '../types.js';
+import { PAL } from '../../domain/palette.js';
 
 /** One console channel strip's identity. */
 export interface Channel {
@@ -19,7 +20,7 @@ export interface Channel {
 /** Channels per layer (legacy LAYER constant). */
 export const LAYER = 8;
 
-const FALLBACK_COLOR = '#4d94ff';
+const FALLBACK_COLOR = PAL.blue65;
 
 /** Persistent control values for one channel strip (0..1 normalized, like the widgets).
  *  Kept OUT of the DOM so moves survive a layer redraw and can be published/driven over

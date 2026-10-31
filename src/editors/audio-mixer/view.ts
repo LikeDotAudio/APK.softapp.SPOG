@@ -11,6 +11,7 @@ import { el } from '../../ui/dom.js';
 import { buildChannels, buildState, LAYER } from './state.js';
 import { stripEl, type StripCtx } from './strip.js';
 import { wireMixerParams } from './mqtt.js';
+import { PAL } from '../../domain/palette.js';
 
 export function renderConsole(host: HTMLElement, ctx: EditorContext): void {
   // Routed sources → one fader each; falls back to input slots / CH N when empty.
@@ -64,7 +65,7 @@ export function renderConsole(host: HTMLElement, ctx: EditorContext): void {
   // scrolled or swapped by the layer switch (so its controls register once).
   const masterTab = el('div', { class: 'am-master-tab' });
   masterTab.append(el('div', { class: 'am-master-h', textContent: 'Master Out' }));
-  masterTab.append(stripEl(rc, { label: 'MASTER', color: '#d8c8ff' }, -1, { master: true }));
+  masterTab.append(stripEl(rc, { label: 'MASTER', color: PAL.indigo89 }, -1, { master: true }));
   console_.append(masterTab);
 
   host.append(console_);

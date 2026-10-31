@@ -5,6 +5,7 @@
 // The loop reads the live rig (fx) + overlay state (ui) and paints one frame.
 
 import type { Fixture, UiState } from './state.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Heat-map ramp: blue → cyan → yellow → red (verbatim legacy stops). */
 function heatColor(v: number): string {
@@ -38,7 +39,7 @@ export function paintFrame(
   if (!w || !h) return;
   g.clearRect(0, 0, w, h);
   // floor + truss
-  g.fillStyle = '#0a1322';
+  g.fillStyle = PAL.blue09s55;
   g.fillRect(0, 0, w, h);
   g.strokeStyle = 'rgba(60,90,130,.25)';
   for (let i = 1; i < 8; i++) {
@@ -116,7 +117,7 @@ export function paintFrame(
     g.lineTo(sx + 130, sy - 40);
     g.closePath();
     g.fill();
-    g.fillStyle = '#6FC8F0';
+    g.fillStyle = PAL.sky69;
     g.font = '10px Courier New, monospace';
     g.fillText('CAM', cxp - 11, cyp - 4);
   }
@@ -127,11 +128,11 @@ export function paintFrame(
   g.beginPath();
   g.ellipse(sx + Math.cos(shAng) * 26, sy + Math.sin(shAng) * 26, 30, 16, shAng, 0, 7);
   g.fill();
-  g.fillStyle = '#e7b48a';
+  g.fillStyle = PAL.orange72;
   g.beginPath();
   g.arc(sx, sy, 18, 0, 7);
   g.fill();
-  g.fillStyle = '#caa15a';
+  g.fillStyle = PAL.orange57;
   g.beginPath();
   g.arc(sx + (ui.talentRot - 0.5) * 18, sy - 3, 7, 0, 7);
   g.fill(); // nose = facing dir
@@ -140,8 +141,8 @@ export function paintFrame(
     const fxp = f.x * w;
     const fyp = f.y * h;
     const lit = f.on > 0.03;
-    g.strokeStyle = lit ? `hsl(${f.hue},90%,65%)` : '#33415f';
-    g.fillStyle = '#0a1326';
+    g.strokeStyle = lit ? `hsl(${f.hue},90%,65%)` : PAL.blue29;
+    g.fillStyle = PAL.blue09s58;
     g.lineWidth = 2;
     if (lit) {
       g.shadowColor = `hsl(${f.hue},90%,60%)`;
@@ -158,7 +159,7 @@ export function paintFrame(
     g.moveTo(fxp, fyp - 11);
     g.lineTo(fxp, fyp + 11);
     g.stroke();
-    g.fillStyle = '#9fb6cc';
+    g.fillStyle = PAL.sky71;
     g.font = 'bold 9px Courier New, monospace';
     g.fillText(f.k, fxp - 9, fyp + 24);
   });

@@ -6,12 +6,14 @@
 // segments (the real-LED look), or a bold Arial fallback. Colour is red or white
 // on whatever background the caller clears to (default black).
 
+import { PAL } from '../domain/palette.js';
+
 export type SegFont = 'seg' | 'arial';
 export type SegColor = 'red' | 'white';
 
 const COLORS: Record<SegColor, { on: string; glow: string; ghost: number }> = {
-  red: { on: '#ff2b2b', glow: '#ff2b2b', ghost: 0.09 },
-  white: { on: '#f2f4f7', glow: '#9fb8ff', ghost: 0.07 },
+  red: { on: PAL.red58, glow: PAL.red58, ghost: 0.09 },
+  white: { on: PAL.blue96s24, glow: PAL.blue81s100, ghost: 0.07 },
 };
 
 // Segment on-sets per glyph (a=top, b=top-right, c=bot-right, d=bottom,
@@ -68,7 +70,7 @@ function advance(ch: string, dw: number, gap: number): number {
  */
 export function drawSegString(
   g: CanvasRenderingContext2D, W: number, H: number, str: string,
-  font: SegFont, color: SegColor, bg = '#000', sepVisible?: boolean[],
+  font: SegFont, color: SegColor, bg = PAL.black, sepVisible?: boolean[],
 ): void {
   const col = COLORS[color];
   g.clearRect(0, 0, W, H);

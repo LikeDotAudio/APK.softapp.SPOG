@@ -6,8 +6,9 @@
 // is pure canvas 2D with no bus or clock access.
 import { drawSegString } from './seven-seg.js';
 import type { TimerRow } from '../domain/timer-core/graphic.js';
+import { PAL } from '../domain/palette.js';
 
-const TAG = '#C864C8';   // the PRODUCTION TIMERS pool colour
+const TAG = PAL.purple59;   // the PRODUCTION TIMERS pool colour
 
 export function drawTimerGraphic(cvs: HTMLCanvasElement, rows: TimerRow[]): void {
   const dpr = window.devicePixelRatio || 1;
@@ -18,7 +19,7 @@ export function drawTimerGraphic(cvs: HTMLCanvasElement, rows: TimerRow[]): void
   if (cvs.height !== bh) cvs.height = bh;
   const g = cvs.getContext('2d'); if (!g) return;
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g.fillStyle = '#000'; g.fillRect(0, 0, cw, ch);
+  g.fillStyle = PAL.black; g.fillRect(0, 0, cw, ch);
   if (!rows.length) return;
   const pad = Math.round(ch * 0.06);
   const band = (ch - pad * (rows.length + 1)) / rows.length;
@@ -29,7 +30,7 @@ export function drawTimerGraphic(cvs: HTMLCanvasElement, rows: TimerRow[]): void
     g.fillStyle = TAG; g.textAlign = 'center'; g.textBaseline = 'middle';
     g.font = `800 ${Math.max(10, Math.round(band * 0.42))}px 'Courier New',monospace`;
     g.fillText(r.id, pad + tagW / 2, y + band * 0.36);
-    g.fillStyle = r.running ? '#7CFC9A' : '#6b7686';
+    g.fillStyle = r.running ? PAL.green74 : PAL.grey47;
     g.font = `700 ${Math.max(7, Math.round(band * 0.16))}px 'Courier New',monospace`;
     const dir = r.overtime ? '▲ OVER' : r.direction === 'down' ? '▼ DN' : r.direction === 'up' ? '▲ UP' : '— —';
     g.fillText(`${dir} ${r.running ? '▶' : '‖'}`, pad + tagW / 2, y + band * 0.78);
@@ -38,7 +39,7 @@ export function drawTimerGraphic(cvs: HTMLCanvasElement, rows: TimerRow[]): void
     const w = cw - tagW - pad * 3, h = Math.min(band, w / 3.6);
     g.save();
     g.translate(pad * 2 + tagW, y + (band - h) / 2);
-    drawSegString(g, w, h, r.text, 'seg', 'red', '#000');
+    drawSegString(g, w, h, r.text, 'seg', 'red', PAL.black);
     g.restore();
   });
 }

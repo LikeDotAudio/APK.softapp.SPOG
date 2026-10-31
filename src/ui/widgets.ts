@@ -7,25 +7,26 @@
 
 import { el, addStyles } from './dom.js';
 import type { Disposer } from './timers.js';
+import { PAL } from '../domain/palette.js';
 
 const CSS_ID = 'tr-ui-widgets';
 const CSS = `
 .tr-kw{display:inline-flex;flex-direction:column;align-items:center;gap:4px;}
 .tr-knob{width:42px;height:42px;border-radius:50%;cursor:ns-resize;position:relative;
-  background:radial-gradient(circle at 50% 38%,#27344d,#0b1422);
-  box-shadow:0 0 0 2px var(--cyan,#00ffff)55,inset 0 2px 6px #000;}
+  background:radial-gradient(circle at 50% 38%,${PAL.blue23s33},${PAL.blue09_0b1422});
+  box-shadow:0 0 0 2px var(--cyan,${PAL.cyan50})55,inset 0 2px 6px ${PAL.black};}
 .tr-knob::after{content:"";position:absolute;left:50%;top:5px;width:2px;height:13px;
-  background:var(--cyan,#00ffff);transform-origin:50% 16px;transform:translateX(-50%) rotate(var(--rot,0deg));}
-.tr-klabel{font-size:9px;letter-spacing:1px;color:#9fb6cc;text-transform:uppercase;}
+  background:var(--cyan,${PAL.cyan50});transform-origin:50% 16px;transform:translateX(-50%) rotate(var(--rot,0deg));}
+.tr-klabel{font-size:9px;letter-spacing:1px;color:${PAL.sky71};text-transform:uppercase;}
 .tr-fader{display:inline-flex;flex-direction:column;align-items:center;gap:4px;}
 .tr-fader-track{position:relative;width:18px;height:120px;border-radius:9px;
-  background:linear-gradient(#0a1322,#152138);box-shadow:inset 0 0 4px #000;cursor:ns-resize;}
+  background:linear-gradient(${PAL.blue09s55},${PAL.blue15_152138});box-shadow:inset 0 0 4px ${PAL.black};cursor:ns-resize;}
 .tr-fader-cap{position:absolute;left:-4px;width:26px;height:14px;border-radius:3px;
-  background:var(--cyan,#00ffff);box-shadow:0 1px 4px #000;transform:translateY(-50%);}
+  background:var(--cyan,${PAL.cyan50});box-shadow:0 1px 4px ${PAL.black};transform:translateY(-50%);}
 .tr-meter{position:relative;width:9px;height:120px;border-radius:3px;overflow:hidden;
-  background:#0a1322;box-shadow:inset 0 0 4px #000;}
+  background:${PAL.blue09s55};box-shadow:inset 0 0 4px ${PAL.black};}
 .tr-meter>i{position:absolute;bottom:0;left:0;right:0;height:30%;
-  background:linear-gradient(#39d353 0%,#39d353 60%,#e8d44a 80%,#ff5a5a 100%);transition:height .1s;}
+  background:linear-gradient(${PAL.green53} 0%,${PAL.green53} 60%,${PAL.yellow60s77} 80%,${PAL.red68s100} 100%);transition:height .1s;}
 `;
 
 /** A widget whose 0..1 value can be driven from the outside (e.g. an inbound
@@ -37,7 +38,7 @@ export interface Control extends HTMLElement {
 
 /** A rotary knob: vertical drag changes value 0..1 → −135..+135°.
  *  `onChange` fires with the new value on every local drag (not on setValue). */
-export function knob(label: string, value = 0.5, color = '#00ffff', onChange?: (v: number) => void): Control {
+export function knob(label: string, value = 0.5, color: string = PAL.cyan50, onChange?: (v: number) => void): Control {
   addStyles(CSS_ID, CSS);
   const k = el('div', { class: 'tr-knob', style: `--cyan:${color}` });
   let v = value;
@@ -72,7 +73,7 @@ export function knob(label: string, value = 0.5, color = '#00ffff', onChange?: (
 
 /** A channel fader: vertical drag sets 0..1 (bottom..top).
  *  `onChange` fires with the new value on every local drag (not on setValue). */
-export function fader(label: string, value = 0.7, color = '#00ffff', onChange?: (v: number) => void): Control {
+export function fader(label: string, value = 0.7, color: string = PAL.cyan50, onChange?: (v: number) => void): Control {
   addStyles(CSS_ID, CSS);
   const track = el('div', { class: 'tr-fader-track', style: `--cyan:${color}` });
   const cap = el('div', { class: 'tr-fader-cap' });

@@ -2,6 +2,7 @@ import { el } from '../../ui/dom.js';
 import type { EditorContext } from '../types.js';
 import { PrompterEngine } from './prompter-engine.js';
 import { buildPrompterUI } from './prompter-ui.js';
+import { PAL } from '../../domain/palette.js';
 
 export function wirePrompter(host: HTMLElement, ctx: EditorContext, ui: ReturnType<typeof buildPrompterUI>, engine: PrompterEngine) {
   const {
@@ -66,13 +67,13 @@ export function wirePrompter(host: HTMLElement, ctx: EditorContext, ui: ReturnTy
      if (engine.speed >= 0) {
         paceFill.style.top = `${top}%`;
         paceFill.style.bottom = `50%`;
-        paceFill.style.background = '#6FC8F0';
-        paceFill.style.boxShadow = '0 0 10px #6FC8F0';
+        paceFill.style.background = PAL.sky69;
+        paceFill.style.boxShadow = `0 0 10px ${PAL.sky69}`;
      } else {
         paceFill.style.top = `50%`;
         paceFill.style.bottom = `${100 - top}%`;
-        paceFill.style.background = '#ff3366';
-        paceFill.style.boxShadow = '0 0 10px #ff3366';
+        paceFill.style.background = PAL.red60s100;
+        paceFill.style.boxShadow = `0 0 10px ${PAL.red60s100}`;
      }
      wheelLabel.textContent = Math.round(engine.speed).toString();
   };

@@ -15,6 +15,7 @@ import { expectationTip } from '../ui/tip.js';
 import { loadAllDestinations } from '../ui/console/footer.js';
 import { applyScope } from '../ui/console/auth-panel.js';
 import { BLURBS } from './blurbs.js';
+import { PAL } from '../domain/palette.js';
 
 /** A twist element in the console was clicked → open its dispatched editor. */
 export function openEditorForTwist(twistEl: HTMLElement): void {
@@ -58,7 +59,7 @@ export function openEditorForTwist(twistEl: HTMLElement): void {
               : pluginFor(name);
   if (!plugin) return;
   const prodName = twistEl.dataset.prodName ?? '';
-  const color = (twistEl.style.getPropertyValue('--lcars-color').trim() || '#646DCC') as Hex;
+  const color = (twistEl.style.getPropertyValue('--lcars-color').trim() || PAL.blue60) as Hex;
   // Room/floor/person-level hover tip authored in the Routes JSON, threaded here as
   // data attributes by destinations.renderPrograms (see ui/tip expectationTip).
   let prodTip: TipSpec | undefined;

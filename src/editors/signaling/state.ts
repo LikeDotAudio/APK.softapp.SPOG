@@ -9,6 +9,7 @@
 // pvw = green next), but kept index-local to mirror the legacy interactions 1:1.
 
 import type { EditorContext } from '../types.js';
+import { PAL } from '../../domain/palette.js';
 
 export type SignalMode = 'live' | 'reh';
 
@@ -39,9 +40,9 @@ export function camsFor(ctx: EditorContext): Cam[] {
   }
   const inputs = ctx.twist.config?.inputs;
   if (inputs && inputs.length) {
-    return inputs.map((label) => ({ label, color: '#cfe6ff' }));
+    return inputs.map((label) => ({ label, color: PAL.sky91 }));
   }
-  return Array.from({ length: 8 }, (_unused, i) => ({ label: `CAM ${i + 1}`, color: '#cfe6ff' }));
+  return Array.from({ length: 8 }, (_unused, i) => ({ label: `CAM ${i + 1}`, color: PAL.sky91 }));
 }
 
 export function initialState(count: number): SignalingState {

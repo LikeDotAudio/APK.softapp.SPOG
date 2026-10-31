@@ -5,6 +5,7 @@ import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { slugId, faultTag, monoEmoji, styleSignalNode } from './format.js';
 import { wireFold, tagOrigin } from './pools-fold.js';
 import { addStyles } from '../dom.js';
+import { PAL } from '../../domain/palette.js';
 
 // Host / co-host / panelist … person labels hug the SQUARE (spine) edge, not the
 // rounded outer edge. lcars.css forces every signal-node text-align:left in
@@ -16,7 +17,7 @@ html[data-chirality="right"] .ingress-panel .super-pool-content .signal-node.aud
 
 // ---- AUDIO pool -------------------------------------------------------------
 export function renderAudioPool(data: SourceLeaf, container: HTMLElement, color?: string): void {
-  const poolColor = color || data.color || '#00ffff';
+  const poolColor = color || data.color || PAL.cyan50;
   const faulted = isFaultStatus(data.status);
   const group = document.createElement('div');
   group.className = 'input-group';
@@ -64,7 +65,7 @@ export function renderAudioPool(data: SourceLeaf, container: HTMLElement, color?
 // recorder (accepts:"both") is the one place both of a person's feeds can co-land.
 export function renderPersonPool(data: SourceLeaf, container: HTMLElement, color?: string): void {
   addStyles('person-label-align', PERSON_ALIGN_CSS);
-  const poolColor = color || data.color || '#F2B74B';
+  const poolColor = color || data.color || PAL.orange62;
   const faulted = isFaultStatus(data.status);
   const origin = data.origin || data.name;
   const group = document.createElement('div');

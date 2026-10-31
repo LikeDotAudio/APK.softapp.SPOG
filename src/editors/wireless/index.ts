@@ -2,6 +2,7 @@ import { VOICE_COMMANDS } from './VOICE.js';
 import type { EditorPlugin } from '../types.js';
 import { el, ctx2d } from '../../ui/dom.js';
 import { injectWirelessStyles } from './styles.js';
+import { PAL } from '../../domain/palette.js';
 
 const plugin: EditorPlugin = {
   id: 'wireless',
@@ -36,14 +37,14 @@ const plugin: EditorPlugin = {
         'Link Quality (SNR)',
         el('div', { style: 'display: flex; align-items: center;' }, [
           el('span', { class: 'wl-stat-val' }, [`${linkQuality}%`]),
-          renderMeter(linkQuality, '#39d353')
+          renderMeter(linkQuality, PAL.green53)
         ])
       ]),
       el('div', { class: 'wl-stat' }, [
         'Battery Remaining',
         el('div', { style: 'display: flex; align-items: center;' }, [
           el('span', { class: 'wl-stat-val' }, ['07:45 (85%)']),
-          renderMeter(batteryLevel, '#f1e05a')
+          renderMeter(batteryLevel, PAL.yellow65)
         ])
       ]),
       el('div', { class: 'wl-stat' }, [
@@ -104,7 +105,7 @@ const plugin: EditorPlugin = {
       const h = specCanvas.height = specCanvas.clientHeight;
       
       g.clearRect(0, 0, w, h);
-      g.strokeStyle = '#3a4c68';
+      g.strokeStyle = PAL.blue32s28;
       g.lineWidth = 1;
       
       // Draw grid
@@ -122,9 +123,9 @@ const plugin: EditorPlugin = {
 
       // Draw active carrier
       const cx = w / 3;
-      g.fillStyle = '#39d353';
+      g.fillStyle = PAL.green53;
       g.fillRect(cx - 2, 20, 4, h - 20);
-      g.fillStyle = '#fff';
+      g.fillStyle = PAL.white;
       g.font = '10px monospace';
       g.fillText('512.400 MHz (Active)', cx + 8, 30);
     });

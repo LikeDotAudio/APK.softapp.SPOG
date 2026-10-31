@@ -1,5 +1,5 @@
 // src/editors/device/styles.ts — LCARS styling for the Universal Device Editor.
-
+import { PAL } from '../../domain/palette.js';
 export const CSS_ID = 'spog-device-editor-styles';
 
 export const CSS = `
@@ -8,8 +8,8 @@ export const CSS = `
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: #030712;
-  color: #e5e7eb;
+  background: ${PAL.blue04s71};
+  color: ${PAL.blue91s13};
   font-family: var(--lcars-font, "Ubuntu Condensed", monospace, sans-serif);
   overflow: hidden;
   box-sizing: border-box;
@@ -20,8 +20,8 @@ export const CSS = `
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
-  background: #0b1329;
-  border-bottom: 2px solid var(--lcars-accent, #ff9900);
+  background: ${PAL.blue10s58};
+  border-bottom: 2px solid var(--lcars-accent, ${PAL.orange50});
   gap: 12px;
 }
 
@@ -37,15 +37,15 @@ export const CSS = `
   letter-spacing: 1.5px;
   padding: 3px 8px;
   border-radius: 12px;
-  background: var(--lcars-accent, #ff9900);
-  color: #000;
+  background: var(--lcars-accent, ${PAL.orange50});
+  color: ${PAL.black};
   text-transform: uppercase;
 }
 
 .dev-title {
   font-size: 18px;
   letter-spacing: 1.5px;
-  color: #fff;
+  color: ${PAL.white};
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -57,9 +57,9 @@ export const CSS = `
 }
 
 .dev-tab-btn {
-  background: #111e38;
-  color: #94a3b8;
-  border: 1px solid #1e293b;
+  background: ${PAL.blue14};
+  color: ${PAL.blue65s20};
+  border: 1px solid ${PAL.blue17};
   border-radius: 4px;
   padding: 4px 10px;
   font-size: 11px;
@@ -70,14 +70,14 @@ export const CSS = `
 }
 
 .dev-tab-btn:hover {
-  background: #1e293b;
-  color: #f1f5f9;
+  background: ${PAL.blue17};
+  color: ${PAL.sky96s40};
 }
 
 .dev-tab-btn.active {
-  background: var(--lcars-accent, #ff9900);
-  color: #000;
-  border-color: var(--lcars-accent, #ff9900);
+  background: var(--lcars-accent, ${PAL.orange50});
+  color: ${PAL.black};
+  border-color: var(--lcars-accent, ${PAL.orange50});
   font-weight: bold;
 }
 
@@ -95,9 +95,9 @@ export const CSS = `
   flex-direction: column;
   min-width: 260px;
   max-width: 380px;
-  background: #090f1d;
-  border: 1px solid #1e293b;
-  border-top: 4px solid var(--group-accent, #38bdf8);
+  background: ${PAL.blue07s53};
+  border: 1px solid ${PAL.blue17};
+  border-top: 4px solid var(--group-accent, ${PAL.sky60});
   border-radius: 6px;
   padding: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
@@ -110,14 +110,14 @@ export const CSS = `
   justify-content: space-between;
   margin-bottom: 12px;
   padding-bottom: 6px;
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid ${PAL.blue17};
 }
 
 .dev-group-title {
   font-size: 13px;
   font-weight: bold;
   letter-spacing: 1px;
-  color: var(--group-accent, #38bdf8);
+  color: var(--group-accent, ${PAL.sky60});
   text-transform: uppercase;
 }
 
@@ -125,10 +125,10 @@ export const CSS = `
   font-size: 10px;
   font-weight: bold;
   letter-spacing: 1.5px;
-  color: #64748b;
+  color: ${PAL.blue47};
   margin: 10px 0 6px 0;
   text-transform: uppercase;
-  border-left: 2px solid #64748b;
+  border-left: 2px solid ${PAL.blue47};
   padding-left: 6px;
 }
 
@@ -145,15 +145,15 @@ export const CSS = `
   align-items: center;
   gap: 6px;
   padding: 8px 4px;
-  background: #0f172a;
+  background: ${PAL.blue11};
   border-radius: 4px;
-  border: 1px solid #1e293b;
+  border: 1px solid ${PAL.blue17};
 }
 
 .dev-strip-name {
   font-size: 9px;
   letter-spacing: 0.5px;
-  color: #94a3b8;
+  color: ${PAL.blue65s20};
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -163,15 +163,15 @@ export const CSS = `
 
 .dev-strip-val {
   font-size: 9px;
-  color: #f8fafc;
+  color: ${PAL.sky98};
   font-family: monospace;
 }
 
 .dev-toggle-btn {
   padding: 6px 10px;
   border-radius: 4px;
-  background: #1e293b;
-  color: #64748b;
+  background: ${PAL.blue17};
+  color: ${PAL.blue47};
   border: none;
   font-size: 10px;
   letter-spacing: 1px;
@@ -181,10 +181,10 @@ export const CSS = `
 }
 
 .dev-toggle-btn.active {
-  background: var(--lcars-accent, #ff9900);
-  color: #000;
+  background: var(--lcars-accent, ${PAL.orange50});
+  color: ${PAL.black};
   font-weight: bold;
-  box-shadow: 0 0 8px var(--lcars-accent, #ff9900);
+  box-shadow: 0 0 8px var(--lcars-accent, ${PAL.orange50});
 }
 
 .dev-empty {
@@ -193,7 +193,7 @@ export const CSS = `
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #64748b;
+  color: ${PAL.blue47};
   gap: 12px;
 }
 `;

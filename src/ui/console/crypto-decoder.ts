@@ -1,35 +1,36 @@
 import { el, addStyles } from '../dom.js';
 import { debugDecryptAndDecode } from '../../platform/mqtt/crypto.js';
 import { ACCENT } from '../../domain/brand.js';
+import { PAL } from '../../domain/palette.js';
 
 const CSS = `
 .crypto-decoder-modal {
   position: fixed; top: 10%; left: 10%; width: 80%; height: 80%;
-  background: #060e1a; border: 2px solid #24304e; border-radius: 12px;
-  z-index: 9999; display: flex; flex-direction: column; color: #bcd3ee;
+  background: ${PAL.blue06s63}; border: 2px solid ${PAL.blue22s37}; border-radius: 12px;
+  z-index: 9999; display: flex; flex-direction: column; color: ${PAL.sky84};
   font-family: 'Courier New', monospace; font-size: 11px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.8);
 }
 .cd-header {
-  padding: 12px; background: #16233d; border-bottom: 2px solid #24304e;
+  padding: 12px; background: ${PAL.blue16_16233d}; border-bottom: 2px solid ${PAL.blue22s37};
   display: flex; justify-content: space-between; align-items: center; border-radius: 10px 10px 0 0;
 }
-.cd-title { font-weight: bold; letter-spacing: 2px; color: #fff; }
+.cd-title { font-weight: bold; letter-spacing: 2px; color: ${PAL.white}; }
 .cd-close { cursor: pointer; color: ${ACCENT}; font-weight: bold; font-size: 14px; padding: 0 10px; }
 .cd-body { display: flex; flex: 1; min-height: 0; }
-.cd-panel { flex: 1; display: flex; flex-direction: column; border-right: 2px solid #16233d; padding: 10px; }
+.cd-panel { flex: 1; display: flex; flex-direction: column; border-right: 2px solid ${PAL.blue16_16233d}; padding: 10px; }
 .cd-panel:last-child { border-right: none; }
-.cd-panel-title { font-weight: bold; margin-bottom: 8px; color: #3FC1C9; letter-spacing: 1px; }
-.cd-log { flex: 1; overflow-y: auto; background: #02060d; padding: 8px; border-radius: 6px; }
-.cd-log-entry { border-bottom: 1px solid #16233d; padding-bottom: 8px; margin-bottom: 8px; }
+.cd-panel-title { font-weight: bold; margin-bottom: 8px; color: ${PAL.cyan52}; letter-spacing: 1px; }
+.cd-log { flex: 1; overflow-y: auto; background: ${PAL.blue03s73}; padding: 8px; border-radius: 6px; }
+.cd-log-entry { border-bottom: 1px solid ${PAL.blue16_16233d}; padding-bottom: 8px; margin-bottom: 8px; }
 .cd-log-topic { color: ${ACCENT}; font-weight: bold; margin-bottom: 4px; }
-.cd-log-hex { color: #5a6a86; word-break: break-all; margin-bottom: 4px; font-size: 10px; }
-.cd-log-json { color: #a4c953; white-space: pre-wrap; margin-bottom: 4px; }
+.cd-log-hex { color: ${PAL.blue44s20}; word-break: break-all; margin-bottom: 4px; font-size: 10px; }
+.cd-log-json { color: ${PAL.lime56}; white-space: pre-wrap; margin-bottom: 4px; }
 .cd-controls { display: flex; gap: 10px; margin-bottom: 10px; }
-.cd-controls button { background: #3FC1C9; color: #000; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; }
-.cd-controls button.active { background: ${ACCENT}; color: #fff; }
-.cd-textarea { width: 100%; height: 100px; background: #02060d; color: #fff; border: 1px solid #24304e; padding: 8px; font-family: inherit; border-radius: 6px; margin-bottom: 10px; resize: none; }
-.cd-decode-btn { background: #3FC1C9; color: #000; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; margin-bottom: 10px; }
+.cd-controls button { background: ${PAL.cyan52}; color: ${PAL.black}; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; }
+.cd-controls button.active { background: ${ACCENT}; color: ${PAL.white}; }
+.cd-textarea { width: 100%; height: 100px; background: ${PAL.blue03s73}; color: ${PAL.white}; border: 1px solid ${PAL.blue22s37}; padding: 8px; font-family: inherit; border-radius: 6px; margin-bottom: 10px; resize: none; }
+.cd-decode-btn { background: ${PAL.cyan52}; color: ${PAL.black}; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; margin-bottom: 10px; }
 `;
 
 let modal: HTMLElement | null = null;
@@ -94,7 +95,7 @@ export function toggleCryptoDecoder(): void {
       resultLog.append(
         el('div', { class: 'cd-log-topic' }, ['DECODED RESULT']),
         el('div', { class: 'cd-log-json' }, ['Proto AST: ' + JSON.stringify(res.rawProtoJSON, null, 2)]),
-        el('div', { class: 'cd-log-json', style: 'color:#3FC1C9' }, ['App Payload: ' + JSON.stringify(res.decodedPayload, null, 2)]),
+        el('div', { class: 'cd-log-json', style: `color:${PAL.cyan52}` }, ['App Payload: ' + JSON.stringify(res.decodedPayload, null, 2)]),
         res.error ? el('div', { style: 'color:red' }, [res.error]) : ''
       );
     } catch (e) {
@@ -119,7 +120,7 @@ if (typeof window !== 'undefined') {
         el('div', { class: 'cd-log-topic' }, [evt.detail.topic]),
         el('div', { class: 'cd-log-hex' }, [hex]),
         el('div', { class: 'cd-log-json' }, ['Proto: ' + JSON.stringify(res.rawProtoJSON)]),
-        el('div', { class: 'cd-log-json', style: 'color:#3FC1C9' }, ['Payload: ' + JSON.stringify(res.decodedPayload)])
+        el('div', { class: 'cd-log-json', style: `color:${PAL.cyan52}` }, ['Payload: ' + JSON.stringify(res.decodedPayload)])
       ]);
       logContainer!.prepend(entry);
       if (logContainer!.childNodes.length > 50) logContainer!.lastChild?.remove();

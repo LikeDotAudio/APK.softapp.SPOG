@@ -28,6 +28,7 @@ import { timeSync } from '../../platform/time-sync.js';
 import { toneFor } from '../../domain/test-tone/index.js';
 import { toneEnabled, listenTone, stopTone, listening } from '../test-tone-player.js';
 import { animate, card } from './dest-fixtures-shared.js';
+import { PAL } from '../../domain/palette.js';
 
 type MonitorFeed = FauxSource & { timer?: boolean };
 
@@ -45,7 +46,7 @@ function routedFeed(body: HTMLElement): MonitorFeed | null {
   for (const n of nodes) {
     const label = (n.textContent ?? '').trim().split('\n')[0]?.trim() ?? '';
     if (!label) continue;
-    const color = n.style.color || n.style.borderColor || '#4d94ff';
+    const color = n.style.color || n.style.borderColor || PAL.blue65;
     const media = n.classList.contains('audio') ? 'audio' as const
       : n.classList.contains('video') ? 'video' as const
       : n.classList.contains('control') || n.classList.contains('camera-control') ? 'control' as const
@@ -69,8 +70,8 @@ function drawIdle(cvs: HTMLCanvasElement): void {
   cvs.width = Math.round(cw * dpr); cvs.height = Math.round(ch * dpr);
   const g = cvs.getContext('2d'); if (!g) return;
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g.fillStyle = '#050608'; g.fillRect(0, 0, cw, ch);
-  g.fillStyle = '#3a4658'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillStyle = PAL.blue03s23; g.fillRect(0, 0, cw, ch);
+  g.fillStyle = PAL.blue29s21; g.textAlign = 'center'; g.textBaseline = 'middle';
   g.font = `700 ${Math.max(9, Math.round(ch * 0.1))}px 'Courier New',monospace`;
   g.fillText('NO SOURCE ROUTED', cw / 2, ch / 2);
 }
@@ -80,7 +81,7 @@ function drawIdle(cvs: HTMLCanvasElement): void {
 export function monitorCard(body: HTMLElement, offline: boolean, destId?: string): HTMLElement {
   const cvs = el('canvas', {
     class: 'dfx-cvs',
-    style: 'aspect-ratio:16/9;height:auto;background:#000;',
+    style: `aspect-ratio:16/9;height:auto;background:${PAL.black};`,
   });
   const timerGfx = timerGfxOn();
   let warned = false;   // a persistently failing paint logs once, not 15×/s

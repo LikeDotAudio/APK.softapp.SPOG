@@ -15,6 +15,7 @@
 import { el, addStyles } from '../../ui/dom.js';
 import { hint } from '../../ui/tip.js';
 import type { View } from './live-input.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface ProbeResult { pos: string; val?: string }
 export interface Probe {
@@ -32,19 +33,19 @@ export interface HoverLayer {
 
 const HOVER_CSS = `
 .mi-probe{position:fixed;z-index:100001;display:none;pointer-events:none;white-space:nowrap;
-    background:#06101f;border:1px solid #2c4370;border-radius:6px;padding:4px 8px;
-    color:#bfe0ff;font:11px/1.3 'Courier New',monospace;box-shadow:0 6px 18px rgba(0,0,0,.6);}
-.mi-probe.open{display:block;} .mi-probe b{color:#ffd27f;}
+    background:${PAL.blue07s68};border:1px solid ${PAL.blue31s44};border-radius:6px;padding:4px 8px;
+    color:${PAL.sky87s100};font:11px/1.3 'Courier New',monospace;box-shadow:0 6px 18px rgba(0,0,0,.6);}
+.mi-probe.open{display:block;} .mi-probe b{color:${PAL.orange75};}
 .mi-marker{position:absolute;z-index:6;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
     display:flex;align-items:center;gap:3px;}
-.mi-marker .x{width:11px;height:11px;border-radius:50%;border:1.5px solid #ffd27f;position:relative;
+.mi-marker .x{width:11px;height:11px;border-radius:50%;border:1.5px solid ${PAL.orange75};position:relative;
     box-shadow:0 0 6px rgba(255,210,127,.7);background:rgba(255,210,127,.12);}
-.mi-marker .x::before,.mi-marker .x::after{content:'';position:absolute;background:#ffd27f;}
+.mi-marker .x::before,.mi-marker .x::after{content:'';position:absolute;background:${PAL.orange75};}
 .mi-marker .x::before{left:50%;top:1px;bottom:1px;width:1px;transform:translateX(-50%);}
 .mi-marker .x::after{top:50%;left:1px;right:1px;height:1px;transform:translateY(-50%);}
-.mi-marker .lbl{font:9px/1.2 'Courier New',monospace;color:#ffe9b0;background:rgba(6,16,31,.85);
-    border:1px solid #3a2f10;border-radius:4px;padding:1px 4px;white-space:nowrap;}
-.mi-marker:hover .lbl{color:#fff;border-color:#ffd27f;}`;
+.mi-marker .lbl{font:9px/1.2 'Courier New',monospace;color:${PAL.amber85};background:rgba(6,16,31,.85);
+    border:1px solid ${PAL.amber15};border-radius:4px;padding:1px 4px;white-space:nowrap;}
+.mi-marker:hover .lbl{color:${PAL.white};border-color:${PAL.orange75};}`;
 
 export function createHoverLayer(): HoverLayer {
   addStyles('meter-hover-styles', HOVER_CSS);

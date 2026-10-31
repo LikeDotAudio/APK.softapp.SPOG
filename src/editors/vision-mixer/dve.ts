@@ -57,6 +57,7 @@ const AXES: ReadonlyArray<{ key: keyof DVEKeyframe; label: string; min: number; 
 ];
 
 import { buildDVEStage } from './dve/stage.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface DveEditorOpts {
   snapshots(): DVESnapshot[];                    // live snapshot library
@@ -163,7 +164,7 @@ export function buildDveEditor(opts: DveEditorOpts): HTMLElement {
     ]),
     stage.el,
     el('details', { style: 'margin-top: 10px;' }, [
-      el('summary', { style: 'cursor: pointer; color: #8fb0d0; font-size: 11px; font-weight: bold; margin-bottom: 8px;' }, ['▸ FINE TUNE']),
+      el('summary', { style: `cursor: pointer; color: ${PAL.sky69s41}; font-size: 11px; font-weight: bold; margin-bottom: 8px;` }, ['▸ FINE TUNE']),
       el('div', { class: 'vm-axes' }, sliders.map((s) => s.row))
     ])
   );

@@ -3,6 +3,9 @@
 **Status:** Audit + strategy proposal · **Date:** 2026-07-03
 **Shipped since:** the four presets + palettes (Colour & Vision editor, `colour-engine.ts`);
 **P0 state glyphs for FAULT** (2026-10-30, `src/ui/console/state-glyphs.ts`, see §5 "Shipped").
+**P0 for every state + P2 sweep** (2026-10-31, ROAD-3449): live surfaces lead with on-air ● / muted ⊘ /
+ok ✓ / kinda ◐ / fault ⚠, the contract's state words get their tone's glyph, and every hex SPOG
+spelled moved into `src/domain/palette.ts` behind a ratchet (see §5 and §6 "P2 status").
 **Scope:** Colour-blindness / low-vision UX audit of the live LCARS UI, plus a design for a
 composable **Colour Engine** driving four presentation modes — *low-visibility*,
 *high-visibility*, *grey*, and *monochrome* — as the substrate under every module and style.
@@ -381,8 +384,19 @@ preview state dots gain `! ✓ ●`. Per-seat `prefs.ui.stateGlyphs` = `auto | o
 section of Colour & Vision); **auto** turns glyphs on when `data-chroma` is grey/mono or
 `data-vision` is high, so the default full-colour console is unchanged. `?glyphs=on|off` in the
 URL overrides the seat for one load. Fail-soft: a bad pref, URL or missing DOM only logs a
-warning — painting the scheme carries on. Not yet: on-air / OK / muted / auth glyphs on live
-surfaces (no live DOM class carries those states yet), fill patterns.
+warning — painting the scheme carries on.
+
+**Shipped (P0, every state, 2026-10-31).** The same switch now leads live surfaces with their
+state's glyph: on-air `●` (the vision mixer's PGM bus label and keyed-on keyers, the signaling
+ON AIR plate, the captain's-log ON AIR badge, a live schedule slot, a live camera tally),
+muted `⊘` (an audio-mixer strip's lit MUTE), ok `✓` / kinda `◐` / fault `⚠︎` (encoder stream
+health, the MQTT tree's efficiency read-out, wireless link status). Those three are the
+contract's good / kinda / dead tones (`contracts/tokens/state.json`, read through
+`src/domain/state.ts`), and every word the contract names gets its tone's glyph on any
+`[data-apk-state="<word>"]`. Their colour is the contract's too: the engine paints
+`--state-good / --state-kinda / --state-dead` from the vendored tokens, and the Classic
+palette's `alarm` / `ok` ARE `dead` / `good` (the CVD-safe palettes re-hue them on purpose).
+Not yet: auth glyphs, fill patterns.
 
 Rules:
 - The glyph rides **leading** every chip/row/node that today uses colour to mean *state*. Shape is
@@ -407,6 +421,7 @@ the whole surface. Ordered by value-per-effort:
 | **P0 — State glyphs** | Add the shape/glyph layer (§5) to *state* — fault first (`lcars.css:1068-1107`), then active/OK/mute/auth. Category shapes already exist. No engine needed. | ~1 day | Low | WCAG 1.4.1 *now*; mono-mode substrate |
 | **P1 — Token pyramid** | Add Tier-1 primitives + Tier-2 semantics to `:root`; wire OS `@media` respect. Pure addition, nothing removed yet. | ~0.5 day | None | everything below |
 | **P2 — Hex migration** | Replace the **106 hex in `lcars.css`** *plus* the literals in the **17 `src/editors/*/styles.ts`** injected blocks with `var(--…)`, and fold `src/ui/palette.ts` into the token layer. Mechanical (names exist) but broad. Do it in themed groups (signal → state → chrome), editor by editor. | **~4-6 days** | **Medium** (volume across ~40 files, visual regressions) | grey/mono/high modes actually working |
+| **P2 status (2026-10-31)** | All but 151 of the 2,652 hex literals SPOG spelled outside `src/ui/clock-faces` now live in **one file**, `src/domain/palette.ts` (601 colours, named by hue family + HSL lightness), read as `PAL.<name>`; `src/domain/palette.test.ts` holds the remainder to a ceiling that only falls. Still to do: fold near-twins and point families at Tier-2 `var(--…)` tokens so grey/mono reach them — in the palette file now, not across 150 files. | | | |
 | **P3 — CVD remap** | Flip the default signal hues to Okabe-Ito (`data-cvd="okabe"`); keep `data-cvd="default"` for the classic look. Reconcile the twice-defined category palette (`lcars.css:673-679` vs `1057-1066`). | ~0.5-1 day | Low | 1-in-12 operators |
 | **P4 — Chroma + contrast layers** | Add `data-chroma=grey|mono` and `data-vision=low|high` selectors (§4.2). Only possible *after* P2. | ~1 day | Low | the four requested modes |
 | **P5 — JS bridge** | `tokens.ts` accessor + re-render on mode change; convert canvas literals in the ~21 canvas/inline files (`matrix.ts`, `helix.ts`, `loudness.ts`, `audio-scope.ts`, `palette.ts`, editor canvases). | ~1-1.5 days | Medium | canvas surfaces stop being stuck in colour |

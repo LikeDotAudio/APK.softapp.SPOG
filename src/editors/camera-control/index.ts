@@ -19,6 +19,7 @@ import { buildShading, buildJoystick, buildTally, buildPresets, buildFunctions }
 import { buildAxisBridge } from './mqtt-axes.js';
 import { buildGlassButtons } from './glass-buttons.js';
 import { makeFrame } from './frame.js';
+import { PAL } from '../../domain/palette.js';
 
 const plugin: EditorPlugin = {
   id: 'camera-control',
@@ -118,7 +119,7 @@ const plugin: EditorPlugin = {
         const contrast = 0.8 + s.gamma * 0.6;
         scene.style.filter = `brightness(${bright.toFixed(2)}) contrast(${contrast.toFixed(2)}) saturate(${sat.toFixed(2)}) hue-rotate(${hue.toFixed(0)}deg)`;
       },
-      dvdState: { x: 14, y: 14, dx: 3.6, dy: 2.9, color: '#fff' },
+      dvdState: { x: 14, y: 14, dx: 3.6, dy: 2.9, color: PAL.white },
     };
 
     buildShading(cc);

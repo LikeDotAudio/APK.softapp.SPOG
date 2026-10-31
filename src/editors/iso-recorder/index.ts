@@ -12,6 +12,7 @@ import { qs } from '../../ui/dom.js';
 import { injectIsoRecorderStyles } from './styles.js';
 import { channelsFor } from './channels.js';
 import { buildReplay } from './replay.js';
+import { PAL } from '../../domain/palette.js';
 
 /** One ISO recorder lane's mutable state + behaviour. */
 interface Rec {
@@ -51,7 +52,7 @@ const plugin: EditorPlugin = {
     disk.className = 'iso-disk';
     disk.innerHTML = '<i style="width:38%"></i>';
     const diskLbl = document.createElement('div');
-    diskLbl.style.cssText = 'font-size:11px;color:#7e93b5;white-space:nowrap;';
+    diskLbl.style.cssText = `font-size:11px;color:${PAL.blue60s27};white-space:nowrap;`;
     diskLbl.textContent = 'DISK 38% · 14:22:10 REMAINING';
     bar.append(allBtn, disk, diskLbl);
     sec1.appendChild(bar);

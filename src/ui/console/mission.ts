@@ -10,6 +10,7 @@ import { addStyles } from '../dom.js';
 import { role } from '../../platform/auth.js';
 import { showSchedule, SCHEDULE, type Slot } from './schedule.js';
 import { openTimeline } from './captains-log-timeline.js';
+import { PAL } from '../../domain/palette.js';
 
 const slug = (s: string): string => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const fmt = (h: number): string => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.round((h % 1) * 60)).padStart(2, '0')}`;
@@ -18,17 +19,17 @@ const nowH = (): number => { try { const d = new Date(); return d.getHours() + d
 const MZ_CSS = `
 /* Rides the LANE the credits pill vacated (bottom:6, below the tab pills),
    docked beside the clock column — never over the footer tabs. */
-.mz-bar{position:fixed;bottom:6px;z-index:1500;display:none;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(90deg,rgba(8,16,34,.92),rgba(12,24,48,.92));border:1px solid #21406a;border-radius:999px;padding:5px 14px;font-family:Arial,Helvetica,sans-serif;color:#cfe6ff;font-size:11px;letter-spacing:1px;box-shadow:0 4px 18px rgba(0,0,0,.45);max-width:64vw;}
+.mz-bar{position:fixed;bottom:6px;z-index:1500;display:none;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(90deg,rgba(8,16,34,.92),rgba(12,24,48,.92));border:1px solid ${PAL.sky27};border-radius:999px;padding:5px 14px;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky91};font-size:11px;letter-spacing:1px;box-shadow:0 4px 18px rgba(0,0,0,.45);max-width:64vw;}
 .mz-bar.show{display:inline-flex;}
-.mz-bar:hover{border-color:#3a6acc;}
-.mz-where{font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30vw;}
-.mz-show{color:#9fd6ff;white-space:nowrap;}
+.mz-bar:hover{border-color:${PAL.blue51};}
+.mz-where{font-weight:900;color:${PAL.white};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30vw;}
+.mz-show{color:${PAL.sky81s100};white-space:nowrap;}
 .mz-role{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
 .mz-dot{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 6px currentColor;}
 .mz-live{font-weight:900;border-radius:6px;padding:2px 8px;letter-spacing:1px;}
-.mz-live.now{background:#ff3b3b;color:#fff;animation:mzPulse 1.4s ease-in-out infinite;}
-.mz-live.next{background:#1d2942;color:#9fb6cc;}
-.mz-live.idle{background:#13233c;color:#6b82a3;}
+.mz-live.now{background:${PAL.red62};color:${PAL.white};animation:mzPulse 1.4s ease-in-out infinite;}
+.mz-live.next{background:${PAL.blue19};color:${PAL.sky71};}
+.mz-live.idle{background:${PAL.blue15};color:${PAL.blue53};}
 @keyframes mzPulse{0%,100%{opacity:.8;}50%{opacity:1;box-shadow:0 0 12px rgba(255,59,59,.7);}}`;
 
 interface Ctx { name: string; lineage: string[]; group: string }
@@ -58,7 +59,7 @@ function matchSlot(ctx: Ctx): Slot | null {
   return score > 0 ? best : null;
 }
 
-const divisionColor = (tier: string): string => (/command/i.test(tier) ? '#e0524a' : /scien/i.test(tier) ? '#5b8def' : '#e0b53a');
+const divisionColor = (tier: string): string => (/command/i.test(tier) ? PAL.red58s71 : /scien/i.test(tier) ? PAL.blue65s82 : PAL.amber55s73);
 
 export function initMission(): void {
   if (document.querySelector('.mz-bar')) return;
@@ -104,7 +105,7 @@ export function initMission(): void {
       else if (slot.s > now) { liveCls = 'next'; liveTxt = 'UP ' + fmt(slot.s); }
       else { liveCls = 'idle'; liveTxt = 'WRAPPED'; }
     }
-    const col = r ? divisionColor(r.tier) : '#6b82a3';
+    const col = r ? divisionColor(r.tier) : PAL.blue53;
     const roleHtml = r
       ? `<span class="mz-role"><span class="mz-dot" style="color:${col}"></span>You: <b style="color:${col}">${r.name}</b> · ${r.sub || r.tier}</span>`
       : '';

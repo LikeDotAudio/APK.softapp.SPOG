@@ -6,20 +6,21 @@
 // beyond updating what it shows. `esc` (HTML-escape) is shared by both tip kinds.
 
 import { addStyles, el } from './dom.js';
+import { PAL } from '../domain/palette.js';
 
 const STYLE_ID = 'tr-tip';
 const CSS = `
 .tr-tip{position:fixed;z-index:100000;display:none;max-width:340px;pointer-events:none;
-  background:#0b1526;border:1px solid #2c4370;border-radius:9px;padding:11px 13px;
-  color:#cfe0f2;font:11px/1.55 Arial,Helvetica,sans-serif;box-shadow:0 12px 34px rgba(0,0,0,.7);}
+  background:${PAL.blue10s55};border:1px solid ${PAL.blue31s44};border-radius:9px;padding:11px 13px;
+  color:${PAL.sky88};font:11px/1.55 Arial,Helvetica,sans-serif;box-shadow:0 12px 34px rgba(0,0,0,.7);}
 .tr-tip.open{display:block;}
-.tr-tip b{color:#6FC8F0;letter-spacing:1px;text-transform:uppercase;font-size:11px;}
+.tr-tip b{color:${PAL.sky69};letter-spacing:1px;text-transform:uppercase;font-size:11px;}
 .tr-tip .r{display:block;margin-top:3px;}
-.tr-tip .k{display:inline-block;min-width:74px;color:#7f9ec4;text-transform:uppercase;
+.tr-tip .k{display:inline-block;min-width:74px;color:${PAL.sky63s37};text-transform:uppercase;
   font-size:9px;letter-spacing:.5px;vertical-align:top;}
-.tr-tip .g{color:#7fe0a0;font-weight:bold;} .tr-tip .bad{color:#ff9a9a;font-weight:bold;}
-.tr-tip .warn{color:#ffcf7a;font-weight:bold;}
-.tr-tip .note{display:block;margin-top:7px;padding-top:7px;border-top:1px solid #1c2c48;color:#bcd3ee;}
+.tr-tip .g{color:${PAL.green69};font-weight:bold;} .tr-tip .bad{color:${PAL.red80};font-weight:bold;}
+.tr-tip .warn{color:${PAL.orange74};font-weight:bold;}
+.tr-tip .note{display:block;margin-top:7px;padding-top:7px;border-top:1px solid ${PAL.blue20s44};color:${PAL.sky84};}
 .has-tip{cursor:help;}
 `;
 

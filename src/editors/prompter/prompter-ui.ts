@@ -1,11 +1,12 @@
 import { el } from '../../ui/dom.js';
+import { PAL } from '../../domain/palette.js';
 
 export function buildPrompterUI() {
   const script = el('div', { class: 'tp-script', contentEditable: 'true', spellcheck: false }) as HTMLDivElement;
   const gutter = el('div', { class: 'tp-gutter' });
   const scriptContainer = el('div', { class: 'tp-script-container' }, [gutter, script]);
   
-  const HIGHLIGHTS = ['#ff5b2e', '#ffd21e', '#39d353', '#2ec5ff', '#c46bff', '#ff5fa2'];
+  const HIGHLIGHTS = [PAL.red59_ff5b2e, PAL.amber56, PAL.green53, PAL.sky59, PAL.violet71, PAL.pink69s100];
   const hlPens = HIGHLIGHTS.map(c =>
     el('button', { class: 'tp-tool-hl', dataset: { hl: c }, style: `background:${c};`, title: `Highlight ${c}` }));
   const hlClear = el('button', { class: 'tp-tool-hl clear', dataset: { hl: 'transparent' }, title: 'Clear highlight' }, ['⌫']);
@@ -49,8 +50,8 @@ export function buildPrompterUI() {
   const upperCheck = el('input', { type: 'checkbox', checked: true }) as HTMLInputElement;
   const stripCheck = el('input', { type: 'checkbox', checked: false }) as HTMLInputElement;
   const lineIn = el('input', { type: 'range', min: '1.0', max: '3.0', step: '0.1', value: '1.6' }) as HTMLInputElement;
-  const tcIn = el('input', { type: 'color', value: '#ffffff' }) as HTMLInputElement;
-  const bgIn = el('input', { type: 'color', value: '#000000' }) as HTMLInputElement;
+  const tcIn = el('input', { type: 'color', value: PAL.white }) as HTMLInputElement;
+  const bgIn = el('input', { type: 'color', value: PAL.black }) as HTMLInputElement;
 
   const gpoLog = el('div', { class: 'tp-gpo-log' });
   const shortcutWin = el('div', { class: 'tp-shortcuts' }, [
@@ -65,10 +66,10 @@ export function buildPrompterUI() {
   ]);
 
   const wheelCol = el('div', { class: 'tp-wheel-col' }, [
-    el('div', { style: 'text-align:center;color:#7e93b5;font:16px monospace;margin-top:10px;font-weight:bold;' }, ['Fwd']),
+    el('div', { style: `text-align:center;color:${PAL.blue60s27};font:16px monospace;margin-top:10px;font-weight:bold;` }, ['Fwd']),
     wheelLabel,
     paceContainer,
-    el('div', { style: 'text-align:center;color:#7e93b5;font:16px monospace;margin-bottom:10px;font-weight:bold;' }, ['Rev']),
+    el('div', { style: `text-align:center;color:${PAL.blue60s27};font:16px monospace;margin-bottom:10px;font-weight:bold;` }, ['Rev']),
   ]);
 
   const root = el('div', { class: 'tp' }, [

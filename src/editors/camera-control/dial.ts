@@ -6,6 +6,7 @@
 import { clamp } from './state.js';
 import type { CamState, CameraConsole } from './state.js';
 import { el } from '../../ui/dom.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Every numeric (non-`presets`) key of CamState — the set a dial can drive. */
 type NumKey = Exclude<keyof CamState, 'presets'>;
@@ -97,10 +98,10 @@ export function buildShading(cc: CameraConsole): void {
     slot.appendChild(buildDial(cc, key, label, color));
     venn.appendChild(slot);
   };
-  place('rGain', 'R Gain', '#ff4d4d', 105, 52);
-  place('gGain', 'G Gain', '#28e04a', 395, 52);
-  place('bGain', 'B Gain', '#4d83ff', 250, 134);
-  place('rBlk', 'R', '#ff7a7a', 205, 92, true);
-  place('gBlk', 'G', '#74ef8a', 250, 92, true);
-  place('bBlk', 'B', '#86acff', 295, 92, true);
+  place('rGain', 'R Gain', PAL.red65, 105, 52);
+  place('gGain', 'G Gain', PAL.green52, 395, 52);
+  place('bGain', 'B Gain', PAL.blue65s100, 250, 134);
+  place('rBlk', 'R', PAL.red74, 205, 92, true);
+  place('gBlk', 'G', PAL.green70, 250, 92, true);
+  place('bBlk', 'B', PAL.blue76, 295, 92, true);
 }

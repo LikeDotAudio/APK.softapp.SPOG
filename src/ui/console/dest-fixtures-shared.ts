@@ -8,15 +8,16 @@
 import { el, ctx2d } from '../dom.js';
 import { drawSegString } from '../seven-seg.js';
 import type { Production } from '../../model/index.js';
+import { PAL } from '../../domain/palette.js';
 
 export const CSS = `
 .dfx{display:flex;flex-wrap:wrap;gap:10px;width:100%;margin-top:8px;}
-.dfx-card{background:#0a080d;border:1px solid #241a26;border-radius:12px;padding:8px 10px;
+.dfx-card{background:${PAL.indigo04};border:1px solid ${PAL.purple13};border-radius:12px;padding:8px 10px;
   display:flex;flex-direction:column;gap:6px;min-width:230px;flex:1 1 230px;}
-.dfx-head{font:800 10px 'Courier New',monospace;letter-spacing:2px;color:#C864C8;text-transform:uppercase;
+.dfx-head{font:800 10px 'Courier New',monospace;letter-spacing:2px;color:${PAL.purple59};text-transform:uppercase;
   display:flex;align-items:center;gap:8px;}
-.dfx-sub{font:700 8px 'Courier New',monospace;letter-spacing:1px;color:#6b7686;text-transform:uppercase;}
-.dfx-cvs{display:block;background:#000;border-radius:8px;width:100%;height:auto;}
+.dfx-sub{font:700 8px 'Courier New',monospace;letter-spacing:1px;color:${PAL.grey47};text-transform:uppercase;}
+.dfx-cvs{display:block;background:${PAL.black};border-radius:8px;width:100%;height:auto;}
 .dfx-cvs.tap{cursor:pointer;}
 .dfx-chrono{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;}
 .dfx-ccol{display:flex;flex-direction:column;gap:8px;flex:1 1 210px;min-width:0;}
@@ -24,26 +25,26 @@ export const CSS = `
 .dfx-swcol .dfx-wlab{text-align:center;line-height:1.5;}
 .dfx-crow{display:flex;align-items:center;gap:6px;}
 .dfx-crow .dfx-cvs{flex:1;min-width:0;}
-.dfx-clab{font:800 11px 'Courier New',monospace;color:#C864C8;width:14px;text-align:center;}
+.dfx-clab{font:800 11px 'Courier New',monospace;color:${PAL.purple59};width:14px;text-align:center;}
 .dfx-mrow{display:flex;gap:4px;}
 .dfx-mini{border:none;border-radius:6px;padding:5px 7px;cursor:pointer;
-  font:800 10px 'Courier New',monospace;background:#16233d;color:#bcd3ee;}
-.dfx-mini.run{background:#e33;color:#150404;}
+  font:800 10px 'Courier New',monospace;background:${PAL.blue16_16233d};color:${PAL.sky84};}
+.dfx-mini.run{background:${PAL.red57};color:${PAL.red05};}
 .dfx-watch{flex:0 0 auto;display:block;cursor:pointer;}
-.dfx-wlab{font:700 8px 'Courier New',monospace;letter-spacing:1px;color:#6b7686;text-transform:uppercase;}
+.dfx-wlab{font:700 8px 'Courier New',monospace;letter-spacing:1px;color:${PAL.grey47};text-transform:uppercase;}
 .dfx-chat{display:flex;flex-direction:column;gap:6px;}
-.dfx-log{height:96px;overflow:auto;background:#050506;border:1px solid #201620;border-radius:8px;padding:6px;
-  display:flex;flex-direction:column;gap:3px;font:600 10px 'Courier New',monospace;color:#cdd6e6;}
+.dfx-log{height:96px;overflow:auto;background:${PAL.grey02s9};border:1px solid ${PAL.purple11};border-radius:8px;padding:6px;
+  display:flex;flex-direction:column;gap:3px;font:600 10px 'Courier New',monospace;color:${PAL.blue85};}
 .dfx-msg{line-height:1.3;word-break:break-word;}
-.dfx-who{font-weight:800;color:#C864C8;}
-.dfx-msg.self .dfx-who{color:#9fe0b0;}
-.dfx-t{color:#5a6472;}
+.dfx-who{font-weight:800;color:${PAL.purple59};}
+.dfx-msg.self .dfx-who{color:${PAL.green75};}
+.dfx-t{color:${PAL.grey40s12};}
 .dfx-row{display:flex;gap:6px;}
-.dfx-in{flex:1;min-width:0;background:#0a0a0d;border:1px solid #241a26;border-radius:7px;padding:6px 8px;
-  color:#e7d3ea;font:600 11px 'Courier New',monospace;}
-.dfx-in:focus{outline:none;border-color:#C864C8;}
+.dfx-in{flex:1;min-width:0;background:${PAL.blue05s13};border:1px solid ${PAL.purple13};border-radius:7px;padding:6px 8px;
+  color:${PAL.purple87};font:600 11px 'Courier New',monospace;}
+.dfx-in:focus{outline:none;border-color:${PAL.purple59};}
 .dfx-send{border:none;border-radius:7px;padding:6px 12px;cursor:pointer;
-  font:800 10px 'Courier New',monospace;letter-spacing:1px;background:#7a1f2a;color:#ffe;}
+  font:800 10px 'Courier New',monospace;letter-spacing:1px;background:${PAL.red30};color:${PAL.yellow97};}
 @keyframes dfx-blink{0%,49.9%{opacity:1;}50%,100%{opacity:.12;}}
 .dfx-blink{animation:dfx-blink 1s infinite;}
 `;
@@ -60,7 +61,7 @@ export function readout(W: number, H: number): { cvs: HTMLCanvasElement; draw: (
   cvs.width = W * dpr; cvs.height = H * dpr;
   cvs.style.maxWidth = W + 'px';
   const g = ctx2d(cvs); if (g) g.scale(dpr, dpr);
-  return { cvs, draw: (s: string): void => { if (g) drawSegString(g, W, H, s, 'seg', 'red', '#000'); } };
+  return { cvs, draw: (s: string): void => { if (g) drawSegString(g, W, H, s, 'seg', 'red', PAL.black); } };
 }
 
 /** A frame loop that stops itself once the node has left the document. A frame

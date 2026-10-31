@@ -7,9 +7,10 @@
 // level line-up.
 
 import type { DvdState } from './state.js';
+import { PAL } from '../../domain/palette.js';
 
-const TOP = ['#bfbfbf', '#bfbf00', '#00bfbf', '#00bf00', '#bf00bf', '#bf0000', '#0000bf'] as const;
-const MID = ['#0000bf', '#131313', '#bf00bf', '#131313', '#00bfbf', '#131313', '#bfbfbf'] as const;
+const TOP = [PAL.grey75, PAL.yellow37, PAL.cyan37, PAL.green37, PAL.purple37, PAL.red37, PAL.blue37] as const;
+const MID = [PAL.blue37, PAL.grey07_131313, PAL.purple37, PAL.grey07_131313, PAL.cyan37, PAL.grey07_131313, PAL.grey75] as const;
 
 export function drawSMPTE(cv: HTMLCanvasElement): void {
   const w = cv.clientWidth | 0;
@@ -40,20 +41,20 @@ export function drawSMPTE(cv: HTMLCanvasElement): void {
     ctx.fillRect(Math.round(x), botY, Math.ceil(width) + 1, botH);
     x += width;
   };
-  seg(u * 1.2, '#00214c'); // -I
-  seg(u * 1.2, '#ffffff'); // 100% white
-  seg(u * 1.2, '#2a0a52'); // +Q
-  seg(u * 1.06, '#131313'); // black
-  seg(u * 0.42, '#0a0a0a'); // PLUGE super-black (3.5 IRE)
-  seg(u * 0.42, '#151515'); // PLUGE black (7.5 IRE)
-  seg(u * 0.42, '#1f1f1f'); // PLUGE lighter (11.5 IRE)
-  seg(w - x, '#131313'); // black
+  seg(u * 1.2, PAL.sky15); // -I
+  seg(u * 1.2, PAL.white); // 100% white
+  seg(u * 1.2, PAL.violet18); // +Q
+  seg(u * 1.06, PAL.grey07_131313); // black
+  seg(u * 0.42, PAL.grey04s0); // PLUGE super-black (3.5 IRE)
+  seg(u * 0.42, PAL.grey08); // PLUGE black (7.5 IRE)
+  seg(u * 0.42, PAL.grey12); // PLUGE lighter (11.5 IRE)
+  seg(w - x, PAL.grey07_131313); // black
   ctx.fillStyle = 'rgba(160,190,220,.5)';
   ctx.font = '8px Courier New, monospace';
   ctx.fillText('PLUGE', Math.round(u * 4.6), botY + botH - 4);
 }
 
-const DVD_COLORS = ['#ff4d4d', '#28e04a', '#4d83ff', '#ffd400', '#ff5bd1', '#5be0ff', '#ffffff'] as const;
+const DVD_COLORS = [PAL.red65, PAL.green52, PAL.blue65s100, PAL.amber50, PAL.pink68, PAL.cyan68, PAL.white] as const;
 
 /** Advance the bouncing badge one frame; recolour (≠ current) on each bounce. */
 export function stepDVD(elm: HTMLElement, vid: HTMLElement, st: DvdState): void {

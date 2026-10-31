@@ -4,6 +4,7 @@
 
 import type { Feed } from '../../domain/routing-core/index.js';
 import type { TwistConfig } from '../../model/index.js';
+import { PAL } from '../../domain/palette.js';
 
 export interface Mic {
   name: string;
@@ -57,7 +58,7 @@ export interface Channel {
 export function resolveChannels(sources: ReadonlyArray<Feed>, config: TwistConfig | null): Channel[] {
   if (sources.length) return sources.map((f) => ({ label: f.label, color: f.color }));
   if (config && Array.isArray(config.inputs) && config.inputs.length) {
-    return config.inputs.map((i) => ({ label: i, color: '#4d94ff' }));
+    return config.inputs.map((i) => ({ label: i, color: PAL.blue65 }));
   }
-  return Array.from({ length: 8 }, (_, i) => ({ label: `CH ${i + 1}`, color: '#4d94ff' }));
+  return Array.from({ length: 8 }, (_, i) => ({ label: `CH ${i + 1}`, color: PAL.blue65 }));
 }

@@ -8,6 +8,7 @@ import type { Disposer } from '../../ui/timers.js';
 import type { EditorServices } from '../types.js';
 import { MICS } from './state.js';
 import type { PanelState } from './state.js';
+import { PAL } from '../../domain/palette.js';
 
 type DialKey = 'gain' | 'hpf' | 'pan';
 
@@ -27,9 +28,9 @@ export function buildDials(
 ): Array<() => void> {
   const dials: Array<() => void> = [];
   const dialDefs: ReadonlyArray<readonly [DialKey, string, string]> = [
-    ['gain', 'Gain', '#39d353'],
-    ['hpf', 'HPF', '#6FC8F0'],
-    ['pan', 'Pan', '#cba6ff'],
+    ['gain', 'Gain', PAL.green53],
+    ['hpf', 'HPF', PAL.sky69],
+    ['pan', 'Pan', PAL.indigo83s100],
   ];
   dialDefs.forEach(([key, label, c]) => {
     const kn = document.createElement('div');

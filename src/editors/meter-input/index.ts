@@ -6,7 +6,6 @@
 // (getDisplayMedia — scope any tab/window incl. a playing clip), Load File, or a
 // CORS media URL. A cross-origin <iframe> can't be scoped directly (tainted canvas)
 // — Capture Tab sidesteps that.
-//
 // Each scope card starts in a default spot, then drag-moves (header) + resizes
 // (corner). Loudness reuses ui/loudness.ts; the audio scope shows L / R / L+R.
 // The card DOM, layout presets, hover-help, hover probes and the edit detector
@@ -31,6 +30,7 @@ import { attachProbes } from './hover-probes.js';
 import { buildToolbar } from './toolbar.js';
 import { wireControls } from './controls.js';
 import { wireWheelResize } from './resize.js';
+import { PAL } from '../../domain/palette.js';
 
 const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, v));
 
@@ -62,7 +62,7 @@ const plugin: EditorPlugin = {
     const sens = { v: 0.35 };   // edit-detection threshold, set by the SENS pills (see ./controls)
     const { applyPreset, restoreCard } = createPresets(cardMap, front);
     for (const [key, card] of Object.entries(cardMap)) {
-      card.style.setProperty('--hc', HC[key] ?? '#3a5573');
+      card.style.setProperty('--hc', HC[key] ?? PAL.sky34);
       floatCard(card, front, () => restoreCard(key));
     }
 

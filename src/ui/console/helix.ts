@@ -3,6 +3,7 @@
 // frequency, not a wider twist), coloured by each feed, going red + "corrupted"
 // if any source is faulted. The right lip folds the strand away.
 import { isFaultStatus } from '../../domain/routing-core/index.js';
+import { PAL } from '../../domain/palette.js';
 
 let gradSeq = 0;
 
@@ -25,7 +26,7 @@ export function getDNAHtml(cycles: number, width: number, colors: string[]): str
     const y1 = 50 + amplitude * Math.sin(freq * (x - 10));
     const y2 = 50 + amplitude * Math.sin(freq * (x - 10) + Math.PI);
     const opacity = 0.3 + (Math.sin(freq * (x - 10)) + 1) * 0.2;
-    const rungColor = colors[i % numColors] ?? '#6FC8F0';
+    const rungColor = colors[i % numColors] ?? PAL.sky69;
     svg += `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${rungColor}" stroke-opacity="${opacity}" stroke-width="2.5" />`;
     svg += `<circle cx="${x}" cy="${y1}" r="2" fill="${rungColor}" opacity="0.6" />`;
     svg += `<circle cx="${x}" cy="${y2}" r="2" fill="${rungColor}" opacity="0.6" />`;
@@ -40,10 +41,10 @@ export function getDNAHtml(cycles: number, width: number, colors: string[]): str
   }
   svg += `<path class="strand strand-1-glow" d="${d1}" fill="none" stroke="url(#${gradientId})" stroke-width="8" opacity="0.5" style="filter: blur(3px);" />`;
   svg += `<path class="strand strand-1" d="${d1}" fill="none" stroke="url(#${gradientId})" stroke-width="4" />`;
-  svg += `<path class="strand strand-1-core" d="${d1}" fill="none" stroke="#fff" stroke-width="1.5" stroke-opacity="0.8" />`;
+  svg += `<path class="strand strand-1-core" d="${d1}" fill="none" stroke="${PAL.white}" stroke-width="1.5" stroke-opacity="0.8" />`;
   svg += `<path class="strand strand-2-glow" d="${d2}" fill="none" stroke="url(#${gradientId})" stroke-width="8" opacity="0.3" style="filter: blur(3px);" />`;
   svg += `<path class="strand strand-2" d="${d2}" fill="none" stroke="url(#${gradientId})" stroke-width="4" stroke-opacity="0.8" />`;
-  svg += `<path class="strand strand-2-core" d="${d2}" fill="none" stroke="#fff" stroke-width="1.5" stroke-opacity="0.6" />`;
+  svg += `<path class="strand strand-2-core" d="${d2}" fill="none" stroke="${PAL.white}" stroke-width="1.5" stroke-opacity="0.6" />`;
   return svg;
 }
 
@@ -99,7 +100,7 @@ export function updateTwistVisuals(twist: HTMLElement): void {
     svg.setAttribute('viewBox', `0 0 ${width} 100`);
     const corrupted = swimmers.some((s) => isFaultStatus(s.dataset.status));
     twist.classList.toggle('corrupted', corrupted);
-    const sourceColors = swimmers.map((s) => (corrupted ? '#ff3b3b' : getComputedStyle(s).color));
+    const sourceColors = swimmers.map((s) => (corrupted ? PAL.red62 : getComputedStyle(s).color));
     svg.innerHTML = getDNAHtml(cycles, width, sourceColors);
     svg.style.height = isMonitor ? '55px' : '100px';
     svg.style.marginTop = isMonitor ? '6px' : '10px';

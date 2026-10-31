@@ -6,6 +6,7 @@
 import { ctx2d } from '../../ui/dom.js';
 import type { Strip } from './dsp.js';
 import { eqResponse } from './dsp.js';
+import { PAL } from '../../domain/palette.js';
 
 export function drawEq(eqCanvas: HTMLCanvasElement, s: Strip): void {
   const g = ctx2d(eqCanvas); if (!g) return;
@@ -20,7 +21,7 @@ export function drawEq(eqCanvas: HTMLCanvasElement, s: Strip): void {
     const y = h / 2 - (db / 15) * (h / 2 - 6);
     x === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
   }
-  g.strokeStyle = s.eqOn && !s.bypass ? '#F2B74B' : '#3a4c68'; g.lineWidth = 2.5; g.stroke();
+  g.strokeStyle = s.eqOn && !s.bypass ? PAL.orange62 : PAL.blue32s28; g.lineWidth = 2.5; g.stroke();
 }
 
 export function drawComp(compCanvas: HTMLCanvasElement, s: Strip): void {
@@ -38,6 +39,6 @@ export function drawComp(compCanvas: HTMLCanvasElement, s: Strip): void {
     const y = h - map(outDb) * h;
     x === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
   }
-  g.strokeStyle = on ? '#39d353' : '#3a4c68'; g.lineWidth = 2.5; g.stroke();
+  g.strokeStyle = on ? PAL.green53 : PAL.blue32s28; g.lineWidth = 2.5; g.stroke();
   if (on) { const tx = map(s.threshold) * w; g.strokeStyle = 'rgba(255,214,0,.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(tx, 0); g.lineTo(tx, h); g.stroke(); }
 }

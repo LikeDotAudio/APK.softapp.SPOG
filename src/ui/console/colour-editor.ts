@@ -10,6 +10,7 @@ import { PALETTES, PRESETS, AXES } from './colour-palettes.js';
 import { STYLE_ID, CSS } from './colour-editor-css.js';
 import { isLcarsPulseOn, setLcarsPulse } from './lcars-pulse.js';
 import { GLYPH_MODES, getGlyphMode, setGlyphMode } from './state-glyphs.js';
+import { PAL } from '../../domain/palette.js';
 
 /** Build the editor body: presets, the vision/chroma axes, the palette gallery, and a live preview. */
 function buildEditor(body: HTMLElement): void {
@@ -123,9 +124,9 @@ function buildEditor(body: HTMLElement): void {
       el('div', { class: 'cse-chip cse-ok' }, [el('span', { class: 'g' }, ['✓']), 'OK']),
       el('div', { class: 'cse-chip cse-onair' }, [el('span', { class: 'g' }, ['●']), 'ON-AIR']),
       el('div', { class: 'cse-wins' }, [
-        sampleWin('VIDEO', '--sig-video', '#CC99CC'),
-        sampleWin('AUDIO', '--sig-audio', '#FF9C63'),
-        sampleWin('PROGRAM', '--sig-program', '#646DCC', true),
+        sampleWin('VIDEO', '--sig-video', PAL.purple70),
+        sampleWin('AUDIO', '--sig-audio', PAL.orange69),
+        sampleWin('PROGRAM', '--sig-program', PAL.blue60, true),
       ]),
     ]),
   ]);
@@ -184,7 +185,7 @@ function buildEditor(body: HTMLElement): void {
 /** Open the COLOUR & VISION editor overlay. */
 export function openColourEditor(): void {
   openOverlay(
-    { title: 'Colour & Vision', color: '#CC79A7', prodName: 'system', twistName: 'colour' },
+    { title: 'Colour & Vision', color: PAL.pink64, prodName: 'system', twistName: 'colour' },
     (bodyEl) => buildEditor(bodyEl),
   );
 }

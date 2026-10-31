@@ -1,34 +1,35 @@
 import { addStyles, el } from '../dom.js';
 import { launchDock } from './launch-dock.js';
 import { getBus } from '../../platform/mqtt/index.js';
+import { PAL } from '../../domain/palette.js';
 
 const CSS = `
-.voice-launch{position:fixed;right:130px;bottom:76px;z-index:1000;background:#ff3366;color:#fff;border:none;border-radius:18px 6px 6px 18px;font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:8px 18px 8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:inset 5px 0 0 #b31038;}
+.voice-launch{position:fixed;right:130px;bottom:76px;z-index:1000;background:${PAL.red60s100};color:${PAL.white};border:none;border-radius:18px 6px 6px 18px;font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:8px 18px 8px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:inset 5px 0 0 ${PAL.red38s84};}
 .voice-launch.listening { animation: pulse-mic 1.5s infinite; }
-@keyframes pulse-mic { 0% { transform: scale(1); box-shadow:inset 5px 0 0 #b31038, 0 0 10px rgba(255,51,102,0.6); } 50% { transform: scale(1.05); box-shadow:inset 5px 0 0 #b31038, 0 0 20px rgba(255,51,102,0.9); } 100% { transform: scale(1); box-shadow:inset 5px 0 0 #b31038, 0 0 10px rgba(255,51,102,0.6); } }
-.voice-panel{position:fixed;right:130px;bottom:120px;z-index:2400;width:min(400px,92vw);display:none;flex-direction:column;background:#0a0c12;border:1px solid #22303a;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.6);overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#d6e6ef;}
+@keyframes pulse-mic { 0% { transform: scale(1); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 10px rgba(255,51,102,0.6); } 50% { transform: scale(1.05); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 20px rgba(255,51,102,0.9); } 100% { transform: scale(1); box-shadow:inset 5px 0 0 ${PAL.red38s84}, 0 0 10px rgba(255,51,102,0.6); } }
+.voice-panel{position:fixed;right:130px;bottom:120px;z-index:2400;width:min(400px,92vw);display:none;flex-direction:column;background:${PAL.blue05s29};border:1px solid ${PAL.sky18};border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.6);overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky89};}
 .voice-panel.open{display:flex;}
-.vd-head{display:flex;justify-content:space-between;padding:12px;background:#1a2333;border-bottom:1px solid #22303a;font-size:14px;}
-.vd-x{background:none;border:none;color:#8fb0d0;cursor:pointer;font-size:18px;}
+.vd-head{display:flex;justify-content:space-between;padding:12px;background:${PAL.blue15s32};border-bottom:1px solid ${PAL.sky18};font-size:14px;}
+.vd-x{background:none;border:none;color:${PAL.sky69s41};cursor:pointer;font-size:18px;}
 .vd-content{padding:20px;display:flex;flex-direction:column;gap:15px;align-items:center;text-align:center;}
-.vd-mic-btn{width:80px;height:80px;border-radius:50%;border:2px solid #22303a;background:#03060f;color:#6FC8F0;font-size:32px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
-.vd-mic-btn.listening{border-color:#ff3366;color:#ff3366;animation:pulse-mic 1.5s infinite;}
-.vd-transcript{width:100%;min-height:60px;background:#03060f;border:1px dashed #22303a;border-radius:8px;padding:12px;font:16px 'Courier New',monospace;box-sizing:border-box;}
-.vd-parsed{font:700 20px 'Courier New',monospace;color:#ffcc33;padding:12px;background:#16233d;border:2px solid #2a3b5c;border-radius:8px;width:100%;box-sizing:border-box;}
+.vd-mic-btn{width:80px;height:80px;border-radius:50%;border:2px solid ${PAL.sky18};background:${PAL.blue04};color:${PAL.sky69};font-size:32px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.vd-mic-btn.listening{border-color:${PAL.red60s100};color:${PAL.red60s100};animation:pulse-mic 1.5s infinite;}
+.vd-transcript{width:100%;min-height:60px;background:${PAL.blue04};border:1px dashed ${PAL.sky18};border-radius:8px;padding:12px;font:16px 'Courier New',monospace;box-sizing:border-box;}
+.vd-parsed{font:700 20px 'Courier New',monospace;color:${PAL.amber60};padding:12px;background:${PAL.blue16_16233d};border:2px solid ${PAL.blue26s37};border-radius:8px;width:100%;box-sizing:border-box;}
 .vd-actions{display:flex;gap:10px;width:100%;justify-content:center;}
 .vd-btn{font:700 16px 'Courier New',monospace;padding:10px 20px;border:none;border-radius:6px;cursor:pointer;flex:1;}
-.vd-btn.yes{background:#6FC8F0;color:#08131f;}
-.vd-btn.no{background:#1d2942;color:#cfe6ff;border:1px solid #2a3b5c;}
-.vd-learn-btn{background:#2a3b5c;border:none;color:#cfe6ff;cursor:pointer;font-size:12px;padding:4px 8px;border-radius:4px;margin-right:10px;}
-.vd-learn-btn:hover{background:#3b5078;}
-.vd-learn-panel{display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:#0a0c12;z-index:2500;flex-direction:column;padding:20px;overflow-y:auto;box-sizing:border-box;}
+.vd-btn.yes{background:${PAL.sky69};color:${PAL.sky08};}
+.vd-btn.no{background:${PAL.blue19};color:${PAL.sky91};border:1px solid ${PAL.blue26s37};}
+.vd-learn-btn{background:${PAL.blue26s37};border:none;color:${PAL.sky91};cursor:pointer;font-size:12px;padding:4px 8px;border-radius:4px;margin-right:10px;}
+.vd-learn-btn:hover{background:${PAL.blue35};}
+.vd-learn-panel{display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:${PAL.blue05s29};z-index:2500;flex-direction:column;padding:20px;overflow-y:auto;box-sizing:border-box;}
 .vd-learn-panel.open{display:flex;}
-.vd-learn-title{font-size:18px;color:#6FC8F0;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;}
-.vd-learn-close{background:none;border:none;color:#ff3366;cursor:pointer;font-size:24px;}
+.vd-learn-title{font-size:18px;color:${PAL.sky69};margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;}
+.vd-learn-close{background:none;border:none;color:${PAL.red60s100};cursor:pointer;font-size:24px;}
 .vd-learn-section{margin-bottom:20px;text-align:left;}
-.vd-learn-section h4{color:#ffcc33;margin:0 0 10px 0;font-size:14px;text-transform:uppercase;border-bottom:1px solid #22303a;padding-bottom:5px;}
+.vd-learn-section h4{color:${PAL.amber60};margin:0 0 10px 0;font-size:14px;text-transform:uppercase;border-bottom:1px solid ${PAL.sky18};padding-bottom:5px;}
 .vd-learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;font:13px monospace;line-height:1.5;}
-.vd-learn-list{font:13px monospace;color:#d6e6ef;margin:0;padding-left:20px;}
+.vd-learn-list{font:13px monospace;color:${PAL.sky89};margin:0;padding-left:20px;}
 .vd-learn-list li{margin-bottom:6px;}
 /* ICON FACE — the VOICE launcher becomes a tile IN LINE with CHAT + MQTT on the
    clock row (the shared dock CSS lives in the static lcars.css, which isn't
@@ -40,7 +41,7 @@ html[data-face="icons"] .voice-launch.has-face-icon{
   right:126px !important;left:auto !important;bottom:33px !important;position:fixed !important;}
 html[data-chirality="right"][data-face="icons"] .voice-launch.has-face-icon{left:126px !important;right:auto !important;}
 html[data-face="icons"] .voice-launch.has-face-icon:hover{background-image:var(--face-icon-hover,var(--face-icon)) !important;transform:none;}
-html[data-face="icons"] .voice-launch.has-face-icon::after{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:3px;font:900 8px 'Courier New',monospace;letter-spacing:1px;color:#8fa8c8;white-space:nowrap;pointer-events:none;content:'VOICE';}
+html[data-face="icons"] .voice-launch.has-face-icon::after{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:3px;font:900 8px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky67s34};white-space:nowrap;pointer-events:none;content:'VOICE';}
 /* Shift the clock inboard so it doesn't collide with the new VOICE tile. */
 html[data-face="icons"] .ptp-clock{right:186px !important;}
 html[data-chirality="right"][data-face="icons"] .ptp-clock{left:186px !important;right:auto !important;}
@@ -95,19 +96,19 @@ export function initVoiceDock(): void {
           <h4>Vocabulary Combinations</h4>
           <div class="vd-learn-grid">
              <div>
-                <b style="color:#6FC8F0">Verbs</b><br>
+                <b style="color:${PAL.sky69}">Verbs</b><br>
                 take, cut, preview, mix, wipe, key, mute, start, stop, roll, hold, fade, clear
              </div>
              <div>
-                <b style="color:#6FC8F0">Nouns</b><br>
+                <b style="color:${PAL.sky69}">Nouns</b><br>
                 camera, prompter, server, graphics, lower third, audio, mic, studio, iso, tally
              </div>
              <div>
-                <b style="color:#6FC8F0">Modifiers</b><br>
+                <b style="color:${PAL.sky69}">Modifiers</b><br>
                 to, all, on, off, up, down, full, next, previous, instantly, softly
              </div>
              <div>
-                <b style="color:#6FC8F0">Targets</b><br>
+                <b style="color:${PAL.sky69}">Targets</b><br>
                 1, 2, 3, 4, 5, 6, 7, 8, primary, secondary, program, preview
              </div>
           </div>
@@ -143,7 +144,7 @@ export function initVoiceDock(): void {
       statusText.textContent = 'Listening...';
       transcriptBox.textContent = '...';
       parsedBox.textContent = '-';
-      parsedBox.style.color = '#ffcc33';
+      parsedBox.style.color = PAL.amber60;
       confirmText.textContent = 'Analyzing...';
       actionRow.style.display = 'none';
     };
@@ -191,13 +192,13 @@ export function initVoiceDock(): void {
       intent = { display: 'STOP PROMPTER', key: 'play', value: false };
     } else {
       parsedBox.textContent = 'UNKNOWN COMMAND';
-      parsedBox.style.color = '#ff3366';
+      parsedBox.style.color = PAL.red60s100;
       confirmText.textContent = 'Could not parse: "' + text + '"';
       return;
     }
     pendingCommand = intent;
     parsedBox.textContent = intent.display;
-    parsedBox.style.color = '#ffcc33';
+    parsedBox.style.color = PAL.amber60;
     confirmText.textContent = 'Is this what you meant?';
     actionRow.style.display = 'flex';
   };
@@ -239,13 +240,13 @@ export function initVoiceDock(): void {
       bus.publishValue('spog/command/' + pendingCommand.key, pendingCommand.value);
       
       parsedBox.textContent = 'EXECUTED';
-      parsedBox.style.color = '#00ff00';
+      parsedBox.style.color = PAL.green50;
       confirmText.textContent = 'Command sent.';
       actionRow.style.display = 'none';
       pendingCommand = null;
       setTimeout(() => {
         parsedBox.textContent = '-';
-        parsedBox.style.color = '#ffcc33';
+        parsedBox.style.color = PAL.amber60;
         confirmText.textContent = 'Waiting for input...';
         panel.classList.remove('open');
       }, 1000);
@@ -254,13 +255,13 @@ export function initVoiceDock(): void {
 
   noBtn.addEventListener('click', () => {
     parsedBox.textContent = 'CANCELLED';
-    parsedBox.style.color = '#ff3366';
+    parsedBox.style.color = PAL.red60s100;
     confirmText.textContent = 'Command aborted.';
     actionRow.style.display = 'none';
     pendingCommand = null;
     setTimeout(() => {
       parsedBox.textContent = '-';
-      parsedBox.style.color = '#ffcc33';
+      parsedBox.style.color = PAL.amber60;
       confirmText.textContent = 'Waiting for input...';
     }, 1000);
   });
