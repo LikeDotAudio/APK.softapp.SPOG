@@ -80,6 +80,7 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
   (publishing a tag is the owner's call).
 
 ## Delivered from the 2026-10-30 audit
+- **Release tag `v111`** — annotated tag at ed55bf6, pushed 2026-10-31 with the owner's go-ahead.
 - **SETUP/.env purged from history** — `git filter-repo --invert-paths --path SETUP/.env` over every branch (main, sandbox, modularity-200-line; worktree-weather-graphic never carried it), force-pushed 2026-10-30 with the owner's go-ahead. Verified: no commit on any origin branch touches the file; HEAD tree unchanged; clockFaces pointer intact. Backup bundle kept in the remediation scratchpad. New main: 20c3854.
 
 - **Deploy credentials untracked** — `git rm --cached SETUP/.env` (the file stays on disk, `.gitignore`
