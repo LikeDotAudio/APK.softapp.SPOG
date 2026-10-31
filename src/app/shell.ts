@@ -33,6 +33,7 @@ import { initColourScheme, applyStoredColourScheme } from '../ui/console/colour-
 import { initAuthoring } from '../ui/console/authoring.js';
 import { getBus, advertiseAll, startLogBridge } from '../platform/mqtt/index.js';
 import { initSeatSync } from '../platform/seat-sync.js';
+import { bindGfxMonitorBus } from '../platform/gfx-monitor.js';
 import { initBuildWatch } from '../ui/console/build-watch.js';
 import { initMqttTree } from '../ui/console/mqtt-tree.js';
 import { onRoleChange } from '../platform/auth.js';
@@ -167,6 +168,7 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   initChromeIcons();   // ICON-face tiles for the chrome buttons (after ALL chrome inits)
   startLogBridge(bus);
   initSeatSync(bus);   // seat prefs ride the retained bus; newer-wins on connect
+  bindGfxMonitorBus(bus);   // on-air graphics ride the retained bus (switcher → every wall)
   initBuildWatch(bus, BUILD);   // deploys announce themselves on the version badge
   onRoleChange((r) => bus.publishValue('system/role', { id: r.id, name: r.name, tier: r.tier }));
   void advertiseAll(bus);

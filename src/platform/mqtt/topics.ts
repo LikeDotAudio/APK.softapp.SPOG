@@ -36,6 +36,10 @@ export const twistTopic = (roomDisplayName: string, twistName: string): string =
 export const sourceTopic = (pathSegs: string[], leafName: string): string =>
   ['routes/sources', ...pathSegs.map(seg), slug(leafName)].filter(Boolean).join('/');
 
+/** A production's on-air graphics set (switcher → every multiviewer, any seat).
+ *  Keyed by the production's id — the one name the switcher and the wall share. */
+export const gfxOnAirTopic = (productionId: string): string => `productions/${slug(productionId)}/gfx/on-air`;
+
 /** The display name a production renders under (parentName ? "PARENT — Name" : Name). */
 export const roomDisplayName = (name: string, parentName?: string): string =>
   parentName ? `${parentName.toUpperCase()} — ${name}` : name;

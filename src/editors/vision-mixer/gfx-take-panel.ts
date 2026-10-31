@@ -2,7 +2,9 @@
 //
 // The DOM over gfx-take.ts: one button per graphic set (click = arm it on PREVIEW),
 // a rate field, and CUT GFX / AUTO GFX to take every armed set to PROGRAM through a
-// simulated fade. Armed sets ride as dashed chips on the preview monitor; a fade in
+// simulated fade; the take rides the bus as `gfx.take` (another seat's take fades
+// here too, and only the taking seat publishes the landed DSK). Armed sets ride
+// as dashed chips on the preview monitor; a fade in
 // flight rides as a chip on the program monitor whose opacity is the fade. The
 // plain DSK buttons keep cutting on/off air directly — this module only adds the
 // prepared path. Its RAF frame is fenced: a failing frame is logged once and the
@@ -10,7 +12,7 @@
 
 import { el } from '../../ui/dom.js';
 import { tip } from '../../ui/tip.js';
-import { gfxSets, armDsk, armedDsks, beginTake, fadeLevel, settle, type GfxFade } from './gfx-take.js';
+import { gfxSets, armDsk, armedDsks, beginTake, fadeLevel, settle, takeMsg, fadesFromTake, type GfxFade } from './gfx-take.js';
 import type { Surface } from './surface.js';
 
 const ARMED = '2px dashed var(--state-ok,#39d98a)';
@@ -36,8 +38,21 @@ export function buildGfxTake(s: Surface, mons: { pgmMon: HTMLElement; pvwMon: HT
   const cutBtn = el('div', { class: 'vm-tbtn take', style: 'background: var(--state-alarm,#ff3b3b); color: #fff;' }, ['CUT GFX']);
   const autoBtn = el('div', { class: 'vm-tbtn take', style: 'background: var(--sig-audio,#FF9C63); color: #000;' }, ['AUTO GFX']);
   tip(cutBtn, { title: 'CUT GFX', lead: 'Take every armed graphic to PROGRAM at once.' });
-  tip(autoBtn, { title: 'AUTO GFX', lead: 'Fade every armed graphic to PROGRAM over the rate (a front-end simulation).' });
-  const take = (ms: number): void => { fades = [...fades, ...beginTake(state, performance.now(), ms)]; frame(); };
+  tip(autoBtn, { title: 'AUTO GFX', lead: 'Fade every armed graphic to PROGRAM over the rate. Every seat on this switcher sees the take.' });
+  const take = (ms: number): void => {
+    const begun = beginTake(state, performance.now(), ms);
+    if (begun.length) s.rawPublish('gfx.take', takeMsg(begun, Date.now()));   // arbitrated like a DSK press; not a macro step
+    fades = [...fades, ...begun];
+    frame();
+  };
+  // Another seat's take: run the same fade here (it replaces one already running on that DSK).
+  const offTake = s.ctx.services.onParam?.('gfx.take', (v) => {
+    const theirs = fadesFromTake(v, def.dsks.length, Date.now(), performance.now());
+    if (!theirs.length) return;
+    fades = [...fades.filter((f) => !theirs.some((t) => t.dsk === f.dsk)), ...theirs];
+    frame();
+  });
+  if (offTake) s.ctx.dispose.add(offTake);
   cutBtn.addEventListener('click', () => take(0));
   autoBtn.addEventListener('click', () => take((Math.max(0, +rate.value || 0) / 30) * 1000));
 
@@ -81,7 +96,7 @@ export function buildGfxTake(s: Surface, mons: { pgmMon: HTMLElement; pvwMon: HT
       if (fades.length) {
         const r = settle(state, fades, performance.now());
         fades = r.live;
-        for (const f of r.done) {
+        for (const f of r.done.filter((d) => !d.remote)) {   // the taking seat publishes the result
           s.publish(`dsk.${f.dsk + 1}.on`, f.to);
           if (f.dsk < 2) s.publish(`dsk${f.dsk + 1}`, f.to);   // legacy alias
         }

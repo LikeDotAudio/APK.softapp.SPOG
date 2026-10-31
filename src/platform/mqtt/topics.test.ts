@@ -1,7 +1,7 @@
 // Unit tests for the pure topic/payload builders (audit §4.3). No DOM, no broker.
 import { describe, it, expect } from 'vitest';
 import {
-  slug, seg, stripOrder, roomTopic, twistTopic, sourceTopic, roomDisplayName,
+  slug, seg, stripOrder, roomTopic, twistTopic, sourceTopic, roomDisplayName, gfxOnAirTopic,
   configForTwist, configForProduction, configForSource, sourceChannels,
 } from './topics.js';
 import type { Production, SourceLeaf } from '../../model/index.js';
@@ -38,6 +38,10 @@ describe('topic builders', () => {
   });
   it('source topics mirror the folder path', () => {
     expect(sourceTopic(['001_Sound', '002_Stage'], 'Mic 1')).toBe('routes/sources/sound/stage/mic-1');
+  });
+  it('a production\'s on-air graphics sit under its id, wildcards stripped', () => {
+    expect(gfxOnAirTopic('prod-7')).toBe('productions/prod-7/gfx/on-air');
+    expect(gfxOnAirTopic('PROD #7')).toBe('productions/prod-7/gfx/on-air');
   });
 });
 

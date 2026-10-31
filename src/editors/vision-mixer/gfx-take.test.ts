@@ -6,7 +6,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { DEFAULT_SWITCHER } from './schema.js';
-import { gfxSets, armDsk, armedDsks, beginTake, fadeLevel, settle } from './gfx-take.js';
+import { gfxSets, armDsk, armedDsks, beginTake, fadeLevel, settle, takeMsg, fadesFromTake, TAKE_STALE_MS } from './gfx-take.js';
 import type { SwitcherState } from './scenes.js';
 
 const def = DEFAULT_SWITCHER;
@@ -64,5 +64,32 @@ describe('DSK preview + take', () => {
     const st = fresh();
     armDsk(st, 99);
     expect(armedDsks(st)).toEqual([]);
+  });
+});
+
+describe('a take on the bus (ROAD-3447)', () => {
+  it('the taking seat writes which DSKs fade to what, and another seat runs the same fade', () => {
+    const mine = fresh();
+    armDsk(mine, 0); armDsk(mine, 3);
+    mine.dsks[3] = true;
+    const begun = beginTake(mine, 100, 800);
+    const msg = takeMsg(begun, 1_000_000);
+    expect(msg).toEqual({ sets: [{ dsk: 0, to: true }, { dsk: 3, to: false }], ms: 800, at: 1_000_000 });
+
+    const theirs = fresh();
+    theirs.dsks[3] = true;
+    const fades = fadesFromTake(JSON.parse(JSON.stringify(msg)), def.dsks.length, 1_000_050, 5000);
+    expect(fades).toEqual([{ dsk: 0, to: true, t0: 5000, ms: 800, remote: true }, { dsk: 3, to: false, t0: 5000, ms: 800, remote: true }]);
+    const { done } = settle(theirs, fades, 5800);
+    expect(done.every((f) => f.remote)).toBe(true);
+    expect(theirs.dsks[0]).toBe(true);
+    expect(theirs.dsks[3]).toBe(false);
+  });
+  it('ignores a stale retained take, an unknown DSK and garbage', () => {
+    const msg = { sets: [{ dsk: 0, to: true }], ms: 0, at: 0 };
+    expect(fadesFromTake(msg, def.dsks.length, TAKE_STALE_MS + 1, 0)).toEqual([]);
+    expect(fadesFromTake({ ...msg, sets: [{ dsk: 99, to: true }] }, def.dsks.length, 0, 0)).toEqual([]);
+    expect(fadesFromTake('nope', def.dsks.length, 0, 0)).toEqual([]);
+    expect(fadesFromTake(null, def.dsks.length, 0, 0)).toEqual([]);
   });
 });

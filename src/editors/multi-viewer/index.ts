@@ -14,7 +14,8 @@ import { createTestCardWall, testCardFor } from '../../ui/test-card/index.js';
 import { injectMultiViewerStyles } from './styles.js';
 import { channelsFor } from './channels.js';
 import { createPanes, type Win } from './panes.js';
-import { autoGfxEnabled, setAutoGfxEnabled, gfxTile, wallCells, gfxOverflow, autoGfxCaption } from './auto-gfx.js';
+import { autoGfxEnabled, setAutoGfxEnabled, gfxTile, wallCells, gfxOverflow, autoGfxCaption,
+  autoGfxReserve, cycleAutoGfxReserve, routedCells, reserveCaption, reserveButton } from './auto-gfx.js';
 import { onAirGraphics, watchOnAirGraphics, type OnAirGraphic } from '../../platform/gfx-monitor.js';
 
 const plugin: EditorPlugin = {
@@ -107,6 +108,11 @@ const plugin: EditorPlugin = {
       draw();
     });
     pbar.appendChild(autoBtn);
+    // RSV: cells this seat holds for AUTO tiles even when routed panes fill the wall.
+    let reserve = autoGfxReserve();
+    const rsvBtn = reserveButton();
+    rsvBtn.addEventListener('click', () => { reserve = cycleAutoGfxReserve(reserve); draw(); });
+    pbar.appendChild(rsvBtn);
     ctx.dispose.add(watchOnAirGraphics(ctx.production.id, (list) => {
       if (!autoOn) return;
       gfx = list;
@@ -154,9 +160,12 @@ const plugin: EditorPlugin = {
         catch (e) { console.warn('[multi-viewer] auto-gfx tile failed', e); return compactWin(undefined); }
       };
       // Graphics with no spare cell are counted on the AUTO button, never dropped silently.
-      const hidden = preset === 'PIP' ? 0 : gfxOverflow(wins.length, gfx.length, cols * cols);
+      const rsv = autoOn && preset !== 'PIP' ? reserve : 0;
+      const hidden = preset === 'PIP' ? 0 : gfxOverflow(wins.length, gfx.length, cols * cols, rsv);
       autoBtn.textContent = autoGfxCaption(hidden);
       autoBtn.classList.toggle('mv-overflow', hidden > 0);
+      rsvBtn.textContent = reserveCaption(reserve, wins.length - routedCells(wins.length, cols * cols, rsv));
+      rsvBtn.classList.toggle('sel', autoOn && reserve > 0);
       if (preset === 'PIP') {
         wins.forEach((w, i) => grid.appendChild(fullWin(w, i)));
         gfx.forEach((g) => grid.appendChild(auto(g)));
@@ -164,7 +173,7 @@ const plugin: EditorPlugin = {
       }
       // Full cols×cols wall: routed sources, then AUTO graphics, then empty cells
       // (like unassigned inputs on a real multiviewer). Dense walls use compact tiles.
-      wallCells(wins, gfx, cols * cols).forEach((c, i) => grid.appendChild(
+      wallCells(wins, gfx, cols * cols, rsv).forEach((c, i) => grid.appendChild(
         c && 'win' in c ? (compact ? compactWin(c.win) : fullWin(c.win, i))
           : c ? auto(c.gfx) : compactWin(undefined)));
     }

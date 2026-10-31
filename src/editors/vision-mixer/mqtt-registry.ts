@@ -45,6 +45,7 @@ export function buildRegistry(s: Surface, refs: { tbar: HTMLInputElement; pct: H
   reg.set('scene.recall', { spec: P.enum('scene.recall', s.scenes.map((sc) => sc.name)), apply: (v) => { const sc = s.scenes.find((x) => x.name === v); if (sc) { recallScene(state, sc, def); s.rebuildKeyers(); s.sync(); } } });
   reg.set('scene.store', { spec: P.str('scene.store') });
   reg.set('tally.program', { spec: P.ro('tally.program') });
+  reg.set('gfx.take', { spec: P.str('gfx.take') });   // GFX SETS take — applied by gfx-take-panel.ts
   // Legacy aliases → M/E 1 (backward compatibility, plan §9).
   reg.set('pgm', { spec: P.enum('pgm', allLabels), apply: (v) => { const i = idxOf(v); if (i >= 0) { state.mes[0]!.pgm = i; s.sync(); } } });
   reg.set('pvw', { spec: P.enum('pvw', allLabels), apply: (v) => { const i = idxOf(v); if (i >= 0) { state.mes[0]!.pvw = i; s.sync(); } } });

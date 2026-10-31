@@ -8,6 +8,10 @@ Wire: **v3 is the default on the bus** (ROAD-3451). Every build from v111 (2026-
 
 ### Changed
 - **v3 compact wire is the encoder default** (`platform/mqtt/wire.ts`): `?wire=v2` opts out; `?wire=compact` is accepted and means the default.
+- **On-air graphics ride the bus** (ROAD-3447): the switcher's on-air set is retained at `SPOG/productions/<id>/gfx/on-air` (`platform/gfx-monitor.ts`), so a multiviewer in another browser, seat or production sees it; localStorage is only the no-broker same-browser path. A GFX SETS take is the `gfx.take` param, arbitrated by the merge mediator — every seat on the switcher runs the fade, the taking seat publishes the landed `dsk.N.on`.
+
+### Added
+- **RSV** on the multiviewer preset bar (per seat, 0 · 1 · 2 · 4): the last cells of the wall are held for AUTO graphics, so a full raster shows the graphic instead of `+N OFF WALL`; the button names the routed panes it pushes off (`multi-viewer/auto-gfx.ts`).
 
 ## [v111] — 2026-10-30
 
