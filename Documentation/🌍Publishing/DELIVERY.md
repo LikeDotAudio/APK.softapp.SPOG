@@ -61,10 +61,10 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
 - **The bench and apk.audio build their own copy** (LOOSE-web-spog-webspog-has-no), the same
   shape as spog.like.audio's (entry as `index.htm`, `Routes/` beside the bundle):
   WEB.Frontend-Assets' image has a `spog-build` stage (named context `spog` = this repo) and
-  serves it at `/APK:SPOG/`, with `/spog/` and `/SPOG/` redirecting there — so an edit here
+  serves it at `/SPOG/`, with `/spog/` and the old `/APK:SPOG/` redirecting there — so an edit here
   reaches a bench only after `up-stack.sh WEB.Frontend-Assets`; the monorepo's root `ci.yml`
-  builds it ("Build SPOG") and its `deploy.py` uploads `dist/` as `APK:SPOG/`. The OS opens it
-  from its `SPOG` display (`PODS/POD.THIN/OS/SPOG/display.json`, `app: APK:SPOG/index.htm`), as
+  builds it ("Build SPOG") and its `deploy.py` uploads `dist/` as `SPOG/`. The OS opens it
+  from its `SPOG` display (`PODS/POD.THIN/OS/SPOG/display.json`, `app: SPOG/index.htm`), as
   does this repo's `display.json`. DATABASE.server.SQL's Storage-Portal does not carry it.
   `.apk.scripts/deploy_all.py` pushes this submodule (CI then deploys spog.like.audio).
 - `server/index.ts` is a dev-only Express API (`npm run server`, `:3000`); nothing ships it.
@@ -73,7 +73,7 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
 
 - No browser/E2E test: CI runs only `tsc` and vitest (node). Nothing loads the built page.
 - The post-deploy check is a command, not a gate: `npm run smoke` (or
-  `npm run smoke -- <origin>/APK:SPOG/` for the image) checks the served `build-id.json` names
+  `npm run smoke -- <origin>/SPOG/` for the image) checks the served `build-id.json` names
   HEAD; the monorepo's `.apk.scripts/smoke.py` still checks only that `HEAD` is pushed
   ([SMOKE](../%F0%9F%A7%A9Manual%20and%20Artifacts/SMOKE.md)).
 - `CHANGELOG.md` is hand-kept; the latest cut is v111 (2026-10-30). Versions are not tagged
@@ -100,7 +100,7 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
   page's own origin (the policy of WEB.Frontend-Assets' `comMQTT/connectionPool.js`);
   `test.mosquitto.org` is not compiled in (a test fails if a public broker host appears in `src/`).
   A deployment that still wants the sandbox broker sets `SPOG_BROKER`. In the APK.audio image
-  (`/APK:SPOG`, WEB.Frontend-Assets) the console now reaches the bench's own broker through the
+  (`/SPOG`, WEB.Frontend-Assets) the console now reaches the bench's own broker through the
   gateway's `/mqtt`.
 - **Own root only** — the bus subscribes to `SPOG/#` alone; the bare broker-root `devices/#` is gone.
   SPOG only ever published devices under `SPOG/devices/…`, which `receiver.ts` (`DEVICE_FILTER`,

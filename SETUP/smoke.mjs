@@ -4,8 +4,8 @@
 //   entry     <base>index.htm answers 200 with HTML
 //   build-id  <base>build-id.json names HEAD's short sha, without "(uncommitted)"
 //
-// The APK.audio image serves the same tree at <origin>/APK:SPOG/ — pass that URL
-// to check it (e.g. `npm run smoke -- http://localhost:8080/APK:SPOG/`).
+// The APK.audio image serves the same tree at <origin>/SPOG/ — pass that URL
+// to check it (e.g. `npm run smoke -- http://localhost:8080/SPOG/`).
 // Exit 1 when any check fails; one line per check either way.
 import { execFileSync } from 'node:child_process';
 

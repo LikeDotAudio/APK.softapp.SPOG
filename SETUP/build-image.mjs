@@ -1,6 +1,6 @@
 // SETUP/build-image.mjs — `npm run build:image`: SPOG's ONE build entry for any
 // host that serves the console as a folder of static files (the APK.audio
-// web-static image serves it at /APK:SPOG; spog.like.audio gets the same tree
+// web-static image serves it at /SPOG; spog.like.audio gets the same tree
 // from SETUP/deploy.py).
 //
 // THE CONTRACT (what a consumer may rely on — nothing else):

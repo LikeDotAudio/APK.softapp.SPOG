@@ -7,7 +7,7 @@
 #   index.htm  index.next.html  twist-mqtt-tree.html  assets/  Routes/ (with index.json)
 #   build-id.json  sw.js  spog-config.js  manifest.json  favicon.svg
 # Consumers take it with `COPY --from=<this stage> / <mount>` (WEB.Frontend-Assets
-# serves it at /APK:SPOG) or `docker build -f Docker/dist.Dockerfile --output type=local,dest=DIR .`.
+# serves it at /SPOG) or `docker build -f Docker/dist.Dockerfile --output type=local,dest=DIR .`.
 # spog-config.js is the checked-in default (same-origin /mqtt, no bus key); a host
 # that wants another broker/key overwrites that one file.
 FROM node:22-alpine AS build
