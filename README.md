@@ -73,8 +73,10 @@ rooms. The rest of this document is mostly about those rooms.
 
 - **The bus (optional)** — with a broker configured, consoles share params, crosspoints,
   presence, chat and the Captain's Log over retained MQTT under the `SPOG/` root
-  (`platform/mqtt/`): AES-GCM encrypted protobuf by default, plain JSON when the broker
-  config sets plaintext. Concurrent writes to one param
+  (`platform/mqtt/`): AES-GCM encrypted protobuf when the deployment gives the console a bus
+  key (`spog-config.js`, see `platform/runtime-config.ts`), plain JSON otherwise or when the
+  broker config sets plaintext. The default broker is the deployment's own (`/mqtt` on the
+  page's origin unless `spog-config.js` names one); no public broker is compiled in. Concurrent writes to one param
   are arbitrated by the merge mediator (higher seat rank wins, `platform/merge/`).
   `?wire=compact` opts into the smaller v3 wire. With no broker, everything still works locally.
 

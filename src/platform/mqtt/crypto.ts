@@ -1,21 +1,43 @@
 import { spog } from './schema.js';
 import { wireCompact, frontCode, frontDecode, isLogPayload, logToProto, logFromProto } from './wire.js';
+import { runtimeConfig } from '../runtime-config.js';
 
-const MASTER_KEY_STRING = 'SPOG-ENTERPRISE-SECRET-KEY-2026-X';
+// THE BUS KEY IS A RUN-TIME INPUT, NEVER A CONSTANT IN THE BUNDLE. It used to be a
+// string literal here, so every published build carried it and anyone who read the
+// bundle could read and forge SPOG traffic. Now it comes, in order, from:
+//   1. setBusKey()                        (tests; a future login flow)
+//   2. the deployment's spog-config.js    (`SPOG_CONFIG.busKey`, see ../runtime-config.ts)
+//   3. localStorage.twistBusKey           (an operator entering it once on a console)
+// With none of them the bus has no key: hasBusKey() is false and client.ts publishes
+// plaintext JSON (the same path as the `plaintext` broker option), which every
+// decoder already reads. The derivation is unchanged (UTF-8, padded with '0' and cut
+// to 32 bytes → AES-256-GCM), so consoles given the same string interoperate with
+// builds that predate this change.
+const LS_BUS_KEY = 'twistBusKey';
 const ENCODER = new TextEncoder();
-const KEY_BYTES = ENCODER.encode(MASTER_KEY_STRING.padEnd(32, '0').substring(0, 32));
+let explicitKey: string | null | undefined;          // undefined = not set by setBusKey()
 
-let cryptoKey: CryptoKey | null = null;
+/** Override the bus key for this page (null = force "no key"; undefined = clear the override). */
+export function setBusKey(key: string | null | undefined): void { explicitKey = key; cache = null; }
+
+/** The bus key string in force, or null when this console has none. */
+export function busKeyString(): string | null {
+  if (explicitKey !== undefined) return explicitKey || null;
+  const rc = runtimeConfig().busKey;
+  if (rc) return rc;
+  try { return (typeof localStorage !== 'undefined' && localStorage.getItem(LS_BUS_KEY)) || null; } catch { return null; }
+}
+export const hasBusKey = (): boolean => busKeyString() !== null;
+
+let cache: { src: string; key: CryptoKey } | null = null;
 async function getKey(): Promise<CryptoKey> {
-  if (cryptoKey) return cryptoKey;
-  cryptoKey = await crypto.subtle.importKey(
-    'raw',
-    KEY_BYTES,
-    { name: 'AES-GCM' },
-    false,
-    ['encrypt', 'decrypt']
-  );
-  return cryptoKey;
+  const src = busKeyString();
+  if (!src) throw new Error('SPOG bus key not configured');
+  if (cache && cache.src === src) return cache.key;
+  const bytes = ENCODER.encode(src.padEnd(32, '0').substring(0, 32));
+  const key = await crypto.subtle.importKey('raw', bytes, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+  cache = { src, key };
+  return key;
 }
 
 /** Coerce a protobuf 64-bit field (a Long, or a number) to a JS number (0 if unset —

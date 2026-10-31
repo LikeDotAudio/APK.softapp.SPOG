@@ -24,6 +24,9 @@ cited, not copied. The visual law for this app is [LCARS.md](LCARS.md) and
 | **Nothing is dropped silently.** When the multiviewer raster has no cell for an on-air graphic, the wall says how many are off it. | `gfxOverflow()` / `autoGfxCaption()` (`src/editors/multi-viewer/auto-gfx.ts`), used in `draw()` (`src/editors/multi-viewer/index.ts`) |
 | **Ship behind the seat.** New behaviour is a per-seat preference or a URL switch, off or unchanged by default. | `src/platform/prefs.ts`; `?preroute=`, `?automv=`, `?glyphs=`, `?tone=`, `?timergfx=`, `?wire=compact`, `?mergelog=keep` |
 | **Small files.** Source files stay ≤200 lines, checked before every build. | `MAX_LINES = 200` (`SETUP/check-file-size.mjs:10`), `prebuild` in `package.json` |
+| **Nothing site-specific in the bundle or the repo.** Broker, bus key and deploy credentials are run-time inputs; the default broker is the one behind the page's own origin. | `src/platform/runtime-config.ts`, `public/spog-config.js`, `src/platform/mqtt/config.ts` `defaultHost()`, `src/platform/mqtt/crypto.ts` `busKeyString()`; `SETUP/deploy/env.py` (`SETUP/.env.example` holds names only); `runtime-key.test.ts`, `SETUP/deploy/test_settings.py` |
+| **Only SPOG's root.** The bus subscribes to `SPOG/#` and nothing at the broker root. | `client.ts` connect subscribe; `DEVICE_FILTER` in `src/platform/device/receiver.ts` |
+| **One build entry for anyone who serves SPOG.** Consumers run `npm run build:image` (or take `Docker/dist.Dockerfile`'s `dist` stage) and never name SPOG's files. | `SETUP/build-image.mjs` (the contract in its header), `Docker/dist.Dockerfile` |
 | **CI is the only deploy.** Local deploy scripts refuse. | `deploy*` scripts in `package.json`; `.github/workflows/deploy-production.yml` |
 
 ## Where the code bends a rule

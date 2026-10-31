@@ -1,0 +1,8 @@
+# Context filter for Docker/dist.Dockerfile (BuildKit reads <Dockerfile>.dockerignore).
+**/node_modules
+**/.test-build
+dist
+.git
+**/.git
+archive
+SETUP/.env

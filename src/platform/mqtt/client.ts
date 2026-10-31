@@ -11,7 +11,7 @@
 import type { TwistBus, ConfigMsg, ValueMsg } from './types.js';
 import { getBrokerConfig, resolveBrokerUrl } from './config.js';
 import { loadMqtt, type MqttClient } from './mqtt-load.js';
-import { encodeAndEncrypt, decryptAndDecode } from './crypto.js';
+import { encodeAndEncrypt, decryptAndDecode, hasBusKey } from './crypto.js';
 import { makeThrottler } from './throttle.js';
 import { topicMatches } from './topics.js';
 import { makeSessionId } from './session-id.js';
@@ -82,7 +82,7 @@ export function createTwistBus(): TwistBus {
     if (!client) return;                       // mqtt.js buffers pre-connect and flushes on connect
     try {
       let outPayload: string | Uint8Array;
-      if (getBrokerConfig().plaintext) {
+      if (getBrokerConfig().plaintext || !hasBusKey()) {   // no bus key (crypto.ts) → plaintext
         outPayload = typeof payload === 'string' ? payload : JSON.stringify(payload);
       } else {
         outPayload = await encodeAndEncrypt(payload);
@@ -113,7 +113,7 @@ export function createTwistBus(): TwistBus {
     client.on('connect', () => {
       connected = true;
       dbg('connected', sessionId);
-      client!.subscribe([`${SPOG_ROOT}/#`, 'devices/#'], { qos: 0 });
+      client!.subscribe(`${SPOG_ROOT}/#`, { qos: 0 });
       const beat = (): void => { send(presenceTopic, { active: true, full_id: sessionId, ts: Date.now() }); };
       beat();
       heartbeat = setInterval(beat, 1000);

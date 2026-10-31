@@ -51,6 +51,12 @@ const ALLOWLIST = new Set([
   'src/ui/console/captains-log-timeline.ts',
 ]);
 
+// Submodule paths from .gitmodules — read off the file, not off a `.git` entry, so a
+// build context that drops `.git` (Docker/dist.Dockerfile) still skips them.
+const SUBMODULES = new Set(existsSync(join(ROOT, '.gitmodules'))
+  ? [...readFileSync(join(ROOT, '.gitmodules'), 'utf8').matchAll(/^\s*path\s*=\s*(.+)$/gm)].map((m) => m[1].trim())
+  : []);
+
 function walk(dir, out) {
   let entries;
   try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return; }
@@ -60,7 +66,7 @@ function walk(dir, out) {
     if (SKIP_DIR.test(rel)) continue;
     // A submodule (src/ui/clock-faces = TIME.clockFaces) is another repo's
     // source and answers to that repo's rules, not to this tripwire.
-    if (e.isDirectory() && existsSync(join(full, '.git'))) continue;
+    if (e.isDirectory() && (SUBMODULES.has(rel) || existsSync(join(full, '.git')))) continue;
     if (e.isDirectory()) walk(full, out);
     else if (EXT.test(e.name)) out.push(full);
   }

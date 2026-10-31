@@ -2,8 +2,8 @@
 // protobuf LogMsg arm, seat/label on ValueMsg, full_id shrink in json_fallback —
 // plus a payload-bytes measurement of v2 (default) vs v3 (?wire=compact).
 
-import { describe, it, expect, afterEach } from 'vitest';
-import { encodeAndEncrypt, decryptAndDecode } from './crypto.js';
+import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
+import { encodeAndEncrypt, decryptAndDecode, setBusKey } from './crypto.js';
 import { setWireCompact, frontCode, frontDecode } from './wire.js';
 import { spog } from './schema.js';
 
@@ -22,6 +22,8 @@ const CASES: Record<string, unknown> = {
 };
 const round = async (p: unknown): Promise<any> => decryptAndDecode(await encodeAndEncrypt(p));
 
+beforeAll(() => setBusKey('wire-test-key'));
+afterAll(() => setBusKey(undefined));
 afterEach(() => setWireCompact(null));
 
 describe('frontCode (crosspoint interning)', () => {
@@ -53,7 +55,7 @@ describe('encode/decode', () => {
   }
   it('still decodes a v2 (pre-interning) crosspoint message', async () => {
     const legacy = spog.PayloadWrapper.encode(spog.PayloadWrapper.create({ valueMsg: { valueList: XP, originId: 0xa1b2c3d4, tsMs: TS } })).finish();
-    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('SPOG-ENTERPRISE-SECRET-KEY-2026-X'.padEnd(32, '0').substring(0, 32)), { name: 'AES-GCM' }, false, ['encrypt']);
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('wire-test-key'.padEnd(32, '0').substring(0, 32)), { name: 'AES-GCM' }, false, ['encrypt']);
     const iv = new Uint8Array(12);
     const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, legacy as unknown as BufferSource));
     const bytes = new Uint8Array(12 + ct.length); bytes.set(iv); bytes.set(ct, 12);

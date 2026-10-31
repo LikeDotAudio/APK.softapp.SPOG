@@ -39,10 +39,12 @@ Run:
                                  #   moved Routes folders…). Dot-entries (.htaccess,
                                  #   .well-known) are never touched.
 
-Uses .env for FTP_HOST / FTP_USER / FTP_PASS (Explicit FTPS).
+Reads FTP_HOST / FTP_USER / FTP_PASS / FTP_PORT (Explicit FTPS), the deploy-stamp
+broker and the runtime config from SETUP/.env (gitignored; template
+SETUP/.env.example) overlaid by the environment — see deploy/env.py.
 
 The helpers live in the `deploy/` package (env, build, manifests, routes, ftp,
-mqtt_stamp); this file keeps the CLI + orchestration only.
+mqtt_stamp, runtime_config); this file keeps the CLI + orchestration only.
 """
 
 import os
@@ -60,6 +62,7 @@ from deploy.routes import (
 )
 from deploy.ftp import upload_file, remote_rmtree, fresh_sweep
 from deploy.mqtt_stamp import publish_build_stamp
+from deploy.runtime_config import write_runtime_config
 
 
 def main():
@@ -90,6 +93,8 @@ def main():
     if not entry:
         print(f"No built entry HTML in {DIST_DIR}/. Run `npm run build` first.")
         sys.exit(1)
+    env = load_env()
+    write_runtime_config(project_dir, env)
     app_files = collect_app_files(dist_path, entry, remote_entry)
 
     # 2) Manifests + Routes upload set.
@@ -124,14 +129,19 @@ def main():
                 print("No Routes changes — data already on server (use --all to force).")
 
     # 3) Connect + deploy.
-    env = load_env()
     FTP_HOST = env.get('FTP_HOST', '') or "spog.like.audio"
     FTP_USER = env.get('FTP_USER', '')
     FTP_PASS = env.get('FTP_PASS', '')
+    FTP_PORT = int(env.get('FTP_PORT') or 21)
+    if not FTP_USER or not FTP_PASS:
+        print("FTP_USER / FTP_PASS not set — put them in SETUP/.env (see SETUP/.env.example) "
+              "or the environment (CI maps its secrets). Aborting deploy.")
+        sys.exit(1)
 
-    print(f"Connecting to {FTP_HOST} (Explicit FTPS) as {FTP_USER}...")
+    print(f"Connecting to {FTP_HOST}:{FTP_PORT} (Explicit FTPS) as {FTP_USER}...")
     try:
-        ftp = ftplib.FTP_TLS(FTP_HOST)
+        ftp = ftplib.FTP_TLS()
+        ftp.connect(FTP_HOST, FTP_PORT)
         ftp.login(user=FTP_USER, passwd=FTP_PASS)
         ftp.prot_p()
         print("Login successful.")

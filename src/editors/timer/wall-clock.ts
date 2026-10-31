@@ -1,7 +1,7 @@
 // src/editors/timer/wall-clock — the locked time-of-day header pinned above the two
 // channels (split from index.ts, audit §4.5). Same zone · resolution · face controls
 // as the clock bench (ui/clock-faces/src/*, the TIME.clockFaces submodule), but no drag / no close. Owns its own config
-// persist (localStorage) and the FACES glob registry; returns a strip element, a
+// persist (localStorage) and the FACES registry (ALL_FACES); returns a strip element, a
 // per-frame draw(now), and publish-suppressed setters the MQTT surface drives.
 
 import type { EditorContext } from '../types.js';
@@ -10,13 +10,13 @@ import {
   type Zone, type Resolution, type FaceState, type FaceDef,
   RESOLUTIONS, ZONES, zoneOf, offsetLabel, detectZoneIdx, zoneIdxForOffset, parseZone,
 } from '../../ui/clock-faces/src/shared.js';
+import { ALL_FACES, FACE_API } from '../../ui/clock-faces/src/index.js';
 
-// ---- wall-clock faces: the SAME registry the clock bench uses (ui/clock-faces/src/*, the TIME.clockFaces submodule) ----
-const faceMods = import.meta.glob<{ default?: FaceDef }>('../../ui/clock-faces/src/*.ts', { eager: true });
-const FACES: FaceDef[] = Object.values(faceMods)
-  .map((m) => m.default)
-  .filter((d): d is FaceDef => !!d && typeof d.draw === 'function')
-  .sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+// ---- wall-clock faces: the SAME registry the clock bench uses (ALL_FACES from the TIME.clockFaces submodule) ----
+// ALL_FACES is TIME.clockFaces' one face list, already in UI order (FaceDef.order);
+// FACE_API pins the contract version this code was written for.
+const FACES: readonly FaceDef[] = ALL_FACES;
+if (FACE_API !== 1) console.warn(`clock-faces FACE_API ${FACE_API}, SPOG expects 1`);
 const faceById = (id: string): FaceDef => FACES.find((f) => f.id === id) ?? FACES[0]!;
 
 export interface WallClock {

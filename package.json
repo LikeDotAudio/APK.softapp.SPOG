@@ -14,15 +14,17 @@
     "server": "tsx server/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:deploy": "python3 -m unittest discover -s SETUP -p 'test_*.py'",
+    "proto": "node SETUP/proto.mjs",
+    "proto:check": "node SETUP/proto.mjs --check",
+    "build:image": "node SETUP/build-image.mjs",
+    "check:clock-faces": "node src/ui/clock-faces/scripts/check-twins.mjs",
+    "smoke": "node SETUP/smoke.mjs"
   },
   "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
     "mqtt": "^5.15.1",
     "protobufjs": "^8.7.0",
-    "puppeteer": "^25.2.1",
     "three": "^0.185.1"
   },
   "devDependencies": {
@@ -30,6 +32,9 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/three": "^0.185.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "protobufjs-cli": "^2.6.0",
     "tsx": "^4.23.0",
     "typescript": "^5.6.3",

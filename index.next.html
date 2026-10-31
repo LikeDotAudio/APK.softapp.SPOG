@@ -24,6 +24,9 @@
 </head>
 <body>
   <div id="app">loading…</div>
+  <!-- The deployment's runtime config (broker, bus key) — src/platform/runtime-config.ts.
+       A classic script so it has run before the app module boots. -->
+  <script src="./spog-config.js"></script>
   <script type="module" src="/src/app/main.ts"></script>
 </body>
 </html>

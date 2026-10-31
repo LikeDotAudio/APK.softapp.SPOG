@@ -51,8 +51,9 @@
   <thead><tr><th style="width:44%">TOPIC (SPOG/…)</th><th>PAYLOAD</th><th style="width:70px">AGE</th></tr></thead>
   <tbody id="rows"><tr><td colspan="3" class="empty">— not connected —</td></tr></tbody>
 </table>
-<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-<script>
+<!-- mqtt.js from the npm dependency (bundled by Vite), not an unversioned unpkg URL. -->
+<script type="module">
+  import mqtt from 'mqtt';
   const ROOT = 'SPOG';
   const q = new URLSearchParams(location.search);
   const store = new Map();      // topic -> { payload, ts }
@@ -69,8 +70,8 @@
   // Pre-fill every field: host from ?mqtt= / storage, the rest from storage or defaults.
   hostInput.value = q.get('mqtt') || localStorage.getItem('twistMqtt') || '';
   portInput.value = localStorage.getItem('twistMqttPort') || '9001';
-  userInput.value = localStorage.getItem('twistMqttUser') || 'guest';
-  passInput.value = localStorage.getItem('twistMqttPass') || 'guest';
+  userInput.value = localStorage.getItem('twistMqttUser') || '';
+  passInput.value = localStorage.getItem('twistMqttPass') || '';
 
   const STATE_LABEL = { idle: 'idle', connecting: 'connecting…', connected: 'connected', reconnecting: 'reconnecting…', offline: 'offline', closed: 'disconnected', error: 'error' };
   function escapeHtml(s) { return String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }

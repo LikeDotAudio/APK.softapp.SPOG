@@ -48,10 +48,19 @@ click twist → app/editor-dispatch.ts → editors/registry.ts match → app/con
    → plugin.render(host, ctx)  (params ↔ ctx.services.publishParam / onParam ↔ the bus)
 ```
 
-- **The bus** (`src/platform/mqtt/`): topic tree mirrors the folder tree (`topics.ts`);
-  payloads are AES-GCM-encrypted protobuf (`schema.proto`, `wire.ts`, `crypto.ts`) or plain JSON
-  when the broker config says plaintext; per-topic trailing throttle (`throttle.ts`);
-  Captain's Log bridge (`log-bridge.ts`).
+- **The bus** (`src/platform/mqtt/`): topic tree mirrors the folder tree (`topics.ts`), all under
+  SPOG's own `SPOG/` root — it subscribes to `SPOG/#` only, and devices live at
+  `SPOG/devices/<id>/…` (`platform/device/receiver.ts`); payloads are AES-GCM-encrypted protobuf
+  (`schema.proto`, `wire.ts`, `crypto.ts`) when the console has a bus key, plain JSON when it has
+  none or the broker config says plaintext; per-topic trailing throttle (`throttle.ts`);
+  Captain's Log bridge (`log-bridge.ts`). mqtt.js is the npm `mqtt` package, emitted as an asset
+  and injected on demand (`mqtt-load.ts`).
+- **Runtime config** (`src/platform/runtime-config.ts`, `public/spog-config.js`): the bundle
+  carries no broker and no key. A deployment serves `spog-config.js` beside the entry
+  (`window.SPOG_CONFIG = { broker, busKey }`; `SETUP/deploy.py` writes it from `SPOG_BROKER` /
+  `SPOG_BUS_KEY`). Broker order: `?mqtt=`, `localStorage.twistMqtt`, `SPOG_CONFIG.broker`, then
+  `/mqtt` on the page's own origin (local-first, as WEB.Frontend-Assets' `connectionPool.js`).
+  Key order: `SPOG_CONFIG.busKey`, then `localStorage.twistBusKey`.
 - **Merge** (`src/platform/merge/`): concurrent writes to a param are bucketed per window and
   resolved by `resolveWindow()` (higher seat rank, then `full_id`).
 - **Same-browser channels**: the vision mixer announces on-air graphics per production on
@@ -68,7 +77,7 @@ click twist → app/editor-dispatch.ts → editors/registry.ts match → app/con
 | Pure domain | `domain/routing-core` (graph, faults, tally, `stripOrder`), `domain/timer-core`, `domain/test-tone`, `domain/tsg`, `domain/test-card` (ident, shapes, types) |
 | Console shell | `ui/console/` (91 files: footer, destinations, matrix DnD, helix, captains-log*, timeline, colour engine, router-view, fixtures) |
 | Sources panel | `ui/sources/` (panel, pools, gang cells, format) |
-| Shared painters | `ui/test-card/` (test frame + wall ticker), `ui/clock-faces/` (CLOCK + TIMER wall clock; the TIME.clockFaces submodule, globbed at `src/*.ts`), `ui/weather/` (forecast data + strip, used by the Graphics Engine) |
+| Shared painters | `ui/test-card/` (test frame + wall ticker), `ui/clock-faces/` (CLOCK + TIMER wall clock; the TIME.clockFaces submodule, read through its `ALL_FACES` list — a second checkout of the repo the root mounts at `Softapps/TIME/TIME.clockFaces`, kept on one commit with `npm run check:clock-faces`), `ui/weather/` (forecast data + strip, used by the Graphics Engine) |
 | Editors | `editors/<name>/index.ts` — 25 folders, auto-registered; editors never import editors |
 | Vision mixer | `editors/vision-mixer/`: `schema.ts` (`DEFAULT_SWITCHER`: 24 in — 1-12 video, 13-18 program, 19-24 graphics), `me.ts`, `scenes.ts` (whole-switcher registers incl. DSK PRE-ROUTE `dskSrc`), `preroute.ts`/`gfx-route.ts`, `gfx-take*.ts`, `gfx-feed.ts` |
 | Multiviewer | `editors/multi-viewer/`: `wallCells()` + `gfxOverflow()` in `auto-gfx.ts` |
@@ -76,7 +85,11 @@ click twist → app/editor-dispatch.ts → editors/registry.ts match → app/con
 
 ## Tests
 
-`npm test` runs vitest over `src/**/*.test.ts` (28+ files: routing-core, timer-core, wire,
-throttle, merge, vision-mixer, multiviewer auto-gfx, captains-log reroute/persist, …) in a node
-environment; `npm run typecheck` is strict `tsc --noEmit`. There is no browser/E2E suite; the
-`puppeteer` dependency is used only by the archived `archive/test_puppeteer.js`.
+`npm test` runs vitest over `src/**/*.test.ts` and `test/**/*.test.ts` (34 files: routing-core,
+timer-core, wire, throttle, merge, vision-mixer, multiviewer auto-gfx, captains-log
+reroute/persist, the bus key + local-first broker + own-root subscription
+(`runtime-key.test.ts`), `schema.js` against `schema.proto` (`schema.test.ts`), the dev API role
+table (`test/server-roles.test.ts`), …) in a node environment; `npm run typecheck` is strict
+`tsc --noEmit`; `npm run test:deploy` runs the Python deploy-settings tests
+(`SETUP/deploy/test_settings.py`). There is no browser/E2E suite; `npm run smoke [-- URL]` checks a
+deployed copy serves HEAD.

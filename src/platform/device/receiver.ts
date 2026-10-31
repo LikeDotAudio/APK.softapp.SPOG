@@ -1,11 +1,17 @@
 // src/platform/device/receiver.ts — Ingests device manifests and values from MQTT.
 // Listens for inputs, outputs, types, and groups broadcast on the broker under
-// SPOG's own `devices/<id>/…`. The old root-level "Device" family is gone: nothing
-// published that family and no grammar declared it, so the owner dropped it
-// (2026-10-30, LOOSE-spog-device-family).
+// SPOG's own root, `SPOG/devices/<id>/…` (DEVICE_FILTER below is relative to the
+// bus root, like every TwistBus filter). The old root-level "Device" family is gone:
+// nothing published that family and no grammar declared it, so the owner dropped it
+// (2026-10-30, LOOSE-spog-device-family). The bare broker-root `devices/#` went the
+// same way (2026-10-30 audit): a root-level topic on a shared broker belongs to
+// nobody, and SPOG only ever PUBLISHED under SPOG/devices/ (publishDeviceValue).
 
 import type { DeviceManifest, DeviceIO, DeviceGroup } from './types.js';
 import { getBus, type TwistBus } from '../mqtt/index.js';
+
+/** The device family, relative to the bus root (the TwistBus prefixes SPOG/). */
+export const DEVICE_FILTER = 'devices/#';
 
 const devices = new Map<string, DeviceManifest>();
 const listeners = new Set<(devs: DeviceManifest[]) => void>();
@@ -140,7 +146,7 @@ export function initDeviceReceiver(bus: TwistBus = getBus()): () => void {
     }
   };
 
-  unsubs.push(bus.subscribe('devices/#', handleMsg));
+  unsubs.push(bus.subscribe(DEVICE_FILTER, handleMsg));
 
   return () => {
     receiverStarted = false;

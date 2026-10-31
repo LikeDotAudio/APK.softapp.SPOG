@@ -8,8 +8,9 @@
 // its own ZONE (auto-detected local, or any entry from the world UTC-offset catalogue in
 // the header dropdown — all offsets are absolute, so every clock reads a real wall time),
 // RESOLUTION
-// (HH:MM → HH:MM:SS → +frames), and FACE. Faces live one-per-file under faces/ and are
-// collected here with import.meta.glob — adding a face is "drop a file in faces/".
+// (HH:MM → HH:MM:SS → +frames), and FACE. Faces live one-per-file in the TIME.clockFaces
+// submodule (ui/clock-faces/src/) and arrive as its ALL_FACES list — adding a face is a
+// file plus a line in that repo's src/index.ts (its own test enforces the line).
 // Layout PRESETS re-tile every window; the stage is a resizable canvas.
 //
 // The window model, tiling/scene presets, stylesheet and paint loop live in sibling
@@ -23,17 +24,17 @@ import {
   type Resolution, type FaceDef,
   deriveZones, detectZoneIdx,
 } from '../../ui/clock-faces/src/shared.js';
+import { ALL_FACES, FACE_API } from '../../ui/clock-faces/src/index.js';
 import { CSS } from './styles.js';
 import { createWindows, type ClockCtx, type Device } from './windows.js';
 import { createLayouts } from './layouts.js';
 import { createPaint } from './paint.js';
 
 // ---- face registry (one file per face under faces/) -------------------------
-const faceMods = import.meta.glob<{ default?: FaceDef }>('../../ui/clock-faces/src/*.ts', { eager: true });
-const FACES: FaceDef[] = Object.values(faceMods)
-  .map((m) => m.default)
-  .filter((d): d is FaceDef => !!d && typeof d.draw === 'function')
-  .sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+// ALL_FACES is TIME.clockFaces' one face list, already in UI order (FaceDef.order);
+// FACE_API pins the contract version this code was written for.
+const FACES: readonly FaceDef[] = ALL_FACES;
+if (FACE_API !== 1) console.warn(`clock-faces FACE_API ${FACE_API}, SPOG expects 1`);
 const hasFace = (id: string): boolean => FACES.some((f) => f.id === id);
 const faceById = (id: string): FaceDef => FACES.find((f) => f.id === id) ?? FACES[0]!;
 const DEFAULT_FACE = hasFace('ledring') ? 'ledring' : (FACES[0]?.id ?? 'digital');

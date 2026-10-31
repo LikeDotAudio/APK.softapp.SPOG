@@ -39,7 +39,7 @@ export interface ClockCtx {
   devices: Device[];
   dpr: number;
   detectedIdx: number;
-  FACES: FaceDef[];
+  FACES: readonly FaceDef[];
   faceById: (id: string) => FaceDef;
   normFace: (id?: string) => { face: string; res?: Resolution };
   defaultFace: string;

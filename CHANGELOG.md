@@ -4,6 +4,22 @@ All notable changes to SPOG (Single Pane Of Glass) are recorded here.
 
 ## [Unreleased]
 
+## [v111] — 2026-10-30
+
+Wire: v2 is the default on the bus; v3 (`?wire=compact`) is opt-in and every build from v111 decodes both. A build older than v111 reads v2 only.
+
+### Changed — 2026-10-30 architecture audit
+- **No bus key in the bundle**: the AES-GCM key comes from the deployment's `spog-config.js` (`SPOG_CONFIG.busKey`, written by `SETUP/deploy.py` from `SPOG_BUS_KEY`) or `localStorage.twistBusKey`; with none the console publishes plaintext JSON (`platform/mqtt/crypto.ts`, `platform/runtime-config.ts`). Same derivation, so any key string interoperates with older builds given the same string.
+- **Local-first broker**: the default is the deployment's `SPOG_CONFIG.broker`, else `/mqtt` on the page's own origin; `test.mosquitto.org` is no longer compiled in (`platform/mqtt/config.ts`).
+- **Own root only**: the bus subscribes to `SPOG/#` alone; devices live at `SPOG/devices/<id>/…` (the bare broker-root `devices/#` subscription is gone).
+- **mqtt.js from npm**: the vendored `src/vendor/mqtt.min.js` is deleted; Vite emits `mqtt/dist/mqtt.min.js` from the pinned dependency, and the MQTT tree page bundles it instead of an unversioned unpkg URL. `express`/`jsonwebtoken`/`cors` moved to devDependencies; `puppeteer` dropped.
+- **Deploy settings**: `SETUP/.env` is untracked (template `SETUP/.env.example`); `SETUP/deploy/env.py` reads the file overlaid by the environment, CI maps its secrets to env vars, and the build stamp has no default broker or `guest/guest` login.
+- **Dev API**: signs only roles in `SPOG_DEV_ROLES` (`role:passphrase,…`), guest otherwise; listens on loopback (`server/roles.ts`).
+
+### Added — 2026-10-30 architecture audit
+- `npm run build:image` — the one build entry for static hosts (gates + `dist/` with `index.htm` and `Routes/`).
+- `npm run proto` / `proto:check` (+ `schema.test.ts`), `npm run test:deploy`, `npm run smoke`, `npm run check:clock-faces`.
+
 ### Added — backlog sweep (roadmap §1)
 - **Vision Mixer graphics**: PRE-ROUTE MATRIX view (`?preroute=matrix|list`), USK/DSK-labelled graphics keyers, and the **GFX SETS · PVW → PGM** module (arm a DSK graphic on preview, CUT/AUTO GFX to program).
 - **Auto-multiviewer** (opt-in `⬡ AUTO GFX`, `?automv=1`): on-air graphics fill spare multiviewer cells as read-only AUTO tiles.

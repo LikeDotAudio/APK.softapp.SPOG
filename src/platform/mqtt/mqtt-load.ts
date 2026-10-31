@@ -1,10 +1,13 @@
 // src/platform/mqtt/mqtt-load — minimal mqtt.js typings + the bundled loader.
 //
-// Extracted from client.ts. VENDORED mqtt.js (audit §4.2 lane table / §8 W4):
-// bundled + content-hashed by Vite, so the console has zero CDN dependency at boot.
+// Extracted from client.ts. mqtt.js comes from the npm dependency pinned in
+// package-lock.json (`mqtt`), not a vendored copy: Vite emits its browser UMD
+// build (`mqtt/dist/mqtt.min.js`) as a content-hashed asset, so the console has
+// zero CDN dependency at boot and there is one copy, upgraded by `npm`.
 // The UMD build sets window.mqtt when the injected script runs — same contract as
-// the old unpkg tag.
-import mqttJsUrl from '../../vendor/mqtt.min.js?url';
+// the old unpkg tag. It stays a lazily injected script (not an `import`) so the
+// 360 KB client never sits in the boot bundle of a console with MQTT off.
+import mqttJsUrl from 'mqtt/dist/mqtt.min?url';
 
 // ---- minimal mqtt.js typings (no @types/mqtt dependency) --------------------
 export interface MqttClient {

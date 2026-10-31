@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import { randomBytes } from 'crypto';
+import { parseRoleTable, issueRole } from './roles.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,11 +26,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Who may be signed for: a fixed table from SPOG_DEV_ROLES ("role:passphrase,…").
+// Unset = guest only. The request no longer chooses its own role (server/roles.ts).
+const ROLE_TABLE = parseRoleTable(process.env.SPOG_DEV_ROLES);
+
 // JWT Auth endpoint
 app.post('/api/v1/auth/login', (req, res) => {
-  const { role } = req.body;
-  const token = jwt.sign({ role: role || 'guest' }, JWT_SECRET, { expiresIn: '12h' });
-  res.json({ token });
+  const { role, passphrase } = req.body ?? {};
+  const granted = issueRole(ROLE_TABLE, role, passphrase);
+  if (!granted) { res.status(401).json({ error: 'role not granted' }); return; }
+  const token = jwt.sign({ role: granted }, JWT_SECRET, { expiresIn: '12h' });
+  res.json({ token, role: granted });
 });
 
 // Public Changelog endpoint
@@ -119,9 +126,12 @@ app.get('/api/v1/routes/*routePath', async (req, res) => {
   }
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 SPOG Backend API listening on port ${PORT}`);
+// Start the server — DEV ONLY: nothing deploys this (spog.like.audio and the APK.audio
+// image are static). Loopback by default; HOST=0.0.0.0 to expose it on purpose.
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || '127.0.0.1';
+app.listen(PORT, HOST, () => {
+  console.log(`SPOG dev API (DEV ONLY — not deployed) listening on http://${HOST}:${PORT}`);
+  console.log(`Roles it will sign: guest${[...ROLE_TABLE.keys()].map((r) => `, ${r}`).join('')} (SPOG_DEV_ROLES)`);
   console.log(`Serving API routes from ${path.join(PROJECT_ROOT, 'Routes')}`);
 });

@@ -47,18 +47,24 @@ jobs:
         run: |
           npm run typecheck
           npm run test -- --run
-
-      - name: Inject FTP Credentials
-        run: |
-          # The sandbox uses a distinct set of secrets or a different target path
-          echo "FTP_HOST=${{ secrets.SANDBOX_FTP_HOST }}" >> .env
-          echo "FTP_USER=${{ secrets.SANDBOX_FTP_USER }}" >> .env
-          echo "FTP_PASS=${{ secrets.SANDBOX_FTP_PASS }}" >> .env
+          npm run test:deploy
 
       - name: Execute Sandbox Deploy
+        # Every deploy setting is a secret mapped to the environment, which
+        # SETUP/deploy/env.py reads (no .env is written, none is tracked).
+        # Unset TWIST_MQTT_HOST skips the build stamp; unset SPOG_BROKER /
+        # SPOG_BUS_KEY ship the default spog-config.js (same-origin /mqtt, plaintext).
         env:
-          TWIST_MQTT_HOST: test.mosquitto.org
-          TWIST_MQTT_PORT: 8080
+          FTP_HOST: ${{ secrets.SANDBOX_FTP_HOST }}
+          FTP_USER: ${{ secrets.SANDBOX_FTP_USER }}
+          FTP_PASS: ${{ secrets.SANDBOX_FTP_PASS }}
+          FTP_PORT: ${{ secrets.SANDBOX_FTP_PORT }}
+          TWIST_MQTT_HOST: ${{ secrets.TWIST_MQTT_HOST }}
+          TWIST_MQTT_PORT: ${{ secrets.TWIST_MQTT_PORT }}
+          TWIST_MQTT_USER: ${{ secrets.TWIST_MQTT_USER }}
+          TWIST_MQTT_PASS: ${{ secrets.TWIST_MQTT_PASS }}
+          SPOG_BROKER: ${{ secrets.SPOG_BROKER }}
+          SPOG_BUS_KEY: ${{ secrets.SPOG_BUS_KEY }}
           DEPLOY_DIFF_BASE: ${{ github.event.before || github.event.pull_request.base.sha }}
           DEPLOY_DIFF_HEAD: ${{ github.sha }}
         run: |
