@@ -8,9 +8,10 @@
  *  file under src/ spells a hex (src/domain/palette.test.ts holds that to a ceiling that only
  *  falls). Names say what the colour IS — hue family + HSL lightness % (`sky69` is a light sky
  *  blue), with the saturation or the hex appended only where two would collide — because they
- *  were swept from 2,800 literals mechanically. Folding near-twins together and re-pointing
- *  families at the Colour Engine's semantic CSS tokens (`var(--sig-*)`, `var(--state-*)`) so
- *  grey / mono / high modes reach them is the next step of P2, and it happens here.
+ *  were swept from 2,800 literals mechanically. The chroma/vision modes reach every colour here
+ *  through lcars.css's root filter (grey / mono / high / low); re-pointing families at the Colour
+ *  Engine's Tier-2 tokens (`var(--sig-*)`, `var(--state-*)`) so the filter can retire is ROAD-3456,
+ *  and it happens here.
  *  Pure data: no DOM, no imports. */
 
 const P = {
