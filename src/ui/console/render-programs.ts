@@ -11,6 +11,7 @@ import { decorateRoom } from './authoring.js';
 import { mountDestFixtures } from './dest-fixtures.js';
 import { applyScope } from './auth-panel.js';
 import { PAL, alpha } from '../../domain/palette.js';
+import { inkAttr, inkValue } from '../ink-var.js';
 
 const twistName = (t: string | TwistConfig): string => (typeof t === 'string' ? t : t.name);
 
@@ -69,7 +70,7 @@ export function renderPrograms(pgm: Production, pane: HTMLElement, openEditor?: 
     const prodAttrs = `data-prod-id="${pgm.id}" data-prod-name="${(titleText || '').replace(/"/g, '&quot;')}"${prodTipAttr}${prodFloorAttr}${prodCatAttr}${capAttr}`;
     const matrixId = `${pgm.id}-${name.replace(/\s+/g, '-').toLowerCase()}`;
     const twistHtml = `
-      <div class="twist-container${isSmall ? ' monitor-twist' : ''}" data-twist-index="${ti}" ${cfgAttr} ${prodAttrs} style="--lcars-color: ${lcars}; ${sizing}">
+      <div class="twist-container${isSmall ? ' monitor-twist' : ''}" data-twist-index="${ti}" ${cfgAttr} ${prodAttrs} ${inkAttr({ '--lcars-color': lcars })} style="--lcars-color: ${inkValue(lcars)}; ${sizing}">
         <div class="twist-title">${monoEmoji(name)}${name}</div>
         <div class="twist-lip" title="Fold / unfold strand"></div>
         <div class="twist-foldbar" title="Fold / unfold strand"></div>

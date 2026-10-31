@@ -3,6 +3,7 @@
 // Its own accordion (one sibling open at a time) is independent of the pool
 // accordion, so nested folders fold on their own.
 import { monoEmoji } from './format.js';
+import { setInkVar } from '../ink-var.js';
 
 export function makeMediaGroup(container: HTMLElement, title: string, color: string, depth: number): HTMLElement {
   const group = document.createElement('div');
@@ -18,7 +19,7 @@ export function makeMediaGroup(container: HTMLElement, title: string, color: str
   content.className = 'media-group-content';
   // Colour + indent as tokens; the bracket geometry (border/shadow/radius/indent)
   // lives in lcars.css so it mirrors to the RIGHT in right-handed mode.
-  content.style.setProperty('--mg-color', color);
+  setInkVar(content, '--mg-color', color);
   content.style.setProperty('--mg-indent', `${depth * 12 + 12}px`);
   content.style.display = 'none';
 

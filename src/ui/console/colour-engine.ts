@@ -6,12 +6,14 @@
 
 import { getPrefs, patchPrefs } from '../../platform/prefs.js';
 import {
-  type ColourScheme, DEFAULT, paletteById,
+  type ColourScheme, type Palette, DEFAULT, paletteById,
   isVision, isChroma, isFace, isCvd,
 } from './colour-palettes.js';
 import { applyStateGlyphs } from './state-glyphs.js';
 import { STATE_TONES, TONE_NAMES } from '../../domain/state.js';
 import { paintPalette } from './palette-paint.js';
+import { ink } from '../canvas-ink.js';
+import { repaintInkVars } from '../ink-var.js';
 
 /** The current scheme, read back from the <html> attributes (default-filled). */
 export function getScheme(): ColourScheme {
@@ -33,7 +35,7 @@ export function getScheme(): ColourScheme {
 
 /** Write a palette's tokens INLINE onto <html> (semantic + legacy category vars). */
 function applyPaletteTokens(id: string): void {
-  const t = paletteById(id).t;
+  const t = Object.fromEntries(Object.entries(paletteById(id).t).map(([k, v]) => [k, ink(v)])) as unknown as Palette['t'];
   const s = document.documentElement.style;
   s.setProperty('--sig-video', t.video);   s.setProperty('--video-color', t.video);
   s.setProperty('--sig-audio', t.audio);    s.setProperty('--audio-color', t.audio);
@@ -43,7 +45,7 @@ function applyPaletteTokens(id: string): void {
   s.setProperty('--state-onair', t.onair);
   // The contract's three tones (good / kinda / dead), the same in every palette: a state word
   // means one thing whichever palette the seat picked (contracts/tokens/state.json).
-  for (const k of TONE_NAMES) s.setProperty(`--state-${k}`, STATE_TONES[k].hex);
+  for (const k of TONE_NAMES) s.setProperty(`--state-${k}`, ink(STATE_TONES[k].hex));
 }
 
 function paint(s: ColourScheme): void {
@@ -55,10 +57,11 @@ function paint(s: ColourScheme): void {
   if (s.monoHue !== undefined) {
     h.style.setProperty('--mono-hue', `${s.monoHue}deg`);
   }
-  // The palette's --pal-* (and the canvas setters). Identity while lcars.css's root filter still
-  // applies the mode to the whole page; retiring that filter points this at `s` (ROAD-3456).
-  paintPalette({ chroma: 'full', vision: 'normal' });
+  // The palette's --pal-* and the canvas setters, resolved for the mode: no page filter, so
+  // signal content keeps its true colour (ROAD-3456). Before the tokens below, which ink() too.
+  paintPalette({ chroma: s.chroma, vision: s.vision, monoHue: s.monoHue });
   applyPaletteTokens(s.cvd);
+  repaintInkVars();     // data colours (Routes JSON) written through ink-var follow too
   applyStateGlyphs(s);   // `auto` glyphs follow chroma/vision; fail-soft
 }
 

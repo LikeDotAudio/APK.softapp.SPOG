@@ -1,14 +1,13 @@
 // src/ui/console/footer — the DESTINATIONS footer: the LCARS tab bar pinned at
 // the bottom of the console (the `#production-tabs` strip). Port of js/topbar.js
 // (TopBar). Nested accordion groups (DESTINATIONS → FLOORS → floor), D-shaped
-// tabs, lazy content panes filled on first activation, and auto-collapse on idle.
-//
-// Named "footer" per the console anatomy: sources column (left) · destination
-// content (centre) · this tab footer (bottom).
+// tabs, lazy content panes filled on first activation, and auto-collapse on idle. Named
+// "footer" per the console anatomy: sources (left) · destination content (centre) · tabs (bottom).
 import { addStyles } from '../dom.js';
 import { stampIcon } from '../icon-face.js';
 import { getPrefs, patchPrefs } from '../../platform/prefs.js';
 import { FOOTER_CSS, LCARS_COLORS, hexToRgb } from './footer-styles.js';
+import { setInkVar } from '../ink-var.js';
 import { destHashPath, expandProductionGroups } from './footer-deeplink.js';
 
 export interface GroupHandle {
@@ -129,7 +128,7 @@ export const Footer = {
     const parent = opts.parent || null;
     const group = document.createElement('div');
     group.className = 'lcars-group' + (opts.collapsed ? ' collapsed' : '');
-    group.style.setProperty('--group-lcars', color);
+    setInkVar(group, '--group-lcars', color);
     const labelEl = document.createElement('div');
     labelEl.className = 'lcars-group-label';
     labelEl.innerHTML = `<span>${label}</span><span class="lcars-group-caret">▸</span>`;
@@ -166,7 +165,7 @@ export const Footer = {
     tabIndex++;
     const tab = document.createElement('div');
     tab.className = 'lcars-tab' + (active ? ' active' : '');
-    tab.style.setProperty('--lcars', color);
+    setInkVar(tab, '--lcars', color);
     tab.dataset['tabId'] = pgm.id;
     tab.innerText = pgm.name;
     host.appendChild(tab);

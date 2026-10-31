@@ -3,6 +3,7 @@
 // byte-identical labels, ids and tints (the LCARS CSS is shared, class-for-class).
 import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { hexOf } from '../../domain/palette.js';
+import { setInkVar } from '../ink-var.js';
 
 /** Sanitise a label into a DOM-id-safe slug (runs of non-alphanumerics → one dash). */
 export function slugId(s: string | null | undefined): string {
@@ -30,9 +31,10 @@ export function shadeColor(hex: string, amt: number): string {
 
 /** Apply the standard LCARS signal-node tint (border + text + soft glow). */
 export function styleSignalNode(node: HTMLElement, color: string): void {
-  node.style.borderColor = color;
-  node.style.color = color;
-  node.style.boxShadow = `0 0 5px color-mix(in srgb, ${color} 33%, transparent)`;
+  setInkVar(node, '--sig-node', color);   // a data colour: resolved for the mode, repainted on change
+  node.style.borderColor = 'var(--sig-node)';
+  node.style.color = 'var(--sig-node)';
+  node.style.boxShadow = '0 0 5px color-mix(in srgb, var(--sig-node) 33%, transparent)';
 }
 
 const VS_TEXT = '︎'; // request monochrome/text rendering
