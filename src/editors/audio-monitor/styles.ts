@@ -28,7 +28,7 @@ const CSS = `
 .am2-phase{margin-top:10px;display:flex;gap:10px;align-items:center;}
 .am2-liss{width:74px;height:74px;border-radius:8px;background:radial-gradient(circle,${PAL.blue06s62},${PAL.blue04});border:1px solid ${PAL.blue19};}
 .am2-corr{flex:1;}
-.am2-corr .bar{position:relative;height:12px;border-radius:6px;background:linear-gradient(to right,${PAL.red62},#3a4straight 18%,${PAL.blue16s47} 50%,${PAL.blue30} 82%,${PAL.green53});box-shadow:inset 0 0 0 1px ${PAL.blue19};}
+.am2-corr .bar{position:relative;height:12px;border-radius:6px;background:linear-gradient(to right,${PAL.red62},${PAL.orange30} 18%,${PAL.blue16s47} 50%,${PAL.blue30} 82%,${PAL.green53});box-shadow:inset 0 0 0 1px ${PAL.blue19};}
 .am2-corr .bar{background:linear-gradient(to right,${PAL.red62} 0%,${PAL.orange30} 22%,${PAL.blue16s47} 50%,${PAL.green24} 78%,${PAL.green53} 100%);}
 .am2-corr .ind{position:absolute;top:-3px;width:4px;height:18px;border-radius:2px;background:${PAL.white};box-shadow:0 0 5px ${PAL.white};}
 .am2-corr .cl{display:flex;justify-content:space-between;font:9px 'Courier New',monospace;color:${PAL.blue53};margin-top:3px;}
