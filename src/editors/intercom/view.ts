@@ -1,7 +1,6 @@
 // src/editors/intercom/view — faithful port of renderIntercom() driven from the
-// typed EditorContext (no DOM scraping). Builds the key panel, talk/listen
-// buttons, talk-group builder, the random "incoming" listen flicker, and the
-// IFB / beltpacks / matrix sub-cards.
+// typed EditorContext (no DOM scraping). Builds the key panel, talk/listen buttons, talk-group
+// builder, the random "incoming" listen flicker, and the IFB / beltpacks / matrix sub-cards.
 
 import type { EditorContext } from '../types.js';
 import type { ParamSpec } from '../../platform/mqtt/types.js';
@@ -172,8 +171,7 @@ export function renderIntercom(host: HTMLElement, ctx: EditorContext): void {
       g.members.forEach((idx) => {
         mem.appendChild(el('span', { class: 'ic-chip' }, [keys[idx] ?? '']));
       });
-      const x = el('div', { class: 'ic-group-x' }, ['✕']);
-      tipHint(x, 'Remove group');
+      const x = el('div', { class: 'ic-group-x' }, ['✕']); tipHint(x, 'Remove group');
       const row = el('div', { class: 'ic-group' + (g.on ? ' on' : '') }, [big, mem, x]);
       big.addEventListener('click', () => {
         setGroupOn(g, !g.on, true);
