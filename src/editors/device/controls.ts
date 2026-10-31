@@ -2,6 +2,7 @@
 // Binds inputs and outputs to reactive two-way MQTT updates with Disposer cleanup.
 
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import { knob, fader, meter } from '../../ui/widgets.js';
 import type { DeviceIO } from '../../platform/device/types.js';
 import { onDeviceValue, publishDeviceValue } from '../../platform/device/receiver.js';
@@ -14,7 +15,8 @@ export function createControlWidget(
   accentColor = '#ff9900',
 ): HTMLElement {
   const strip = el('div', { class: 'dev-strip' });
-  const label = el('div', { class: 'dev-strip-name', textContent: io.name, title: io.name });
+  const label = el('div', { class: 'dev-strip-name', textContent: io.name });
+  hint(label, io.name);
   const valReadout = el('div', { class: 'dev-strip-val', textContent: formatVal(io.value, io.unit) });
 
   let widget: HTMLElement;

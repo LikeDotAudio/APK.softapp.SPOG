@@ -9,6 +9,7 @@
 // sets you route in — falling back to the built-in catalog when nothing is routed.
 
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import type { EditorContext } from '../types.js';
 import { createStage } from './preview.js';
 import { templateForLabel } from './templates.js';
@@ -133,8 +134,9 @@ export function buildEngine(host: HTMLElement, ctx: EditorContext): void {
     crawlItems.forEach((it, i) => {
       const cb = el('input', { type: 'checkbox' }) as HTMLInputElement; cb.checked = it.enabled;
       const tx = el('input', { class: 'gfx-crawl-text', type: 'text', value: it.text }) as HTMLInputElement;
-      const up = el('button', { class: 'gfx-crawl-mv', title: 'Move up' }, ['↑']);
-      const dn = el('button', { class: 'gfx-crawl-mv', title: 'Move down' }, ['↓']);
+      const up = el('button', { class: 'gfx-crawl-mv' }, ['↑']);
+      const dn = el('button', { class: 'gfx-crawl-mv' }, ['↓']);
+      hint(up, 'Move up'); hint(dn, 'Move down');
       const row = el('div', { class: `gfx-crawl-row${it.enabled ? '' : ' off'}` }, [cb, el('span', { class: 'gfx-crawl-n' }, [String(i + 1)]), tx, up, dn]);
       cb.onchange = () => { it.enabled = cb.checked; row.classList.toggle('off', !it.enabled); applyCrawl(); };
       tx.oninput = () => { it.text = tx.value; applyCrawl(); };

@@ -5,6 +5,7 @@
 import { VOICE_COMMANDS } from './VOICE.js';
 import type { EditorPlugin } from '../types.js';
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import type { ParamSpec } from '../../platform/mqtt/types.js';
 import { injectAudioPositionerStyles } from './styles.js';
 import { NEAR_RADIUS, FAR_RADIUS, Fader, buildGroups } from './fader.js';
@@ -65,10 +66,12 @@ const plugin: EditorPlugin = {
     const inBox = el('div', { class: 'ap-meters-box' });
     chans.forEach((ch, i) => {
       if (i > 7) return;
-      inBox.append(el('div', { class: 'ap-meter', title: ch.label }, [
+      const meter = el('div', { class: 'ap-meter' }, [
         el('div', { class: 'ap-meter-fill', style: `height: ${40 + Math.random() * 40}%; background: ${ch.color}` }),
         el('div', { class: 'ap-meter-label' }, [`CH${i+1}`])
-      ]));
+      ]);
+      hint(meter, ch.label);
+      inBox.append(meter);
     });
     inputMeters.append(inBox);
 

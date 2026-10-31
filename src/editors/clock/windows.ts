@@ -5,6 +5,7 @@
 // device list, stage and face registry that index owns.
 
 import { el, ctx2d } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import {
   type Zone, type Resolution, type FaceState, type FaceDef,
   RESOLUTIONS, ZONES, zoneOf, offsetLabel, zoneIdxForOffset,
@@ -130,7 +131,8 @@ export function createWindows(C: ClockCtx): WindowsApi {
   const addClock = (zone: Zone = zoneOf(ZONES[C.detectedIdx]!), face: string = C.defaultFace, rect?: Rect, res?: Resolution): Device => {
     const norm = C.normFace(face);
     const startRes: Resolution = res ?? norm.res ?? 'hms';
-    const title = el('div', { class: 'ck-win-title', title: 'Click to rename' }, [zone.label.toUpperCase()]);
+    const title = el('div', { class: 'ck-win-title' }, [zone.label.toUpperCase()]);
+    hint(title, 'Click to rename');
     title.contentEditable = 'true';
     const cvs = el('canvas') as HTMLCanvasElement;
     const d: Device = { id: ++seq, kind: 'clock', win: el('div', { class: 'ck-win' }), title, zone, face: norm.face, res: startRes, cvs, g: ctx2d(cvs), state: {} };

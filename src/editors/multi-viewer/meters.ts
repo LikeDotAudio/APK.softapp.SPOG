@@ -6,6 +6,7 @@
 
 import type { Disposer } from '../../ui/timers.js';
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 
 // A bank of n vertical VU meters — the SCREEN of an audio-group pane. Each
 // channel gets its own bar + number, all animated on the shared disposer.
@@ -15,7 +16,8 @@ export function vuBank(channels: string[], dispose: Disposer): HTMLElement {
   channels.forEach((ch, i) => {
     const fill = el('i');
     const bar = el('div', { class: 'bar' }, [fill]);
-    const cell = el('div', { class: 'mv-vu', title: ch }, [bar, el('span', { textContent: String(i + 1).padStart(2, '0') })]);
+    const cell = el('div', { class: 'mv-vu' }, [bar, el('span', { textContent: String(i + 1).padStart(2, '0') })]);
+    hint(cell, ch);
     bank.append(cell);
     fills.push({ fill, lvl: 0.2 + Math.random() * 0.4 });
   });

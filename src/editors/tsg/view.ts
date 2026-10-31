@@ -7,6 +7,7 @@
 // seeded from the routed feed's LABEL (route "EBU BARS" → the EBU bars generator).
 
 import { addStyles, el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import type { EditorContext } from '../types.js';
 import { CSS } from './styles.js';
 import { buildTsgGallery } from '../../ui/tsg-gallery.js';
@@ -45,9 +46,9 @@ export function renderTsg(host: HTMLElement, ctx: EditorContext): void {
     name.textContent = p.name;
     badge.textContent = p.group === 'HDR' ? 'HDR · REC. 2100' : 'SDR · REC. 709';
     desc.textContent = p.title;
-    preview.title = p.title;
+    hint(preview, p.title);
     link.setAttribute('href', p.href);
-    link.title = p.title;
+    hint(link, p.title);
     gallery.select(p.id);
     try { localStorage.setItem(keyFor(ctx), p.id); } catch { /* ignore */ }
     if (publish) ctx.services.publishParam?.('pattern', p.id, { throttle: false });

@@ -4,6 +4,7 @@
 // the window spawners so applyScene can rebuild the live device set.
 
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import { type Resolution, type Zone, parseZone, ZONES, zoneIdxForOffset } from '../../ui/clock-faces/src/shared.js';
 import type { ClockCtx, Rect, WindowsApi } from './windows.js';
 
@@ -80,7 +81,8 @@ export function createLayouts(C: ClockCtx, w: WindowsApi): LayoutsApi {
     const names = Object.keys(savedLayouts);
     if (!names.length) { savedRow.append(el('span', { class: 'ck-empty' }, ['none yet'])); return; }
     for (const name of names) {
-      const b = el('button', { class: 'ck-btn on', title: 'Click to load · Alt-click to delete' }, [name]);
+      const b = el('button', { class: 'ck-btn on' }, [name]);
+      hint(b, `${name} · click to load · Alt-click to delete`);
       b.addEventListener('click', (e) => {
         if ((e as MouseEvent).altKey) { delete savedLayouts[name]; persistSaved(); renderSaved(); return; }
         const items = savedLayouts[name]; if (items) applyScene(items);

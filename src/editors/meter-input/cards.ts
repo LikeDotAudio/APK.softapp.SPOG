@@ -2,6 +2,7 @@
 // every card builder, the grid, the cardMap keying, the LCARS header palette and
 // the drag-move/resize `floatCard` behaviour. Pure DOM — no render-loop state.
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 
 // A card becomes drag-move (via its header) + resize (native corner handle); its
 // position/size is set by a layout preset (see PRESETS / applyPreset). Double-
@@ -13,7 +14,7 @@ export function floatCard(card: HTMLElement, bringToFront: () => number, onResto
   handle.style.cursor = 'move'; handle.style.userSelect = 'none';
   // × closes (hides) this card; double-clicking the title (or a preset) restores it.
   const x = document.createElement('span');
-  x.className = 'mi-btnicon mi-x'; x.textContent = '×'; x.title = 'Close (a preset restores it)';
+  x.className = 'mi-btnicon mi-x'; x.textContent = '×'; hint(x, 'Close (a preset restores it)');
   x.addEventListener('pointerdown', (e) => e.stopPropagation());
   x.addEventListener('click', (e) => { e.stopPropagation(); card.style.display = 'none'; });
   handle.append(x);

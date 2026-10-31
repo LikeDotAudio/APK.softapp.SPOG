@@ -6,6 +6,7 @@
 import type { EditorContext } from '../types.js';
 import type { ParamSpec } from '../../platform/mqtt/types.js';
 import { el } from '../../ui/dom.js';
+import { hint as tipHint } from '../../ui/tip.js';
 import { injectIntercomStyles } from './styles.js';
 import { createIntercomState, resolveKeys, type TalkGroup } from './state.js';
 import { buildSubCards } from './subcards.js';
@@ -171,7 +172,8 @@ export function renderIntercom(host: HTMLElement, ctx: EditorContext): void {
       g.members.forEach((idx) => {
         mem.appendChild(el('span', { class: 'ic-chip' }, [keys[idx] ?? '']));
       });
-      const x = el('div', { class: 'ic-group-x', title: 'Remove group' }, ['✕']);
+      const x = el('div', { class: 'ic-group-x' }, ['✕']);
+      tipHint(x, 'Remove group');
       const row = el('div', { class: 'ic-group' + (g.on ? ' on' : '') }, [big, mem, x]);
       big.addEventListener('click', () => {
         setGroupOn(g, !g.on, true);

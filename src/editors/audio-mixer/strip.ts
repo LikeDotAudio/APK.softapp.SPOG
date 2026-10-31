@@ -9,6 +9,7 @@
 import type { Hex } from '../../model/index.js';
 import type { EditorContext } from '../types.js';
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import { knob, fader, meter } from '../../ui/widgets.js';
 import type { Channel, MixerState } from './state.js';
 
@@ -67,7 +68,7 @@ export function stripEl(rc: StripCtx, c: Channel, idx: number, opts: StripOpts):
     const src = lines.pop()!;
     lines.forEach((l) => name.append(el('span', { class: 'am-ln ctx', textContent: l })));
     name.append(el('span', { class: 'am-ln src', textContent: `${wireless ? '📶 ' : ''}${src}` }));
-    name.title = c.origin || c.label;
+    hint(name, c.origin || c.label);
   }
   strip.append(name);
 

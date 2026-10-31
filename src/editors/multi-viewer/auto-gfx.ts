@@ -9,6 +9,7 @@
 // that never asked for it are unchanged.
 
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import type { OnAirGraphic } from '../../platform/gfx-monitor.js';
 import type { Win } from './panes.js';
 
@@ -65,7 +66,8 @@ export function autoGfxCaption(hidden: number): string {
 /** A read-only AUTO tile (no drag / tally cycle / UMD edit: the switcher owns it). */
 export function gfxTile(g: OnAirGraphic, compact: boolean, videoScreen: (w: Win) => HTMLElement): HTMLElement {
   const w = gfxWin(g);
-  const tile = el('div', { class: 'mv-win pgm mv-auto', title: `On air via ${w.origin}` });
+  const tile = el('div', { class: 'mv-win pgm mv-auto' });
+  hint(tile, `On air via ${w.origin}`);
   tile.draggable = false;
   if (compact) {
     tile.append(el('div', { class: 'mv-tile', textContent: `⬡ ${g.label}` }));

@@ -15,6 +15,7 @@
 // keyer of the delegated M/E (UPSTREAM), one column per hard-wired graphic.
 
 import { el } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import { srcLabel } from './me.js';
 import { gfxBuses, gfxFeeds, prerouteView, routeGfx } from './gfx-route.js';
 import type { Surface } from './surface.js';
@@ -98,11 +99,12 @@ export function buildPreRoute(
     const feeds = gfxFeeds(def);
     matrixView.style.gridTemplateColumns = `auto repeat(${feeds.length}, minmax(34px, 1fr))`;
     const cells: HTMLElement[] = [el('span', {}, ['']),
-      ...feeds.map((src, c) => el('span', { class: 'vm-gfxhead', title: srcLabel(src, def) }, [`GFX ${c + 1}`]))];
+      ...feeds.map((src, c) => { const h = el('span', { class: 'vm-gfxhead' }, [`GFX ${c + 1}`]); hint(h, srcLabel(src, def)); return h; })];
     gfxBuses(def, s.state, s.delegate).forEach((bus, r) => {
       cells.push(el('span', { class: `vm-gfxbus ${bus.stream}` }, [`${bus.stream === 'down' ? 'DSK' : 'USK'} · ${bus.label}`]));
       for (const src of feeds) {
-        const cell = el('button', { class: `vm-gfxcell${bus.source === src ? ' on' : ''}`, type: 'button', title: `${srcLabel(src, def)} → ${bus.label}` }, [bus.source === src ? '●' : '']);
+        const cell = el('button', { class: `vm-gfxcell${bus.source === src ? ' on' : ''}`, type: 'button' }, [bus.source === src ? '●' : '']);
+        hint(cell, `${srcLabel(src, def)} → ${bus.label}`);
         cell.addEventListener('click', () => {
           const hit = routeGfx(def, s.state, s.delegate, r, src);
           if (!hit) return;

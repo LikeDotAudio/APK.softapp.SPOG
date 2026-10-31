@@ -13,6 +13,7 @@
 // readable {pos, val}. For pan/zoom scopes it also supplies its `view` so the
 // layer can invert the transform (client→backing→data) consistently.
 import { el, addStyles } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import type { View } from './live-input.js';
 
 export interface ProbeResult { pos: string; val?: string }
@@ -94,9 +95,10 @@ export function createHoverLayer(): HoverLayer {
       const [dx, dy] = toData(cv, p.view, e.clientX, e.clientY);
       const r = p.read(dx, dy, cv.width, cv.height);
       const label = r ? (r.val ? `${r.pos} · ${r.val}` : r.pos) : `${dx | 0},${dy | 0}`;
-      const node = el('div', { class: 'mi-marker', title: 'Click to remove marker' }, [
+      const node = el('div', { class: 'mi-marker' }, [
         el('span', { class: 'x' }), el('span', { class: 'lbl' }, [label]),
       ]);
+      hint(node, `${label} · click to remove marker`);
       const m: Marker = { cv, view: p.view, dx, dy, node };
       node.addEventListener('click', (ev) => { ev.stopPropagation(); node.remove(); const i = markers.indexOf(m); if (i >= 0) markers.splice(i, 1); });
       node.addEventListener('contextmenu', (ev) => ev.preventDefault());

@@ -17,6 +17,7 @@
 import { VOICE_COMMANDS } from './VOICE.js';
 import type { EditorPlugin } from '../types.js';
 import { el, addStyles, ctx2d } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import type { SegFont, SegColor } from '../../ui/seven-seg.js';
 import { type DisplayDef, type CtrlKind } from './shared.js';
 import { Controller, deriveControllers } from './controllers.js';
@@ -95,7 +96,8 @@ const plugin: EditorPlugin = {
       const cvs = el('canvas', { class: 'cr-face' }) as HTMLCanvasElement;
       const body = el('div', { class: 'cr-body' }, [cvs]);
       const card: Card = { ctrl, displayId: displayFor(DEFAULT_DISPLAY[ctrl.kind]).id, body, cvs, g: ctx2d(cvs) };
-      const sel = el('select', { class: 'cr-sel', title: 'Read-out' }) as HTMLSelectElement;
+      const sel = el('select', { class: 'cr-sel' }) as HTMLSelectElement;
+      hint(sel, 'Read-out');
       for (const d of DISPLAYS) sel.append(el('option', { value: d.id }, [d.short]));
       sel.value = card.displayId;
       sel.addEventListener('change', () => setDisplay(card, sel.value));

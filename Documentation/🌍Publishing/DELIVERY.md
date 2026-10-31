@@ -168,3 +168,8 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
   default, per seat under Colour & Vision (`ui/console/lcars-pulse.ts`, `prefs.ui.heartbeat`);
   the on-air weather forecast strip face (`ui/weather/faces/strip.ts`, the Graphics Engine's
   forecast template).
+
+## Delivered from the APK.audio roadmap
+
+- **ROAD-3451 v3 wire by default** — `wire.ts` encodes v3 unless `?wire=v2`/`spog.wire=v2`; decode of v2 kept. Checked first: the deployed build (20261031.1735 · git e40f008) decodes `xpSuffix`/`logMsg`, and the only other reader (`contracts` `spog_envelope.rs`, the VISA sampler bridge) reads numeric ValueMsg arms only, which v3 leaves unchanged.
+- **ROAD-3450 (2026-10-31)** — the last 18 native `title` hovers in `src/editors/` (16 the item counted, plus the PRE-ROUTE matrix cells and the device strip name) ride `hint()` from `src/ui/tip.ts`; `src/editors/native-title.test.ts` fails on any new `.title =`, `setAttribute('title')` or `title:` in an `el()` attrs object.

@@ -2,6 +2,7 @@
 // index.ts: preset selection, SENS sensitivity, the layout inspector popup and the
 // source buttons (Test Pattern / Capture Tab / Load File / URL) + the status line.
 import { el, addStyles } from '../../ui/dom.js';
+import { hint } from '../../ui/tip.js';
 import type { LiveInput } from './live-input.js';
 import type { EditDetector } from './edit-detector.js';
 import type { ToolbarRefs } from './toolbar.js';
@@ -89,7 +90,8 @@ export function wireControls(deps: ControlDeps): SetStat {
         },
         dispose,
       });
-      const close = el('span', { class: 'mi-tsgpop-x', title: 'close' }, ['✕']);
+      const close = el('span', { class: 'mi-tsgpop-x' }, ['✕']);
+      hint(close, 'Close the test signal generator');
       close.addEventListener('click', () => tsgPop?.classList.remove('open'));
       tsgPop = el('div', { class: 'mi-tsgpop' }, [
         el('div', { class: 'mi-tsgpop-h' }, [el('b', {}, ['Test Signal Generator']), close]),
