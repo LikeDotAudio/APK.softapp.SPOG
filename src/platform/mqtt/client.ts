@@ -15,6 +15,8 @@ import { encodeAndEncrypt, decryptAndDecode, hasBusKey } from './crypto.js';
 import { makeThrottler } from './throttle.js';
 import { topicMatches } from './topics.js';
 import { makeSessionId } from './session-id.js';
+import { noopBus } from './noop-bus.js';
+import { externalSubscriptions } from './external-subs.js';
 
 // Re-exported so consumers (barrel index.ts) keep importing broker config from
 // client.js after the config/loader extraction — public bus API is unchanged.
@@ -26,20 +28,6 @@ export {
 export const SPOG_ROOT = 'SPOG';
 
 const dbg = (...a: unknown[]): void => { if (typeof window !== 'undefined' && window.OA_MQTT_DEBUG) console.log('[TwistBus]', ...a); };
-
-/** A bus that does nothing but keeps the app happy when no broker is configured. */
-function noopBus(sessionId: string): TwistBus {
-  return {
-    ready: Promise.resolve(),
-    sessionId,
-    status: () => ({ enabled: false, connected: false }),
-    publishConfig: () => {},
-    publishValue: () => {},
-    publishRaw: () => {},
-    subscribe: () => () => {},
-    dispose: () => {},
-  };
-}
 
 /**
  * Create the TwistBus. Returns immediately; `ready` resolves once connected or
@@ -53,13 +41,7 @@ export function createTwistBus(): TwistBus {
 
   const presenceTopic = `${SPOG_ROOT}/system/presence/${sessionId.split(':')[0]}`;
   const subs = new Set<{ filter: string; cb: (t: string, p: unknown) => void }>();
-  // Filters OUTSIDE SPOG/ (an absolute `APK.audio/…` topic, e.g. the Discovery
-  // Engine's device setups). The connect-time SPOG/# never carries them, so each
-  // is subscribed on the broker too — now if connected, and again on every
-  // (re)connect.
-  const external = new Set<string>();
-  // An absolute topic's root is dotted (`APK.audio`); SPOG's own filters are relative suffixes.
-  const isExternal = (f: string): boolean => (f.split('/')[0] ?? '').includes('.');
+  const external = externalSubscriptions();   // APK.audio/… filters, outside SPOG/# (external-subs.ts)
   // LAST-VALUE CACHE (audit §7.3 gap 1): the broker replays retained topics ONCE,
   // at the connect-time SPOG/# subscribe — anything subscribing later (editors
   // register onParam when they OPEN) missed it. Cache the last payload per topic
@@ -121,7 +103,7 @@ export function createTwistBus(): TwistBus {
       connected = true;
       dbg('connected', sessionId);
       client!.subscribe(`${SPOG_ROOT}/#`, { qos: 0 });
-      for (const f of external) client!.subscribe(f, { qos: 0 });
+      external.resubscribe(client!);
       const beat = (): void => { send(presenceTopic, { active: true, full_id: sessionId, ts: Date.now() }); };
       beat();
       heartbeat = setInterval(beat, 1000);
@@ -179,10 +161,7 @@ export function createTwistBus(): TwistBus {
     subscribe(filter, cb): () => void {
       const entry = { filter: filter.replace(/^\/+/, ''), cb };
       subs.add(entry);
-      if (isExternal(entry.filter) && !external.has(entry.filter)) {
-        external.add(entry.filter);
-        if (client && connected) client.subscribe(entry.filter, { qos: 0 });
-      }
+      external.add(entry.filter, connected ? client : null);
       // Replay the cache to the late subscriber (async so subscribe() never
       // re-enters the caller mid-registration).
       queueMicrotask(() => {

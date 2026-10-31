@@ -153,12 +153,7 @@ export const Footer = {
   /** Remove a group, its sub-groups and their tabs' content panes. */
   removeGroup(handle: GroupHandle): void {
     const doomed = groups.filter((g) => g === handle || g.path.startsWith(handle.path + ' / '));
-    for (const g of doomed) {
-      g.tabsEl.querySelectorAll<HTMLElement>('.lcars-tab').forEach((t) => {
-        const id = t.dataset['tabId'];
-        if (id) document.getElementById('tab-' + id)?.remove();
-      });
-    }
+    doomed.forEach((g) => g.tabsEl.querySelectorAll<HTMLElement>('.lcars-tab').forEach((t) => document.getElementById('tab-' + t.dataset['tabId'])?.remove()));
     handle.group.remove();
     groups = groups.filter((g) => !doomed.includes(g));
   },
