@@ -1,11 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { STATE_TONES, STATE_WORDS, TONE_GLYPHS, TONE_NAMES, toneOf } from './state.js';
+// @ts-expect-error TS7016 — untyped vendored ES module (the contract's browser build)
+import { STATE_TONES as CONTRACT } from '../vendor/apk-contracts/apk-contracts.mjs';
 
 describe('domain/state — the contract state vocabulary', () => {
   it('carries the contract tones', () => {
-    expect(STATE_TONES.good.hex).toBe('#2ea043');
-    expect(STATE_TONES.dead.hex).toBe('#f85149');
-    expect(STATE_TONES.kinda.hex).toBe('#d29922');
+    // Read from the vendored contract, never spelled here (check.sh brand counts state hex).
+    for (const t of ['good', 'dead', 'kinda'] as const) {
+      expect(STATE_TONES[t].hex).toMatch(/^#[0-9a-f]{6}$/i);
+      expect(STATE_TONES[t].hex).toBe((CONTRACT as Record<string, { hex: string }>)[t]!.hex);
+    }
   });
   it('every word maps to a tone that has a glyph', () => {
     for (const w of Object.keys(STATE_WORDS)) expect(TONE_NAMES).toContain(toneOf(w));

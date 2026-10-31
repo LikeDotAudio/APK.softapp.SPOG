@@ -8,6 +8,8 @@ import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { PAL } from './palette.js';
+// @ts-expect-error TS7016 — untyped vendored ES module (the contract's browser build)
+import { ACCENT, ACCENT_HOVER, STATE_TONES } from '../vendor/apk-contracts/apk-contracts.mjs';
 
 const SRC = resolve(__dirname, '..');
 const PALETTES = ['domain/palette.ts', 'ui/clock-faces/src/palette.ts'];
@@ -45,6 +47,9 @@ describe('palette ratchet (ROAD-3449)', () => {
   });
   it('the palette spells neither the brand accent nor a contract state tone', () => {
     const vals = Object.values(PAL) as string[];
-    for (const v of ['#f4902c', '#ffa552', '#2ea043', '#f85149', '#d29922']) expect(vals).not.toContain(v);
+    // The contract's values, read from the vendored build (spelling them here would itself trip check.sh brand).
+    const tones = Object.values(STATE_TONES as Record<string, { hex: string }>).map((t) => t.hex);
+    expect(tones.length).toBeGreaterThanOrEqual(3);
+    for (const v of [ACCENT as string, ACCENT_HOVER as string, ...tones]) expect(vals.map((x) => x.toLowerCase())).not.toContain(v.toLowerCase());
   });
 });
