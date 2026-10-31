@@ -4,6 +4,7 @@
 // gamut painter. Re-exported through live-input.ts so import sites are unchanged.
 import type { FrameData } from './live-input.js';
 import { PAL, alpha } from '../../domain/palette.js';
+import { tripleColour } from '../../domain/colour-resolve.js';
 
 // ---- draw helpers (render analysis onto editor canvases) -------------------
 export function ctx2d(cv: HTMLCanvasElement): CanvasRenderingContext2D | null { return cv.getContext('2d'); }
@@ -13,7 +14,7 @@ export function ctx2d(cv: HTMLCanvasElement): CanvasRenderingContext2D | null { 
 //     it dwells and leaves soft ghosts. The graticule is redrawn crisp each frame.
 export function fade(c: CanvasRenderingContext2D, W: number, H: number, a: number): void {
   c.globalCompositeOperation = 'source-over';
-  c.fillStyle = `rgba(3,6,15,${a})`;
+  c.fillStyle = alpha(PAL.blue04, a);
   c.fillRect(0, 0, W, H);
 }
 
@@ -57,7 +58,7 @@ function drawDensity(c: CanvasRenderingContext2D, hist: Uint32Array, AW: number,
     for (let bin = 0; bin < BINS; bin++) {
       const cnt = hist[col + bin]; if (!cnt) continue;
       const y = ireY((bin / (BINS - 1)) * 100, H);   // value 0..255 → 0..100 IRE
-      c.fillStyle = `rgba(${rgb},${Math.min(0.85, cnt * 0.05)})`;
+      c.fillStyle = tripleColour(rgb, Math.min(0.85, cnt * 0.05));
       c.fillRect(x0 + x, y - bh / 2, 1, bh);
     }
   }
@@ -89,7 +90,7 @@ export function drawRGBStacked(cv: HTMLCanvasElement, d: FrameData, view: View =
       const col = ((x / W * d.AW) | 0) * BINS;
       for (let bin = 0; bin < BINS; bin++) {
         const cnt = hist[col + bin]; if (!cnt) continue;
-        c.fillStyle = `rgba(${rgb},${Math.min(0.85, cnt * 0.05)})`;
+        c.fillStyle = tripleColour(rgb, Math.min(0.85, cnt * 0.05));
         c.fillRect(x, yOf((bin / (BINS - 1)) * 100) - bh / 2, 1, bh);
       }
     }

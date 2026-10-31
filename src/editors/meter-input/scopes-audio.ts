@@ -4,6 +4,7 @@
 // live-input.ts so import sites are unchanged.
 import { ctx2d, fade, applyView, resetView, IDENTITY_VIEW, type View } from './scopes-video.js';
 import { PAL, alpha } from '../../domain/palette.js';
+import { tripleColour } from '../../domain/colour-resolve.js';
 
 // Audio goniometer / Lissajous — plots real L (x) vs R (y) sample pairs rotated
 // 45° (mono = vertical), additive with persistence. Zoomable.
@@ -40,7 +41,7 @@ export function drawScope3(cv: HTMLCanvasElement, L: Uint8Array | null, R: Uint8
     c.fillStyle = PAL.sky44s20; c.fillText(label, 5, y0 + 12);
     if (!data) return;
     c.globalCompositeOperation = 'lighter';
-    c.strokeStyle = `rgba(${rgb},0.5)`; c.lineWidth = 1; c.beginPath();
+    c.strokeStyle = tripleColour(rgb, 0.5); c.lineWidth = 1; c.beginPath();
     for (let x = 0; x < W; x++) {
       const v = (data[(x / W * data.length) | 0] ?? 128) / 128 - 1;
       const y = mid - v * (lh / 2) * 0.82;

@@ -53,7 +53,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   // Landed alarm: a red rim pulse while a finished down count sits at zero.
   if (c.kind === 'down' && c.ms <= 0 && !c.running) {
     const p = 0.5 + 0.5 * Math.sin(c.now / 140);
-    g.strokeStyle = `rgba(224,31,31,${0.35 + 0.55 * p})`; g.lineWidth = S * 0.02;
+    g.strokeStyle = alpha(PAL.red50s76, 0.35 + 0.55 * p); g.lineWidth = S * 0.02;
     g.beginPath(); g.arc(cx, cy, R * 1.03, 0, TAU); g.stroke();
   }
 

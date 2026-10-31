@@ -53,12 +53,13 @@ export interface MeterCards {
 // Build every card. `video` is the LiveInput's <video> (the Input Under Test);
 // the SENS pills live inside the luminance card so they're passed in from the bar.
 export function buildCards(video: HTMLVideoElement, sSub: HTMLElement, sNorm: HTMLElement, sHard: HTMLElement): MeterCards {
+  // Scopes and the preview are signal content: their canvases keep TRUE colour whatever the mode (ROAD-3463).
   const scope = (tag: string, hClass: string, canvasClass: string): HTMLElement =>
-    el('div', { class: `mi-scope ${hClass}` }, [el('span', { class: 'mi-tag' }, [tag]), el('canvas', { class: canvasClass })]);
+    el('div', { class: `mi-scope ${hClass}` }, [el('span', { class: 'mi-tag' }, [tag]), el('canvas', { class: canvasClass, dataset: { trueColour: '' } })]);
 
   // A preview canvas shows the offline test pattern (the <video> element only has
   // real pixels for file/capture sources); one is shown, the other hidden, per mode.
-  const cPreview = el('canvas', { class: 'mi-vid mi-preview' });
+  const cPreview = el('canvas', { class: 'mi-vid mi-preview', dataset: { trueColour: '' } });
   const cardVideo = el('div', { class: 'mi-vidcard' }, [el('h4', {}, ['Input Under Test']), video, cPreview]);
   const cardParade = el('div', { class: 'mi-card' }, [el('h4', {}, ['RGB Parade · IRE']), scope('R · G · B', '', 'c-parade')]);
   const cardWave = el('div', { class: 'mi-card' }, [el('h4', {}, ['Luma Waveform']), scope("Y'", '', 'c-wave')]);

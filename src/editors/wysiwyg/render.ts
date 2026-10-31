@@ -6,6 +6,7 @@
 
 import type { Fixture, UiState } from './state.js';
 import { PAL, alpha } from '../../domain/palette.js';
+import { formatColour, hslColour } from '../../domain/colour-resolve.js';
 
 /** Heat-map ramp: blue → cyan → yellow → red (verbatim legacy stops). */
 function heatColor(v: number): string {
@@ -20,7 +21,7 @@ function heatColor(v: number): string {
   const f = t - i;
   const a = stops[i]!;
   const b = stops[i + 1]!;
-  return `rgb(${(a[0] + (b[0] - a[0]) * f) | 0},${(a[1] + (b[1] - a[1]) * f) | 0},${(a[2] + (b[2] - a[2]) * f) | 0})`;
+  return formatColour((a[0] + (b[0] - a[0]) * f) | 0, (a[1] + (b[1] - a[1]) * f) | 0, (a[2] + (b[2] - a[2]) * f) | 0);
 }
 
 /**
@@ -90,7 +91,7 @@ export function paintFrame(
       const fyp = f.y * h;
       const ang = Math.atan2(sy - fyp, sx - fxp);
       const spread = 0.32;
-      g.fillStyle = `hsla(${f.hue},90%,60%,${(0.06 + f.on * 0.14).toFixed(2)})`;
+      g.fillStyle = hslColour(f.hue, 90, 60, +(0.06 + f.on * 0.14).toFixed(2));
       g.beginPath();
       g.moveTo(fxp, fyp);
       g.lineTo(fxp + Math.cos(ang - spread) * w, fyp + Math.sin(ang - spread) * w);
@@ -141,11 +142,11 @@ export function paintFrame(
     const fxp = f.x * w;
     const fyp = f.y * h;
     const lit = f.on > 0.03;
-    g.strokeStyle = lit ? `hsl(${f.hue},90%,65%)` : PAL.blue29;
+    g.strokeStyle = lit ? hslColour(f.hue, 90, 65) : PAL.blue29;
     g.fillStyle = PAL.blue09s58;
     g.lineWidth = 2;
     if (lit) {
-      g.shadowColor = `hsl(${f.hue},90%,60%)`;
+      g.shadowColor = hslColour(f.hue, 90, 60);
       g.shadowBlur = 12;
     }
     g.beginPath();

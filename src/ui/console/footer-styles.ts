@@ -16,10 +16,13 @@ export function hexToRgb(hex: string | undefined): string | null {
   return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`;
 }
 
+/** The group / tab colours arrive as "r,g,b" data on --group-lcars / --lcars (setInkVar), which also
+ *  writes them, mode-resolved, as a colour on --group-lcars-c / --lcars-c: CSS reads those (ROAD-3463). */
+const G = 'var(--group-lcars-c)', L = 'var(--lcars-c)';
 export const FOOTER_CSS = `
 .lcars-topbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;padding:8px;margin-bottom:16px;border:none;}
-.lcars-group{--group-lcars:255,170,0;display:flex;align-items:flex-end;gap:6px;padding:4px;border-radius:20px;background:rgba(var(--group-lcars),0.08);position:relative;}
-.lcars-group-label{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:12px;line-height:1;color:${PAL.black};background:rgb(var(--group-lcars));padding:11px 18px;border-radius:16px 4px 4px 16px;white-space:nowrap;cursor:pointer;}
+.lcars-group{--group-lcars-c:${PAL.amber50s100};display:flex;align-items:flex-end;gap:6px;padding:4px;border-radius:20px;background:${alpha(G, .08)};position:relative;}
+.lcars-group-label{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:12px;line-height:1;color:${PAL.black};background:var(--group-lcars-c);padding:11px 18px;border-radius:16px 4px 4px 16px;white-space:nowrap;cursor:pointer;}
 .lcars-group-caret{font-size:10px;transition:transform 0.2s;}
 .lcars-group:not(.collapsed) > .lcars-group-label .lcars-group-caret{transform:rotate(90deg);}
 .lcars-group.collapsed > .lcars-group-body{display:none;}
@@ -28,10 +31,10 @@ export const FOOTER_CSS = `
    its label — expanding never grows the footer, so the main window never shifts. */
 .lcars-group:not(.collapsed) > .lcars-group-body{
   position:absolute;bottom:calc(100% + 8px);left:0;z-index:1550;
-  border-top:6px solid rgb(var(--group-lcars));border-radius:12px;
+  border-top:6px solid var(--group-lcars-c);border-radius:12px;
   padding:8px;min-width:max-content;overflow:visible;
-  background:${alpha(PAL.blue05s62, .95)};border-left:1px solid rgba(var(--group-lcars),.35);
-  border-right:1px solid rgba(var(--group-lcars),.35);border-bottom:1px solid rgba(var(--group-lcars),.35);
+  background:${alpha(PAL.blue05s62, .95)};border-left:1px solid ${alpha(G, .35)};
+  border-right:1px solid ${alpha(G, .35)};border-bottom:1px solid ${alpha(G, .35)};
   box-shadow:0 -10px 34px ${alpha(PAL.black, .65)};}
 /* Leaf panels (tabs only, no nested groups) cap + scroll; panels holding nested
    groups stay overflow-visible so their side fan-outs are not clipped. */
@@ -50,7 +53,7 @@ html[data-chirality="right"] .lcars-group-body .lcars-group:not(.collapsed) > .l
    Both hands stack alphanumerically top-down (tab 1 at the top). */
 html[data-chirality="right"] .lcars-group-tabs{flex-direction:column;}
 .lcars-group-tabs .lcars-tab{text-align:left;}
-.lcars-tab{--lcars:0,0,0;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:13px;line-height:1;color:${PAL.black};background:rgb(var(--lcars));opacity:0.45;padding:9px 26px;border:none;border-radius:0 999px 999px 0;cursor:pointer;user-select:none;white-space:nowrap;transition:opacity .2s,box-shadow .2s,transform .08s;}
+.lcars-tab{--lcars-c:${PAL.black};font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:13px;line-height:1;color:${PAL.black};background:var(--lcars-c);opacity:0.45;padding:9px 26px;border:none;border-radius:0 999px 999px 0;cursor:pointer;user-select:none;white-space:nowrap;transition:opacity .2s,box-shadow .2s,transform .08s;}
 .lcars-tab:hover:not(.active){opacity:0.8;}
-.lcars-tab.active{opacity:1;box-shadow:0 0 12px rgba(var(--lcars),0.75);}
+.lcars-tab.active{opacity:1;box-shadow:0 0 12px ${alpha(L, .75)};}
 .lcars-tab:active{transform:translateY(1px);}`;

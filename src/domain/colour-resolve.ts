@@ -78,6 +78,22 @@ export function formatColour(r: number, g: number, b: number, a = 1): string {
   return a >= 1 ? `#${hex2(r)}${hex2(g)}${hex2(b)}` : `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${+a.toFixed(3)})`;
 }
 
+/** A COMPUTED colour (data, a hue sweep, a lerp) as a literal the modes can read: `hsl` → `formatColour`.
+ *  `h` in degrees, `s`/`l` in % (0..100). Spelled here so no drawing file spells rgba()/hsl() (ROAD-3463). */
+export function hslColour(h: number, s: number, l: number, a = 1): string {
+  const S = Math.max(0, Math.min(100, s)) / 100, L = Math.max(0, Math.min(100, l)) / 100;
+  const H = ((h % 360) + 360) % 360;
+  const k = (n: number): number => (n + H / 30) % 12, q = S * Math.min(L, 1 - L);
+  const f = (n: number): number => 255 * (L - q * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)));
+  return formatColour(f(0), f(8), f(4), a);
+}
+
+/** A data colour carried as an "r,g,b" triple, at `a`, as a literal (`formatColour`). */
+export function tripleColour(rgb: string, a = 1): string {
+  const [r = 0, g = 0, b = 0] = rgb.split(',').map(Number);
+  return formatColour(r, g, b, a);
+}
+
 /** One colour through a mode. Unparseable input (a name, a gradient, `var(…)`) comes back unchanged. */
 export function resolveColour(colour: string, mode: Mode): string {
   const steps = chain(mode);

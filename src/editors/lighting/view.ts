@@ -10,6 +10,10 @@
 // fixture intensity (%) + colour temp (K), scene recall, and cue triggers.
 
 import { addStyles, qs, el } from '../../ui/dom.js';
+import { ink } from '../../ui/canvas-ink.js';
+import { onSchemeChange } from '../../ui/ink-var.js';
+import { hslColour } from '../../domain/colour-resolve.js';
+import { PAL, alpha } from '../../domain/palette.js';
 import type { EditorContext } from '../types.js';
 import { CSS } from './styles.js';
 import { initialFixtures, SCENES, CUES, tempK } from './state.js';
@@ -95,7 +99,7 @@ export function renderLighting(host: HTMLElement, ctx: EditorContext): void {
       const strip = strips[i];
       if (!fixEl || !strip) return;
       const k = tempK(f.temp);
-      const warm = `hsl(${38 - f.temp * 30},90%,${55 + f.intensity * 20}%)`;
+      const warm = ink(hslColour(38 - f.temp * 30, 90, 55 + f.intensity * 20));
       fixEl.style.background = warm;
       fixEl.style.color = warm;
       fixEl.style.opacity = (0.35 + f.intensity * 0.65).toFixed(2);
@@ -107,7 +111,7 @@ export function renderLighting(host: HTMLElement, ctx: EditorContext): void {
     const fill = st[1];
     if (key && fill) {
       const lum = 0.3 + (key.intensity * 0.5 + fill.intensity * 0.3);
-      beam.style.background = `radial-gradient(circle at ${30 + (key.intensity - fill.intensity) * 20}% 42%, rgba(255,240,210,${(lum * 0.5).toFixed(2)}), transparent 60%)`;
+      beam.style.background = `radial-gradient(circle at ${30 + (key.intensity - fill.intensity) * 20}% 42%, ${alpha(PAL.amber91, +(lum * 0.5).toFixed(2))}, transparent 60%)`;
     }
     const ch = st.reduce((a, f) => a + (f.intensity > 0.01 ? 2 : 0), 0);
     const keyK = key ? tempK(key.temp) : 0;
@@ -171,6 +175,7 @@ export function renderLighting(host: HTMLElement, ctx: EditorContext): void {
   wireLightingParams({ st, ctx, intInputs, ctInputs, paint, applyScene, flashCue });
 
   paint();
+  ctx.dispose.add(onSchemeChange(host, paint));   // the fixtures' computed tint follows a mode change
   paintSel();
   ctx.dispose.interval(() => {
     /* live DMX heartbeat */

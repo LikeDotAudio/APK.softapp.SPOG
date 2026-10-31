@@ -30,8 +30,10 @@ const counted = (f: string): boolean => {
   return !/test|vendor/.test(r) && !PALETTES.includes(r);
 };
 
-/** rgba()/hsl() spelled in .ts outside the palette machinery: ROAD-3456 sweeps these into `alpha(PAL.*, a)`. */
-const RGBA_CEILING = 63;
+/** rgba()/hsl() spelled in .ts outside the palette machinery: ROAD-3456 swept the literals into
+ *  `alpha(PAL.*, a)`, ROAD-3463 the computed ones (formatColour / hslColour / tripleColour, setInkVar's
+ *  `<prop>-c`). What is left is the clock-faces repository's own (src/ui/clock-faces). */
+const RGBA_CEILING = 27;
 const RGBA = /\brgba?\(|\bhsla?\(/g;
 const MACHINERY = ['domain/colour-resolve.ts', 'ui/canvas-ink.ts', 'ui/ink-var.ts'];
 const LCARS = resolve(SRC, '../lcars.css');

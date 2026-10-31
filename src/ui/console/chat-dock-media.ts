@@ -3,6 +3,7 @@
 // front-end image downscaler (no media server).
 
 import type { Endpoint, ChatMsg } from './chat-dock-types.js';
+import { trueInkVar } from '../ink-var.js';
 
 export const DEFAULT_COLOR = '57,211,83';   // comms green
 export const slug = (s: string): string => s.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -53,7 +54,7 @@ export function productions(): Endpoint[] {
     const name = (t.textContent || '').trim();
     if (!name || seen.has(name)) continue;
     seen.add(name);
-    out.push({ name, color: t.style.getPropertyValue('--lcars').trim() || DEFAULT_COLOR });
+    out.push({ name, color: trueInkVar(t, '--lcars') || DEFAULT_COLOR });   // the data colour, not the mode's paint
   }
   return out;
 }

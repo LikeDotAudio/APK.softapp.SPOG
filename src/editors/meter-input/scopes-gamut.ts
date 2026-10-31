@@ -4,6 +4,7 @@
 // scatter (not the per-column histograms). Re-exported through live-input.ts.
 import { ctx2d, fade, applyView, resetView, IDENTITY_VIEW, type View } from './scopes-video.js';
 import { PAL, alpha } from '../../domain/palette.js';
+import { formatColour } from '../../domain/colour-resolve.js';
 
 // CIE 1931 xy chromaticity gamut. Each sampled pixel's RGB is linearised (sRGB
 // decode), converted to XYZ (sRGB/D65 matrix), normalised to xy, and plotted
@@ -40,7 +41,7 @@ export function drawCIE(cv: HTMLCanvasElement, pts: number[], view: View = IDENT
     const lr = srgb2lin(R / 255), lg = srgb2lin(G / 255), lb = srgb2lin(B / 255);
     const X = 0.4124 * lr + 0.3576 * lg + 0.1805 * lb, Y = 0.2126 * lr + 0.7152 * lg + 0.0722 * lb, Z = 0.0193 * lr + 0.1192 * lg + 0.9505 * lb;
     const sum = X + Y + Z; if (sum < 1e-6) continue;
-    c.fillStyle = `rgba(${R | 0},${G | 0},${B | 0},0.5)`;
+    c.fillStyle = formatColour(R | 0, G | 0, B | 0, 0.5);
     c.fillRect(px(X / sum), py(Y / sum), 1, 1);
   }
   c.globalCompositeOperation = 'source-over';
@@ -115,7 +116,7 @@ export function drawVectorReal(cv: HTMLCanvasElement, pts: number[], view: View 
   const sc = R / 140;
   c.globalCompositeOperation = 'lighter';
   for (let i = 0; i < pts.length; i += 5) {
-    c.fillStyle = `rgba(${(pts[i + 2] ?? 0) | 0},${(pts[i + 3] ?? 0) | 0},${(pts[i + 4] ?? 0) | 0},0.5)`;
+    c.fillStyle = formatColour((pts[i + 2] ?? 0) | 0, (pts[i + 3] ?? 0) | 0, (pts[i + 4] ?? 0) | 0, 0.5);
     c.fillRect(cx + (pts[i] ?? 0) * sc, cy - (pts[i + 1] ?? 0) * sc, 1, 1);
   }
   c.globalCompositeOperation = 'source-over';

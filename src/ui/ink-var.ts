@@ -7,10 +7,10 @@
  *  cannot, so it is written resolved (`ink()`) and remembered on the element as
  *  `data-ink="--prop=colour|…"`; the Colour Engine calls `repaintInkVars()` after every mode
  *  change and each one is re-resolved from its true colour. Accepts a CSS colour or an
- *  "r,g,b" triple (written back as a triple, for `rgba(var(--x), a)`). */
+ *  "r,g,b" triple (written back as a triple, and as a colour on `<prop>-c`). */
 
 import { ink } from './canvas-ink.js';
-import { parseColour } from '../domain/colour-resolve.js';
+import { parseColour, tripleColour } from '../domain/colour-resolve.js';
 
 const TRIPLE = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/;
 
@@ -34,8 +34,18 @@ export function setInkVar(el: HTMLElement, prop: string, colour: string): void {
   const m = read(el);
   m.set(prop, colour);
   el.setAttribute('data-ink', write(m));
-  el.style.setProperty(prop, inkValue(colour));
+  paintVar(el, prop, colour);
 }
+
+/** A triple also lands as a colour on `<prop>-c`, so CSS can read it without spelling rgb(var(…)). */
+function paintVar(el: HTMLElement, prop: string, colour: string): void {
+  el.style.setProperty(prop, inkValue(colour));
+  if (TRIPLE.test(colour)) el.style.setProperty(`${prop}-c`, ink(tripleColour(colour)));
+}
+
+/** The TRUE (data) colour behind `prop` on `el`, as it was handed to setInkVar — for anything that
+ *  sends or stores it (a chat endpoint's colour), never the mode-resolved paint. */
+export const trueInkVar = (el: Element, prop: string): string | undefined => read(el).get(prop);
 
 /** The same for an HTML string: `style="${prop}: …"` comes from inkValue, this is the attribute. */
 export const inkAttr = (vars: Record<string, string>): string =>
@@ -44,6 +54,17 @@ export const inkAttr = (vars: Record<string, string>): string =>
 /** Re-resolve every remembered data colour (after a mode change). */
 export function repaintInkVars(root: ParentNode = document): void {
   root.querySelectorAll<HTMLElement>('[data-ink]').forEach((el) => {
-    for (const [prop, colour] of read(el)) el.style.setProperty(prop, inkValue(colour));
+    for (const [prop, colour] of read(el)) paintVar(el, prop, colour);
   });
+}
+
+/** Run `repaint` after every colour-mode change while `el` is in the document: for a canvas drawn
+ *  once (not per frame) or an inline style built from a computed colour, which would otherwise keep
+ *  the old mode until something else redraws it (ROAD-3463). The listener drops itself once `el`
+ *  has left the page; the returned function drops it sooner (an editor's `dispose.add`). */
+export function onSchemeChange(el: Element, repaint: () => void): () => void {
+  const off = (): void => document.removeEventListener('colour-scheme-change', fn);
+  const fn = (): void => { if (el.isConnected) repaint(); else off(); };
+  document.addEventListener('colour-scheme-change', fn);
+  return off;
 }

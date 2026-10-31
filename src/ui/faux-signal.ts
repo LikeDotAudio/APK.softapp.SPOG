@@ -8,6 +8,7 @@ import { drawTsg } from '../domain/tsg/index.js';
 import { paintTimerFeed } from './timer-feed.js';
 import { PAL, HEX, hexOf, alpha } from '../domain/palette.js';
 import { withTrueColour } from '../domain/true-colour.js';
+import { formatColour, hslColour } from '../domain/colour-resolve.js';
 
 // We only need identity + colour (+ optional room/media/fault) — accept a Feed or
 // any lightweight source-like object. `tsg` (a pattern id) makes this feed paint a
@@ -26,7 +27,7 @@ const hexToRgb = (hex: string): RGB => {
   const v = parseInt(n.slice(0, 6), 16); const w = Number.isNaN(v) ? 0x888888 : v;
   return [(w >> 16) & 255, (w >> 8) & 255, w & 255];
 };
-const css = (c: RGB): string => `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`;
+const css = (c: RGB): string => formatColour(c[0] | 0, c[1] | 0, c[2] | 0);
 const mix = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 const pick = <T>(rng: () => number, arr: T[]): T => arr[Math.floor(rng() * arr.length)] as T;
 
@@ -60,13 +61,13 @@ function person(g: CanvasRenderingContext2D, W: number, H: number, rng: () => nu
   const bob = Math.sin(t / 900 + rng() * 6) * headR * 0.03;   // subtle "live" breathing
   const headY = horizon - headR * 1.15 + bob;
   // shoulders / torso
-  g.fillStyle = `hsl(${shirtH},46%,44%)`;
+  g.fillStyle = hslColour(shirtH, 46, 44);
   g.beginPath();
   g.moveTo(cx - W * 0.33, H); g.lineTo(cx - W * 0.19, horizon + headR * 0.1);
   g.quadraticCurveTo(cx, horizon - headR * 0.55, cx + W * 0.19, horizon + headR * 0.1);
   g.lineTo(cx + W * 0.33, H); g.closePath(); g.fill();
   // collar V
-  g.fillStyle = `hsl(${shirtH},40%,30%)`;
+  g.fillStyle = hslColour(shirtH, 40, 30);
   g.beginPath(); g.moveTo(cx, horizon + headR * 0.55); g.lineTo(cx - headR * 0.5, horizon - headR * 0.1); g.lineTo(cx + headR * 0.5, horizon - headR * 0.1); g.closePath(); g.fill();
   // neck
   g.fillStyle = css(mix(skin, [0, 0, 0], 0.14)); g.fillRect(cx - headR * 0.26, headY + headR * 0.8, headR * 0.52, headR * 0.8);
@@ -116,7 +117,7 @@ function lowerThird(g: CanvasRenderingContext2D, W: number, H: number, feed: Fau
 // A "no signal" slate for faulted feeds (static + red bar).
 function faultSlate(g: CanvasRenderingContext2D, W: number, H: number, rng: () => number): void {
   g.fillStyle = PAL.grey04s0; g.fillRect(0, 0, W, H);
-  for (let i = 0; i < (W * H) / 40; i++) { const v = Math.floor(rng() * 255); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(rng() * W, rng() * H, 2, 2); }
+  for (let i = 0; i < (W * H) / 40; i++) { const v = Math.floor(rng() * 255); g.fillStyle = formatColour(v, v, v); g.fillRect(rng() * W, rng() * H, 2, 2); }
   const bh = H * 0.17; g.fillStyle = alpha(PAL.red39, .9); g.fillRect(0, H * 0.42, W, bh);
   g.fillStyle = PAL.white; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `700 ${Math.round(bh * 0.48)}px sans-serif`;
   g.fillText('NO SIGNAL', W / 2, H * 0.42 + bh / 2);

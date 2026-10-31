@@ -6,6 +6,7 @@
 
 import { PAL, alpha } from '../domain/palette.js';
 import { withTrueColour } from '../domain/true-colour.js';
+import { tripleColour } from '../domain/colour-resolve.js';
 
 export interface ShadingState {
   pan: number; iris: number; mgain: number; mblack: number; gamma: number;
@@ -78,7 +79,7 @@ function paintParade(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): v
         ctx.fillText(String(p), 2, y + 3);
       }
     }
-    ctx.fillStyle = `rgba(${RGBCOL[c]},.9)`;
+    ctx.fillStyle = tripleColour(RGBCOL[c]!, .9);
     ctx.fillText(LBL[c], x0 + 5, top + 9);
     ctx.globalCompositeOperation = 'lighter';
     const N = 90;
@@ -89,7 +90,7 @@ function paintParade(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): v
       const val = barsOn ? bar[c] : channel(s, c, fx);
       const jit = barsOn ? 0.012 : 0.03 + s.mgain * 0.12;
       for (let k = 0; k < 3; k++) {
-        ctx.fillStyle = `rgba(${RGBCOL[c]},.5)`;
+        ctx.fillStyle = tripleColour(RGBCOL[c]!, .5);
         ctx.fillRect(px, ire2y(clamp(val + (Math.random() - 0.5) * jit) * 100), 2, 2);
       }
     }

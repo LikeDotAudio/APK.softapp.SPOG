@@ -3,6 +3,7 @@
 // exerciser that stays inside the broadcast bar gamut.
 import type { TsgPattern } from '../types.js';
 import { PAL } from '../../palette.js';
+import { tripleColour } from '../../colour-resolve.js';
 
 // The seven EBU/SMPTE 75% bars: white, yellow, cyan, green, magenta, red, blue.
 const BARS = ['191,191,191', '191,191,0', '0,191,191', '0,191,0', '191,0,191', '191,0,0', '0,0,191'];
@@ -19,7 +20,7 @@ const pattern: TsgPattern = {
       const a = s + (i / BARS.length) * Math.PI * 2;   // spread the blobs around a slow orbit
       const cx = W * (0.5 + 0.34 * Math.cos(a * 1.1 + i)), cy = H * (0.5 + 0.34 * Math.sin(a + i * 0.7));
       const grad = g.createRadialGradient(cx, cy, 0, cx, cy, r);
-      grad.addColorStop(0, `rgba(${rgb},0.85)`); grad.addColorStop(0.5, `rgba(${rgb},0)`);
+      grad.addColorStop(0, tripleColour(rgb, 0.85)); grad.addColorStop(0.5, tripleColour(rgb, 0));
       g.fillStyle = grad; g.fillRect(0, 0, W, H);
     });
     g.globalCompositeOperation = 'source-over';

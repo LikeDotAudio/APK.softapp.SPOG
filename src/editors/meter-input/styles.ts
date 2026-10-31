@@ -16,20 +16,20 @@ export function injectMeterInputStyles(): void {
 .mi-title-line{flex:1 1 60px;min-width:40px;height:14px;border-radius:7px;background:${PAL.orange65_f2a25a};opacity:.85;}
 .mi-bar-groups{align-items:flex-start;gap:14px;}
 .mi-grp{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:10px 14px 12px 20px;border-radius:10px;
-    position:relative;overflow:hidden;background:rgba(var(--acc),.07);}
-.mi-grp::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9px;background:rgb(var(--acc));}
-.mi-grp-lbl{font:900 11px sans-serif;letter-spacing:2px;text-transform:uppercase;color:rgb(var(--acc));}
+    position:relative;overflow:hidden;background:${alpha('var(--acc)', .07)};}
+.mi-grp::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9px;background:var(--acc);}
+.mi-grp-lbl{font:900 11px sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--acc);}
 .mi-grp-btns{display:flex;flex-direction:column;align-items:stretch;gap:8px;}
-.mi-grp-src{--acc:224,150,60;} .mi-grp-pre{--acc:186,150,214;} .mi-grp-sens{--acc:224,110,90;}
+.mi-grp-src{--acc:${PAL.orange56s73};} .mi-grp-pre{--acc:${PAL.violet71s44};} .mi-grp-sens{--acc:${PAL.red62s68};}
 .mi-pill{font:bold 11px sans-serif;letter-spacing:1px;text-transform:uppercase;padding:8px 15px;border-radius:14px;
     border:none;background:${PAL.blue18s41};color:${PAL.blue87};cursor:pointer;white-space:nowrap;
     transition:filter .15s,background .15s,margin-left .2s cubic-bezier(.3,.8,.3,1),padding-left .2s,border-radius .2s;}
 .mi-pill:hover{filter:brightness(1.28);}
-.mi-pill.on{background:rgb(var(--acc,224,150,60));color:${PAL.orange05};box-shadow:0 0 10px rgba(var(--acc,224,150,60),.5);}
+.mi-pill.on{background:var(--acc,${PAL.orange56s73});color:${PAL.orange05};box-shadow:0 0 10px ${alpha(`var(--acc,${PAL.orange56s73})`, .5)};}
 /* Selected pill TUCKS INTO the group's colour spine: slides left to meet it and
    squares its left edge so pill + spine read as one continuous LCARS accent bar. */
 .mi-grp .mi-pill.on{margin-left:-11px;padding-left:26px;border-radius:0 14px 14px 0;
-    box-shadow:inset 4px 0 8px ${alpha(PAL.black, .3)},0 0 10px rgba(var(--acc,224,150,60),.5);}
+    box-shadow:inset 4px 0 8px ${alpha(PAL.black, .3)},0 0 10px ${alpha(`var(--acc,${PAL.orange56s73})`, .5)};}
 .mi-url{font:11px monospace;background:${PAL.blue09};color:${PAL.sky91};border:1px solid ${PAL.blue27s36};border-radius:12px;padding:8px 12px;min-width:200px;}
 .mi-stat{font:11px sans-serif;color:${PAL.orange56};}
 /* ── floating cards ────────────────────────────────────────────────────── */
