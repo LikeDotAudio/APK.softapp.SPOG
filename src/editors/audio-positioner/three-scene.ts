@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { hexOf } from '../../domain/palette.js';
 
 export interface SpatialState {
   format: string; // '9.1.4' | '5.1.2' | '5.1' | 'stereo'
@@ -88,7 +89,7 @@ export class SpatialScene {
       // Map x, y (from polar azimuth/depth) and z (height) to 3D coords
       mesh.position.set(f.x, f.z, f.y);
       // Update color in case it changed
-      (mesh.material as THREE.MeshLambertMaterial).color.setStyle(f.color);
+      (mesh.material as THREE.MeshLambertMaterial).color.setStyle(hexOf(f.color));
     }
     
     // Hide removed faders

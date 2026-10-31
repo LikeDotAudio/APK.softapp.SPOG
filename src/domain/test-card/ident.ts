@@ -6,6 +6,7 @@
 // of the seed; hue from the authored colour (falls back to a hashed hue).
 
 import { stripOrder } from '../routing-core/index.js';
+import { hexOf } from '../palette.js';
 import { SHAPE_ROSTER, type CardIdent, type ShapeKind } from './types.js';
 
 /** FNV-1a — a cheap, stable string hash (no crypto needed for visual idents). */
@@ -25,7 +26,7 @@ export function hashHue(seed: string): number {
 
 /** Extract a hue from a #rrggbb colour; 210 (LCARS blue) for anything unparseable. */
 export function hueOf(hex: string | undefined): number {
-  const m = hex ? /^#?([0-9a-f]{6})$/i.exec(hex.trim()) : null;
+  const m = hex ? /^#?([0-9a-f]{6})$/i.exec(hexOf(hex).trim()) : null;
   if (!m) return 210;
   const n = parseInt(m[1]!, 16);
   const r = ((n >> 16) & 255) / 255;

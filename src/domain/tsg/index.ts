@@ -6,6 +6,7 @@
 
 import { patternById, DEFAULT_TSG } from './catalog.js';
 import type { TsgPattern } from './types.js';
+import { withTrueColour } from '../true-colour.js';
 
 export * from './types.js';
 export { PATTERNS, DEFAULT_TSG, patternById, patternForLabel, findPattern, byGroup } from './catalog.js';
@@ -23,7 +24,11 @@ export function tsgFor(prod: string, twist: string): TsgPattern {
 /** Paint pattern `id` onto a visible canvas, sizing the backing store to its CSS box
  *  (DPR-aware) — the same contract as ui/faux-signal.drawFauxSignal. `t` (ms) drives
  *  any live motion. Safe to call every frame. */
+/** Signal content: drawn in TRUE colour whatever the mode (src/domain/true-colour.ts). */
 export function drawTsg(canvas: HTMLCanvasElement, id: string | undefined, t = 0): void {
+  withTrueColour(canvas.getContext('2d'), () => paintTsg(canvas, id, t));
+}
+function paintTsg(canvas: HTMLCanvasElement, id: string | undefined, t = 0): void {
   const dpr = window.devicePixelRatio || 1;
   const cw = canvas.clientWidth, ch = canvas.clientHeight;
   const laidOut = cw > 0 && ch > 0;

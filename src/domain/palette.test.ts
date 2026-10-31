@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { PAL } from './palette.js';
+import { HEX as TRUE } from './palette.js';
 // @ts-expect-error TS7016 — untyped vendored ES module (the contract's browser build)
 import { ACCENT, ACCENT_HOVER, STATE_TONES } from '../vendor/apk-contracts/apk-contracts.mjs';
 
@@ -41,12 +41,12 @@ describe('palette ratchet (ROAD-3449)', () => {
   });
   it('every palette colour is used, and spelled once', () => {
     const text = all.filter((f) => ownFile(f) && relative(SRC, f) !== 'domain/palette.ts' && !f.endsWith('.test.ts')).map((f) => readFileSync(f, 'utf8')).join('\n');
-    expect(Object.keys(PAL).filter((k) => !new RegExp(`PAL\\.${k}\\b`).test(text))).toEqual([]);
-    const vals = Object.values(PAL);
+    expect(Object.keys(TRUE).filter((k) => !new RegExp(`(PAL|HEX)\\.${k}\\b`).test(text))).toEqual([]);
+    const vals = Object.values(TRUE);
     expect(vals.length).toBe(new Set(vals).size);
   });
   it('the palette spells neither the brand accent nor a contract state tone', () => {
-    const vals = Object.values(PAL) as string[];
+    const vals = Object.values(TRUE) as string[];
     // The contract's values, read from the vendored build (spelling them here would itself trip check.sh brand).
     const tones = Object.values(STATE_TONES as Record<string, { hex: string }>).map((t) => t.hex);
     expect(tones.length).toBeGreaterThanOrEqual(3);

@@ -1,5 +1,5 @@
 import { el } from '../../ui/dom.js';
-import { PAL } from '../../domain/palette.js';
+import { PAL, HEX } from '../../domain/palette.js';
 
 export function buildPrompterUI() {
   const script = el('div', { class: 'tp-script', contentEditable: 'true', spellcheck: false }) as HTMLDivElement;
@@ -50,8 +50,8 @@ export function buildPrompterUI() {
   const upperCheck = el('input', { type: 'checkbox', checked: true }) as HTMLInputElement;
   const stripCheck = el('input', { type: 'checkbox', checked: false }) as HTMLInputElement;
   const lineIn = el('input', { type: 'range', min: '1.0', max: '3.0', step: '0.1', value: '1.6' }) as HTMLInputElement;
-  const tcIn = el('input', { type: 'color', value: PAL.white }) as HTMLInputElement;
-  const bgIn = el('input', { type: 'color', value: PAL.black }) as HTMLInputElement;
+  const tcIn = el('input', { type: 'color', value: HEX.white }) as HTMLInputElement;
+  const bgIn = el('input', { type: 'color', value: HEX.black }) as HTMLInputElement;
 
   const gpoLog = el('div', { class: 'tp-gpo-log' });
   const shortcutWin = el('div', { class: 'tp-shortcuts' }, [

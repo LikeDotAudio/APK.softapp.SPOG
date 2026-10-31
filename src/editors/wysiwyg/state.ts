@@ -6,6 +6,7 @@
 // what is actually patched without any DOM scraping.
 
 import type { EditorContext } from '../types.js';
+import { hexOf } from '../../domain/palette.js';
 
 /** A virtual lighting fixture: normalized stage position, intensity, colour hue. */
 export interface Fixture {
@@ -36,7 +37,7 @@ export const FIX: ReadonlyArray<Fixture> = [
 
 /** Derive the HSL hue (0..360) from a `#rrggbb` / `#rgb` colour, or null if unparseable. */
 function hueFromHex(hex: string): number | null {
-  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hexOf(hex).trim());
   if (!m) return null;
   let s = m[1]!;
   if (s.length === 3) s = s[0]! + s[0]! + s[1]! + s[1]! + s[2]! + s[2]!;

@@ -8,10 +8,12 @@
  *  file under src/ spells a hex (src/domain/palette.test.ts holds that to a ceiling that only
  *  falls). Names say what the colour IS — hue family + HSL lightness % (`sky69` is a light sky
  *  blue), with the saturation or the hex appended only where two would collide — because they
- *  were swept from 2,800 literals mechanically. The chroma/vision modes reach every colour here
- *  through lcars.css's root filter (grey / mono / high / low); re-pointing families at the Colour
- *  Engine's Tier-2 tokens (`var(--sig-*)`, `var(--state-*)`) so the filter can retire is ROAD-3456,
- *  and it happens here.
+ *  were swept from 2,800 literals mechanically.
+ *  `PAL.<name>` reads `var(--pal-<name>)`: the Colour Engine writes every `--pal-*` onto <html>
+ *  already seen through the chroma / vision modes (src/domain/colour-resolve.ts), so a style
+ *  string follows the mode live, and src/ui/canvas-ink.ts reads the same values onto a canvas.
+ *  `HEX.<name>` is the true colour, for what must stay a hex: data, parsers, colour inputs, and
+ *  signal content (TSG, video, scopes), which never passes through the modes (ROAD-3456).
  *  Pure data: no DOM, no imports. */
 
 const P = {
@@ -145,5 +147,16 @@ const P = {
   red62_ff5a3b: '#ff5a3b',
 } as const;
 
-/** Typed as `#${string}` (not each literal) so a default parameter set from it stays any colour. */
-export const PAL: { readonly [K in keyof typeof P]: `#${string}` } = P;
+export type PalName = keyof typeof P;
+/** The true colours, as spelled (a `#rrggbb` per name). */
+export const HEX: { readonly [K in PalName]: `#${string}` } = P;
+/** What the interface paints: the mode-resolved custom property for each name. */
+export type PalVar = `var(--pal-${string})`;
+export const PAL = Object.fromEntries(Object.keys(P).map((k) => [k, `var(--pal-${k})`])) as { readonly [K in PalName]: PalVar };
+
+const VAR = /^var\(--pal-([A-Za-z0-9_]+)\)$/;
+/** A palette reference back to its true hex (anything else comes back unchanged): for parsers and data. */
+export const hexOf = (c: string): string => {
+  const m = VAR.exec(c.trim());
+  return m && m[1]! in P ? P[m[1] as PalName] : c;
+};

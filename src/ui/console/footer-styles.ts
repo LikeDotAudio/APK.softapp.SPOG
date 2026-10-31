@@ -2,7 +2,7 @@
 // split out of footer.ts to keep that file under the size cap: the LCARS tab
 // palette, a hex→"r,g,b" helper, and the footer's injected CSS.
 
-import { PAL } from '../../domain/palette.js';
+import { PAL, hexOf } from '../../domain/palette.js';
 
 export const LCARS_COLORS = [
   '193,152,176', '180,103,87', '174,105,125', '151,88,123',
@@ -10,7 +10,7 @@ export const LCARS_COLORS = [
 ];
 
 export function hexToRgb(hex: string | undefined): string | null {
-  const m = /^#?([0-9a-fA-F]{6})$/.exec(hex || '');
+  const m = /^#?([0-9a-fA-F]{6})$/.exec(hexOf(hex || ''));
   if (!m || !m[1]) return null;
   const n = parseInt(m[1], 16);
   return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`;

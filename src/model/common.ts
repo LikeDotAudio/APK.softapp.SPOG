@@ -1,7 +1,9 @@
 // src/model/common — primitives shared across every domain shape.
 // See Documentation/TYPESCRIPT-WASM-REPORT.md §A.2.
 
-export type Hex = `#${string}`;
+/** A colour SPOG paints: a true `#hex` (data from Routes JSON) or a palette reference, `var(--pal-*)`,
+ *  which follows the colour modes (ROAD-3456). Parse one through `hexOf` (src/domain/palette.ts). */
+export type Hex = `#${string}` | `var(--pal-${string})`;
 
 /** A source/device is faulted when status is set and isn't "OK". */
 export type Status = 'OK' | (string & {});

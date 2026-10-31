@@ -2,6 +2,7 @@
 // Faithful ports of js/util/{dom,color,mono-emoji}.js so the ported pools build
 // byte-identical labels, ids and tints (the LCARS CSS is shared, class-for-class).
 import { isFaultStatus } from '../../domain/routing-core/index.js';
+import { hexOf } from '../../domain/palette.js';
 
 /** Sanitise a label into a DOM-id-safe slug (runs of non-alphanumerics → one dash). */
 export function slugId(s: string | null | undefined): string {
@@ -18,7 +19,7 @@ export function faultTag(status: string | undefined): string {
 
 /** Shift a #rrggbb colour's lightness by amt (-100..100) for per-node variation. */
 export function shadeColor(hex: string, amt: number): string {
-  const m = /^#?([0-9a-fA-F]{6})$/.exec(hex || '');
+  const m = /^#?([0-9a-fA-F]{6})$/.exec(hexOf(hex || ''));
   if (!m || !m[1]) return hex;
   const num = parseInt(m[1], 16);
   const r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
@@ -31,7 +32,7 @@ export function shadeColor(hex: string, amt: number): string {
 export function styleSignalNode(node: HTMLElement, color: string): void {
   node.style.borderColor = color;
   node.style.color = color;
-  node.style.boxShadow = `0 0 5px ${color}55`;
+  node.style.boxShadow = `0 0 5px color-mix(in srgb, ${color} 33%, transparent)`;
 }
 
 const VS_TEXT = '︎'; // request monochrome/text rendering

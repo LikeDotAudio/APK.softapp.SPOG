@@ -32,7 +32,7 @@ const hueShift = (hex: string, deg: number): string => {
 
 // ── glyph library (extracted to a sibling module to keep this file small) ────
 import { GLYPHS } from './icon-glyphs.js';
-import { PAL } from '../domain/palette.js';
+import { PAL, hexOf } from '../domain/palette.js';
 
 // ── palette hookup: each icon's accent = a SEMANTIC token of the active palette
 // (colour-scheme.ts writes these inline on <html>), so palette choices re-tint
@@ -75,7 +75,7 @@ export const hasTile = (id: string): boolean => id in GLYPHS;
 function accentFor(id: string): string {
   const [token, fallback] = TOKENS[id] ?? ['--sig-program', PAL.blue60];
   const v = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
-  return /^#[0-9a-fA-F]{6}$/.test(v) ? v : fallback;
+  return /^#[0-9a-fA-F]{6}$/.test(v) ? v : hexOf(fallback);
 }
 
 // ── the squircle templates (verbatim geometry from the generators) ───────────

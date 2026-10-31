@@ -5,6 +5,7 @@
 // The camera console (and any future scope consumer) composes these.
 
 import { PAL } from '../domain/palette.js';
+import { withTrueColour } from '../domain/true-colour.js';
 
 export interface ShadingState {
   pan: number; iris: number; mgain: number; mblack: number; gamma: number;
@@ -37,7 +38,11 @@ function channel(s: ShadingState, c: 0 | 1 | 2, x: number): number {
   return clamp(v);
 }
 
+/** Signal content: drawn in TRUE colour whatever the mode (src/domain/true-colour.ts). */
 export function drawParade(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): void {
+  withTrueColour(cv.getContext('2d'), () => paintParade(cv, s, barsOn));
+}
+function paintParade(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): void {
   const w = cv.clientWidth | 0;
   const h = cv.clientHeight | 0;
   if (!w || !h) return;
@@ -102,7 +107,11 @@ function ypbpr(r: number, g: number, b: number): [number, number] {
   return [(b - Y) * 0.564, (r - Y) * 0.713];
 }
 
+/** Signal content: drawn in TRUE colour whatever the mode (src/domain/true-colour.ts). */
 export function drawVectorscope(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): void {
+  withTrueColour(cv.getContext('2d'), () => paintVectorscope(cv, s, barsOn));
+}
+function paintVectorscope(cv: HTMLCanvasElement, s: ShadingState, barsOn: boolean): void {
   const w = (cv.width = cv.clientWidth | 0);
   const h = (cv.height = cv.clientHeight | 0);
   if (!w || !h) return;

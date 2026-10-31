@@ -6,7 +6,8 @@
 import type { Feed } from '../domain/routing-core/index.js';
 import { drawTsg } from '../domain/tsg/index.js';
 import { paintTimerFeed } from './timer-feed.js';
-import { PAL } from '../domain/palette.js';
+import { PAL, HEX, hexOf } from '../domain/palette.js';
+import { withTrueColour } from '../domain/true-colour.js';
 
 // We only need identity + colour (+ optional room/media/fault) — accept a Feed or
 // any lightweight source-like object. `tsg` (a pattern id) makes this feed paint a
@@ -20,7 +21,7 @@ const mulberry32 = (a: number): (() => number) => () => { a = a + 0x6D2B79F5 | 0
 
 type RGB = [number, number, number];
 const hexToRgb = (hex: string): RGB => {
-  const h = (hex || PAL.grey53).replace('#', '');
+  const h = hexOf(hex || HEX.grey53).replace('#', '');
   const n = h.length === 3 ? h.split('').map((c) => c + c).join('') : h.padEnd(6, '8');
   const v = parseInt(n.slice(0, 6), 16); const w = Number.isNaN(v) ? 0x888888 : v;
   return [(w >> 16) & 255, (w >> 8) & 255, w & 255];
@@ -124,7 +125,11 @@ function faultSlate(g: CanvasRenderingContext2D, W: number, H: number, rng: () =
 // Paint the faux signal for `feed` onto `canvas`. Pass `t` (a timestamp, ms) for a
 // subtle "live" bob; omit for a still frame. Sizes the backing store from the
 // canvas's CSS box when laid out, else draws in its existing backing pixels.
+/** Signal content: drawn in TRUE colour whatever the mode (src/domain/true-colour.ts). */
 export function drawFauxSignal(canvas: HTMLCanvasElement, feed: FauxSource, t = 0): void {
+  withTrueColour(canvas.getContext('2d'), () => paintFauxSignal(canvas, feed, t));
+}
+function paintFauxSignal(canvas: HTMLCanvasElement, feed: FauxSource, t = 0): void {
   // A Test Signal Generator feed paints its standardised pattern, not the cartoon.
   if (feed.tsg) { drawTsg(canvas, feed.tsg, t); return; }
   // A routed PRODUCTION TIMERS feed paints the RC1000 read-out on EVERY surface

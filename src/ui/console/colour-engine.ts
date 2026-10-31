@@ -11,6 +11,7 @@ import {
 } from './colour-palettes.js';
 import { applyStateGlyphs } from './state-glyphs.js';
 import { STATE_TONES, TONE_NAMES } from '../../domain/state.js';
+import { paintPalette } from './palette-paint.js';
 
 /** The current scheme, read back from the <html> attributes (default-filled). */
 export function getScheme(): ColourScheme {
@@ -54,6 +55,9 @@ function paint(s: ColourScheme): void {
   if (s.monoHue !== undefined) {
     h.style.setProperty('--mono-hue', `${s.monoHue}deg`);
   }
+  // The palette's --pal-* (and the canvas setters). Identity while lcars.css's root filter still
+  // applies the mode to the whole page; retiring that filter points this at `s` (ROAD-3456).
+  paintPalette({ chroma: 'full', vision: 'normal' });
   applyPaletteTokens(s.cvd);
   applyStateGlyphs(s);   // `auto` glyphs follow chroma/vision; fail-soft
 }
