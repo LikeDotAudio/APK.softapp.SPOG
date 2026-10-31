@@ -38,7 +38,7 @@ function fill(slot: HTMLElement, device: DeviceSetup): boolean {
   frame.src = panelUrl(osBase(), panel);
   frame.title = `${device.name} — GUI`;
   frame.loading = 'lazy';
-  frame.style.cssText = 'width:100%;height:520px;border:0;background:#000;';
+  frame.style.cssText = `width:100%;height:520px;border:0;background:${PAL.black};`;
   slot.replaceChildren(frame);
   return true;
 }
