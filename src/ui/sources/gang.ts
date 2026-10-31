@@ -8,6 +8,7 @@ import type { PoolKind, SourceLeaf } from '../../model/index.js';
 import { slugId, styleSignalNode } from './format.js';
 import { fillVideoCameras } from './pools.js';
 import { PAL, alpha } from '../../domain/palette.js';
+import { setInkVar } from '../ink-var.js';
 
 const GANG_CSS = `
 .gang-cap{font-size:10px;font-weight:bold;letter-spacing:2px;color:${PAL.sky71};margin:2px 0 4px 4px;text-transform:uppercase;}
@@ -124,7 +125,7 @@ export function renderGang(container: HTMLElement, word: string, leaves: SourceL
   const group = document.createElement('div');
   group.className = 'input-group gang-group';
   const cap = document.createElement('div');
-  cap.className = 'gang-cap'; cap.textContent = word; cap.style.color = color;
+  cap.className = 'gang-cap'; cap.textContent = word; setInkVar(cap, 'color', color);
   group.appendChild(cap);
   const grid = document.createElement('div');
   grid.className = 'gang-grid';

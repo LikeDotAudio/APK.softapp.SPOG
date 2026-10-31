@@ -7,7 +7,7 @@ import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { slugId, faultTag, monoEmoji, styleSignalNode, shadeColor } from './format.js';
 import { wireFold, tagOrigin } from './pools-fold.js';
 import { PAL } from '../../domain/palette.js';
-import { inkAttr, inkValue } from '../ink-var.js';
+import { inkAttr, inkValue, setInkVar } from '../ink-var.js';
 
 // A prompter feed reads as a beam-splitter/prompter-glass silhouette (angled
 // trapezoid hood) so it is instantly distinguishable from a plain video node,
@@ -74,7 +74,7 @@ export function fillVideoCameras(
         <div class="signal-node camera-control sub-stream" draggable="true" id="pool-${id}-CC">${id}-CC</div>
       </div>`;
     styleSignalNode(node, poolColor);
-    node.style.borderColor = shadeColor(poolColor, ((i % 4) * 14) - 21);
+    setInkVar(node, 'border-color', shadeColor(poolColor, ((i % 4) * 14) - 21));   // data colour through the mode
     const vSub = node.querySelector<HTMLElement>(`#pool-${id}-V`);
     if (vSub) styleSignalNode(vSub, poolColor);
     node.dataset.status = status || 'OK';
