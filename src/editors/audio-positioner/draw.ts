@@ -1,8 +1,9 @@
 // src/editors/audio-positioner/draw.ts — canvas painters for the CMDP face + top/side POVs.
 import type { Fader } from './fader.js';
+import { ACCENT } from '../../domain/brand.js';
 
 export function drawFace(c: CanvasRenderingContext2D, cx: number, cy: number, target: Fader | null): void {
-  const r = 40, orange = '#f4902c'; c.save(); c.translate(cx, cy);
+  const r = 40, orange = ACCENT; c.save(); c.translate(cx, cy);
   c.fillStyle = '#333'; c.strokeStyle = orange; c.lineWidth = 2;
   c.beginPath(); c.ellipse(-r - 5, 0, 10, 15, 0, 0, Math.PI * 2); c.fill(); c.stroke();
   c.beginPath(); c.ellipse(r + 5, 0, 10, 15, 0, 0, Math.PI * 2); c.fill(); c.stroke();

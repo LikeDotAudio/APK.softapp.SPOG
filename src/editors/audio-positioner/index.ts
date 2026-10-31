@@ -10,6 +10,7 @@ import { injectAudioPositionerStyles } from './styles.js';
 import { NEAR_RADIUS, FAR_RADIUS, Fader, buildGroups } from './fader.js';
 import { drawFace, drawPOVs } from './draw.js';
 import { clamp, newInteractionState, createInteraction, type Geom } from './interaction.js';
+import { ACCENT } from '../../domain/brand.js';
 
 const plugin: EditorPlugin = {
   id: 'audio-positioner',
@@ -169,10 +170,10 @@ const plugin: EditorPlugin = {
       fit();
       c.fillStyle = '#181818'; c.fillRect(0, 0, W, H);
       drawFace(c, geom.cx, geom.cy, state.active || state.hovered);
-      c.strokeStyle = '#f4902c'; c.setLineDash([5, 5]); c.lineWidth = 2;
+      c.strokeStyle = ACCENT; c.setLineDash([5, 5]); c.lineWidth = 2;
       c.beginPath(); c.arc(geom.cx, geom.cy, NEAR_RADIUS, 0, Math.PI * 2); c.stroke();
       c.beginPath(); c.arc(geom.cx, geom.cy, FAR_RADIUS, 0, Math.PI * 2); c.stroke(); c.setLineDash([]);
-      c.fillStyle = '#f4902c'; c.font = 'bold 12px Arial'; c.textAlign = 'center';
+      c.fillStyle = ACCENT; c.font = 'bold 12px Arial'; c.textAlign = 'center';
       c.fillText('NEAR', geom.cx, geom.cy - NEAR_RADIUS - 10); c.fillText('FAR', geom.cx, geom.cy - FAR_RADIUS - 10);
       faders.forEach((f) => f.render(c, geom.cx, geom.cy));
       drawPOVs(ctxTop, ctxSide, cvsTop, cvsSide, faders, state.active, state.hovered);

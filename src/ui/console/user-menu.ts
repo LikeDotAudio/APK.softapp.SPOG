@@ -17,6 +17,7 @@ import { addStyles } from '../dom.js';
 import { exportSeat, importSeat, type SeatExport } from '../../platform/prefs.js';
 import { tileDataUrl } from '../icon-tiles.js';
 import { toggleCryptoDecoder } from './crypto-decoder.js';
+import { ACCENT, accentRgba } from '../../domain/brand.js';
 
 const UM_CSS = `
 .um-btn{display:block;z-index:1000;background:#3FC1C9;color:#06202a;border:none;
@@ -24,8 +25,8 @@ const UM_CSS = `
   padding:9px 16px;margin-bottom:10px;border-radius:18px 6px 6px 18px;cursor:pointer;
   box-shadow:inset 6px 0 0 #2a8b91;text-align:left;white-space:nowrap;}
 .um-btn:hover{background:#7fe3e9;color:#000;}
-.um-btn.stale{animation:um-pulse 1.2s infinite;background:rgb(244, 144, 44);color:#ffe;}
-@keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 #b36314,0 0 0 0 rgba(244,144,44,.5);}50%{box-shadow:inset 6px 0 0 #b36314,0 0 12px 3px rgba(244,144,44,.5);}}
+.um-btn.stale{animation:um-pulse 1.2s infinite;background:${ACCENT};color:#ffe;}
+@keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 #b36314,0 0 0 0 ${accentRgba(.5)};}50%{box-shadow:inset 6px 0 0 #b36314,0 0 12px 3px ${accentRgba(.5)};}}
 .um-panel{position:fixed;z-index:2650;display:none;flex-direction:column;gap:7px;padding:12px;
   min-width:250px;background:#0a0f1e;border:1px solid #24304e;border-radius:14px;
   box-shadow:0 14px 44px rgba(0,0,0,.7);font-family:Arial,Helvetica,sans-serif;}

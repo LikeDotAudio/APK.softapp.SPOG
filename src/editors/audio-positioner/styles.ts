@@ -1,9 +1,10 @@
 // src/editors/audio-positioner/styles.ts — CSS for the CMDP 3D audio positioner.
 import { addStyles } from '../../ui/dom.js';
+import { ACCENT } from '../../domain/brand.js';
 
 export function injectAudioPositionerStyles(): void {
   addStyles('audio-positioner-styles', `
-.ap-wrap{--accent:#f4902c;display:flex;flex-direction:column;width:100%;height:78vh;min-height:600px;
+.ap-wrap{--accent:${ACCENT};display:flex;flex-direction:column;width:100%;height:78vh;min-height:600px;
   background:#121212;border-radius:12px;overflow:hidden;color:#eee;font-family:'Segoe UI',sans-serif;position:relative;}
 
 .ap-header{display:flex;justify-content:space-between;padding:10px 15px;background:#181818;border-bottom:1px solid #333;}

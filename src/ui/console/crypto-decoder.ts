@@ -1,5 +1,6 @@
 import { el, addStyles } from '../dom.js';
 import { debugDecryptAndDecode } from '../../platform/mqtt/crypto.js';
+import { ACCENT } from '../../domain/brand.js';
 
 const CSS = `
 .crypto-decoder-modal {
@@ -14,19 +15,19 @@ const CSS = `
   display: flex; justify-content: space-between; align-items: center; border-radius: 10px 10px 0 0;
 }
 .cd-title { font-weight: bold; letter-spacing: 2px; color: #fff; }
-.cd-close { cursor: pointer; color: #f4902c; font-weight: bold; font-size: 14px; padding: 0 10px; }
+.cd-close { cursor: pointer; color: ${ACCENT}; font-weight: bold; font-size: 14px; padding: 0 10px; }
 .cd-body { display: flex; flex: 1; min-height: 0; }
 .cd-panel { flex: 1; display: flex; flex-direction: column; border-right: 2px solid #16233d; padding: 10px; }
 .cd-panel:last-child { border-right: none; }
 .cd-panel-title { font-weight: bold; margin-bottom: 8px; color: #3FC1C9; letter-spacing: 1px; }
 .cd-log { flex: 1; overflow-y: auto; background: #02060d; padding: 8px; border-radius: 6px; }
 .cd-log-entry { border-bottom: 1px solid #16233d; padding-bottom: 8px; margin-bottom: 8px; }
-.cd-log-topic { color: #f4902c; font-weight: bold; margin-bottom: 4px; }
+.cd-log-topic { color: ${ACCENT}; font-weight: bold; margin-bottom: 4px; }
 .cd-log-hex { color: #5a6a86; word-break: break-all; margin-bottom: 4px; font-size: 10px; }
 .cd-log-json { color: #a4c953; white-space: pre-wrap; margin-bottom: 4px; }
 .cd-controls { display: flex; gap: 10px; margin-bottom: 10px; }
 .cd-controls button { background: #3FC1C9; color: #000; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; }
-.cd-controls button.active { background: #f4902c; color: #fff; }
+.cd-controls button.active { background: ${ACCENT}; color: #fff; }
 .cd-textarea { width: 100%; height: 100px; background: #02060d; color: #fff; border: 1px solid #24304e; padding: 8px; font-family: inherit; border-radius: 6px; margin-bottom: 10px; resize: none; }
 .cd-decode-btn { background: #3FC1C9; color: #000; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; margin-bottom: 10px; }
 `;
