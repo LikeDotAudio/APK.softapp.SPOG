@@ -22,7 +22,7 @@ export const STEPS: Array<{ title: string; body: string }> = [
 
 export const ACADEMY_CSS = `
 .tut-overlay{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;
-  background:${alpha(PAL.blue03s71, .6)};backdrop-filter:blur(1.5px);font-family:Arial,Helvetica,sans-serif;}
+  background:${alpha(PAL.blue04, .6)};backdrop-filter:blur(1.5px);font-family:Arial,Helvetica,sans-serif;}
 .tut-overlay.open{display:flex;}
 /* Numbered markers dropped onto the live console beneath — each step's badge sits
    on the region it teaches (anchors resolved from the DOM, so they follow chirality). */
@@ -35,8 +35,8 @@ export const ACADEMY_CSS = `
 .tut-mark::after{content:'';position:absolute;inset:-8px;border-radius:inherit;
   border:2px solid var(--tut-color,${PAL.orange69});animation:tut-pulse 1.6s infinite;}
 @keyframes tut-pulse{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.4);opacity:0}}
-.tut-card{width:min(620px,92vw);max-height:88vh;overflow:auto;background:${PAL.blue06};
-  border:2px solid ${PAL.blue26};border-radius:18px;box-shadow:0 18px 60px ${alpha(PAL.black, .6)};}
+.tut-card{width:min(620px,92vw);max-height:88vh;overflow:auto;background:${PAL.blue06_060c1a};
+  border:2px solid ${PAL.blue27s36};border-radius:18px;box-shadow:0 18px 60px ${alpha(PAL.black, .6)};}
 .tut-head{display:flex;align-items:stretch;height:46px;background:var(--tut-color,${PAL.orange69});
   border-radius:16px 16px 0 0;overflow:hidden;}
 .tut-title{flex:1;display:flex;align-items:center;padding-left:78px;color:${PAL.black};font-weight:900;
@@ -45,12 +45,12 @@ export const ACADEMY_CSS = `
   color:${PAL.black};font-size:26px;font-weight:bold;box-shadow:inset 2px 0 0 ${alpha(PAL.black, .25)};}
 .tut-x:hover{background:${alpha(PAL.black, .18)};}
 .tut-body{padding:18px 22px 8px;}
-.tut-step{display:flex;gap:16px;align-items:flex-start;padding:11px 0;border-bottom:1px solid ${PAL.blue16};}
+.tut-step{display:flex;gap:16px;align-items:flex-start;padding:11px 0;border-bottom:1px solid ${PAL.blue15};}
 .tut-step:last-child{border-bottom:none;}
 .tut-num{flex:0 0 auto;width:40px;height:40px;border-radius:12px 4px 12px 4px;
   background:var(--tut-color,${PAL.orange69});color:${PAL.black};font-weight:900;font-size:18px;
   display:flex;align-items:center;justify-content:center;}
-.tut-text h4{margin:2px 0 3px;color:${PAL.sky94};font-size:14px;letter-spacing:1px;}
+.tut-text h4{margin:2px 0 3px;color:${PAL.sky94s100};font-size:14px;letter-spacing:1px;}
 .tut-text p{margin:0;color:${PAL.sky71};font-size:13px;line-height:1.45;}
 .tut-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;
   padding:12px 22px 20px;flex-wrap:wrap;}
@@ -59,7 +59,7 @@ export const ACADEMY_CSS = `
 .tut-go{border:none;border-radius:18px;background:var(--tut-color,${PAL.orange69});color:${PAL.black};
   font-weight:900;letter-spacing:2px;font-size:13px;padding:12px 30px;cursor:pointer;}
 .tut-go:hover{filter:brightness(1.1);}
-.tut-new{margin:0 22px 10px;padding:9px 12px;border-radius:10px;background:${PAL.blue09s45};
+.tut-new{margin:0 22px 10px;padding:9px 12px;border-radius:10px;background:${PAL.blue09};
   color:${PAL.sky71};font-size:11px;line-height:1.5;}
 .tut-new b{color:var(--tut-color,${PAL.orange69});letter-spacing:1px;}
 /* ACADEMY button: static pill — rides the credit-row or the seat menu. */

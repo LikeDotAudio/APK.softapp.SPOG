@@ -16,7 +16,7 @@ export function injectPersonStyles(): void {
 .pr-idtxt span{font:11px 'Courier New',monospace;color:${PAL.sky71};letter-spacing:1px;}
 .pr-virtual{align-self:flex-start;font:800 9px 'Courier New',monospace;letter-spacing:2px;color:${PAL.sky08};
   background:${PAL.green53};padding:3px 9px;border-radius:5px;}
-.pr-virtual.off{background:${PAL.blue31};color:${PAL.blue08};}
+.pr-virtual.off{background:${PAL.blue31};color:${PAL.blue09};}
 .pr-field{display:flex;flex-direction:column;gap:3px;}
 .pr-field label{font:9px 'Courier New',monospace;letter-spacing:1px;color:${PAL.blue60s27};text-transform:uppercase;}
 .pr-field input,.pr-field select{background:${PAL.blue04};border:1px solid ${PAL.blue19};border-radius:6px;color:${PAL.cyan96};
@@ -42,12 +42,12 @@ export function injectPersonStyles(): void {
 .pr-gr-bar{display:block;height:100%;width:0;background:linear-gradient(90deg,${PAL.amber50},${PAL.red68s100});transition:width .08s;}
 .pr-gr-lbl{font:9px 'Courier New',monospace;color:${PAL.blue60s27};letter-spacing:1px;}
 .pr-toggle{font:800 9px 'Courier New',monospace;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border:none;
-  border-radius:10px;background:${PAL.blue31};color:${PAL.blue08};cursor:pointer;}
+  border-radius:10px;background:${PAL.blue31};color:${PAL.blue09};cursor:pointer;}
 .pr-toggle.on{background:${PAL.green53};}
 /* presets */
 .pr-presets{display:flex;flex-direction:column;gap:8px;}
 .pr-preset{font:bold 12px sans-serif;letter-spacing:1px;text-transform:uppercase;padding:11px 14px;border:none;
-  border-radius:10px;background:${PAL.blue16_16233d};color:${PAL.amber72};cursor:pointer;text-align:left;transition:filter .12s;}
+  border-radius:10px;background:${PAL.blue19};color:${PAL.amber72};cursor:pointer;text-align:left;transition:filter .12s;}
 .pr-preset:hover{filter:brightness(1.3);}
 .pr-preset.sel{background:${PAL.orange62};color:${PAL.orange07};}
 .pr-hint{font:10px 'Courier New',monospace;color:${PAL.blue44s25};letter-spacing:.5px;}

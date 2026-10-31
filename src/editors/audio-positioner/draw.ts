@@ -5,10 +5,10 @@ import { PAL } from '../../domain/palette.js';
 
 export function drawFace(c: CanvasRenderingContext2D, cx: number, cy: number, target: Fader | null): void {
   const r = 40, orange = ACCENT; c.save(); c.translate(cx, cy);
-  c.fillStyle = PAL.grey20; c.strokeStyle = orange; c.lineWidth = 2;
+  c.fillStyle = PAL.grey20s0; c.strokeStyle = orange; c.lineWidth = 2;
   c.beginPath(); c.ellipse(-r - 5, 0, 10, 15, 0, 0, Math.PI * 2); c.fill(); c.stroke();
   c.beginPath(); c.ellipse(r + 5, 0, 10, 15, 0, 0, Math.PI * 2); c.fill(); c.stroke();
-  c.fillStyle = PAL.grey27; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); c.stroke();
+  c.fillStyle = PAL.grey25s0; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); c.stroke();
   if (target) { c.fillStyle = PAL.white; c.font = 'bold 10px Arial'; c.textAlign = 'center'; c.textBaseline = 'middle'; let t = target.label; if (t.length > 10) t = t.slice(0, 8) + '..'; c.fillText(t, 0, 0); }
   c.fillStyle = orange; c.beginPath(); c.moveTo(0, -r - 10); c.lineTo(-10, -r + 5); c.lineTo(10, -r + 5); c.closePath(); c.fill(); c.stroke();
   c.restore();
@@ -21,14 +21,14 @@ export function drawPOVs(
 ): void {
   const w1 = cvsTop.width, h1 = cvsTop.height;
   ctxTop.clearRect(0, 0, w1, h1);
-  ctxTop.strokeStyle = PAL.grey20; ctxTop.beginPath(); ctxTop.arc(w1 / 2, h1 / 2, w1 * 0.35, 0, Math.PI * 2); ctxTop.stroke();
+  ctxTop.strokeStyle = PAL.grey20s0; ctxTop.beginPath(); ctxTop.arc(w1 / 2, h1 / 2, w1 * 0.35, 0, Math.PI * 2); ctxTop.stroke();
   ctxTop.beginPath(); ctxTop.moveTo(w1 / 2, 0); ctxTop.lineTo(w1 / 2, h1); ctxTop.stroke();
   ctxTop.beginPath(); ctxTop.moveTo(0, h1 / 2); ctxTop.lineTo(w1, h1 / 2); ctxTop.stroke();
   ctxTop.fillStyle = PAL.grey53; ctxTop.beginPath(); ctxTop.arc(w1 / 2, h1 / 2, 4, 0, Math.PI * 2); ctxTop.fill();
 
   const w2 = cvsSide.width, h2 = cvsSide.height;
   ctxSide.clearRect(0, 0, w2, h2);
-  ctxSide.strokeStyle = PAL.grey20; ctxSide.beginPath(); ctxSide.moveTo(w2 / 2, 0); ctxSide.lineTo(w2 / 2, h2); ctxSide.stroke();
+  ctxSide.strokeStyle = PAL.grey20s0; ctxSide.beginPath(); ctxSide.moveTo(w2 / 2, 0); ctxSide.lineTo(w2 / 2, h2); ctxSide.stroke();
   ctxSide.setLineDash([5, 5]); ctxSide.beginPath(); ctxSide.moveTo(0, h2 - 40); ctxSide.lineTo(w2, h2 - 40); ctxSide.stroke(); ctxSide.setLineDash([]);
   ctxSide.fillStyle = PAL.grey53; ctxSide.beginPath(); ctxSide.arc(w2 / 2, h2 - 40, 4, 0, Math.PI * 2); ctxSide.fill();
 

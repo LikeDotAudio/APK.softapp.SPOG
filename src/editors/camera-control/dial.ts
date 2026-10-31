@@ -101,7 +101,7 @@ export function buildShading(cc: CameraConsole): void {
   place('rGain', 'R Gain', PAL.red65, 105, 52);
   place('gGain', 'G Gain', PAL.green52, 395, 52);
   place('bGain', 'B Gain', PAL.blue65s100, 250, 134);
-  place('rBlk', 'R', PAL.red74, 205, 92, true);
+  place('rBlk', 'R', PAL.red74s100, 205, 92, true);
   place('gBlk', 'G', PAL.green70, 250, 92, true);
   place('bBlk', 'B', PAL.blue76, 295, 92, true);
 }

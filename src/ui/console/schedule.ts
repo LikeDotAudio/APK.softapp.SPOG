@@ -28,7 +28,7 @@ export async function loadSchedule(): Promise<void> {
 
 export const SHOW_COLORS = [
   PAL.orange69, PAL.cyan52, PAL.violet57, PAL.green58, PAL.sky69, PAL.yellow53, PAL.pink69s100, PAL.orange51s59,
-  PAL.purple52, PAL.green53, PAL.red58s71, PAL.blue65s82, PAL.amber55s73, PAL.violet80s44, PAL.teal56, PAL.pink75,
+  PAL.purple52, PAL.green53, PAL.red58s71, PAL.blue65s82, PAL.amber55s73, PAL.violet80s44, PAL.teal49, PAL.pink75,
   PAL.lime55, PAL.blue75s76, PAL.orange62s85, PAL.sky71s80,
 ];
 const showColorMap = new Map<string, string>();

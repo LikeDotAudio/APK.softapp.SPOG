@@ -26,16 +26,16 @@ export function injectVisionMixerStyles(): void {
         /* M/E delegation tabs + toolbar row */
         .vm-medock{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
         .vm-metab{padding:10px 20px;border:none;cursor:pointer;font:900 12px Arial;letter-spacing:2px;
-            border-radius:16px 8px 8px 16px;background:${PAL.blue16s45};color:${PAL.blue91};}
+            border-radius:16px 8px 8px 16px;background:${PAL.blue15};color:${PAL.blue89};}
         .vm-metab.sel{background:var(--sig-program,${PAL.blue60});color:${PAL.black};}
         .vm-medock .vm-spacer{flex:1;}
         .vm-sel,.vm-num{font:800 11px 'Courier New',monospace;letter-spacing:1px;text-transform:uppercase;cursor:pointer;
-            background:${PAL.blue16s45};color:${PAL.blue91};border:1px solid ${PAL.blue26};border-radius:8px;padding:6px 8px;}
+            background:${PAL.blue15};color:${PAL.blue89};border:1px solid ${PAL.blue27s36};border-radius:8px;padding:6px 8px;}
         .vm-num{width:74px;cursor:text;}
 
         /* Stage: PROGRAM monitor | T-BAR | PREVIEW monitor */
         .vm-stage{display:flex;gap:14px;align-items:stretch;justify-content:center;}
-        .vm-mon{position:relative;flex: 0 1 300px;aspect-ratio: 1 / 1;background:${PAL.blue04s56};border-radius:16px;
+        .vm-mon{position:relative;flex: 0 1 300px;aspect-ratio: 1 / 1;background:${PAL.blue04};border-radius:16px;
             border:2px solid ${PAL.blue31s27};padding:34px 16px 16px;overflow:hidden;
             display:flex;flex-direction:column;justify-content:center;perspective:700px;}
         .vm-mon::before{content:'';position:absolute;top:0;left:0;right:0;height:24px;
@@ -47,7 +47,7 @@ export function injectVisionMixerStyles(): void {
         .vm-tag{position:absolute;top:3px;left:18px;font-weight:900;letter-spacing:3px;font-size:12px;color:${PAL.black};z-index:2;}
         .vm-src{position:absolute;top:3px;right:14px;font:900 11px 'Courier New',monospace;letter-spacing:1px;color:${PAL.black};z-index:2;opacity:.75;}
         .vm-feed{flex:1;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;
-            color:var(--text-main,${PAL.sky94});text-align:center;letter-spacing:1px;}
+            color:var(--text-main,${PAL.sky94s100});text-align:center;letter-spacing:1px;}
         /* Keyer PIP chips fly over the feed via the DVE pose (CSS 3D transform). */
         .vm-pip{position:absolute;inset:22%;display:flex;align-items:center;justify-content:center;
             font:900 12px Arial;letter-spacing:1px;color:${PAL.black};background:var(--sig-video,${PAL.purple70});
@@ -59,15 +59,15 @@ export function injectVisionMixerStyles(): void {
 
         /* T-bar */
         .vm-tbar-wrap{flex:0 0 150px;display:flex;flex-direction:column;align-items:center;gap:8px;
-            background:${PAL.blue07};border-radius:16px;border:2px solid ${PAL.blue26};padding:12px 8px;}
+            background:${PAL.blue09};border-radius:16px;border:2px solid ${PAL.blue27s36};padding:12px 8px;}
         .vm-tbar-wrap .vm-h{margin:0;color:var(--cyan,${PAL.cyan50});}
         .vm-tbar-stage{flex:1;display:flex;align-items:stretch;gap:10px;padding:4px 0;}
         .vm-tbar-ends{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
             font-size:11px;font-weight:900;letter-spacing:1px;padding:6px 0;}
         .vm-tbar-ends .pvw{color:var(--state-ok,${PAL.teal54});} .vm-tbar-ends .pgm{color:var(--state-alarm,${PAL.red62});}
         .vm-tbar{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;
-            width:58px;flex:1;min-height:150px;border-radius:16px;border:2px solid ${PAL.blue34};cursor:grab;
-            background:linear-gradient(var(--state-ok,${PAL.teal54}) 0%, ${PAL.blue12s60} 46%, ${PAL.blue12s60} 54%, var(--state-alarm,${PAL.red62}) 100%);}
+            width:58px;flex:1;min-height:150px;border-radius:16px;border:2px solid ${PAL.blue34s39};cursor:grab;
+            background:linear-gradient(var(--state-ok,${PAL.teal54}) 0%, ${PAL.blue12_0c1730} 46%, ${PAL.blue12_0c1730} 54%, var(--state-alarm,${PAL.red62}) 100%);}
         .vm-tbar:active{cursor:grabbing;}
         .vm-tbar::-webkit-slider-thumb{-webkit-appearance:none;width:78px;height:32px;border-radius:8px;
             background:var(--cyan,${PAL.cyan50});border:2px solid ${PAL.white};cursor:grab;}
@@ -82,8 +82,8 @@ export function injectVisionMixerStyles(): void {
         .vm-bus{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;flex:1;}
         .vm-bus.stack{flex-direction:column;} .vm-bus.stack .vm-bank{display:flex;gap:6px;flex-wrap:wrap;}
         .vm-btn{width:78px;height:78px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-            text-align:center;border-radius:4px 8px 8px 4px;background:${PAL.blue16s45};
-            border:none;border-left:5px solid ${PAL.blue26};color:${PAL.blue91};cursor:pointer;font-weight:bold;font-size:11px;
+            text-align:center;border-radius:4px 8px 8px 4px;background:${PAL.blue15};
+            border:none;border-left:5px solid ${PAL.blue27s36};color:${PAL.blue89};cursor:pointer;font-weight:bold;font-size:11px;
             white-space:normal;transition:all .1s;user-select:none;word-break:break-word;line-height:1.2;overflow:hidden;}
         .vm-btn:hover{filter:brightness(1.25);}
         /* Category: tint + SHAPE cue (survives grey/mono). */
@@ -95,7 +95,7 @@ export function injectVisionMixerStyles(): void {
         .vm-btn[data-cat="audio"]::before{content:'◆';opacity:.7;font-size:14px;margin-bottom:4px;}
         .vm-btn[data-cat="program"]::before{content:'▚';opacity:.7;font-size:14px;margin-bottom:4px;}
         .vm-btn[data-cat="graphics"]::before{content:'◩';opacity:.7;font-size:14px;margin-bottom:4px;}
-        .vm-btn.reentry{border-left-color:var(--cyan,${PAL.cyan50});background:${PAL.sky15s53};}
+        .vm-btn.reentry{border-left-color:var(--cyan,${PAL.cyan50});background:${PAL.sky13};}
         .vm-btn.reentry::before{content:'⮌';opacity:.8;font-size:14px;margin-bottom:4px;}
         .vm-bus.pgm .vm-btn.sel{background:var(--state-alarm,${PAL.red62});color:${PAL.white};}
         .vm-bus.pvw .vm-btn.sel{background:var(--state-ok,${PAL.teal54});color:${PAL.black};}
@@ -104,13 +104,13 @@ export function injectVisionMixerStyles(): void {
 
         /* Console sections (Corner Law: 16 outer / 8 inner nests) */
         .vm-console{display:flex;gap:16px;align-items:stretch;flex-wrap:wrap;}
-        .vm-sec{background:${PAL.blue07};border-radius:16px;border-left:6px solid var(--ed-color,${PAL.blue60});padding:12px 16px;display:flex;flex-direction:column;}
+        .vm-sec{background:${PAL.blue09};border-radius:16px;border-left:6px solid var(--ed-color,${PAL.blue60});padding:12px 16px;display:flex;flex-direction:column;}
         .vm-sec .ed-h{margin-top:0;}
         .vm-trans,.vm-keys,.vm-scenes{display:flex;flex-direction:column;gap:8px;}
         .vm-transrow,.vm-keyrow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;flex:1;align-content:flex-start;}
         .vm-transrow > *, .vm-keyrow > * { flex: 1 1 auto; text-align: center; justify-content: center; display: flex; align-items: center; }
-        .vm-tbtn{padding:12px 22px;border-radius:16px;background:${PAL.blue20};border:none;
-            color:${PAL.blue91};cursor:pointer;font-weight:900;letter-spacing:1px;font-size:12px;text-align:center;}
+        .vm-tbtn{padding:12px 22px;border-radius:16px;background:${PAL.blue19};border:none;
+            color:${PAL.blue89};cursor:pointer;font-weight:900;letter-spacing:1px;font-size:12px;text-align:center;}
         .vm-tbtn.sel{background:var(--cyan,${PAL.cyan50});color:${PAL.black};}
         .vm-tbtn.take{background:var(--state-alarm,${PAL.red62});color:${PAL.white};}
         .vm-tbtn.vm-ab{padding:8px 14px;}
@@ -125,15 +125,15 @@ export function injectVisionMixerStyles(): void {
         .vm-gfxhead{font:800 10px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky69s41};text-align:center;}
         .vm-gfxbus{font:800 10px 'Courier New',monospace;letter-spacing:1px;padding-right:6px;white-space:nowrap;color:${PAL.indigo89};}
         .vm-gfxbus.down{color:var(--state-onair,${PAL.amber50s100});}
-        .vm-gfxcell{height:24px;border-radius:6px;border:none;background:${PAL.blue16s45};color:${PAL.black};cursor:pointer;font-weight:900;}
+        .vm-gfxcell{height:24px;border-radius:6px;border:none;background:${PAL.blue15};color:${PAL.black};cursor:pointer;font-weight:900;}
         .vm-gfxcell.on{background:var(--cyan,${PAL.cyan50});}
         .vm-gfxcell:hover{filter:brightness(1.4);}
-        .vm-scenebtn{padding:10px 16px;border-radius:16px 8px 8px 16px;background:${PAL.blue16s45};border:none;
-            color:${PAL.blue91};cursor:pointer;font-weight:900;letter-spacing:1px;font-size:11px;}
+        .vm-scenebtn{padding:10px 16px;border-radius:16px 8px 8px 16px;background:${PAL.blue15};border:none;
+            color:${PAL.blue89};cursor:pointer;font-weight:900;letter-spacing:1px;font-size:11px;}
         .vm-scenebtn:hover{filter:brightness(1.3);}
 
         /* Drawers (keyer setup / DVE editor / M-E presets) */
-        .vm-drawer{background:${PAL.blue07};border:1px solid ${PAL.blue26};border-left:6px solid var(--sig-program,${PAL.blue60});
+        .vm-drawer{background:${PAL.blue09};border:1px solid ${PAL.blue27s36};border-left:6px solid var(--sig-program,${PAL.blue60});
             border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:10px;}
         .vm-drawerhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
         .vm-drawerhead .vm-h{margin:0;color:var(--cyan,${PAL.cyan50});}
@@ -141,10 +141,10 @@ export function injectVisionMixerStyles(): void {
         .vm-axis{display:flex;align-items:center;gap:8px;}
         .vm-axislab{width:54px;flex:0 0 auto;font:800 10px 'Courier New',monospace;letter-spacing:1px;color:${PAL.sky69s41};}
         .vm-range{flex:1;accent-color:var(--cyan,${PAL.cyan50});}
-        .vm-rangeval{width:40px;text-align:right;font:800 11px 'Courier New',monospace;color:${PAL.blue91};}
+        .vm-rangeval{width:40px;text-align:right;font:800 11px 'Courier New',monospace;color:${PAL.blue89};}
 
         /* DVE Stage */
-        .vm-dve-stage{position:relative;width:100%;aspect-ratio:16/9;background:${PAL.blue04s56};overflow:hidden;border:2px solid ${PAL.blue31s27};border-radius:12px;margin:10px 0;}
+        .vm-dve-stage{position:relative;width:100%;aspect-ratio:16/9;background:${PAL.blue04};overflow:hidden;border:2px solid ${PAL.blue31s27};border-radius:12px;margin:10px 0;}
         .vm-dve-frame{position:absolute;inset:22%;pointer-events:none;}
         .vm-dve-frame .vm-pip{pointer-events:auto;}
         .vm-dve-frame .vm-pip.ghost{opacity:.4;border:2px dashed ${PAL.sky69s41};background:transparent;z-index:1;}

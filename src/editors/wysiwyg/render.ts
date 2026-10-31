@@ -40,9 +40,9 @@ export function paintFrame(
   if (!w || !h) return;
   g.clearRect(0, 0, w, h);
   // floor + truss
-  g.fillStyle = PAL.blue09s55;
+  g.fillStyle = PAL.blue09;
   g.fillRect(0, 0, w, h);
-  g.strokeStyle = alpha(PAL.sky37, .25);
+  g.strokeStyle = alpha(PAL.blue38, .25);
   for (let i = 1; i < 8; i++) {
     const x = (i / 8) * w;
     g.beginPath();
@@ -142,7 +142,7 @@ export function paintFrame(
     const fxp = f.x * w;
     const fyp = f.y * h;
     const lit = f.on > 0.03;
-    g.strokeStyle = lit ? hslColour(f.hue, 90, 65) : PAL.blue29;
+    g.strokeStyle = lit ? hslColour(f.hue, 90, 65) : PAL.blue27s36;
     g.fillStyle = PAL.blue09s58;
     g.lineWidth = 2;
     if (lit) {

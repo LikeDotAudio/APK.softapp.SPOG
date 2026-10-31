@@ -24,10 +24,10 @@ export interface Fixture extends FixtureDef {
 
 export const FIXTURES: readonly FixtureDef[] = [
   { k: 'KEY', sub: 'Key · 30–45°', x: 32, y: 30, color: PAL.orange81 },
-  { k: 'FILL', sub: 'Fill · soft', x: 68, y: 30, color: PAL.blue91 },
+  { k: 'FILL', sub: 'Fill · soft', x: 68, y: 30, color: PAL.blue89 },
   { k: 'BACK', sub: 'Back / Hair', x: 50, y: 14, color: PAL.white },
   { k: 'BG', sub: 'Background', x: 50, y: 82, color: PAL.sky81s100 },
-  { k: 'CYC', sub: 'Cyclorama', x: 16, y: 70, color: PAL.sky74 },
+  { k: 'CYC', sub: 'Cyclorama', x: 16, y: 70, color: PAL.sky75s100 },
   { k: 'FX', sub: 'Effect / Gobo', x: 84, y: 70, color: PAL.violet80 },
 ];
 

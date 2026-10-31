@@ -92,14 +92,14 @@ function stopwatchCtl(destId: string, s: CState, offline: boolean, k = 1): HTMLC
       g.strokeStyle = PAL.grey64; g.lineWidth = size * 0.7; g.lineCap = 'round';
       g.beginPath(); g.moveTo(bx, by); g.lineTo(k.x, k.y); g.stroke();
       const kn = g.createRadialGradient(k.x - size * 0.3, k.y - size * 0.3, size * 0.2, k.x, k.y, size);
-      kn.addColorStop(0, PAL.sky96); kn.addColorStop(0.6, cap); kn.addColorStop(1, PAL.grey21);
+      kn.addColorStop(0, PAL.blue96s24); kn.addColorStop(0.6, cap); kn.addColorStop(1, PAL.grey21);
       g.fillStyle = kn; g.beginPath(); g.arc(k.x, k.y, size, 0, TAU); g.fill();
     };
     crown(angTop, topSize, s.running ? PAL.pink50 : PAL.grey25);   // start/stop (lit when running)
-    crown(angSide, sideSize, PAL.sky44);                          // blue reset pusher
+    crown(angSide, sideSize, PAL.sky44s20);                          // blue reset pusher
     // Chrome bezel + white dial.
     const bez = g.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.2, cx, cy, R * 1.05);
-    bez.addColorStop(0, PAL.cyan99); bez.addColorStop(0.42, PAL.grey81); bez.addColorStop(0.7, PAL.grey52); bez.addColorStop(1, PAL.grey36);
+    bez.addColorStop(0, PAL.white); bez.addColorStop(0.42, PAL.grey81); bez.addColorStop(0.7, PAL.grey52); bez.addColorStop(1, PAL.grey36);
     g.fillStyle = bez; g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fill();
     const rF = R * 0.86;
     g.fillStyle = PAL.lime96; g.beginPath(); g.arc(cx, cy, rF, 0, TAU); g.fill();

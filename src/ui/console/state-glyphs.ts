@@ -65,7 +65,7 @@ ${ON} .foldable-header.fault::before{${G}margin-right:6px;}
 ${ON} .program-row.fault .program-title::before{${G}margin-right:6px;}
 ${ON} .twist-container.corrupted .twist-title::before{${G}margin-right:4px;}
 ${ON} .cse-win-states b{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
-  font:900 9px/1 Arial,sans-serif;color:${PAL.sky07};}
+  font:900 9px/1 Arial,sans-serif;color:${PAL.sky08};}
 ${ON} .cse-win-states .d-alarm::before{content:'!';}
 ${ON} .cse-win-states .d-ok::before{content:'${STATE_GLYPHS.ok}';}
 ${ON} .cse-win-states .d-onair::before{content:'${STATE_GLYPHS.onair}';font-size:7px;}

@@ -15,7 +15,7 @@ export function injectIfbStyles(): void {
 .ifb-strip{display:flex;gap:12px;align-items:flex-end;}
 .ifb-meter{position:relative;width:26px;height:150px;border-radius:5px;overflow:hidden;box-shadow:inset 0 0 0 1px ${PAL.blue19};
     background:linear-gradient(to top,${PAL.green27},${PAL.green53} 55%,${PAL.amber50} 80%,${PAL.red58} 100%);}
-.ifb-meter .mask{position:absolute;left:0;right:0;top:0;background:${PAL.blue07s63};}
+.ifb-meter .mask{position:absolute;left:0;right:0;top:0;background:${PAL.blue09};}
 .ifb-stripinfo b{display:block;font:bold 12px sans-serif;color:${PAL.sky91};letter-spacing:1px;}
 .ifb-stripinfo span{font:10px 'Courier New',monospace;color:${PAL.blue60s27};}
 
@@ -28,7 +28,7 @@ export function injectIfbStyles(): void {
 .ifb-status.talk{color:${PAL.red71};animation:ifbB 1s steps(2) infinite;}
 @keyframes ifbB{50%{opacity:.35;}}
 .ifb-duckwrap{margin-top:12px;}
-.ifb-duck{position:relative;height:64px;background:${PAL.blue07s63};border:1px solid ${PAL.blue19};border-radius:8px;overflow:hidden;}
+.ifb-duck{position:relative;height:64px;background:${PAL.blue09};border:1px solid ${PAL.blue19};border-radius:8px;overflow:hidden;}
 .ifb-duck canvas{position:absolute;inset:0;width:100%;height:100%;}
 .ifb-cap{font:bold 10px 'Courier New',monospace;color:${PAL.sky69};letter-spacing:1px;margin:4px 2px;}
 
@@ -37,8 +37,8 @@ export function injectIfbStyles(): void {
 .ifb-knobs{display:flex;justify-content:space-around;}
 .ifb-kn{display:flex;flex-direction:column;align-items:center;gap:7px;}
 .ifb-dial{width:84px;height:84px;border-radius:50%;position:relative;cursor:ns-resize;touch-action:none;
-    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg),${PAL.blue07s63};box-shadow:0 5px 13px ${alpha(PAL.black, .55)};}
-.ifb-dial::before{content:'';position:absolute;inset:9%;border-radius:50%;background:conic-gradient(from 225deg,var(--c,${PAL.sky69}) calc(var(--p,50%) * 0.75),${PAL.blue16s48} 0);
+    background:repeating-conic-gradient(from -136deg,${PAL.blue31} 0 1.5deg,transparent 1.5deg 14deg),${PAL.blue09};box-shadow:0 5px 13px ${alpha(PAL.black, .55)};}
+.ifb-dial::before{content:'';position:absolute;inset:9%;border-radius:50%;background:conic-gradient(from 225deg,var(--c,${PAL.sky69}) calc(var(--p,50%) * 0.75),${PAL.blue15} 0);
     -webkit-mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);mask:radial-gradient(circle,transparent 53%,${PAL.black} 55%);filter:drop-shadow(0 0 5px var(--c,${PAL.sky69}));}
 .ifb-dial::after{content:'';position:absolute;inset:24%;border-radius:50%;background:radial-gradient(circle at 42% 32%,${PAL.sky40},${PAL.blue15} 72%);box-shadow:inset 0 2px 5px ${alpha(PAL.white, .2)},0 2px 5px ${alpha(PAL.black, .5)};}
 .ifb-dial i{position:absolute;left:50%;top:50%;width:4px;height:36%;border-radius:3px;background:var(--c,${PAL.sky69});box-shadow:0 0 6px var(--c,${PAL.sky69});transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(var(--rot,0deg));}
@@ -55,14 +55,14 @@ export function injectIfbStyles(): void {
 .ifb-route{flex:1;font:800 10px 'Courier New',monospace;letter-spacing:1px;padding:8px 4px;border:1px solid ${PAL.blue27s36};
     border-radius:8px;background:${PAL.blue12_0c1730};color:${PAL.sky71};cursor:pointer;}
 .ifb-route.sel{background:${PAL.cyan52};border-color:${PAL.cyan52};color:${PAL.cyan09};box-shadow:0 0 10px ${alpha(PAL.cyan52, .45)};}
-.ifb-leg{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid ${PAL.blue22s39};
+.ifb-leg{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid ${PAL.blue23s39};
     background:${PAL.blue09s58};margin-bottom:8px;opacity:.45;}
 .ifb-leg.on{opacity:1;border-color:${PAL.cyan52};}
 .ifb-leg .led{width:10px;height:10px;border-radius:50%;background:${PAL.blue31};flex:0 0 auto;}
 .ifb-leg.on .led{background:${PAL.green53};box-shadow:0 0 8px ${PAL.green53};}
 .ifb-leg .nm{flex:1;font:bold 11px sans-serif;color:${PAL.sky91};letter-spacing:1px;}
 .ifb-leg .nm small{display:block;color:${PAL.blue60s27};font-weight:normal;letter-spacing:0;font-size:9px;}
-.ifb-leg .open{font:800 9px 'Courier New',monospace;letter-spacing:1px;border:1px solid ${PAL.cyan37s54};border-radius:6px;
+.ifb-leg .open{font:800 9px 'Courier New',monospace;letter-spacing:1px;border:1px solid ${PAL.cyan37s55};border-radius:6px;
     background:${PAL.cyan12};color:${PAL.cyan52};padding:6px 8px;cursor:pointer;}
 .ifb-leg .open:hover{background:${PAL.cyan18};}
 `,

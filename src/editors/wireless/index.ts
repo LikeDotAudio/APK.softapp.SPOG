@@ -105,7 +105,7 @@ const plugin: EditorPlugin = {
       const h = specCanvas.height = specCanvas.clientHeight;
       
       g.clearRect(0, 0, w, h);
-      g.strokeStyle = PAL.blue32s28;
+      g.strokeStyle = PAL.blue31s27;
       g.lineWidth = 1;
       
       // Draw grid

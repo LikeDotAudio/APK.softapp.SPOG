@@ -13,14 +13,16 @@
 
 import { HEX } from '../domain/palette.js';
 import { ACCENT_HEX } from '../domain/brand.js';
+import { STATE_TONES, TONE_NAMES } from '../domain/state.js';
 import { resolveColour, type Mode } from '../domain/colour-resolve.js';
 import { isTrueColour } from '../domain/true-colour.js';
 
 /** Every colour token the engine paints, custom-property name (no `--`) → true colour: the
- *  palette's `pal-*` and the contract's `brand-accent` (ROAD-3463). */
+ *  palette's `pal-*`, the contract's `brand-accent` and `state-*` (ROAD-3463). */
 export const TRUE_VARS: Readonly<Record<string, string>> = {
   ...Object.fromEntries(Object.entries(HEX).map(([k, v]) => [`pal-${k}`, v])),
   'brand-accent': ACCENT_HEX,
+  ...Object.fromEntries(TONE_NAMES.map((t) => [`state-${t}`, STATE_TONES[t].hex])),
 };
 const IDENTITY: Mode = { chroma: 'full', vision: 'normal' };
 let mode: Mode = IDENTITY;

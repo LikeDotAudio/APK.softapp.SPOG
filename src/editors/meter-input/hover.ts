@@ -33,7 +33,7 @@ export interface HoverLayer {
 
 const HOVER_CSS = `
 .mi-probe{position:fixed;z-index:100001;display:none;pointer-events:none;white-space:nowrap;
-    background:${PAL.blue07s68};border:1px solid ${PAL.blue31s44};border-radius:6px;padding:4px 8px;
+    background:${PAL.blue09};border:1px solid ${PAL.blue31s44};border-radius:6px;padding:4px 8px;
     color:${PAL.sky87s100};font:11px/1.3 'Courier New',monospace;box-shadow:0 6px 18px ${alpha(PAL.black, .6)};}
 .mi-probe.open{display:block;} .mi-probe b{color:${PAL.orange75};}
 .mi-marker{position:absolute;z-index:6;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
@@ -43,7 +43,7 @@ const HOVER_CSS = `
 .mi-marker .x::before,.mi-marker .x::after{content:'';position:absolute;background:${PAL.orange75};}
 .mi-marker .x::before{left:50%;top:1px;bottom:1px;width:1px;transform:translateX(-50%);}
 .mi-marker .x::after{top:50%;left:1px;right:1px;height:1px;transform:translateY(-50%);}
-.mi-marker .lbl{font:9px/1.2 'Courier New',monospace;color:${PAL.amber85};background:${alpha(PAL.blue07s68, .85)};
+.mi-marker .lbl{font:9px/1.2 'Courier New',monospace;color:${PAL.amber85};background:${alpha(PAL.blue09, .85)};
     border:1px solid ${PAL.amber15};border-radius:4px;padding:1px 4px;white-space:nowrap;}
 .mi-marker:hover .lbl{color:${PAL.white};border-color:${PAL.orange75};}`;
 

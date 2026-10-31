@@ -17,9 +17,9 @@ export function injectGraphicsStyles(): void {
 /* ---- left rail: rundown / template list ---- */
 .gfx-rail{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-right:2px;}
 .gfx-item{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:9px;cursor:pointer;
-  background:${PAL.blue09s58};border:1px solid ${PAL.blue19};font:600 12px sans-serif;letter-spacing:.5px;color:${PAL.sky84s61};
+  background:${PAL.blue09s58};border:1px solid ${PAL.blue19};font:600 12px sans-serif;letter-spacing:.5px;color:${PAL.sky84};
   transition:background .12s,border-color .12s;}
-.gfx-item:hover{background:${PAL.blue14s56};border-color:${PAL.blue31};}
+.gfx-item:hover{background:${PAL.blue14};border-color:${PAL.blue31};}
 .gfx-item.sel{background:${PAL.indigo13s50};border-color:${PAL.purple59};color:${PAL.violet93};box-shadow:0 0 8px ${alpha(PAL.purple59, .35)};}
 .gfx-item .kind{margin-left:auto;font:10px 'Courier New',monospace;color:${PAL.blue60s27};letter-spacing:1px;}
 .gfx-empty{color:${PAL.blue60s27};font:11px 'Courier New',monospace;padding:8px;}
@@ -29,8 +29,8 @@ export function injectGraphicsStyles(): void {
 .gfx-stage-wrap{position:relative;width:100%;aspect-ratio:16/9;background:${PAL.blue04};border:1px solid ${PAL.blue19};border-radius:12px;
   overflow:hidden;box-shadow:inset 0 0 40px ${alpha(PAL.black, .6)};
   /* checkerboard = the ALPHA the renderer would key over program (audit §4) */
-  background-image:linear-gradient(45deg,${PAL.blue08s52} 25%,transparent 25%),linear-gradient(-45deg,${PAL.blue08s52} 25%,transparent 25%),
-    linear-gradient(45deg,transparent 75%,${PAL.blue08s52} 75%),linear-gradient(-45deg,transparent 75%,${PAL.blue08s52} 75%);
+  background-image:linear-gradient(45deg,${PAL.blue09} 25%,transparent 25%),linear-gradient(-45deg,${PAL.blue09} 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,${PAL.blue09} 75%),linear-gradient(-45deg,transparent 75%,${PAL.blue09} 75%);
   background-size:36px 36px;background-position:0 0,0 18px,18px -18px,-18px 0;}
 .gfx-stage{position:absolute;inset:0;}
 .gfx-layer{position:absolute;inset:0;overflow:hidden;}
@@ -38,7 +38,7 @@ export function injectGraphicsStyles(): void {
   color:${PAL.blue04};background:${PAL.purple59};padding:2px 8px;border-radius:5px;}
 /* SMPTE ST 2046-1 guides: safe title 90% (5% margins), safe action 93% (3.5%). */
 .gfx-safe-action{position:absolute;inset:3.5%;border:1px dashed ${alpha(PAL.sky69, .28)};pointer-events:none;z-index:8;}
-.gfx-safe-title{position:absolute;inset:5%;border:1px dashed ${alpha(PAL.amber50_ffd600, .3)};pointer-events:none;z-index:8;}
+.gfx-safe-title{position:absolute;inset:5%;border:1px dashed ${alpha(PAL.amber50, .3)};pointer-events:none;z-index:8;}
 
 .gfx-transport{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .gfx-btn{flex:1;min-width:64px;padding:11px 6px;border-radius:9px;border:1px solid ${PAL.blue19};background:${PAL.blue09s58};color:${PAL.sky91};
@@ -86,7 +86,7 @@ export function injectGraphicsStyles(): void {
 .gfx-list-head{font-weight:800;font-size:clamp(13px,2.2vw,20px);color:${PAL.white};letter-spacing:2px;margin-bottom:10px;
   text-transform:uppercase;border-bottom:1px solid ${alpha(PAL.purple59, .4)};padding-bottom:7px;}
 .gfx-list-row,.gfx-person-row{display:flex;align-items:center;gap:10px;padding:6px 0;
-  font-weight:600;font-size:clamp(11px,1.8vw,16px);color:${PAL.sky96s100};
+  font-weight:600;font-size:clamp(11px,1.8vw,16px);color:${PAL.sky96_eaf4ff};
   transform:translateX(30px);transition-delay:calc(var(--i,0)*.07s)!important;}
 .gfx-graphic.on .gfx-list-row,.gfx-graphic.on .gfx-person-row{transform:none;}
 .gfx-list-dot{width:8px;height:8px;border-radius:50%;background:${PAL.amber50};flex:0 0 auto;box-shadow:0 0 6px ${PAL.amber50};}
@@ -108,7 +108,7 @@ export function injectGraphicsStyles(): void {
 .gfx-ticker-tag{flex:0 0 auto;height:100%;display:flex;align-items:center;padding:0 14px;background:${PAL.red58};color:${PAL.white};
   font-weight:900;letter-spacing:2px;font-size:clamp(10px,1.7vw,15px);}
 .gfx-ticker-track{flex:1;overflow:hidden;white-space:nowrap;}
-.gfx-ticker-crawl{display:inline-block;padding-left:100%;color:${PAL.sky96s100};font-weight:700;letter-spacing:1px;
+.gfx-ticker-crawl{display:inline-block;padding-left:100%;color:${PAL.sky96_eaf4ff};font-weight:700;letter-spacing:1px;
   font-size:clamp(11px,1.8vw,16px);animation:gfxcrawl 22s linear infinite;}
 @keyframes gfxcrawl{to{transform:translateX(-100%);}}
 .gfx-crawl-el{white-space:nowrap;}
@@ -147,10 +147,10 @@ export function injectGraphicsStyles(): void {
 .gfx-crawl-row{display:flex;align-items:center;gap:8px;}
 .gfx-crawl-row input[type=checkbox]{width:15px;height:15px;accent-color:${PAL.purple59};cursor:pointer;flex:0 0 auto;}
 .gfx-crawl-n{font:bold 10px 'Courier New',monospace;color:${PAL.sky44s20};min-width:16px;text-align:right;}
-.gfx-crawl-text{flex:1;min-width:0;background:${PAL.blue09};color:${PAL.sky96s100};border:1px solid ${PAL.blue27s36};border-radius:6px;
+.gfx-crawl-text{flex:1;min-width:0;background:${PAL.blue09};color:${PAL.sky96_eaf4ff};border:1px solid ${PAL.blue27s36};border-radius:6px;
   padding:5px 8px;font:12px sans-serif;}
 .gfx-crawl-row.off .gfx-crawl-text{opacity:.45;}
-.gfx-crawl-mv{flex:0 0 auto;width:24px;height:24px;border:none;border-radius:6px;background:${PAL.blue16_16233d};color:${PAL.sky84};
+.gfx-crawl-mv{flex:0 0 auto;width:24px;height:24px;border:none;border-radius:6px;background:${PAL.blue19};color:${PAL.sky84};
   cursor:pointer;font-size:12px;line-height:1;}
 .gfx-crawl-mv:hover{filter:brightness(1.35);}
 `,

@@ -26,18 +26,18 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
     g.strokeStyle = PAL.grey64; g.lineWidth = size * 0.7; g.lineCap = 'round';
     g.beginPath(); g.moveTo(bx, by); g.lineTo(tx, ty); g.stroke();
     const kn = g.createRadialGradient(tx - size * 0.3, ty - size * 0.3, size * 0.2, tx, ty, size);
-    kn.addColorStop(0, PAL.sky96); kn.addColorStop(0.6, cap); kn.addColorStop(1, PAL.grey21);
+    kn.addColorStop(0, PAL.blue96s24); kn.addColorStop(0.6, cap); kn.addColorStop(1, PAL.grey21);
     g.fillStyle = kn; g.beginPath(); g.arc(tx, ty, size, 0, TAU); g.fill();
   };
   // Crowns sit on the dial marks: the start/stop pusher at 60 (top), reset at 52.
   const markAng = (n: number): number => -Math.PI / 2 + (n / 60) * TAU;
   crown(markAng(60), R * 0.15, PAL.grey25);   // big knurled start/stop crown at 60 (top)
-  crown(markAng(52), R * 0.10, PAL.sky44);   // small blue reset crown at 52
+  crown(markAng(52), R * 0.10, PAL.sky44s20);   // small blue reset crown at 52
 
   // Chrome bezel ring.
   const bez = g.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.2, cx, cy, R * 1.05);
-  bez.addColorStop(0, PAL.cyan99); bez.addColorStop(0.42, PAL.grey81); bez.addColorStop(0.7, PAL.grey52);
-  bez.addColorStop(0.86, PAL.sky93); bez.addColorStop(1, PAL.grey36);
+  bez.addColorStop(0, PAL.white); bez.addColorStop(0.42, PAL.grey81); bez.addColorStop(0.7, PAL.grey52);
+  bez.addColorStop(0.86, PAL.blue93); bez.addColorStop(1, PAL.grey36);
   g.fillStyle = bez; g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fill();
   // Coloured rim reflections (the green + magenta glints on the real chrome).
   g.lineWidth = R * 0.02; g.lineCap = 'round';
@@ -64,7 +64,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
 
   // Inner black MINUTE sub-dial (concentric): 60 ticks + white numbers by 5.
   const rS = rF * 0.52;
-  g.fillStyle = PAL.grey07s6; g.beginPath(); g.arc(cx, cy, rS, 0, TAU); g.fill();
+  g.fillStyle = PAL.grey07_131313; g.beginPath(); g.arc(cx, cy, rS, 0, TAU); g.fill();
   for (let i = 0; i < 60; i++) {
     const a = -Math.PI / 2 + (i / 60) * TAU, major = i % 5 === 0;
     const rO = rS * 0.96, rI = rS * (major ? 0.82 : 0.9);
@@ -89,8 +89,8 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
     g.lineTo(cx + Math.cos(a) * len, cy + Math.sin(a) * len);
     g.stroke();
   };
-  hand(minF, rS * 0.82, R * 0.02, PAL.grey94);                 // minute hand (short, in sub-dial)
-  g.fillStyle = PAL.grey94; g.beginPath(); g.arc(cx, cy, R * 0.028, 0, TAU); g.fill();
+  hand(minF, rS * 0.82, R * 0.02, PAL.blue96s24);                 // minute hand (short, in sub-dial)
+  g.fillStyle = PAL.blue96s24; g.beginPath(); g.arc(cx, cy, R * 0.028, 0, TAU); g.fill();
   hand(secF, rF * 0.84, R * 0.018, PAL.pink50, rF * 0.2);      // second hand (long magenta sweep)
   g.fillStyle = PAL.pink50; g.beginPath(); g.arc(cx, cy, R * 0.04, 0, TAU); g.fill();
   g.fillStyle = PAL.pink27; g.beginPath(); g.arc(cx, cy, R * 0.017, 0, TAU); g.fill();

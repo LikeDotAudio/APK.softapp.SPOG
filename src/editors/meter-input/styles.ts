@@ -22,10 +22,10 @@ export function injectMeterInputStyles(): void {
 .mi-grp-btns{display:flex;flex-direction:column;align-items:stretch;gap:8px;}
 .mi-grp-src{--acc:${PAL.orange56s73};} .mi-grp-pre{--acc:${PAL.violet71s44};} .mi-grp-sens{--acc:${PAL.red62s68};}
 .mi-pill{font:bold 11px sans-serif;letter-spacing:1px;text-transform:uppercase;padding:8px 15px;border-radius:14px;
-    border:none;background:${PAL.blue18s41};color:${PAL.blue87};cursor:pointer;white-space:nowrap;
+    border:none;background:${PAL.blue19};color:${PAL.blue87};cursor:pointer;white-space:nowrap;
     transition:filter .15s,background .15s,margin-left .2s cubic-bezier(.3,.8,.3,1),padding-left .2s,border-radius .2s;}
 .mi-pill:hover{filter:brightness(1.28);}
-.mi-pill.on{background:var(--acc,${PAL.orange56s73});color:${PAL.orange05};box-shadow:0 0 10px ${alpha(`var(--acc,${PAL.orange56s73})`, .5)};}
+.mi-pill.on{background:var(--acc,${PAL.orange56s73});color:${PAL.orange05s54};box-shadow:0 0 10px ${alpha(`var(--acc,${PAL.orange56s73})`, .5)};}
 /* Selected pill TUCKS INTO the group's colour spine: slides left to meet it and
    squares its left edge so pill + spine read as one continuous LCARS accent bar. */
 .mi-grp .mi-pill.on{margin-left:-11px;padding-left:26px;border-radius:0 14px 14px 0;
@@ -36,11 +36,11 @@ export function injectMeterInputStyles(): void {
 .mi-vidcard,.mi-card{background:${PAL.blue09s58};border:1px solid ${PAL.blue19};border-radius:12px;padding:10px 12px 12px;
     display:flex;flex-direction:column;gap:8px;box-shadow:0 6px 18px ${alpha(PAL.black, .4)};min-width:200px;}
 .mi-vidcard{min-height:140px;} .mi-card{min-height:120px;}
-.mi-vidcard h4,.mi-card h4{margin:-10px -12px 6px;padding:7px 12px;background:var(--hc,${PAL.sky34});color:${PAL.blue08};
+.mi-vidcard h4,.mi-card h4{margin:-10px -12px 6px;padding:7px 12px;background:var(--hc,${PAL.sky34});color:${PAL.blue09};
     font:900 11px sans-serif;letter-spacing:2px;text-transform:uppercase;border-radius:11px 11px 0 0;
     cursor:move;user-select:none;display:flex;align-items:center;gap:7px;}
 .mi-vidcard h4::before,.mi-card h4::before{content:'⠿';color:${alpha(PAL.black, .4)};font-size:12px;}
-.mi-btnicon{cursor:pointer;color:${PAL.blue08};background:${alpha(PAL.black, .18)};border-radius:6px;font-weight:900;
+.mi-btnicon{cursor:pointer;color:${PAL.blue09};background:${alpha(PAL.black, .18)};border-radius:6px;font-weight:900;
     font-size:12px;line-height:1;padding:3px 6px;}
 .mi-btnicon:hover{background:${alpha(PAL.black, .38)};}
 .mi-x{margin-left:auto;}
@@ -59,7 +59,7 @@ export function injectMeterInputStyles(): void {
 .mi-luminrow{display:flex;align-items:center;gap:10px;}
 .mi-lumin-lbl{font:900 11px sans-serif;letter-spacing:2px;color:${PAL.sky75};}
 .mi-lumin-track{flex:1;height:16px;border-radius:8px;background:${PAL.blue12_0c1730};overflow:hidden;box-shadow:inset 0 0 4px ${PAL.black};}
-.mi-lumin-bar{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,${PAL.blue28s42},${PAL.sky75});transition:width .12s;}
+.mi-lumin-bar{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,${PAL.blue27s36},${PAL.sky75});transition:width .12s;}
 .mi-lumin-val{font:bold 13px 'Courier New',monospace;color:${PAL.sky91};min-width:58px;text-align:right;}
 .mi-lumin-range{display:flex;gap:18px;font:11px sans-serif;color:${PAL.sky71};}
 .mi-lumin-range b{color:${PAL.sky75};font:bold 12px 'Courier New',monospace;margin-left:4px;}

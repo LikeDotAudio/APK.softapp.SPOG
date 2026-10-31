@@ -33,7 +33,7 @@ export const FOOTER_CSS = `
   position:absolute;bottom:calc(100% + 8px);left:0;z-index:1550;
   border-top:6px solid var(--group-lcars-c);border-radius:12px;
   padding:8px;min-width:max-content;overflow:visible;
-  background:${alpha(PAL.blue05s62, .95)};border-left:1px solid ${alpha(G, .35)};
+  background:${alpha(PAL.blue05_060c16, .95)};border-left:1px solid ${alpha(G, .35)};
   border-right:1px solid ${alpha(G, .35)};border-bottom:1px solid ${alpha(G, .35)};
   box-shadow:0 -10px 34px ${alpha(PAL.black, .65)};}
 /* Leaf panels (tabs only, no nested groups) cap + scroll; panels holding nested

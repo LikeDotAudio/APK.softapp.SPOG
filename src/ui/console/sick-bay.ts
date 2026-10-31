@@ -8,7 +8,7 @@ import { PAL, alpha } from '../../domain/palette.js';
 
 export async function initSickBay(): Promise<void> {
   const groupColor = '255,51,51'; // RED ALERT color
-  const hexColor = PAL.red60_ff3333;
+  const hexColor = PAL.red58;
   const group = Footer.addGroup('SICK BAY', { color: groupColor, collapsed: true });
   if (!group) return;
 
@@ -19,8 +19,8 @@ export async function initSickBay(): Promise<void> {
     style.id = 'sickbay-pulse-styles';
     style.textContent = `
       @keyframes sickbay-pulse {
-        0% { box-shadow: 0 0 5px ${alpha(PAL.red60_ff3333, .4)}; background-color: ${PAL.red60_ff3333}; color: ${PAL.black}; }
-        100% { box-shadow: 0 0 20px ${PAL.red60_ff3333}; background-color: ${PAL.red50}; color: ${PAL.white}; }
+        0% { box-shadow: 0 0 5px ${alpha(PAL.red58, .4)}; background-color: ${PAL.red58}; color: ${PAL.black}; }
+        100% { box-shadow: 0 0 20px ${PAL.red58}; background-color: ${PAL.red50}; color: ${PAL.white}; }
       }
     `;
     document.head.appendChild(style);
@@ -92,13 +92,13 @@ export async function initSickBay(): Promise<void> {
                 ? `const el = document.querySelector('.lcars-tab[data-tab-id=\\'${f.id}\\']'); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.click(); }`
                 : `const el = document.getElementById('pool-${f.id}'); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.click(); }`;
               return `
-                <div style="flex: 1 1 300px; max-width: 400px; background: ${alpha(PAL.red50, .1)}; border: 2px solid ${hexColor}; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 0 10px ${alpha(PAL.red60_ff3333, .2)}; cursor: pointer;" onclick="${clickScript}">
+                <div style="flex: 1 1 300px; max-width: 400px; background: ${alpha(PAL.red50, .1)}; border: 2px solid ${hexColor}; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 0 10px ${alpha(PAL.red58, .2)}; cursor: pointer;" onclick="${clickScript}">
                   <div style="font-weight: bold; font-size: 1.2em; color: ${hexColor}; display: flex; justify-content: space-between; align-items: flex-start;">
                     <span>${monoEmoji(f.name)}${f.name}</span>
                     ${faultTag(f.status)}
                   </div>
                   <div style="color: ${PAL.grey80}; font-size: 0.9em; text-transform: uppercase;">${f.type}</div>
-                  <div style="color: ${PAL.grey60s0}; font-size: 0.8em; word-break: break-all;">${f.path}</div>
+                  <div style="color: ${PAL.grey60}; font-size: 0.8em; word-break: break-all;">${f.path}</div>
                   <div style="background: ${PAL.black}; border: 2px solid ${PAL.grey33}; border-radius: 6px; padding: 12px; text-align: center; margin-top: 8px;">
                     <div style="color: ${hexColor}; font-family: monospace; font-size: 1.2em; font-weight: bold; letter-spacing: 2px;">
                       ${f.status}

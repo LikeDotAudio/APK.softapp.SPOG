@@ -6,6 +6,7 @@
 // the app renders these at runtime instead of reading their files.
 import { CHROME_GLYPHS } from './icon-glyphs-chrome.js';
 import { PAL } from '../domain/palette.js';
+import { STATE_VAR } from '../domain/state.js';
 
 export const GLYPHS: Record<string, string> = {
   'control-rooms': `
@@ -85,7 +86,7 @@ export const GLYPHS: Record<string, string> = {
       <animate attributeName="stroke-dashoffset" values="0;-42" dur=".8s" begin=".53s" repeatCount="indefinite" calcMode="linear"/></path>
     <rect x="180" y="206" width="180" height="150" rx="24" stroke="none"/>
     <path d="M 180 251 l -66 -42 v 134 l 66 -42 z" stroke="none"/>
-    <circle cx="270" cy="281" r="66" fill="${PAL.red63}" stroke="none">
+    <circle cx="270" cy="281" r="66" fill="${STATE_VAR.dead}" stroke="none">
       <animate attributeName="opacity" values="1;.15;1" dur="1.1s" repeatCount="indefinite"/></circle>
     <path d="M 360 281 H 492" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="30 18 2 18">
       <animate attributeName="stroke-dashoffset" values="0;-136" dur="1.6s" repeatCount="indefinite" calcMode="linear"/></path>`,
@@ -150,7 +151,7 @@ export const GLYPHS: Record<string, string> = {
     <rect x="96" y="214" width="176" height="128" rx="22" stroke="none"/>
     <path d="M 96 250 l -56 -34 v 96 l 56 -34 z" stroke="none"/>
     <circle cx="184" cy="278" r="40" fill="none" stroke-width="14"/>
-    <circle cx="184" cy="278" r="12" fill="${PAL.red63}" stroke="none"><animate attributeName="opacity" values="1;.2;1" dur="1.1s" repeatCount="indefinite"/></circle>
+    <circle cx="184" cy="278" r="12" fill="${STATE_VAR.dead}" stroke="none"><animate attributeName="opacity" values="1;.2;1" dur="1.1s" repeatCount="indefinite"/></circle>
     <rect x="330" y="150" width="64" height="116" rx="32" stroke="none"/>
     <path d="M 306 244 a 56 56 0 0 0 112 0" fill="none" stroke-width="14" stroke-linecap="round"/>
     <line x1="362" y1="300" x2="362" y2="338" stroke-width="14" stroke-linecap="round"/>
@@ -174,7 +175,7 @@ export const GLYPHS: Record<string, string> = {
   'sick-bay': `
     <rect x="220" y="140" width="72" height="232" rx="16" stroke="none"/>
     <rect x="140" y="220" width="232" height="72" rx="16" stroke="none"/>
-    <circle cx="256" cy="256" r="48" fill="${PAL.red63}" stroke="none">
+    <circle cx="256" cy="256" r="48" fill="${STATE_VAR.dead}" stroke="none">
       <animate attributeName="opacity" values="1;.2;1" dur="1.1s" repeatCount="indefinite"/></circle>`,
   ...CHROME_GLYPHS,
 };

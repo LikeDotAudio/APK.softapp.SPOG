@@ -6,30 +6,30 @@ import { PAL, alpha } from '../../domain/palette.js';
 const CSS = `
 .crypto-decoder-modal {
   position: fixed; top: 10%; left: 10%; width: 80%; height: 80%;
-  background: ${PAL.blue06s63}; border: 2px solid ${PAL.blue22s37}; border-radius: 12px;
+  background: ${PAL.blue06_060c1a}; border: 2px solid ${PAL.blue23s39}; border-radius: 12px;
   z-index: 9999; display: flex; flex-direction: column; color: ${PAL.sky84};
   font-family: 'Courier New', monospace; font-size: 11px;
   box-shadow: 0 20px 60px ${alpha(PAL.black, .8)};
 }
 .cd-header {
-  padding: 12px; background: ${PAL.blue16_16233d}; border-bottom: 2px solid ${PAL.blue22s37};
+  padding: 12px; background: ${PAL.blue19}; border-bottom: 2px solid ${PAL.blue23s39};
   display: flex; justify-content: space-between; align-items: center; border-radius: 10px 10px 0 0;
 }
 .cd-title { font-weight: bold; letter-spacing: 2px; color: ${PAL.white}; }
 .cd-close { cursor: pointer; color: ${ACCENT}; font-weight: bold; font-size: 14px; padding: 0 10px; }
 .cd-body { display: flex; flex: 1; min-height: 0; }
-.cd-panel { flex: 1; display: flex; flex-direction: column; border-right: 2px solid ${PAL.blue16_16233d}; padding: 10px; }
+.cd-panel { flex: 1; display: flex; flex-direction: column; border-right: 2px solid ${PAL.blue19}; padding: 10px; }
 .cd-panel:last-child { border-right: none; }
 .cd-panel-title { font-weight: bold; margin-bottom: 8px; color: ${PAL.cyan52}; letter-spacing: 1px; }
-.cd-log { flex: 1; overflow-y: auto; background: ${PAL.blue03s73}; padding: 8px; border-radius: 6px; }
-.cd-log-entry { border-bottom: 1px solid ${PAL.blue16_16233d}; padding-bottom: 8px; margin-bottom: 8px; }
+.cd-log { flex: 1; overflow-y: auto; background: ${PAL.blue04}; padding: 8px; border-radius: 6px; }
+.cd-log-entry { border-bottom: 1px solid ${PAL.blue19}; padding-bottom: 8px; margin-bottom: 8px; }
 .cd-log-topic { color: ${ACCENT}; font-weight: bold; margin-bottom: 4px; }
 .cd-log-hex { color: ${PAL.blue44s20}; word-break: break-all; margin-bottom: 4px; font-size: 10px; }
 .cd-log-json { color: ${PAL.lime56}; white-space: pre-wrap; margin-bottom: 4px; }
 .cd-controls { display: flex; gap: 10px; margin-bottom: 10px; }
 .cd-controls button { background: ${PAL.cyan52}; color: ${PAL.black}; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; }
 .cd-controls button.active { background: ${ACCENT}; color: ${PAL.white}; }
-.cd-textarea { width: 100%; height: 100px; background: ${PAL.blue03s73}; color: ${PAL.white}; border: 1px solid ${PAL.blue22s37}; padding: 8px; font-family: inherit; border-radius: 6px; margin-bottom: 10px; resize: none; }
+.cd-textarea { width: 100%; height: 100px; background: ${PAL.blue04}; color: ${PAL.white}; border: 1px solid ${PAL.blue23s39}; padding: 8px; font-family: inherit; border-radius: 6px; margin-bottom: 10px; resize: none; }
 .cd-decode-btn { background: ${PAL.cyan52}; color: ${PAL.black}; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; margin-bottom: 10px; }
 `;
 

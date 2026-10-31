@@ -20,7 +20,7 @@ export function injectWirelessStyles(): void {
     .wl-btn-row { display: flex; gap: 10px; margin-top: 15px; }
     .wl-btn { background: ${alpha(PAL.white, .1)}; border: none; color: ${PAL.white}; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background 0.2s; }
     .wl-btn:hover { background: ${alpha(PAL.white, .2)}; }
-    .wl-btn.panic { background: ${alpha(PAL.red54s70, .2)}; border: 1px solid ${alpha(PAL.red54s70, .5)}; color: ${PAL.red71s100}; }
+    .wl-btn.panic { background: ${alpha(PAL.red54s70, .2)}; border: 1px solid ${alpha(PAL.red54s70, .5)}; color: ${PAL.red71}; }
     .wl-btn.panic:hover { background: ${alpha(PAL.red54s70, .4)}; }
     
     .wl-spectrum { width: 100%; height: 120px; background: ${PAL.black}; border: 1px solid ${alpha(PAL.white, .1)}; border-radius: 4px; position: relative; }
@@ -29,7 +29,7 @@ export function injectWirelessStyles(): void {
     .wl-traffic { width: 12px; height: 12px; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px currentColor; margin-right: 8px; }
     .status-ok { color: var(--state-good); background: ${PAL.green53}; }
     .status-warn { color: var(--state-kinda); background: ${PAL.yellow65}; }
-    .status-err { color: var(--state-dead); background: ${PAL.red71s100}; }
+    .status-err { color: var(--state-dead); background: ${PAL.red71}; }
 
     .wl-iem-section { margin-top: 10px; border-top: 1px solid ${alpha(PAL.white, .1)}; padding-top: 10px; }
   `);

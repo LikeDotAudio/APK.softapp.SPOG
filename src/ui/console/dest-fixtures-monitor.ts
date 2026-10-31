@@ -60,7 +60,7 @@ function drawIdle(cvs: HTMLCanvasElement): void {
   cvs.width = Math.round(cw * dpr); cvs.height = Math.round(ch * dpr);
   const g = cvs.getContext('2d'); if (!g) return;
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g.fillStyle = PAL.blue03s23; g.fillRect(0, 0, cw, ch);
+  g.fillStyle = PAL.grey04s0; g.fillRect(0, 0, cw, ch);
   g.fillStyle = PAL.blue29s21; g.textAlign = 'center'; g.textBaseline = 'middle';
   g.font = `700 ${Math.max(9, Math.round(ch * 0.1))}px 'Courier New',monospace`;
   g.fillText('NO SOURCE ROUTED', cw / 2, ch / 2);

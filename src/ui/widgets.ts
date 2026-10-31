@@ -13,18 +13,18 @@ const CSS_ID = 'tr-ui-widgets';
 const CSS = `
 .tr-kw{display:inline-flex;flex-direction:column;align-items:center;gap:4px;}
 .tr-knob{width:42px;height:42px;border-radius:50%;cursor:ns-resize;position:relative;
-  background:radial-gradient(circle at 50% 38%,${PAL.blue23s33},${PAL.blue09_0b1422});
+  background:radial-gradient(circle at 50% 38%,${PAL.blue21s35},${PAL.blue09});
   box-shadow:0 0 0 2px var(--cyan,${PAL.cyan50})55,inset 0 2px 6px ${PAL.black};}
 .tr-knob::after{content:"";position:absolute;left:50%;top:5px;width:2px;height:13px;
   background:var(--cyan,${PAL.cyan50});transform-origin:50% 16px;transform:translateX(-50%) rotate(var(--rot,0deg));}
 .tr-klabel{font-size:9px;letter-spacing:1px;color:${PAL.sky71};text-transform:uppercase;}
 .tr-fader{display:inline-flex;flex-direction:column;align-items:center;gap:4px;}
 .tr-fader-track{position:relative;width:18px;height:120px;border-radius:9px;
-  background:linear-gradient(${PAL.blue09s55},${PAL.blue15_152138});box-shadow:inset 0 0 4px ${PAL.black};cursor:ns-resize;}
+  background:linear-gradient(${PAL.blue09},${PAL.blue15});box-shadow:inset 0 0 4px ${PAL.black};cursor:ns-resize;}
 .tr-fader-cap{position:absolute;left:-4px;width:26px;height:14px;border-radius:3px;
   background:var(--cyan,${PAL.cyan50});box-shadow:0 1px 4px ${PAL.black};transform:translateY(-50%);}
 .tr-meter{position:relative;width:9px;height:120px;border-radius:3px;overflow:hidden;
-  background:${PAL.blue09s55};box-shadow:inset 0 0 4px ${PAL.black};}
+  background:${PAL.blue09};box-shadow:inset 0 0 4px ${PAL.black};}
 .tr-meter>i{position:absolute;bottom:0;left:0;right:0;height:30%;
   background:linear-gradient(${PAL.green53} 0%,${PAL.green53} 60%,${PAL.yellow60s77} 80%,${PAL.red68s100} 100%);transition:height .1s;}
 `;

@@ -172,7 +172,7 @@ const plugin: EditorPlugin = {
 
     ctx.dispose.raf(() => {
       fit();
-      c.fillStyle = PAL.grey09; c.fillRect(0, 0, W, H);
+      c.fillStyle = PAL.grey08; c.fillRect(0, 0, W, H);
       drawFace(c, geom.cx, geom.cy, state.active || state.hovered);
       c.strokeStyle = ACCENT; c.setLineDash([5, 5]); c.lineWidth = 2;
       c.beginPath(); c.arc(geom.cx, geom.cy, NEAR_RADIUS, 0, Math.PI * 2); c.stroke();

@@ -15,6 +15,9 @@ export const TONE_NAMES: readonly Tone[] = ['good', 'kinda', 'dead'];
 
 /** Each tone's hex and translucent tint, as the contract states them. */
 export const STATE_TONES: Readonly<Record<Tone, { hex: `#${string}`; tint: string }>> = TONES;
+/** Each tone as the interface paints it: the engine writes `--state-<tone>` resolved for the mode
+ *  (src/ui/console/colour-engine.ts), and src/ui/canvas-ink.ts reads the same on a canvas. */
+export const STATE_VAR: Readonly<Record<Tone, string>> = { good: 'var(--state-good)', kinda: 'var(--state-kinda)', dead: 'var(--state-dead)' };
 /** Every state word the bench uses → its tone (`online` → good, `offline` → dead, …). */
 export const STATE_WORDS: Readonly<Record<string, Tone>> = WORDS;
 

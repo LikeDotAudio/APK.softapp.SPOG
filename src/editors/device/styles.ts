@@ -8,8 +8,8 @@ export const CSS = `
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: ${PAL.blue04s71};
-  color: ${PAL.blue91s13};
+  background: ${PAL.blue05_060c16};
+  color: ${PAL.blue93};
   font-family: var(--lcars-font, "Ubuntu Condensed", monospace, sans-serif);
   overflow: hidden;
   box-sizing: border-box;
@@ -20,7 +20,7 @@ export const CSS = `
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
-  background: ${PAL.blue10s58};
+  background: ${PAL.blue12_0c1730};
   border-bottom: 2px solid var(--lcars-accent, ${PAL.orange50});
   gap: 12px;
 }
@@ -71,7 +71,7 @@ export const CSS = `
 
 .dev-tab-btn:hover {
   background: ${PAL.blue17};
-  color: ${PAL.sky96s40};
+  color: ${PAL.blue96s24};
 }
 
 .dev-tab-btn.active {
@@ -95,7 +95,7 @@ export const CSS = `
   flex-direction: column;
   min-width: 260px;
   max-width: 380px;
-  background: ${PAL.blue07s53};
+  background: ${PAL.blue06_060c1a};
   border: 1px solid ${PAL.blue17};
   border-top: 4px solid var(--group-accent, ${PAL.sky60});
   border-radius: 6px;
@@ -145,7 +145,7 @@ export const CSS = `
   align-items: center;
   gap: 6px;
   padding: 8px 4px;
-  background: ${PAL.blue11};
+  background: ${PAL.blue09s58};
   border-radius: 4px;
   border: 1px solid ${PAL.blue17};
 }
@@ -163,7 +163,7 @@ export const CSS = `
 
 .dev-strip-val {
   font-size: 9px;
-  color: ${PAL.sky98};
+  color: ${PAL.blue96s24};
   font-family: monospace;
 }
 

@@ -14,7 +14,7 @@ const CLOCK_CSS = `
 .ck-dots{display:grid;grid-template-columns:repeat(30,2px);grid-auto-rows:2px;gap:1px;align-content:center;}
 .ck-dot{width:2px;height:2px;border-radius:50%;background:${PAL.teal10};}
 .ck-dot.on{background:${PAL.green53s71};animation:ckP 1.4s ease-in-out infinite;}
-.ck-dot.now{background:${PAL.green93};box-shadow:0 0 5px ${PAL.green71};animation:ckN .9s ease-in-out infinite;}
+.ck-dot.now{background:${PAL.green93};box-shadow:0 0 5px ${PAL.green74};animation:ckN .9s ease-in-out infinite;}
 @keyframes ckP{0%,100%{opacity:.5;}50%{opacity:1;}}
 @keyframes ckN{0%,100%{transform:scale(1);opacity:.75;}50%{transform:scale(1.7);opacity:1;}}
 .ptp-clock.num{color:${PAL.amber50s100};}

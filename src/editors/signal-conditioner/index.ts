@@ -77,7 +77,7 @@ const plugin: EditorPlugin = {
     const led = el('span', { class: 'sc-led' });
     const lockTxt = el('span', {}, ['LOCKED']);
     const timing = el('span', { class: 'sc-note' }, ['input timing: +0.0 ms']);
-    const refCard = el('div', { class: 'sc-card sc-refcard', style: `--hc:${PAL.sky75s76}` }, [
+    const refCard = el('div', { class: 'sc-card sc-refcard', style: `--hc:${PAL.sky75}` }, [
       el('h4', {}, ['Frame Sync · Reference']),
       el('div', { class: 'sc-body' }, [
         el('div', { class: 'sc-ref' }, refBtns.map(([b]) => b)),

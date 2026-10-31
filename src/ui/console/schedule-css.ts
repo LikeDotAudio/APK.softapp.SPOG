@@ -1,7 +1,7 @@
 import { PAL, alpha } from '../../domain/palette.js';
 
 export const SCHED_CSS = `
-.sc-ov{position:fixed;inset:0;z-index:3100;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,${alpha(PAL.blue12s57, .92)},${alpha(PAL.blue04, .96)});font-family:Arial,Helvetica,sans-serif;}
+.sc-ov{position:fixed;inset:0;z-index:3100;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,${alpha(PAL.blue12_0c1730, .92)},${alpha(PAL.blue04, .96)});font-family:Arial,Helvetica,sans-serif;}
 .sc-ov.open{display:flex;}
 .sc-box{width:min(960px,94vw);max-height:90vh;overflow:auto;background:${PAL.blue09s58};border:1px solid ${PAL.blue19};border-radius:16px;padding:26px;}
 .sc-box h2{margin:0 0 2px;color:${PAL.white};font-size:22px;letter-spacing:2px;display:flex;justify-content:space-between;align-items:center;}
@@ -21,14 +21,14 @@ export const SCHED_CSS = `
 .sc-crew{display:flex;flex-wrap:wrap;gap:6px;}
 .sc-resources{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
 .sc-role{font:bold 10px sans-serif;letter-spacing:.5px;border-radius:6px;padding:5px 9px;background:${PAL.blue15};color:${PAL.sky91};border:1px solid ${PAL.blue27s36};}
-.sc-resource{font:bold 10px sans-serif;letter-spacing:.5px;border-radius:6px;padding:5px 9px;background:${PAL.violet11s48};color:${PAL.violet80s44};border:1px solid ${PAL.violet30};}
+.sc-resource{font:bold 10px sans-serif;letter-spacing:.5px;border-radius:6px;padding:5px 9px;background:${PAL.indigo11};color:${PAL.violet80s44};border:1px solid ${PAL.violet30};}
 .sc-legend{display:flex;gap:16px;margin:-8px 0 16px;font:bold 11px sans-serif;letter-spacing:1px;}
 .sc-hint{color:${PAL.blue53};font-size:11px;letter-spacing:1px;margin-top:6px;}
 .sc-edit-btn{position:absolute;top:14px;right:14px;background:${PAL.blue19};color:${PAL.white};border:none;border-radius:4px;padding:4px 8px;font-size:10px;cursor:pointer;}
 .sc-edit-btn:hover{background:${PAL.blue27s36};}
 .sc-locked-msg{position:absolute;top:14px;right:14px;color:${PAL.red71};font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;padding:4px;}
 .sc-editor{display:flex;flex-direction:column;gap:8px;width:100%;}
-.sc-editor input{background:${PAL.blue12s57};border:1px solid ${PAL.blue27s36};color:${PAL.white};padding:6px;border-radius:4px;}
+.sc-editor input{background:${PAL.blue12_0c1730};border:1px solid ${PAL.blue27s36};color:${PAL.white};padding:6px;border-radius:4px;}
 .sc-editor label{font-size:11px;color:${PAL.blue60s27};display:flex;flex-direction:column;gap:4px;}
 .sc-editor-actions{display:flex;gap:8px;margin-top:8px;}
 .sc-editor-actions button{padding:6px 12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;}

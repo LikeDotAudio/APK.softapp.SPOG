@@ -28,20 +28,20 @@ export const CSS = `
 .dfx-clab{font:800 11px 'Courier New',monospace;color:${PAL.purple59};width:14px;text-align:center;}
 .dfx-mrow{display:flex;gap:4px;}
 .dfx-mini{border:none;border-radius:6px;padding:5px 7px;cursor:pointer;
-  font:800 10px 'Courier New',monospace;background:${PAL.blue16_16233d};color:${PAL.sky84};}
+  font:800 10px 'Courier New',monospace;background:${PAL.blue19};color:${PAL.sky84};}
 .dfx-mini.run{background:${PAL.red57};color:${PAL.red05};}
 .dfx-watch{flex:0 0 auto;display:block;cursor:pointer;}
 .dfx-wlab{font:700 8px 'Courier New',monospace;letter-spacing:1px;color:${PAL.grey47};text-transform:uppercase;}
 .dfx-chat{display:flex;flex-direction:column;gap:6px;}
-.dfx-log{height:96px;overflow:auto;background:${PAL.grey02s9};border:1px solid ${PAL.purple11};border-radius:8px;padding:6px;
+.dfx-log{height:96px;overflow:auto;background:${PAL.grey04s0};border:1px solid ${PAL.purple13};border-radius:8px;padding:6px;
   display:flex;flex-direction:column;gap:3px;font:600 10px 'Courier New',monospace;color:${PAL.blue85};}
 .dfx-msg{line-height:1.3;word-break:break-word;}
 .dfx-who{font-weight:800;color:${PAL.purple59};}
 .dfx-msg.self .dfx-who{color:${PAL.green75};}
 .dfx-t{color:${PAL.grey40s12};}
 .dfx-row{display:flex;gap:6px;}
-.dfx-in{flex:1;min-width:0;background:${PAL.blue05s13};border:1px solid ${PAL.purple13};border-radius:7px;padding:6px 8px;
-  color:${PAL.purple87};font:600 11px 'Courier New',monospace;}
+.dfx-in{flex:1;min-width:0;background:${PAL.grey04s0};border:1px solid ${PAL.purple13};border-radius:7px;padding:6px 8px;
+  color:${PAL.purple84};font:600 11px 'Courier New',monospace;}
 .dfx-in:focus{outline:none;border-color:${PAL.purple59};}
 .dfx-send{border:none;border-radius:7px;padding:6px 12px;cursor:pointer;
   font:800 10px 'Courier New',monospace;letter-spacing:1px;background:${PAL.red30};color:${PAL.yellow97};}

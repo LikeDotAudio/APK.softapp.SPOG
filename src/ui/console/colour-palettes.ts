@@ -4,6 +4,7 @@
 // value sets + guards, and the editor's preset/axis tables. Pure data — no DOM.
 
 import { PAL } from '../../domain/palette.js';
+import { STATE_VAR } from '../../domain/state.js';
 import { STATE_TONES } from '../../domain/state.js';
 
 export type Vision = 'low' | 'normal' | 'high';
@@ -29,22 +30,22 @@ export const PALETTES: readonly Palette[] = [
     t: { video: PAL.purple70, audio: PAL.orange69, program: PAL.blue60, alarm: STATE_TONES.dead.hex, ok: STATE_TONES.good.hex, onair: PAL.amber50s100 } },
   { id: 'okabe', name: 'Okabe-Ito', cvdSafe: true,
     blurb: 'The scientific gold standard — safe across all three colour-vision deficiencies.',
-    t: { video: PAL.pink64, audio: PAL.amber45, program: PAL.sky63s77, alarm: PAL.orange42, ok: PAL.teal31, onair: PAL.yellow60 } },
+    t: { video: PAL.pink64, audio: PAL.amber45, program: PAL.sky63s77, alarm: PAL.orange42, ok: PAL.teal31, onair: PAL.yellow56 } },
   { id: 'ibm', name: 'IBM Carbon', cvdSafe: true,
     blurb: 'IBM Design colour-blind-safe set — bright and modern.',
-    t: { video: PAL.indigo65, audio: PAL.orange50_fe6100, program: PAL.blue70, alarm: PAL.pink51, ok: PAL.green39, onair: PAL.amber50_ffb000 } },
+    t: { video: PAL.indigo65, audio: PAL.orange50_fe6100, program: PAL.blue69, alarm: PAL.pink51, ok: STATE_VAR.good, onair: PAL.amber48 } },
   { id: 'tol', name: 'Paul Tol', cvdSafe: true,
     blurb: 'Paul Tol vibrant scheme — the muted, print-friendly CVD-safe alternative.',
     t: { video: PAL.pink43, audio: PAL.orange57s85, program: PAL.sky47, alarm: PAL.red43, ok: PAL.green33, onair: PAL.yellow53s57 } },
   { id: 'synthwave', name: 'Synthwave', cvdSafe: false,
     blurb: 'Neon night palette — electric purple, hot-pink and cyan on the dark grid.',
-    t: { video: PAL.violet65, audio: PAL.pink59, program: PAL.cyan50s100, alarm: PAL.red60_ff3355, ok: PAL.teal51, onair: PAL.amber55 } },
+    t: { video: PAL.violet65, audio: PAL.pink59, program: PAL.cyan50s100, alarm: PAL.red60_ff3355, ok: PAL.teal51, onair: PAL.amber50 } },
   { id: 'ember', name: 'Ember', cvdSafe: false,
     blurb: 'Warm, blue-free ramp for low-light / night rooms — easy on dark-adapted eyes.',
-    t: { video: PAL.red71s100, audio: PAL.orange65s100, program: PAL.amber62s100, alarm: PAL.red54, ok: PAL.lime45, onair: PAL.orange58 } },
+    t: { video: PAL.red71, audio: PAL.orange65s100, program: PAL.amber62s100, alarm: PAL.red54, ok: PAL.lime45, onair: PAL.orange58 } },
   { id: 'tidal', name: 'Tidal', cvdSafe: false,
     blurb: 'Cool and calm — cyan, indigo and mint, with a warm alarm for salience.',
-    t: { video: PAL.cyan59, audio: PAL.blue67, program: PAL.teal65, alarm: PAL.red71s100, ok: PAL.teal54s68, onair: PAL.sky72 } },
+    t: { video: PAL.cyan59, audio: PAL.blue67, program: PAL.teal65, alarm: PAL.red71, ok: PAL.teal54s68, onair: PAL.sky72 } },
 ];
 
 export const paletteById = (id: string): Palette => PALETTES.find((p) => p.id === id) ?? PALETTES[0]!;

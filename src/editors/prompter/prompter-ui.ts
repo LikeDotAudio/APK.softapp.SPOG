@@ -6,7 +6,7 @@ export function buildPrompterUI() {
   const gutter = el('div', { class: 'tp-gutter' });
   const scriptContainer = el('div', { class: 'tp-script-container' }, [gutter, script]);
   
-  const HIGHLIGHTS = [PAL.red59_ff5b2e, PAL.amber56, PAL.green53, PAL.sky59, PAL.violet71, PAL.pink69s100];
+  const HIGHLIGHTS = [PAL.red59_ff5b2e, PAL.amber50, PAL.green53, PAL.sky59, PAL.violet71, PAL.pink69s100];
   const hlPens = HIGHLIGHTS.map(c =>
     el('button', { class: 'tp-tool-hl', dataset: { hl: c }, style: `background:${c};`, title: `Highlight ${c}` }));
   const hlClear = el('button', { class: 'tp-tool-hl clear', dataset: { hl: 'transparent' }, title: 'Clear highlight' }, ['⌫']);

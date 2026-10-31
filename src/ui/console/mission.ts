@@ -19,7 +19,7 @@ const nowH = (): number => { try { const d = new Date(); return d.getHours() + d
 const MZ_CSS = `
 /* Rides the LANE the credits pill vacated (bottom:6, below the tab pills),
    docked beside the clock column — never over the footer tabs. */
-.mz-bar{position:fixed;bottom:6px;z-index:1500;display:none;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(90deg,${alpha(PAL.blue08s62, .92)},${alpha(PAL.blue12s60, .92)});border:1px solid ${PAL.sky27};border-radius:999px;padding:5px 14px;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky91};font-size:11px;letter-spacing:1px;box-shadow:0 4px 18px ${alpha(PAL.black, .45)};max-width:64vw;}
+.mz-bar{position:fixed;bottom:6px;z-index:1500;display:none;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(90deg,${alpha(PAL.blue09s58, .92)},${alpha(PAL.blue12_0c1730, .92)});border:1px solid ${PAL.sky27};border-radius:999px;padding:5px 14px;font-family:Arial,Helvetica,sans-serif;color:${PAL.sky91};font-size:11px;letter-spacing:1px;box-shadow:0 4px 18px ${alpha(PAL.black, .45)};max-width:64vw;}
 .mz-bar.show{display:inline-flex;}
 .mz-bar:hover{border-color:${PAL.blue51};}
 .mz-where{font-weight:900;color:${PAL.white};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30vw;}

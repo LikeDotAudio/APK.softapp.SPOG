@@ -11,10 +11,10 @@ export const CSS = `
 .cr-grp{display:inline-flex;align-items:center;gap:6px;font:700 10px 'Courier New',monospace;letter-spacing:1px;color:${PAL.cyan60};text-transform:uppercase;}
 .cr-seg{display:inline-flex;border:1px solid ${PAL.violet22};border-radius:9px;overflow:hidden;}
 .cr-btn{font:800 11px 'Courier New',monospace;letter-spacing:1px;text-transform:uppercase;padding:7px 13px;border:none;
-  background:${PAL.violet10};color:${PAL.violet78};cursor:pointer;}
+  background:${PAL.indigo09};color:${PAL.violet78};cursor:pointer;}
 .cr-btn.on{background:${PAL.purple59};color:${PAL.purple07};}
 .cr-list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:2px;}
-.cr-card{background:${PAL.black};border:1px solid ${PAL.grey12s10};border-radius:12px;padding:10px 12px;
+.cr-card{background:${PAL.black};border:1px solid ${PAL.blue12s14};border-radius:12px;padding:10px 12px;
   display:flex;flex-direction:column;gap:8px;}
 .cr-head{display:flex;align-items:center;gap:10px;}
 .cr-name{font:800 11px 'Courier New',monospace;letter-spacing:2px;color:${PAL.blue56};text-transform:uppercase;}
@@ -24,8 +24,8 @@ export const CSS = `
 .cr-face{position:absolute;inset:0;width:100%;height:100%;display:block;}
 .cr-xport{display:inline-flex;gap:6px;margin-left:auto;align-items:center;}
 .cr-tbtn{font:800 10px 'Courier New',monospace;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border:none;
-  border-radius:8px;background:${PAL.blue16_16233d};color:${PAL.sky84};cursor:pointer;}
-.cr-tbtn.set{background:${PAL.violet17};color:${PAL.violet82};}
+  border-radius:8px;background:${PAL.blue19};color:${PAL.sky84};cursor:pointer;}
+.cr-tbtn.set{background:${PAL.violet17s39};color:${PAL.violet82};}
 .cr-tbtn.run{background:${PAL.red57};color:${PAL.red05};}
 .cr-live{font:800 10px 'Courier New',monospace;letter-spacing:2px;color:${PAL.green68};}
 `;

@@ -18,7 +18,7 @@ export function buildSceneEditor(s: Surface): {
   sceneEdToggle: HTMLElement;
   rebuildSel: () => void;
 } {
-  const sceneEditorDrawer = el('div', { class: 'vm-drawer', style: `display:none; padding: 16px; background: ${PAL.blue07}; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;` });
+  const sceneEditorDrawer = el('div', { class: 'vm-drawer', style: `display:none; padding: 16px; background: ${PAL.blue09}; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;` });
   const sceneEdSel = el('select', { class: 'vm-sel' }) as HTMLSelectElement;
   const sceneEdJson = el('textarea', { style: `width: 100%; height: 300px; background: ${PAL.black}; color: ${PAL.green50}; font-family: monospace; padding: 8px; border-radius: 8px;` }) as HTMLTextAreaElement;
   const sceneEdApply = el('button', { class: 'vm-tbtn', type: 'button' }, ['SAVE SCENE']);

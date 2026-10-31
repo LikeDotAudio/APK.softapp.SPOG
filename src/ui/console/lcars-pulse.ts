@@ -19,17 +19,17 @@ let onResize: (() => void) | undefined;
 export function isLcarsPulseOn(): boolean { return getPrefs().ui.heartbeat === true; }
 
 const PULSE_CSS = `
-.lcp-strip{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:${WIDTH}px;z-index:950;background:${PAL.grey02};display:flex;flex-direction:column;overflow:hidden;pointer-events:none;}
+.lcp-strip{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:${WIDTH}px;z-index:950;background:${PAL.black};display:flex;flex-direction:column;overflow:hidden;pointer-events:none;}
 .lcp-cap{flex:0 0 auto;height:26px;background:${PAL.orange46s64};}
 .lcp-cap.top{border-radius:0 0 0 11px;}
 .lcp-cap.bot{border-radius:11px 0 0 0;}
 .lcp-lines{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:space-between;padding:5px 0;overflow:hidden;}
-.lcp-line{height:2px;border-radius:1px;background:${PAL.grey17};transition:background .15s,box-shadow .15s;}
-.lcp-line.dim{background:${PAL.grey11};}
-.lcp-line.mid{background:${PAL.grey23};}
+.lcp-line{height:2px;border-radius:1px;background:${PAL.grey20s0};transition:background .15s,box-shadow .15s;}
+.lcp-line.dim{background:${PAL.grey12};}
+.lcp-line.mid{background:${PAL.grey25s0};}
 .lcp-line.blue{background:${PAL.sky61s100};box-shadow:0 0 5px ${alpha(PAL.sky61s100, .8)};}
 .lcp-line.red{background:${PAL.red62s100};box-shadow:0 0 5px ${alpha(PAL.red62s100, .7)};}
-.lcp-lines::after{content:'';position:absolute;left:0;right:0;top:0;height:42%;pointer-events:none;background:linear-gradient(to bottom,transparent,${alpha(PAL.sky68, .3)},${alpha(PAL.sky81_a0dcff, .1)},transparent);animation:lcpPulse 2.6s linear infinite;}
+.lcp-lines::after{content:'';position:absolute;left:0;right:0;top:0;height:42%;pointer-events:none;background:linear-gradient(to bottom,transparent,${alpha(PAL.sky65, .3)},${alpha(PAL.sky81, .1)},transparent);animation:lcpPulse 2.6s linear infinite;}
 @keyframes lcpPulse{0%{transform:translateY(140%);}100%{transform:translateY(-160%);}}
 .credit-button{right:${WIDTH + 14}px !important;}
 .rv-btn{right:${WIDTH + 14}px !important;}

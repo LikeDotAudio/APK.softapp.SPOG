@@ -28,10 +28,10 @@ body.authoring .auth-only{display:flex !important;}
 .dest-frame:not(:has(.program-row)) .auth-dock{display:none;}
 .authoring-toggle{display:inline-flex;align-items:center;gap:8px;box-sizing:border-box;
   font:900 12px/1 Arial;letter-spacing:2px;text-transform:uppercase;color:${PAL.black};background:transparent;
-  border:none;border-left:4px solid var(--bg-color,${PAL.blue05s62});
+  border:none;border-left:4px solid var(--bg-color,${PAL.blue05_060c16});
   padding:0 20px 0 14px;cursor:pointer;box-shadow:none;}
 .authoring-toggle:hover{background:${alpha(PAL.black, .16)};}
-.authoring-toggle .cnt{background:${PAL.blue04};color:${PAL.sky94};border-radius:8px;padding:2px 6px;font-size:10px;min-width:8px;text-align:center;}
+.authoring-toggle .cnt{background:${PAL.blue04};color:${PAL.sky94s100};border-radius:8px;padding:2px 6px;font-size:10px;min-width:8px;text-align:center;}
 /* Authoring ON: the segment inverts — black fill, green text — so state is
    unmistakable while still reading as part of the bar. */
 body.authoring .authoring-toggle{background:${PAL.blue04};color:${PAL.green53};box-shadow:none;}
@@ -41,7 +41,7 @@ body.authoring .authoring-toggle .cnt{color:${PAL.green53};}
    frame keeps 20px padding there to clear the pulse strip, so the rail starts x=20. */
 html[data-chirality="right"] .auth-dock{right:auto;left:20px;flex-direction:row;}
 html[data-chirality="right"] .authoring-toggle{padding:0 14px 0 20px;
-  border-left:none;border-right:4px solid var(--bg-color,${PAL.blue05s62});}
+  border-left:none;border-right:4px solid var(--bg-color,${PAL.blue05_060c16});}
 .auth-tools button{font:900 10px/1 Arial;letter-spacing:1px;text-transform:uppercase;color:${PAL.black};
   border:none;border-radius:4px;padding:8px 12px;cursor:pointer;background:${PAL.yellow53};}
 .auth-tools .revert{background:${PAL.red52};color:${PAL.white};}
@@ -60,29 +60,29 @@ html[data-chirality="right"] .authoring-toggle{padding:0 14px 0 20px;
 
 .auth-modal-bg{position:fixed;inset:0;z-index:2600;background:${alpha(PAL.blue04, .72)};display:flex;
   align-items:center;justify-content:center;font-family:Arial;}
-.auth-modal{background:${PAL.blue12s57};border:2px solid ${PAL.purple62};border-radius:12px;min-width:320px;
-  max-width:min(94vw,540px);max-height:88vh;overflow:auto;padding:16px 18px;color:${PAL.sky94};}
+.auth-modal{background:${PAL.blue12_0c1730};border:2px solid ${PAL.purple62};border-radius:12px;min-width:320px;
+  max-width:min(94vw,540px);max-height:88vh;overflow:auto;padding:16px 18px;color:${PAL.sky94s100};}
 .auth-modal h3{margin:0 0 12px;color:${PAL.purple62};font-size:13px;letter-spacing:2px;text-transform:uppercase;}
 .auth-field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
-.auth-field label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${PAL.sky70};}
+.auth-field label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${PAL.sky69s41};}
 .auth-field input,.auth-field select,.auth-field textarea{background:${PAL.blue04};border:1px solid ${PAL.blue34s39};
-  border-radius:5px;color:${PAL.sky94};padding:7px 9px;font:13px Arial;width:100%;box-sizing:border-box;}
+  border-radius:5px;color:${PAL.sky94s100};padding:7px 9px;font:13px Arial;width:100%;box-sizing:border-box;}
 .auth-hint{font-size:10px;color:${PAL.sky56};margin:-4px 0 10px;}
 .auth-modal .rowbtn{display:flex;gap:8px;justify-content:flex-end;margin-top:6px;}
 .auth-modal .rowbtn button{font:900 11px/1 Arial;letter-spacing:1px;text-transform:uppercase;border:none;
   border-radius:5px;padding:9px 16px;cursor:pointer;}
 .auth-modal .ok{background:${PAL.green53};color:${PAL.black};}
-.auth-modal .cancel{background:${PAL.blue34s39};color:${PAL.sky94};}
+.auth-modal .cancel{background:${PAL.blue34s39};color:${PAL.sky94s100};}
 .auth-palette{display:flex;flex-wrap:wrap;gap:6px;}
 .auth-palette .tool{background:${PAL.blue20s48};border:1px solid ${PAL.blue34s39};border-radius:6px;padding:9px 11px;
   cursor:pointer;font-size:12px;color:${PAL.sky91};}
-.auth-palette .tool:hover{background:${PAL.blue29s50};border-color:${PAL.purple62};}
+.auth-palette .tool:hover{background:${PAL.blue31s44};border-color:${PAL.purple62};}
 
 /* scale + pan the room canvas (Ctrl/⌘+wheel to zoom, drag empty space to pan). */
 .auth-zoom{display:flex;align-items:center;gap:3px;margin-left:auto;}
-.auth-zoom button{font:900 12px/1 Arial;color:${PAL.black};background:${PAL.sky70};border:none;border-radius:4px;
+.auth-zoom button{font:900 12px/1 Arial;color:${PAL.black};background:${PAL.sky69s41};border:none;border-radius:4px;
   width:26px;height:26px;cursor:pointer;}
-.auth-zoom .pct{font:900 10px/1 Arial;color:${PAL.sky70};min-width:38px;text-align:center;}
+.auth-zoom .pct{font:900 10px/1 Arial;color:${PAL.sky69s41};min-width:38px;text-align:center;}
 body.authoring .program-body{will-change:transform;transform-origin:0 0;}
 body.authoring .program-row{cursor:default;}
 body.authoring .program-row.panning{cursor:grabbing;}

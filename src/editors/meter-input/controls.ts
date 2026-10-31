@@ -29,7 +29,7 @@ export interface ControlDeps {
 
 const TSG_POP_CSS = `
 .mi-tsgpop{position:absolute;z-index:60;left:8px;top:96px;right:8px;max-height:62%;
-  overflow:auto;padding:12px;background:${alpha(PAL.blue05s54, .97)};border:1px solid ${PAL.sky30};
+  overflow:auto;padding:12px;background:${alpha(PAL.blue05_060c16, .97)};border:1px solid ${PAL.sky30};
   border-radius:10px;box-shadow:0 10px 40px ${alpha(PAL.black, .6)};display:none;}
 .mi-tsgpop.open{display:block;}
 .mi-tsgpop-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}

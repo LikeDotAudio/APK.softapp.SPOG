@@ -8,16 +8,16 @@ import { operator } from '../../platform/auth.js';
 import { PAL, alpha } from '../../domain/palette.js';
 
 const CSS = `
-.xp-details{position:fixed;z-index:4000;min-width:220px;max-width:320px;background:${PAL.blue08};color:${PAL.sky91};
-  border:1px solid ${PAL.blue26s37};border-radius:10px;box-shadow:0 10px 34px ${alpha(PAL.black, .6)};
+.xp-details{position:fixed;z-index:4000;min-width:220px;max-width:320px;background:${PAL.blue09};color:${PAL.sky91};
+  border:1px solid ${PAL.blue27s36};border-radius:10px;box-shadow:0 10px 34px ${alpha(PAL.black, .6)};
   font:12px/1.5 'Courier New',monospace;padding:0;overflow:hidden;}
-.xp-details-h{display:flex;align-items:center;gap:8px;padding:8px 12px;background:${PAL.blue16_16233d};color:${PAL.sky69};
+.xp-details-h{display:flex;align-items:center;gap:8px;padding:8px 12px;background:${PAL.blue19};color:${PAL.sky69};
   font-weight:bold;letter-spacing:2px;text-transform:uppercase;font-size:11px;}
 .xp-details-h .xp-details-x{margin-left:auto;cursor:pointer;color:${PAL.blue60s27};font-weight:bold;}
 .xp-details-h .xp-details-x:hover{color:${PAL.white};}
 .xp-details-body{padding:8px 12px;display:grid;grid-template-columns:auto 1fr;gap:5px 12px;}
 .xp-details-body dt{color:${PAL.blue60s27};text-transform:uppercase;font-size:9px;letter-spacing:1px;align-self:center;}
-.xp-details-body dd{margin:0;color:${PAL.sky95};word-break:break-word;}
+.xp-details-body dd{margin:0;color:${PAL.sky96_eaf4ff};word-break:break-word;}
 `;
 
 /** Stamp WHEN + BY WHOM a node was routed — once, when it first becomes a crosspoint. */

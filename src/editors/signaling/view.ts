@@ -131,7 +131,7 @@ export function renderSignaling(host: HTMLElement, ctx: EditorContext): void {
     const live = ui.mode === 'live';
     onair.className = 'sg-onair ' + (live ? 'live' : 'reh');
     onair.textContent = live ? 'ON AIR' : 'REHEARSAL';
-    onlight.style.background = live ? PAL.red13 : PAL.amber13s76;
+    onlight.style.background = live ? PAL.red13 : PAL.amber15;
     onlight.style.color = live ? PAL.red71 : PAL.amber71;
     onlight.style.boxShadow = live ? `0 0 16px ${alpha(PAL.red58, .5)}` : `0 0 12px ${alpha(PAL.amber50, .35)}`;
     onlight.textContent = live ? 'DOOR LIGHT · RED (LIVE)' : 'DOOR LIGHT · AMBER (REH)';

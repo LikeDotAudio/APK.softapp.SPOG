@@ -12,10 +12,10 @@ export function injectAudioMixerStyles(): void {
         /* LCARS layout: rounded left rail (layer switch + deco elbows) | strips */
         .am-console{display:flex;gap:14px;align-items:stretch;min-height:430px;}
         .am-rail{flex:0 0 158px;display:flex;flex-direction:column;gap:8px;padding:12px 10px;
-            background:${PAL.blue07};border:2px solid ${PAL.blue26};border-radius:44px 10px 10px 44px;}
+            background:${PAL.blue09};border:2px solid ${PAL.blue27s36};border-radius:44px 10px 10px 44px;}
         .am-rail-h{color:var(--cyan,${PAL.cyan50});font-size:10px;letter-spacing:2px;font-weight:bold;
             text-align:center;text-transform:uppercase;margin-bottom:2px;}
-        .am-layerbtn{padding:16px 10px;border-radius:24px 6px 6px 24px;background:${PAL.blue23};color:${PAL.blue91};
+        .am-layerbtn{padding:16px 10px;border-radius:24px 6px 6px 24px;background:${PAL.blue23s39};color:${PAL.blue89};
             font-weight:900;letter-spacing:1px;font-size:14px;text-align:center;cursor:pointer;
             white-space:nowrap;transition:filter .12s,box-shadow .12s,background .12s;}
         .am-layerbtn:hover{filter:brightness(1.12);}
@@ -24,23 +24,23 @@ export function injectAudioMixerStyles(): void {
         /* Decorative LCARS elbow blocks down the rail */
         .am-elbow{flex:0 0 auto;height:30px;border-radius:24px 6px 6px 24px;}
         .am-elbow.a{background:${PAL.orange46};} .am-elbow.b{background:${PAL.blue60};} .am-elbow.c{background:${PAL.purple52};}
-        .am-rail-foot{flex:1 1 auto;min-height:36px;border-radius:6px 6px 44px 6px;background:${PAL.blue16};}
+        .am-rail-foot{flex:1 1 auto;min-height:36px;border-radius:6px 6px 44px 6px;background:${PAL.blue15};}
         .am-strips{flex:1 1 auto;min-width:0;display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;}
-        .am-strip{flex:0 0 auto;width:128px;background:${PAL.blue10};border:1px solid ${PAL.blue23s39};
+        .am-strip{flex:0 0 auto;width:128px;background:${PAL.blue09};border:1px solid ${PAL.blue23s39};
             border-radius:12px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:12px;}
-        .am-strip.master{background:${PAL.indigo13};border-color:${PAL.indigo33};}
+        .am-strip.master{background:${PAL.indigo11};border-color:${PAL.indigo33};}
         .am-strip.group{border-width:2px;border-style:solid;}
         /* Three-line channel identity: parent / child small, the SOURCE leads. */
         .am-name .am-ln{display:block;line-height:1.2;}
         .am-name .am-ln.ctx{font-size:8px;font-weight:600;letter-spacing:.5px;opacity:.75;}
         .am-name .am-ln.src{font-size:12px;}
         .am-name{font-size:12px;font-weight:bold;letter-spacing:.5px;text-align:center;width:100%;
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${PAL.blue91};}
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${PAL.blue89};}
         .am-spill{font-size:11px;font-weight:900;letter-spacing:1px;border:none;border-radius:8px;
-            padding:6px 12px;cursor:pointer;background:${PAL.blue27};color:${PAL.blue91};}
+            padding:6px 12px;cursor:pointer;background:${PAL.blue27s36};color:${PAL.blue89};}
         .am-spill:hover{filter:brightness(1.15);}
         .am-spill.on{background:var(--cyan,${PAL.cyan50});color:${PAL.black};box-shadow:0 0 10px ${alpha(PAL.cyan50, .5)};}
-        .am-knob{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 50% 35%,${PAL.blue32},${PAL.blue12});
+        .am-knob{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 50% 35%,${PAL.blue32},${PAL.blue09s58});
             border:3px solid ${PAL.blue40};position:relative;cursor:ns-resize;box-shadow:0 2px 6px ${alpha(PAL.black, .5)};}
         .am-knob::after{content:'';position:absolute;left:50%;top:6px;width:3px;height:18px;background:var(--cyan,${PAL.cyan50});
             transform-origin:50% 25px;transform:translateX(-50%) rotate(var(--rot,0deg));border-radius:2px;}
@@ -55,7 +55,7 @@ export function injectAudioMixerStyles(): void {
         .am-pregain .am-knob{--cyan:${PAL.orange62};width:42px;height:42px;border-color:${PAL.amber35};}
         .am-pregain .am-knob::after{height:12px;top:4px;transform-origin:50% 16px;}
         .am-pre-open{width:100%;background:${PAL.blue15};color:${PAL.orange62};border:1px solid ${PAL.amber35};border-radius:5px;font:bold 8px sans-serif;letter-spacing:.5px;padding:5px 4px;cursor:pointer;}
-        .am-pre-open:hover{background:${PAL.blue21};}
+        .am-pre-open:hover{background:${PAL.blue23s39};}
         /* Wireless mic channel: the strip carries an RF accent so the operator can
            spot radio channels (battery/RF risk) at a glance; button opens telemetry. */
         .am-strip.wireless{border:1px solid ${alpha(PAL.cyan52, .55)};border-radius:8px;
@@ -63,7 +63,7 @@ export function injectAudioMixerStyles(): void {
             box-shadow:0 0 10px ${alpha(PAL.cyan52, .18)} inset;}
         .am-strip.wireless .am-name::after{content:'RF';font:bold 7px sans-serif;letter-spacing:1px;color:${PAL.sky10};
             background:${PAL.cyan52};border-radius:3px;padding:1px 3px;margin-left:4px;vertical-align:middle;}
-        .am-pre-open.wireless{background:${PAL.cyan12};color:${PAL.cyan52};border-color:${PAL.cyan37s54};}
+        .am-pre-open.wireless{background:${PAL.cyan12};color:${PAL.cyan52};border-color:${PAL.cyan37s55};}
         .am-pre-open.wireless:hover{background:${PAL.cyan18};}
         .am-sens-reveal{animation:amSens .85s cubic-bezier(.2,1.4,.4,1) both;}
         @keyframes amSens{0%{transform:scale(.15);opacity:0;filter:brightness(3)}55%{transform:scale(1.14)}100%{transform:scale(1);opacity:1;filter:none}}
@@ -78,18 +78,18 @@ export function injectAudioMixerStyles(): void {
         .am-eq .am-knob::after{height:12px;top:4px;transform-origin:50% 16px;}
         .am-ms{display:flex;gap:8px;}
         .am-ms button{font-size:13px;font-weight:900;letter-spacing:1px;border:none;border-radius:8px;
-            padding:8px 16px;cursor:pointer;background:${PAL.blue23};color:${PAL.blue91};}
+            padding:8px 16px;cursor:pointer;background:${PAL.blue23s39};color:${PAL.blue89};}
         .am-ms button.mute.on{background:${PAL.red60};color:${PAL.white};box-shadow:0 0 12px ${alpha(PAL.red60, .6)};}
         .am-ms button.solo.on{background:${PAL.amber61};color:${PAL.black};box-shadow:0 0 12px ${alpha(PAL.amber61, .6)};}
         .am-fadarea{display:flex;gap:10px;align-items:flex-end;height:240px;}
         .am-fader{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;
-            width:46px;height:230px;border-radius:24px;border:2px solid ${PAL.blue34};cursor:grab;
-            background:linear-gradient(${PAL.blue12s60},${PAL.blue16});box-shadow:inset 0 0 14px ${alpha(PAL.black, .6)};}
+            width:46px;height:230px;border-radius:24px;border:2px solid ${PAL.blue34s39};cursor:grab;
+            background:linear-gradient(${PAL.blue12_0c1730},${PAL.blue15});box-shadow:inset 0 0 14px ${alpha(PAL.black, .6)};}
         .am-fader:active{cursor:grabbing;}
         .am-fader::-webkit-slider-thumb{-webkit-appearance:none;width:60px;height:34px;border-radius:9px;
-            background:linear-gradient(${PAL.blue97},${PAL.blue81});border:2px solid ${PAL.white};cursor:grab;
-            box-shadow:0 3px 6px ${alpha(PAL.black, .55)},0 0 8px ${alpha(PAL.blue91, .5)};}
-        .am-fader::-moz-range-thumb{width:60px;height:34px;border-radius:9px;background:${PAL.blue91};border:2px solid ${PAL.white};cursor:grab;}
+            background:linear-gradient(${PAL.sky96_eaf4ff},${PAL.blue80s50});border:2px solid ${PAL.white};cursor:grab;
+            box-shadow:0 3px 6px ${alpha(PAL.black, .55)},0 0 8px ${alpha(PAL.blue89, .5)};}
+        .am-fader::-moz-range-thumb{width:60px;height:34px;border-radius:9px;background:${PAL.blue89};border:2px solid ${PAL.white};cursor:grab;}
         .am-strip.master .am-fader::-webkit-slider-thumb{background:linear-gradient(${PAL.indigo92},${PAL.indigo83});}
         .am-vu{width:16px;height:230px;border-radius:5px;background:${PAL.blue09};overflow:hidden;display:flex;flex-direction:column-reverse;}
         .am-vu > i{display:block;width:100%;height:0%;background:linear-gradient(${PAL.green44},${PAL.yellow56} 70%,${PAL.red62});}
@@ -113,13 +113,13 @@ export function injectAudioMixerStyles(): void {
         .am-master-tab .am-strip.master{border:none;background:transparent;padding:0;}
         .am-master-tab .am-strip.master .am-name{display:none;}
         /* Sub-mix breakout (a spilled group's individual channels) */
-        .am-submix{margin-top:16px;background:${PAL.blue08};border:1px solid ${PAL.blue26};border-left:5px solid var(--cyan,${PAL.cyan50});
+        .am-submix{margin-top:16px;background:${PAL.blue09};border:1px solid ${PAL.blue27s36};border-left:5px solid var(--cyan,${PAL.cyan50});
             border-radius:6px 14px 14px 6px;padding:12px 14px;}
         .am-submix-h{display:flex;justify-content:space-between;align-items:center;color:var(--cyan,${PAL.cyan50});
             font-size:12px;font-weight:bold;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;}
         .am-submix-close{cursor:pointer;color:${PAL.sky71};font-size:11px;font-weight:900;}
         .am-submix-close:hover{color:${PAL.white};}
-        .am-substrips .am-strip{background:${PAL.blue12s55};}
+        .am-substrips .am-strip{background:${PAL.blue12_0c1730};}
     `,
   );
 }

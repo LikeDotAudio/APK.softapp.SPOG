@@ -64,7 +64,7 @@ export class Fader {
     const tl = this.trackLen;
     c.lineCap = 'round';
     c.lineWidth = 6; c.strokeStyle = PAL.black; c.beginPath(); c.moveTo(0, -tl / 2); c.lineTo(0, tl / 2); c.stroke();
-    c.lineWidth = 2; c.strokeStyle = PAL.grey13; c.beginPath(); c.moveTo(0, -tl / 2); c.lineTo(0, tl / 2); c.stroke();
+    c.lineWidth = 2; c.strokeStyle = PAL.grey12; c.beginPath(); c.moveTo(0, -tl / 2); c.lineTo(0, tl / 2); c.stroke();
     c.lineWidth = 1; c.strokeStyle = PAL.grey40;
     for (let i = 0; i <= 10; i++) {
       const ly = -tl / 2 + tl * (i / 10), len = i % 5 === 0 ? 10 : 5;
@@ -75,7 +75,7 @@ export class Fader {
     c.translate(0, capY);
     c.rotate(-((this.angle + 90) * Math.PI / 180));
     const r = 22;
-    c.fillStyle = PAL.grey20; c.strokeStyle = this.hovered ? PAL.white : this.color; c.lineWidth = this.hovered ? 3 : 2;
+    c.fillStyle = PAL.grey20s0; c.strokeStyle = this.hovered ? PAL.white : this.color; c.lineWidth = this.hovered ? 3 : 2;
     c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); c.stroke();
     const startDeg = 135, curDeg = 135 + (this.rot / 100) * 270, ar = r - 5;
     c.strokeStyle = this.color; c.lineWidth = 4;

@@ -29,7 +29,7 @@ const UM_CSS = `
 .um-btn.stale{animation:um-pulse 1.2s infinite;background:${ACCENT};color:${PAL.yellow97};}
 @keyframes um-pulse{0%,100%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 0 0 ${accentAlpha(.5)};}50%{box-shadow:inset 6px 0 0 ${PAL.orange39},0 0 12px 3px ${accentAlpha(.5)};}}
 .um-panel{position:fixed;z-index:2650;display:none;flex-direction:column;gap:7px;padding:12px;
-  min-width:250px;background:${PAL.blue08s50};border:1px solid ${PAL.blue22s37};border-radius:14px;
+  min-width:250px;background:${PAL.blue09};border:1px solid ${PAL.blue23s39};border-radius:14px;
   box-shadow:0 14px 44px ${alpha(PAL.black, .7)};font-family:Arial,Helvetica,sans-serif;}
 .um-panel.open{display:flex;}
 .um-h{font:900 9px 'Courier New',monospace;letter-spacing:2px;color:${PAL.blue44s20};text-transform:uppercase;
@@ -50,7 +50,7 @@ const UM_CSS = `
 .um-seat{display:flex;align-items:center;gap:8px;border-top:1px solid ${PAL.blue18s42};padding-top:10px;
   color:${PAL.blue44s20};font:900 9px 'Courier New',monospace;letter-spacing:2px;}
 .um-seat button{border:none;border-radius:10px;padding:7px 13px;cursor:pointer;
-  font:900 10px 'Courier New',monospace;letter-spacing:1px;background:${PAL.blue16_16233d};color:${PAL.sky84};}
+  font:900 10px 'Courier New',monospace;letter-spacing:1px;background:${PAL.blue19};color:${PAL.sky84};}
 .um-seat button:hover{filter:brightness(1.3);}
 /* ICON FACE: lcars.css turns these chrome buttons into 34px tiles pinned to the
    clock row (position:fixed !important, font-size:0). Inside the menu they must
@@ -64,12 +64,12 @@ html[data-face="icons"] .um-panel .palette-toggle.has-face-icon{
   top:auto !important;bottom:auto !important;
   width:100% !important;min-width:0 !important;height:auto !important;
   display:flex !important;align-items:center;justify-content:flex-start;gap:10px;
-  background:${PAL.blue09s45} !important;color:${PAL.sky84} !important;
+  background:${PAL.blue09} !important;color:${PAL.sky84} !important;
   font-size:11px !important;letter-spacing:2px !important;font-weight:900;
   padding:9px 14px !important;border-radius:10px !important;}
 html[data-face="icons"] .um-panel .credit-button.has-face-icon{
   position:static !important;width:100% !important;height:auto !important;
-  background:${PAL.blue09s45} !important;color:${PAL.sky84} !important;font-size:10px !important;}
+  background:${PAL.blue09} !important;color:${PAL.sky84} !important;font-size:10px !important;}
 `;
 
 function seatRow(): HTMLElement {

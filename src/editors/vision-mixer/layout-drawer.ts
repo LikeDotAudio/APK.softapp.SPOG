@@ -11,11 +11,11 @@ import { PAL } from '../../domain/palette.js';
 
 /** Build the layout drawer + its toolbar toggle over the dashboard. */
 export function buildLayoutDrawer(d: Dashboard): { lmDrawer: HTMLElement; lmToggle: HTMLElement } {
-  const lmDrawer = el('div', { class: 'vm-drawer', style: `display:none; padding: 16px; background: ${PAL.blue07}; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;` });
+  const lmDrawer = el('div', { class: 'vm-drawer', style: `display:none; padding: 16px; background: ${PAL.blue09}; border-radius: 8px; margin-bottom: 16px; gap: 16px; flex-direction: column;` });
   const lmChecks = el('div', { style: 'display:flex; gap:16px; flex-wrap:wrap;' });
   const rebuildLmChecks = () => {
     lmChecks.replaceChildren(...Object.keys(d.modules).map(id => {
-      const lbl = el('label', { style: `cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:bold; color: ${PAL.blue91};` }, [id.toUpperCase()]);
+      const lbl = el('label', { style: `cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:bold; color: ${PAL.blue89};` }, [id.toUpperCase()]);
       const chk = el('input', { type: 'checkbox', checked: !d.layout.hidden.includes(id) }) as HTMLInputElement;
       chk.addEventListener('change', () => {
         if (chk.checked) d.layout.hidden = d.layout.hidden.filter(x => x !== id);

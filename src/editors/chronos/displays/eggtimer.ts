@@ -17,7 +17,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   const bR = S * 0.47;
   roundRect(g, cx - bR, cy - bR, bR * 2, bR * 2, S * 0.1);
   const body = g.createLinearGradient(0, cy - bR, 0, cy + bR);
-  body.addColorStop(0, PAL.white); body.addColorStop(1, PAL.grey90);
+  body.addColorStop(0, PAL.white); body.addColorStop(1, PAL.grey90s0);
   g.fillStyle = body; g.fill();
   g.strokeStyle = alpha(PAL.black, .14); g.lineWidth = S * 0.006; g.stroke();
 
@@ -61,7 +61,7 @@ function draw(g: CanvasRenderingContext2D, W: number, H: number, c: DisplayCtx):
   const kw = S * 0.1, kh = S * 0.34;
   roundRect(g, cx - kw / 2, cy - kh / 2, kw, kh, kw * 0.5);
   const kg = g.createLinearGradient(cx - kw / 2, 0, cx + kw / 2, 0);
-  kg.addColorStop(0, PAL.grey91); kg.addColorStop(0.5, PAL.white); kg.addColorStop(1, PAL.grey84);
+  kg.addColorStop(0, PAL.grey90s0); kg.addColorStop(0.5, PAL.white); kg.addColorStop(1, PAL.grey84);
   g.fillStyle = kg; g.fill();
   g.strokeStyle = alpha(PAL.black, .16); g.lineWidth = S * 0.003; g.stroke();
 

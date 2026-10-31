@@ -11,7 +11,7 @@ import { PAL, alpha } from '../domain/palette.js';
 const STYLE_ID = 'tr-tip';
 const CSS = `
 .tr-tip{position:fixed;z-index:100000;display:none;max-width:340px;pointer-events:none;
-  background:${PAL.blue10s55};border:1px solid ${PAL.blue31s44};border-radius:9px;padding:11px 13px;
+  background:${PAL.blue09};border:1px solid ${PAL.blue31s44};border-radius:9px;padding:11px 13px;
   color:${PAL.sky88};font:11px/1.55 Arial,Helvetica,sans-serif;box-shadow:0 12px 34px ${alpha(PAL.black, .7)};}
 .tr-tip.open{display:block;}
 .tr-tip b{color:${PAL.sky69};letter-spacing:1px;text-transform:uppercase;font-size:11px;}
@@ -19,8 +19,8 @@ const CSS = `
 .tr-tip .k{display:inline-block;min-width:74px;color:${PAL.sky63s37};text-transform:uppercase;
   font-size:9px;letter-spacing:.5px;vertical-align:top;}
 .tr-tip .g{color:${PAL.green69};font-weight:bold;} .tr-tip .bad{color:${PAL.red80};font-weight:bold;}
-.tr-tip .warn{color:${PAL.orange74};font-weight:bold;}
-.tr-tip .note{display:block;margin-top:7px;padding-top:7px;border-top:1px solid ${PAL.blue20s44};color:${PAL.sky84};}
+.tr-tip .warn{color:${PAL.orange75};font-weight:bold;}
+.tr-tip .note{display:block;margin-top:7px;padding-top:7px;border-top:1px solid ${PAL.blue19};color:${PAL.sky84};}
 .has-tip{cursor:help;}
 `;
 

@@ -84,7 +84,7 @@ export function createControlWidget(
     // Readout / indicator / patch point
     const box = el('div', {
       class: 'dev-toggle-btn',
-      style: `background: ${PAL.blue09s51}; border: 1px solid ${PAL.blue17}; color: ${PAL.sky60};`,
+      style: `background: ${PAL.blue09}; border: 1px solid ${PAL.blue17}; color: ${PAL.sky60};`,
       textContent: formatVal(io.value ?? '—', io.unit),
     });
     dispose.add(onDeviceValue(devId, io.id, (v) => {

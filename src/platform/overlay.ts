@@ -12,8 +12,8 @@ import { PAL, alpha } from '../domain/palette.js';
 const STYLE_ID = 'tr-ed-overlay';
 const CSS = `
 .ed-overlay{position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;
-  background:radial-gradient(circle at 50% 30%,${PAL.blue12s57} 0%,${PAL.blue04} 85%);
-  font-family:Arial,Helvetica,sans-serif;color:${PAL.sky94};}
+  background:radial-gradient(circle at 50% 30%,${PAL.blue12_0c1730} 0%,${PAL.blue04} 85%);
+  font-family:Arial,Helvetica,sans-serif;color:${PAL.sky94s100};}
 .ed-overlay.open{display:flex;}
 .ed-topbar{flex:0 0 auto;display:flex;align-items:stretch;height:48px;cursor:pointer;
   background:var(--ed-color,${PAL.blue60});border-radius:0 0 16px 44px;overflow:hidden;}
@@ -112,7 +112,7 @@ export function openOverlay(
       e.stopPropagation(); // prevent topbar from closing the overlay
       // Remove any existing voice modal
       document.getElementById('ed-voice-modal')?.remove();
-      const modal = el('div', { id: 'ed-voice-modal', style: `position:absolute;top:48px;right:66px;width:350px;background:${PAL.blue16s45};border:2px solid ${PAL.red60s100};border-radius:0 0 8px 8px;padding:12px;z-index:3000;box-shadow:0 10px 30px ${alpha(PAL.black, .5)};` });
+      const modal = el('div', { id: 'ed-voice-modal', style: `position:absolute;top:48px;right:66px;width:350px;background:${PAL.blue15};border:2px solid ${PAL.red60s100};border-radius:0 0 8px 8px;padding:12px;z-index:3000;box-shadow:0 10px 30px ${alpha(PAL.black, .5)};` });
       modal.append(el('div', { class: 'ed-h', style: `color:${PAL.red60s100};margin-bottom:12px;` }, ['VALID VOICE COMMANDS']));
       const list = el('div', { style: 'display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow-y:auto;' });
       for (const [category, words] of Object.entries(vc)) {
