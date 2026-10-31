@@ -53,6 +53,13 @@ export function createTwistBus(): TwistBus {
 
   const presenceTopic = `${SPOG_ROOT}/system/presence/${sessionId.split(':')[0]}`;
   const subs = new Set<{ filter: string; cb: (t: string, p: unknown) => void }>();
+  // Filters OUTSIDE SPOG/ (an absolute `APK.audio/…` topic, e.g. the Discovery
+  // Engine's device setups). The connect-time SPOG/# never carries them, so each
+  // is subscribed on the broker too — now if connected, and again on every
+  // (re)connect.
+  const external = new Set<string>();
+  // An absolute topic's root is dotted (`APK.audio`); SPOG's own filters are relative suffixes.
+  const isExternal = (f: string): boolean => (f.split('/')[0] ?? '').includes('.');
   // LAST-VALUE CACHE (audit §7.3 gap 1): the broker replays retained topics ONCE,
   // at the connect-time SPOG/# subscribe — anything subscribing later (editors
   // register onParam when they OPEN) missed it. Cache the last payload per topic
@@ -114,6 +121,7 @@ export function createTwistBus(): TwistBus {
       connected = true;
       dbg('connected', sessionId);
       client!.subscribe(`${SPOG_ROOT}/#`, { qos: 0 });
+      for (const f of external) client!.subscribe(f, { qos: 0 });
       const beat = (): void => { send(presenceTopic, { active: true, full_id: sessionId, ts: Date.now() }); };
       beat();
       heartbeat = setInterval(beat, 1000);
@@ -171,6 +179,10 @@ export function createTwistBus(): TwistBus {
     subscribe(filter, cb): () => void {
       const entry = { filter: filter.replace(/^\/+/, ''), cb };
       subs.add(entry);
+      if (isExternal(entry.filter) && !external.has(entry.filter)) {
+        external.add(entry.filter);
+        if (client && connected) client.subscribe(entry.filter, { qos: 0 });
+      }
       // Replay the cache to the late subscriber (async so subscribe() never
       // re-enters the caller mid-registration).
       queueMicrotask(() => {

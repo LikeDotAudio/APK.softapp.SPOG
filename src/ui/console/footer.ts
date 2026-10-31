@@ -150,6 +150,19 @@ export const Footer = {
     return handle;
   },
 
+  /** Remove a group, its sub-groups and their tabs' content panes. */
+  removeGroup(handle: GroupHandle): void {
+    const doomed = groups.filter((g) => g === handle || g.path.startsWith(handle.path + ' / '));
+    for (const g of doomed) {
+      g.tabsEl.querySelectorAll<HTMLElement>('.lcars-tab').forEach((t) => {
+        const id = t.dataset['tabId'];
+        if (id) document.getElementById('tab-' + id)?.remove();
+      });
+    }
+    handle.group.remove();
+    groups = groups.filter((g) => !doomed.includes(g));
+  },
+
   addTab(pgm: TabInfo, opts: TabOpts = {}): HTMLElement | null {
     if (!tabsContainer || !contentContainer) return null;
     const active = !!opts.active;

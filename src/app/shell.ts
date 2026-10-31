@@ -38,6 +38,7 @@ import { initBuildWatch } from '../ui/console/build-watch.js';
 import { initMqttTree } from '../ui/console/mqtt-tree.js';
 import { onRoleChange } from '../platform/auth.js';
 import { showPeopleManager } from '../ui/console/people-manager.js';
+import { loadDiscovered, followDiscovered } from '../ui/console/discovered.js';
 import { openEditorForTwist } from './editor-dispatch.js';
 import { initMergeObserver } from '../ui/merge/observer.js';
 import { initMergeBadge, describeEvent } from '../ui/merge/badge.js';
@@ -116,6 +117,10 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   }
   const peoplePromise = addDestinationTree('Routes/Talent/', peopleGroup, peopleColor, undefined, openEditorForTwist, 'Talent');
 
+  // The Discovery Engine's setup — every device on the network as inputs and
+  // outputs — laid over Routes/** before the first draw (ui/console/discovered).
+  await loadDiscovered(openEditorForTwist);
+
   await Promise.all([
     renderSourcesPanel(ingress, () => wireSourceNodes(ingress)).then(() => wireSourceNodes(ingress)),
     peoplePromise,
@@ -156,6 +161,7 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   // without one. Advertise the whole catalogue, bridge the Captain's Log, and
   // mirror the operator role; publish a final presence on unload.
   const bus = getBus();
+  followDiscovered(bus);   // the engine's setups, live: devices come and go as it finds and loses them
   initMqttTree(bus);   // bottom-right chip (above the clock) → live topic tree + broker config
   // Merge mediator surfaces: the contested toast + a highlighted Captain's Log entry
   // whenever a window held a real fight. (The ⚖ observer launcher is created above and

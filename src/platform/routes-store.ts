@@ -23,8 +23,31 @@ function ls(): Storage | null {
 }
 const keyFor = (url: string): string => PREFIX + url;
 
+/* THE LIVE LAYER. What the Discovery Engine says is on the network right now
+   (ui/console/discovered.ts) is laid over Routes/** the same way a draft is —
+   but in MEMORY ONLY. A draft is somebody's edit and must survive a reload; a
+   discovered device is a claim about NOW, and one that died must not come back
+   from localStorage. Live wins over a draft for the same URL; it never touches
+   storage and never marks the console dirty. */
+const live = new Map<string, unknown>();
+
+/** Replace the whole live layer (an empty map clears it). */
+export function setLive(entries: Map<string, unknown>): void {
+  live.clear();
+  for (const [url, data] of entries) live.set(url, data);
+}
+
+/** The stored draft only — the live layer ignored. For whoever builds that layer. */
+export function getStoredDraft<T = unknown>(url: string): T | null {
+  const store = ls(); if (!store) return null;
+  const raw = store.getItem(keyFor(url));
+  if (raw == null) return null;
+  try { return JSON.parse(raw) as T; } catch { return null; }
+}
+
 /** The draft override for a URL, or null if the file is un-edited (reads from disk). */
 export function getDraft<T = unknown>(url: string): T | null {
+  if (live.has(url)) return structuredClone(live.get(url)) as T;
   const store = ls(); if (!store) return null;
   const raw = store.getItem(keyFor(url));
   if (raw == null) return null;
