@@ -1,5 +1,8 @@
 // src/platform/device/receiver.ts — Ingests device manifests and values from MQTT.
-// Listens for inputs, outputs, types, and groups broadcast on the broker.
+// Listens for inputs, outputs, types, and groups broadcast on the broker under
+// SPOG's own `devices/<id>/…`. The old root-level "Device" family is gone: nothing
+// published that family and no grammar declared it, so the owner dropped it
+// (2026-10-30, LOOSE-spog-device-family).
 
 import type { DeviceManifest, DeviceIO, DeviceGroup } from './types.js';
 import { getBus, type TwistBus } from '../mqtt/index.js';
@@ -128,12 +131,6 @@ export function initDeviceReceiver(bus: TwistBus = getBus()): () => void {
       return;
     }
 
-    // Topic pattern: APK.audio/Device/<devId>/manifest
-    if (parts[0] === 'APK.audio' && parts[1] === 'Device' && parts[3] === 'manifest') {
-      ingestManifest(data);
-      return;
-    }
-
     // Live parameter / IO updates: devices/<devId>/<ioId> or devices/<devId>/params/<ioId>
     if (parts[0] === 'devices' && parts.length >= 3) {
       const devId = parts[1]!;
@@ -144,7 +141,6 @@ export function initDeviceReceiver(bus: TwistBus = getBus()): () => void {
   };
 
   unsubs.push(bus.subscribe('devices/#', handleMsg));
-  unsubs.push(bus.subscribe('APK.audio/Device/#', handleMsg));
 
   return () => {
     receiverStarted = false;
