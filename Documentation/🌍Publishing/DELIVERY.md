@@ -80,6 +80,7 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
   (publishing a tag is the owner's call).
 
 ## Delivered from the 2026-10-30 audit
+- **Owner-held (owner decision 2026-10-31): rotate the FTP credentials.** `SETUP/.env` is purged from every branch (ed55bf6). Steps: change the FTP password at the host, then set the `FTP_*` / `SANDBOX_FTP_*` repository secrets and `GH_PAT` (for the private clock-faces submodule) so the deploy turns green.
 - **Release tag `v111`** — annotated tag at ed55bf6, pushed 2026-10-31 with the owner's go-ahead.
 - **SETUP/.env purged from history** — `git filter-repo --invert-paths --path SETUP/.env` over every branch (main, sandbox, modularity-200-line; worktree-weather-graphic never carried it), force-pushed 2026-10-30 with the owner's go-ahead. Verified: no commit on any origin branch touches the file; HEAD tree unchanged; clockFaces pointer intact. Backup bundle kept in the remediation scratchpad. New main: 20c3854.
 
