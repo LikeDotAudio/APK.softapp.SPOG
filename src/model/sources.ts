@@ -19,6 +19,7 @@ export interface StageBox {
   status?: Status;
   serial?: string;         // label identity — SCAN Fill / Locate / Verify (ROAD-3476)
   asset_tag?: string;
+  mac?: string;            // rating-plate MAC — OCR / SCAN Fill (ROAD-3475)
 }
 
 export interface Production {
@@ -35,6 +36,7 @@ export interface Production {
   role?: string;
   serial?: string;         // label identity — SCAN Fill / Locate / Verify (ROAD-3476)
   asset_tag?: string;
+  mac?: string;            // rating-plate MAC — OCR / SCAN Fill (ROAD-3475)
 }
 
 /** A name-super / lower-third graphic tied to a person (drives the LOWER THIRD

@@ -1,0 +1,18 @@
+{
+  "_about": "ROAD-3475 OCR candidate shapes. Patterns only (case-insensitive regex sources) — never a list of devices, vendors or known values. labels: a printed field name that precedes the value; value: what may follow a label; shapes: values recognisable with no label. A labelled read is offered to ADD ALL; a shape-only read must be attached by hand.",
+  "mac": {
+    "labels": ["MAC(?:\\s*(?:ADDR(?:ESS)?|ID))?", "HW\\s*ADDR(?:ESS)?", "ETH(?:ERNET)?\\s*(?:ADDR(?:ESS)?|MAC)"],
+    "value": "(?:[0-9A-F]{2}[:\\-.\\s]?){5}[0-9A-F]{2}|[0-9A-F]{4}\\.[0-9A-F]{4}\\.[0-9A-F]{4}",
+    "shapes": ["(?:[0-9A-F]{2}[:\\-]){5}[0-9A-F]{2}", "[0-9A-F]{4}\\.[0-9A-F]{4}\\.[0-9A-F]{4}"]
+  },
+  "serial": {
+    "labels": ["S\\s*/\\s*N", "SN", "SER(?:IAL)?\\.?(?:\\s*(?:NO\\.?|NUMBER|NUM|#))?"],
+    "value": "[A-Z0-9](?:[A-Z0-9./\\-]{2,38}[A-Z0-9])",
+    "shapes": []
+  },
+  "asset_tag": {
+    "labels": ["ASSET(?:\\s*(?:TAG|NO\\.?|NUMBER|ID|#))?", "PROPERTY\\s*(?:TAG|NO\\.?)", "INV(?:ENTORY)?\\.?\\s*(?:NO\\.?|#|TAG)"],
+    "value": "[A-Z0-9](?:[A-Z0-9./\\-]{1,38}[A-Z0-9])",
+    "shapes": ["[A-Z]{1,4}-\\d{5,9}"]
+  }
+}

@@ -25,6 +25,8 @@ export interface TwistConfig {
       (ROAD-3476) or typed. Locate and Verify match a scanned code against these. */
   serial?: string;
   asset_tag?: string;
+  /** Read off the rating plate by the OCR importer (ROAD-3475) or typed. */
+  mac?: string;
   /** Failover feeds used when the primary crosspoint(s) go to a fault status
       (audit §6). `hot` auto-cuts, `warm` arms for one-click, `manual` records
       intent; `twist` fails over to another named twist instead of feeds. */

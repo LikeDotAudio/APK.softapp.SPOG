@@ -68,7 +68,10 @@ export function reveal(entry: NetEntry): boolean {
    a destination tab loads once — the draft is read on the next load. */
 const noRerender = (): void => undefined;
 
-export async function act(o: Outcome): Promise<Acted> {
+/** Carry out one outcome. `via` says in the Captain's Log how a Fill's value was
+ *  read: the SCAN panel ('scanned') and the OCR importer ('read by OCR', ROAD-3475)
+ *  both write identity through this one function. */
+export async function act(o: Outcome, via = 'scanned'): Promise<Acted> {
   switch (o.kind) {
     case 'located': {
       // Reveal the best hit only — opening every match's tab would leave the last one showing.
@@ -85,7 +88,7 @@ export async function act(o: Outcome): Promise<Acted> {
       const who = label(o.entry);
       commit(doc, o.entry.url, noRerender,
         // commit() prefixes the document's name; a twist adds its own.
-        () => `${o.entry.kind === 'twist' ? `${o.entry.name} ` : ''}${o.field} ← ${o.value}${o.previous ? ` (was ${o.previous})` : ''} · scanned`,
+        () => `${o.entry.kind === 'twist' ? `${o.entry.name} ` : ''}${o.field} ← ${o.value}${o.previous ? ` (was ${o.previous})` : ''} · ${via}`,
         () => { applyIdentity(doc, o.entry, o.field, o.value); });
       return { line: `FILL → ${who}.${o.field} = ${o.value}${o.previous ? ` (was ${o.previous})` : ''}`, tone: 'ok' };
     }

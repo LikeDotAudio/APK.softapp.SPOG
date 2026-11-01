@@ -10,8 +10,11 @@
 // room and a label on a stagebox finds the stagebox.
 
 export type NetKind = 'source' | 'destination' | 'twist';
-export type IdentityField = 'serial' | 'asset_tag';
-export type MatchField = IdentityField | 'mac' | 'id' | 'name';
+/** What Fill writes on an authored card (a MAC too since ROAD-3475: the OCR
+ *  importer reads them off rating plates). A discovered device's identity is
+ *  never written — it is what the device reports. */
+export type IdentityField = 'serial' | 'asset_tag' | 'mac';
+export type MatchField = IdentityField | 'id' | 'name';
 
 export interface NetEntry {
   /** Stable key: the url, plus `#<index>` for a twist. */
@@ -47,7 +50,7 @@ export function entriesOf(url: string, doc: unknown, live = false): NetEntry[] {
   const destination = url.includes('/Destinations/');
   const out: NetEntry[] = [{
     key: url, url, kind: destination ? 'destination' : 'source', name, id: str(doc.id),
-    serial: str(doc.serial) ?? str(dev.serial), asset_tag: str(doc.asset_tag), mac: str(dev.mac), live,
+    serial: str(doc.serial) ?? str(dev.serial), asset_tag: str(doc.asset_tag), mac: str(doc.mac) ?? str(dev.mac), live,
   }];
   const kit = isObj(doc.kit) ? doc.kit : {};
   const twists = Array.isArray(doc.twists) ? doc.twists : Array.isArray(kit.twists) ? kit.twists : [];
@@ -57,7 +60,7 @@ export function entriesOf(url: string, doc: unknown, live = false): NetEntry[] {
       if (!tn) return;
       const to = isObj(t) ? t : {};
       out.push({ key: `${url}#${i}`, url, kind: 'twist', name: tn, parent: name, twistIndex: i,
-        serial: str(to.serial), asset_tag: str(to.asset_tag), live });
+        serial: str(to.serial), asset_tag: str(to.asset_tag), mac: str(to.mac), live });
     });
   }
   return out;

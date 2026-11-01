@@ -1,0 +1,16 @@
+{
+  "rack-label.png": {
+    "printed": [
+      "RACK B  U12   DSP-8800",
+      "S/N: KX7R-24918",
+      "MAC: 00:1D:C1:4A:7F:22",
+      "ASSET TAG: AT-004512",
+      "Made in Canada  48V  2.5A"
+    ],
+    "identity": {
+      "serial": "KX7R-24918",
+      "mac": "00:1D:C1:4A:7F:22",
+      "asset_tag": "AT-004512"
+    }
+  }
+}

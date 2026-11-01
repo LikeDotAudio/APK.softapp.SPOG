@@ -6,6 +6,8 @@
 // THE LAW (§5.1, learned from the v109 disaster): the entry HTML is NEVER
 // served cache-first. Lanes:
 //   /assets/*  (hashed)       → cache-first, immutable — the hash IS the version
+//   /ocr/*  (versioned path)   → cache-first on FIRST USE, not precached: ~7 MB of
+//                                 self-hosted Tesseract only a seat that opens OCR pays for (ROAD-3475)
 //   Routes/**  JSON           → stale-while-revalidate — instant boot, fresh next paint
 //   assets/icons/* (and legacy Routes/*/icons/*) → stale-while-revalidate, long-lived bucket
 //   navigations / index.htm   → network-first, cache fallback (offline boot only)
@@ -17,7 +19,8 @@ const VER = '__BUILD__';
 const SHELL = `twist-shell-${VER}`;
 const ROUTES = 'twist-routes-v1';
 const ICONS = 'twist-icons-v1';
-const KEEP = [SHELL, ROUTES, ICONS];
+const OCR = 'twist-ocr-v1';   // paths carry the engine version, so the bucket outlives builds
+const KEEP = [SHELL, ROUTES, ICONS, OCR];
 const PRECACHE = __PRECACHE__;
 
 self.addEventListener('install', (e) => {
@@ -76,6 +79,7 @@ self.addEventListener('fetch', (e) => {
   const path = url.pathname;
 
   if (path.includes('/assets/')) { e.respondWith(cacheFirst(SHELL, req)); return; }
+  if (path.includes('/ocr/')) { e.respondWith(cacheFirst(OCR, req)); return; }
   if (path.includes('/Routes/')) {
     e.respondWith(staleWhileRevalidate(path.includes('/icons/') ? ICONS : ROUTES, req));
     return;

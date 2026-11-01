@@ -61,6 +61,26 @@ builds one, else the self-hosted `zxing-wasm` reader (pinned 3.1.5), loaded lazi
 its `.wasm` is emitted into `dist/assets/` and is never fetched from a CDN. Test
 photos: `platform/scan/__fixtures__/make-fixtures.mjs`.
 
+## Reading labels with OCR (ROAD-3475)
+
+The ⌕ OCR panel (`ui/ocr/`, in the seat MENU next to SCAN) imports photos (many at
+once) or a `.zip` of them and reads them with **Tesseract.js pinned at 7.0.0** —
+worker, core (SIMD+LSTM or plain LSTM, picked by a wasm probe) and the English
+`4.0.0_best_int` data are copied by `SETUP/ocr-assets.mjs` into `dist/ocr/` (served
+in dev from node_modules) and requested only when the first photo is read; every
+path is set, so nothing is fetched from a CDN. `dist/ocr/` is outside `dist/assets/`,
+so the service worker caches it on first use instead of precaching ~7 MB into every
+seat. The zip is opened in memory under `domain/ocr/archive-rules` (limits, no `..`
+or absolute paths, bytes must BE an image). Word boxes are SVG over the photo;
+arrows move by geometry (`domain/ocr/box-nav`), Enter corrects a box (the engine's
+reading is kept beside the correction). `domain/ocr/candidates` finds serial / MAC /
+asset-tag values by the shapes in `ocr-shapes.json` (patterns, never device lists).
+**+ ATTACH / ADD ALL** go through SCAN's Fill (`attach-plan` → `routeRead('fill')`
+→ `ui/scan/scan-act` `act()`), with its refusals. **EXPORT FROM PROJECT** writes the
+recorded identity as a printable sheet of QR labels (`domain/ocr/qr-export`, drawn
+by zxing-wasm's writer) that SCAN's Locate reads back. Test photo:
+`platform/ocr/__fixtures__/make-fixtures.mjs` (ImageMagick).
+
 ## Run
 
 ```bash

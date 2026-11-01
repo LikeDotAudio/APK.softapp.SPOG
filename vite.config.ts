@@ -3,6 +3,7 @@
 import { defineConfig } from 'vite';
 import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { ocrAssetsPlugin } from './SETUP/ocr-assets.mjs';
 
 // Build stamp shown in the bottom-corner byline. Computed fresh on every `vite
 // build` (so it changes on every deploy): the CHANGELOG version + build time + git
@@ -38,7 +39,8 @@ const BUILD = buildId();
 
 export default defineConfig({
   root: '.',
-  plugins: [{
+  // ocrAssetsPlugin: the self-hosted Tesseract worker/core/eng data → dist/ocr/ (ROAD-3475).
+  plugins: [ocrAssetsPlugin(), {
     // Emit the build stamp to DISK too (dist/build-id.json): deploy.py reads it
     // to publish the retained SPOG/system/build stamp, and the service worker
     // keys its caches on it — __BUILD_ID__ alone lives only inside the JS

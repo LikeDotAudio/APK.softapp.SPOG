@@ -25,13 +25,13 @@ export type Outcome =
   | { kind: 'located'; code: string; hits: Hit[] }
   | { kind: 'not-found'; code: string }
   | { kind: 'fill'; code: string; entry: NetEntry; field: IdentityField; value: string; previous?: string }
-  | { kind: 'verified'; code: string; entry: NetEntry; field: IdentityField | 'mac' }
-  | { kind: 'mismatch'; code: string; entry: NetEntry; recorded: Partial<Record<IdentityField | 'mac', string>> }
+  | { kind: 'verified'; code: string; entry: NetEntry; field: IdentityField }
+  | { kind: 'mismatch'; code: string; entry: NetEntry; recorded: Partial<Record<IdentityField, string>> }
   | { kind: 'unrecorded'; code: string; entry: NetEntry }
   | { kind: 'refused'; code: string; reason: string };
 
-const recordedOf = (e: NetEntry): Partial<Record<IdentityField | 'mac', string>> => {
-  const r: Partial<Record<IdentityField | 'mac', string>> = {};
+const recordedOf = (e: NetEntry): Partial<Record<IdentityField, string>> => {
+  const r: Partial<Record<IdentityField, string>> = {};
   if (e.serial) r.serial = e.serial;
   if (e.asset_tag) r.asset_tag = e.asset_tag;
   if (e.mac) r.mac = e.mac;
@@ -55,7 +55,7 @@ export function routeRead(mode: ScanMode, code: string, ctx: RouteContext): Outc
   if (mode === 'verify') {
     const want = new Set(candidates(text));
     const rec = recordedOf(entry);
-    const fields = Object.keys(rec) as Array<IdentityField | 'mac'>;
+    const fields = Object.keys(rec) as Array<IdentityField>;
     if (!fields.length) return { kind: 'unrecorded', code: text, entry };
     const field = fields.find((f) => want.has(normCode(rec[f]!)));
     return field ? { kind: 'verified', code: text, entry, field } : { kind: 'mismatch', code: text, entry, recorded: rec };

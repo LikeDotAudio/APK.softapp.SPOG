@@ -32,6 +32,7 @@ import { getPrefs, patchPrefs } from '../platform/prefs.js';
 import { initColourScheme, applyStoredColourScheme } from '../ui/console/colour-scheme.js';
 import { initAuthoring } from '../ui/console/authoring.js';
 import { initScanPanel } from '../ui/scan/scan-panel.js';
+import { initOcrPanel } from '../ui/ocr/ocr-launch.js';
 import { initDisciplineLens } from '../ui/console/lens.js';
 import { getBus, advertiseAll, startLogBridge } from '../platform/mqtt/index.js';
 import { initSeatSync } from '../platform/seat-sync.js';
@@ -159,6 +160,7 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   initAcademy();   // first-load quick-start overlay + ACADEMY button (credit-row)
   initMergeObserver();   // ⚖ MERGE mediator launcher + panel (launcher adopted into the MENU below)
   initScanPanel();   // ▦ SCAN — label decode → Locate / Fill / Verify on the netlist (ROAD-3476; adopted into the MENU)
+  initOcrPanel();    // ⌕ OCR — photos/zip → word boxes → serial/asset/MAC via SCAN's Fill; QR export (ROAD-3475; adopted into the MENU)
   initUserMenu();   // seat menu beside the log — adopts academy/1990s/display/chirality/credits/merge
 
   // MQTT projection (audit: Documentation/Audit /TWIST-MQTT-Advertising-Audit.md). No-op

@@ -34,7 +34,7 @@ const ENGINE_TEXT = {
 } as const;
 
 const cardText = (e: NetEntry | null): string => !e ? 'no active card — Locate or pick one'
-  : `${e.parent ? `${e.parent} · ` : ''}${e.name} · serial ${e.serial ?? '—'} · asset ${e.asset_tag ?? '—'}${e.live ? ' · discovered' : ''}`;
+  : `${e.parent ? `${e.parent} · ` : ''}${e.name} · serial ${e.serial ?? '—'} · asset ${e.asset_tag ?? '—'}${e.mac ? ` · mac ${e.mac}` : ''}${e.live ? ' · discovered' : ''}`;
 
 export function initScanPanel(): void {
   addStyles('scan-styles', SCAN_CSS);
@@ -51,7 +51,7 @@ export function initScanPanel(): void {
   const launch = el('button', { class: 'scan-launch', title: 'Scan a label — Locate / Fill / Verify against the netlist' }, ['▦ SCAN']);
   const engine = el('span', { class: 'scan-engine' }, ['engine · …']);
   const modeBtns = (['locate', 'fill', 'verify'] as const).map((m) => el('button', { dataset: { mode: m } }, [m.toUpperCase()]));
-  const fieldSel = el('select', { title: 'Fill writes this field' }, [el('option', { value: 'serial' }, ['serial']), el('option', { value: 'asset_tag' }, ['asset tag'])]);
+  const fieldSel = el('select', { title: 'Fill writes this field' }, [el('option', { value: 'serial' }, ['serial']), el('option', { value: 'asset_tag' }, ['asset tag']), el('option', { value: 'mac' }, ['MAC'])]);
   const cardSel = el('select', { title: 'Active device card' });
   const card = el('div', { class: 'scan-card' }, [cardText(null)]);
   const video = el('video', { class: 'scan-video' });
