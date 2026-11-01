@@ -405,6 +405,21 @@ bound the switcher:
   ] }
 ```
 
+Optional on a source leaf or on a twist (ROAD-3479):
+
+- `wire` — what the feeds ride on or the input receives on (`"Dante"`, `"AES67"`,
+  `"ST 2110-30"`, `"PTP"`, `"NMOS"`, `"MADI"`, `"SDI"`, `"Ethernet"` …) and `format` (e.g.
+  `"ST 2110-20"`). The Discipline Lens reads them; leave them out when the wire is not known,
+  rather than guess (the lens then classifies by the feed's own class). On a discovered device
+  the engine's per-output / per-input wire wins.
+- `serial`, `asset_tag`, `mac` — the unit's identity, written by the SCAN / OCR panels' Fill or
+  typed; the destination card shows them.
+
+Every `id` is unique on its side: across `Destinations/`, and across `Sources/` + `Talent/`
+(nested player / video / stream ids included). The one allowed repeat is a production
+re-exposed as a source (the same id and name on both sides). `test/routes-tree.test.ts` holds
+the tree to this.
+
 ## Running it
 
 The app is **TypeScript**, built with **Vite**. Dev/test needs Node; the built app is a static

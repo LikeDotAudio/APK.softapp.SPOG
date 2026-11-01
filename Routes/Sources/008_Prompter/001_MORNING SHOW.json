@@ -11,7 +11,7 @@
   ],
   "blocks": [
     {
-      "id": "b1",
+      "id": "pms-b1",
       "slug": "OPEN",
       "presenter": "ANCHOR 1",
       "camera": "CAM 1",
@@ -19,7 +19,7 @@
       "text": "Good morning and welcome to the broadcast."
     },
     {
-      "id": "b2",
+      "id": "pms-b2",
       "slug": "HEADLINES",
       "presenter": "ANCHOR 2",
       "camera": "CAM 2",
@@ -27,7 +27,7 @@
       "text": "Our top stories this hour."
     },
     {
-      "id": "b3",
+      "id": "pms-b3",
       "slug": "WEATHER",
       "presenter": "ANCHOR 1",
       "camera": "CAM 3",

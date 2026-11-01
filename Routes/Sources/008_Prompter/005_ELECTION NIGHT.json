@@ -11,7 +11,7 @@
   ],
   "blocks": [
     {
-      "id": "b1",
+      "id": "penight-b1",
       "slug": "OPEN",
       "presenter": "ANCHOR 1",
       "camera": "CAM 1",
@@ -19,7 +19,7 @@
       "text": "Polls are closing across the country."
     },
     {
-      "id": "b2",
+      "id": "penight-b2",
       "slug": "DESK",
       "presenter": "ANCHOR 2",
       "camera": "CAM 2",

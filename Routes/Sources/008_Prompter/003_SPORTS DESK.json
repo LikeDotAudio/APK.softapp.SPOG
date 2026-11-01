@@ -11,7 +11,7 @@
   ],
   "blocks": [
     {
-      "id": "b1",
+      "id": "psd-b1",
       "slug": "OPEN",
       "presenter": "HOST",
       "camera": "CAM 2",
@@ -19,7 +19,7 @@
       "text": "Welcome to the sports desk."
     },
     {
-      "id": "b2",
+      "id": "psd-b2",
       "slug": "SCORES",
       "presenter": "HOST",
       "camera": "CAM 2",

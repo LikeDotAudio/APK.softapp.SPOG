@@ -11,7 +11,7 @@
   ],
   "blocks": [
     {
-      "id": "b1",
+      "id": "ppt-b1",
       "slug": "OPEN",
       "presenter": "MODERATOR",
       "camera": "CAM 4",
@@ -19,7 +19,7 @@
       "text": "Welcome to the panel."
     },
     {
-      "id": "b2",
+      "id": "ppt-b2",
       "slug": "AD-LIB",
       "presenter": "MODERATOR",
       "camera": "CAM 4",

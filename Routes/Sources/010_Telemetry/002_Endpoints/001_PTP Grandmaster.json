@@ -4,6 +4,7 @@
   "prefix": "GM-",
   "count": 2,
   "extraClass": "telemetry-endpoint",
+  "wire": "PTP",
   "color": "#C678C6",
   "status": "LOCKED"
 }

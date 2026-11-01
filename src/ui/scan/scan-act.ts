@@ -19,6 +19,7 @@ import { commit, canBuild } from '../console/authoring-commit.js';
 import { logAction } from '../console/captains-log.js';
 import { footerGroups, openGroupPath } from '../console/footer.js';
 import { expandProductionGroups } from '../console/footer-deeplink.js';
+import { refreshIdentity } from '../identity-line.js';
 
 export type Tone = 'ok' | 'warn' | 'bad';
 export interface Acted { line: string; tone: Tone }
@@ -64,9 +65,6 @@ export function reveal(entry: NetEntry): boolean {
   return true;
 }
 
-/* No pane re-render after a Fill: no SPOG view draws serial/asset_tag yet, and
-   a destination tab loads once — the draft is read on the next load. */
-const noRerender = (): void => undefined;
 
 /** Carry out one outcome. `via` says in the Captain's Log how a Fill's value was
  *  read: the SCAN panel ('scanned') and the OCR importer ('read by OCR', ROAD-3475)
@@ -86,7 +84,8 @@ export async function act(o: Outcome, via = 'scanned'): Promise<Acted> {
       const doc = await fetchJSON<Record<string, unknown>>(o.entry.url);
       if (!doc) return { line: `REFUSED — ${o.entry.url} could not be read`, tone: 'bad' };
       const who = label(o.entry);
-      commit(doc, o.entry.url, noRerender,
+      // The card's identity line redraws in place (and again on the log's undo).
+      commit(doc, o.entry.url, () => refreshIdentity(o.entry.url, doc),
         // commit() prefixes the document's name; a twist adds its own.
         () => `${o.entry.kind === 'twist' ? `${o.entry.name} ` : ''}${o.field} ← ${o.value}${o.previous ? ` (was ${o.previous})` : ''} · ${via}`,
         () => { applyIdentity(doc, o.entry, o.field, o.value); });

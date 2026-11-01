@@ -18,6 +18,7 @@ import { renderVideoPool } from './pools-video.js';
 import { renderAudioPool, renderPersonPool } from './pools-audio.js';
 import { renderPlayoutPool, renderStreamsPool } from './pools-playout.js';
 import { renderProductionInputs } from './pools-productions.js';
+import { paintSource } from '../identity-line.js';
 
 // ---- re-exports (keep every external importer of './pools.js' byte-identical) --
 export { togglePool } from './pools-fold.js';
@@ -62,4 +63,5 @@ export function renderSourceLeaf(data: SourceLeaf, container: HTMLElement, kind:
     const caps = CAP_MAP[kind];
     if (caps) el.dataset.cap = caps;
   }
+  paintSource(data, container);   // serial / asset tag / MAC under the pool header (ROAD-3479)
 }

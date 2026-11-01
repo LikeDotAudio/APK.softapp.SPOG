@@ -124,6 +124,8 @@ export function renderVideoPool(data: SourceLeaf, container: HTMLElement): void 
       });
     } else {
       fillVideoCameras(grid, data.prefix ?? '', data.count ?? 0, data.extraClass ?? '', data.color ?? '', data.status);
+      // A prefix/count leaf's wire/format (e.g. the PTP grandmaster) rides every port too.
+      grid.querySelectorAll<HTMLElement>('.signal-node').forEach((n) => tagWire(n, data, n.textContent?.trim() ?? ''));
     }
     tagOrigin(grid, data.origin || data.name);
   }

@@ -4,6 +4,7 @@
   "prefix": "SW-A-",
   "count": 4,
   "extraClass": "telemetry-switch",
+  "wire": "Ethernet",
   "color": "#39D353",
   "status": "ONLINE"
 }

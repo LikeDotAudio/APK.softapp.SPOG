@@ -10,6 +10,7 @@ import { Footer, type GroupHandle } from './footer.js';
 import { type OpenEditor } from './matrix.js';
 import { renderPrograms } from './render-programs.js';
 import { trackLoad } from '../pending-loads.js';
+import { paintDestination } from '../identity-line.js';
 
 // Re-export so existing importers of console/destinations keep resolving.
 export { renderPrograms } from './render-programs.js';
@@ -54,6 +55,7 @@ export async function addDestinationTree(
             const pane = document.getElementById('tab-' + id);
             if (!pane) return;
             renderPrograms(data, pane, openEditor, baseUrl + f.href);
+            paintDestination(data, pane);   // serial / asset tag / MAC (ROAD-3479)
             afterRender.forEach((cb) => { try { cb(data, pane); } catch (e) { console.warn('destination after-render:', e); } });
           }));
         },
