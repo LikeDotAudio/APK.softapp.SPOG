@@ -7,7 +7,7 @@
 import { describe, it, expect, afterAll } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { createOcrEngine, browserOptions, OCR_DIRS, type OcrEngine } from './ocr-engine.js';
+import { createOcrEngine, browserOptions, engineError, OCR_DIRS, type OcrEngine } from './ocr-engine.js';
 import { extractCandidates } from '../../domain/ocr/candidates.js';
 import { getAdjacentBoxId } from '../../domain/ocr/box-nav.js';
 import { wordText, type OcrPage } from '../../domain/ocr/ocr-page.js';
@@ -62,5 +62,33 @@ describe('browser paths', () => {
       workerBlobURL: false,
     });
     expect(browserOptions('https://spog.example/', false).corePath).toMatch(/tesseract-core-lstm\.wasm\.js$/);
+  });
+});
+
+describe('an engine that cannot start rejects, promptly and by name', () => {
+  // tesseract.js 7 never settled createWorker() when the language data (or the
+  // core) failed inside the worker: the error was thrown uncaught and the OCR panel
+  // waited forever. It must reject, naming the files, well inside a second or two.
+  it('a missing language file is a named rejection, not a hang', async () => {
+    const missing = join(__dirname, '__fixtures__', 'no-such-lang');
+    const t0 = performance.now();
+    const err = await Promise.race([
+      createOcrEngine({ langPath: missing, cacheMethod: 'none', gzip: true }).then(
+        async (e) => { await e.terminate(); return new Error('engine started without its language data'); },
+        (e: unknown) => e,
+      ),
+      new Promise<Error>((r) => setTimeout(() => r(new Error('HUNG: createOcrEngine never settled')), 10_000)),
+    ]) as Error;
+    expect(err.message).toMatch(/^OCR engine did not start \(language data .*no-such-lang\): .*eng\.traineddata/);
+    expect(performance.now() - t0).toBeLessThan(10_000);
+  }, 15_000);
+
+  it('names every engine file it was given, and says when no reason came back', () => {
+    const o = browserOptions('https://spog.example/', true);
+    const e = engineError(o, undefined);
+    expect(e.message).toContain(`worker ${o.workerPath}`);
+    expect(e.message).toContain(`core ${o.corePath}`);
+    expect(e.message).toContain(`language data ${o.langPath}`);
+    expect(e.message).toMatch(/: no reason given$/);
   });
 });

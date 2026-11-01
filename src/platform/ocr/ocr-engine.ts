@@ -73,7 +73,24 @@ export interface OcrEngine {
  *  directory and cacheMethod 'none' (node reads its core from node_modules). */
 export async function createOcrEngine(opts: EngineOptions): Promise<OcrEngine> {
   const { createWorker, OEM } = await import('tesseract.js');
-  const worker: TessWorker = await createWorker('eng', OEM.LSTM_ONLY, { ...opts });
+  // tesseract.js 7 settles createWorker() only when the worker SCRIPT fails to
+  // load (and then with `undefined`). A core or language file that fails inside
+  // the worker reaches errorHandler and nothing else: without one it is thrown
+  // uncaught and createWorker() never settles, so the OCR panel would wait
+  // forever. The handler turns it into a rejection naming the engine files, which
+  // the panel shows. (The half-started worker is unreachable then and stays idle;
+  // recognizeShared drops the failed start and the next run starts a fresh one.)
+  let failed!: (reason: unknown) => void;
+  const failure = new Promise<never>((_, reject) => { failed = reject; });
+  let worker: TessWorker;
+  try {
+    worker = await Promise.race([
+      createWorker('eng', OEM.LSTM_ONLY, { ...opts, errorHandler: (e: unknown) => failed(e) }),
+      failure,
+    ]);
+  } catch (err) {
+    throw engineError(opts, err);
+  }
   return {
     async recognize(image, width, height) {
       const input = image instanceof ArrayBuffer ? new Uint8Array(image) : image;
@@ -82,6 +99,14 @@ export async function createOcrEngine(opts: EngineOptions): Promise<OcrEngine> {
     },
     terminate: async () => { await worker.terminate(); },
   };
+}
+
+/** The error a failed engine start becomes: which files, and why. */
+export function engineError(opts: EngineOptions, err: unknown): Error {
+  const why = err instanceof Error ? err.message : err === undefined ? 'no reason given' : String(err);
+  const files = [opts.workerPath && `worker ${opts.workerPath}`, opts.corePath && `core ${opts.corePath}`, `language data ${opts.langPath}`]
+    .filter(Boolean).join(', ');
+  return new Error(`OCR engine did not start (${files}): ${why}`, { cause: err });
 }
 
 // ---- the page's one shared engine -------------------------------------------
