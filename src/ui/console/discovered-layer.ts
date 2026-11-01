@@ -49,6 +49,26 @@ const withFolder = (root: string[], has: boolean): string[] => {
   return has ? [...rest, `${FOLDER}/`] : rest;
 };
 
+/** The root manifests a layer is built on. */
+export interface Roots { src: string[]; dest: string[] }
+
+/** The roots the layer must be rebuilt on when the stored drafts change, or null
+ *  when the layer built on `last` still holds. A drafted root wins (an import or an
+ *  edit wrote it); without one the root is disk's — null in `disk` when disk was
+ *  never read, so the caller must fetch (ROAD-3483: the layer used to keep the root
+ *  it was first built on, hiding the folder a later workbook import registered). */
+export function movedRoots(
+  last: Roots,
+  drafted: { src: string[] | null; dest: string[] | null },
+  disk: { src: string[] | null; dest: string[] | null },
+): Roots | 'fetch' | null {
+  const src = Array.isArray(drafted.src) ? drafted.src : disk.src;
+  const dest = Array.isArray(drafted.dest) ? drafted.dest : disk.dest;
+  if (!src || !dest) return 'fetch';
+  const same = (a: string[], b: string[]): boolean => a.length === b.length && a.every((e, i) => e === b[i]);
+  return same(src, last.src) && same(dest, last.dest) ? null : { src, dest };
+}
+
 /** The live layer for a set of devices — pure, so it is testable. `srcRoot` /
  *  `destRoot` are the root manifests as they stand without this layer. */
 export function buildLayer(list: DeviceSetup[], srcRoot: string[], destRoot: string[]): Map<string, unknown> {

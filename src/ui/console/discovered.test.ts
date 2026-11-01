@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildLayer, FOLDER, type DeviceSetup } from './discovered-layer.js';
+import { buildLayer, movedRoots, FOLDER, type DeviceSetup } from './discovered-layer.js';
 
 const dev = (over: Partial<DeviceSetup>): DeviceSetup => ({
   id: 'mac:00:1d:c1:12:34:56', key: 'mac_00_1d_c1_12_34_56', name: 'Stagebox', make: 'Audinate', model: 'AVIO',
@@ -36,5 +36,16 @@ describe('discovered — the engine setup as Routes', () => {
     expect(layer.get('Routes/Sources/index.json')).toEqual(['001_Studio/']);
     expect(layer.get('Routes/Destinations/index.json')).toEqual(['001_Control Room/']);
     expect(layer.has(`Routes/Sources/${FOLDER}/index.json`)).toBe(false);
+  });
+
+  it('a root drafted after the layer was built moves it; an unchanged one does not (ROAD-3483)', () => {
+    const last = { src: ['001_Studio/'], dest: ['001_Control Room/'] };
+    const disk = { src: ['001_Studio/'], dest: ['001_Control Room/'] };
+    expect(movedRoots(last, { src: null, dest: null }, disk)).toBeNull();
+    expect(movedRoots(last, { src: ['001_Studio/'], dest: null }, disk)).toBeNull();
+    expect(movedRoots(last, { src: ['001_Studio/', '009_Imported/'], dest: null }, disk))
+      .toEqual({ src: ['001_Studio/', '009_Imported/'], dest: ['001_Control Room/'] });
+    // a draft cleared while disk was never read: the caller must fetch it
+    expect(movedRoots({ src: ['009_Imported/'], dest: [] }, { src: null, dest: [] }, { src: null, dest: null })).toBe('fetch');
   });
 });

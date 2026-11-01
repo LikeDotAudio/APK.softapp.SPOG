@@ -49,6 +49,20 @@ function removeRoute(twistEl: HTMLElement, origin: string, feed: string): boolea
   return false;
 }
 
+/** How many routes land on a twist on screen but find no sender by origin + feed.
+ *  Only these fall back to matching the feed alone, which is honest only over the
+ *  whole catalog — so the import renders every source folder only when this is > 0. */
+export function senderMisses(imported: Route[]): number {
+  const { byPair } = senderIndex();
+  const tw = twistIndex();
+  let n = 0;
+  for (const r of imported) {
+    if (!tw.has(norm(r.room) + SEP + norm(r.twist))) continue;
+    if (!r.origin || !byPair.has(norm(r.origin) + SEP + norm(r.feed))) n++;
+  }
+  return n;
+}
+
 /** Diff imported routes against the live DOM and apply via placeSourceInTwist. */
 export function applyRoutes(imported: Route[], mode: ImportMode): ApplySummary {
   const { byPair, byFeed } = senderIndex();

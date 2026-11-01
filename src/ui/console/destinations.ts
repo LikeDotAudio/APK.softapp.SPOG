@@ -36,7 +36,7 @@ export async function addDestinationTree(
       const fileName = decodeURIComponent(f.href).replace(/\.json$/i, '');
       const id = ns + '--' + fileName.replace(/[^a-zA-Z0-9]+/g, '-');
       const color = paletteAt(DEST_TAB_COLORS, i);
-      Footer.addTab({ id, name: stripOrder(fileName).toUpperCase() }, {
+      const tab = Footer.addTab({ id, name: stripOrder(fileName).toUpperCase() }, {
         group: parentGroup, active: false, color,
         onActivate: () => {
           void trackLoad('destinations', fetchJSON<Production>(baseUrl + f.href).then((data) => {
@@ -60,6 +60,9 @@ export async function addDestinationTree(
           }));
         },
       });
+      // The room's title will be "<PARENT> — <name>", so the import can activate only
+      // the tabs under a parent its routes name (ROAD-3483).
+      if (tab && parentName) tab.dataset['parentName'] = parentName;
     });
   }
   await Promise.all(dirs.map((dir: Entry) => {

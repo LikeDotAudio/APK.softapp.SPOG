@@ -52,6 +52,10 @@ none of them names, so a re-import's replaced chunks do not pile up in IndexedDB
 The console's lazy loads (a source folder on first open, a destination tab on first
 activate) register in `ui/pending-loads.ts`; whoever opens them all (the 1990s view's
 `loadAllSources`/`loadAllDest`, an editor deep link) awaits `loadsSettled`, never a sleep.
+A workbook import opens only what it names (ROAD-3483): `loadSourcesFor`/`loadDestFor` take
+`domain/router-doc/scope` keys (every ' — ' ancestor of the origins and rooms) and open the
+source folders (`data-chain`) and destination tabs (`data-parent-name`) they match; every
+source folder only when a route must fall back to its feed alone, every tab for a replace.
 
 ## Scanning labels (ROAD-3476)
 

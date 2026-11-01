@@ -6,14 +6,16 @@
 import { el } from '../dom.js';
 import {
   firstLine, splitParent, gatherSenderNodes, gatherReceivers, loadAllSources, loadAllDest,
+  loadSourcesFor, loadDestFor,
 } from './router-view-gather.js';
+import { ancestorKeys } from '../../domain/router-doc/scope.js';
 import { parseConfig } from './matrix-groups.js';
 import { csv, parseWorkbook, columnMap, cleanName, type Sheet } from './router-io-sheet.js';
 import type { Sheets } from '../../domain/pyramid/interpret.js';
 import { runImport } from '../../platform/import/pipeline.js';
 import { memoryProjects } from '../../platform/import/projects.js';
 import { toJson } from '../../domain/router-doc/json.js';
-import { applyRoutes, type Route, type ImportMode, type ApplySummary } from './router-io-apply.js';
+import { applyRoutes, senderMisses, type Route, type ImportMode, type ApplySummary } from './router-io-apply.js';
 import { authorDevices } from './router-io-devices.js';
 import { trueInkVar } from '../ink-var.js';
 
@@ -108,14 +110,20 @@ export async function exportCsv(): Promise<void> {
 const projects = memoryProjects();
 
 /** The 1990s view's commit: author any new Source devices, then replay the
- *  Destinations routes into the live DOM. */
+ *  Destinations routes into the live DOM. Only the groups the workbook names are
+ *  rendered (ROAD-3483): the source folders its origins sit in and the rooms its
+ *  routes land on — every source folder only when a route must fall back to
+ *  matching its feed alone, every room only for a replace (it must see every route). */
 async function replay(sheets: Sheets, mode: ImportMode): Promise<ImportSummary> {
-  await loadAllSources();                                   // render the existing catalog first
-  const dev = sheets.sources ? await authorDevices(sheets.sources) : { created: 0 };
-  await loadAllSources(); await loadAllDest();              // (re)render everything for matching
+  let created = 0;
+  if (sheets.sources) {
+    const col = columnMap(sheets.sources);
+    await loadSourcesFor(ancestorKeys(sheets.sources.rows.map((r) => col(r, 'Origin'))));   // the catalog it may repeat
+    created = (await authorDevices(sheets.sources)).created;
+  }
   const dst = sheets.destinations;
   if (!dst) {
-    if (dev.created) return { created: dev.created, added: 0, removed: 0, rejected: [], unmatched: [] };
+    if (created) return { created, added: 0, removed: 0, rejected: [], unmatched: [] };
     throw new Error('No Destinations tab found (needs columns Room, Twist, Routed Feed).');
   }
   const col = columnMap(dst);
@@ -124,7 +132,10 @@ async function replay(sheets: Sheets, mode: ImportMode): Promise<ImportSummary> 
     const feed = col(r, 'Routed Feed').trim(); if (!feed) continue;
     imported.push({ room: col(r, 'Room').trim(), twist: col(r, 'Twist').trim(), origin: col(r, 'Routed Origin').trim(), feed });
   }
-  return { created: dev.created, ...applyRoutes(imported, mode) };
+  await loadSourcesFor(ancestorKeys(imported.map((r) => r.origin)));
+  await (mode === 'replace' ? loadAllDest() : loadDestFor(ancestorKeys(imported.map((r) => r.room))));
+  if (senderMisses(imported)) await loadAllSources();
+  return { created, ...applyRoutes(imported, mode) };
 }
 
 /** Import a workbook (spog.router/1 JSON, CSV, or legacy SpreadsheetML) through the

@@ -45,7 +45,20 @@ function buildGangCell(data: SourceLeaf, suffix: string, color: string, kind: Po
   if (kind === 'video') {
     const grid = document.createElement('div');
     grid.className = 'input-grid-video gang-cam-grid';
-    fillVideoCameras(grid, data.prefix ?? '', data.count ?? 0, data.extraClass ?? '', cellColor, data.status);
+    // Named video feeds (an imported or discovered device's `video[]`) are the cell's
+    // feeds, as renderVideo draws them outside a gang; else the camera-stack fill.
+    // Without this a ganged imported box drew no feed to route (ROAD-3483).
+    if (data.video && data.video.length) {
+      data.video.forEach((label) => {
+        const sub = document.createElement('div');
+        sub.className = `signal-node video ${data.extraClass ?? ''} sub-stream`;
+        sub.draggable = true;
+        sub.id = `pool-${node.id}-${slugId(label)}`;
+        sub.textContent = label;
+        styleSignalNode(sub, cellColor);
+        grid.appendChild(sub);
+      });
+    } else fillVideoCameras(grid, data.prefix ?? '', data.count ?? 0, data.extraClass ?? '', cellColor, data.status);
     grid.querySelectorAll<HTMLElement>('.signal-node').forEach((n) => { n.dataset.origin = data.origin || data.name; });
     kids.appendChild(grid);
   } else {

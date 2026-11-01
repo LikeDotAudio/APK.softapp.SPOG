@@ -37,8 +37,10 @@ export async function renderSourceTree(
     const kind = inferPoolKind(d);
     const word = (d.name || '').replace(/\s*\d.*$/, '').trim();
     if ((kind === 'audio' || kind === 'video') && word) {
-      let g = byWord.get(word);
-      if (!g) { g = { word, kind, leaves: [] }; byWord.set(word, g); order.push({ group: g }); }
+      // One gang per word AND kind: a gang draws every cell as its first leaf's kind,
+      // so an audio leaf ganged with video ones lost its feeds (ROAD-3483).
+      let g = byWord.get(`${kind}:${word}`);
+      if (!g) { g = { word, kind, leaves: [] }; byWord.set(`${kind}:${word}`, g); order.push({ group: g }); }
       g.leaves.push(d);
     } else order.push({ single: d, kind });
   });
@@ -57,11 +59,14 @@ export async function renderSourceTree(
     const header = content.previousElementSibling as HTMLElement | null;
     // data-lazy says whether this folder's leaves were ever asked for, so
     // loadAllSources can open exactly the folders still unloaded.
+    // data-chain is the origin prefix its leaves will carry, so the import can
+    // open only the folders its routes name (ROAD-3483).
     content.dataset.lazy = 'pending';
+    const childParent = parentLabel ? `${parentLabel} — ${stripOrder(d.name)}` : stripOrder(d.name);
+    content.dataset.chain = childParent;
     const load = async (): Promise<void> => {
       if (content.dataset.lazy !== 'pending') return;
       content.dataset.lazy = 'loaded';
-      const childParent = parentLabel ? `${parentLabel} — ${stripOrder(d.name)}` : stripOrder(d.name);
       await renderSourceTree(baseUrl + d.href, content, depth + 1, groupColor, childParent, onRendered);
       onRendered?.();
     };

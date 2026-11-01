@@ -21,7 +21,7 @@
 //
 // First the HTTP list (works with no broker), then the bus keeps it live.
 
-import { setLive, getStoredDraft } from '../../platform/routes-store.js';
+import { setLive, getStoredDraft, onDraftsChange } from '../../platform/routes-store.js';
 import type { TwistBus } from '../../platform/mqtt/index.js';
 import { renderSourcesPanel } from '../sources/panel.js';
 import { wireSourceNodes } from '../sources/interact.js';
@@ -31,7 +31,8 @@ import { type OpenEditor } from './matrix.js';
 import { DEST_GROUP_COLORS, rgbAt } from '../palette.js';
 
 import {
-  buildLayer, isSetup, SETUP_URL, SETUP_TOPIC, SRC_ROOT, DEST_ROOT, DEST_DIR, type DeviceSetup,
+  buildLayer, movedRoots, isSetup, SETUP_URL, SETUP_TOPIC, SRC_ROOT, DEST_ROOT, DEST_DIR,
+  type DeviceSetup, type Roots,
 } from './discovered-layer.js';
 
 export { buildLayer, FOLDER, type DeviceSetup, type DeviceIO } from './discovered-layer.js';
@@ -55,8 +56,34 @@ async function diskRoot(url: string): Promise<string[]> {
   return diskRoots.get(url) ?? [];
 }
 
+let roots: Roots | null = null;   // what the live layer was last built on
+function lay(next: Roots): void {
+  roots = next;
+  setLive(buildLayer([...devices.values()], next.src, next.dest));
+}
+
 async function applyLayer(): Promise<void> {
-  setLive(buildLayer([...devices.values()], await diskRoot(SRC_ROOT), await diskRoot(DEST_ROOT)));
+  lay({ src: await diskRoot(SRC_ROOT), dest: await diskRoot(DEST_ROOT) });
+}
+
+/* The layer re-derives the root manifests, so a root drafted AFTER it was built
+   (a workbook import registering 009_Imported/, an edit) would stay hidden behind
+   it (ROAD-3483). Re-lay it when a stored root draft moves — synchronously, inside
+   the write that moved it, so whoever wrote the draft reads it back at once. */
+let following = false;
+function followRootDrafts(): void {
+  if (following) return;
+  following = true;
+  onDraftsChange(() => {
+    if (!roots) return;
+    const next = movedRoots(
+      roots,
+      { src: getStoredDraft<string[]>(SRC_ROOT), dest: getStoredDraft<string[]>(DEST_ROOT) },
+      { src: diskRoots.get(SRC_ROOT) ?? null, dest: diskRoots.get(DEST_ROOT) ?? null },
+    );
+    if (next === 'fetch') void applyLayer();
+    else if (next) lay(next);
+  });
 }
 
 /** Re-draw what the layer feeds: the sources rail and the DISCOVERED footer group. */
@@ -118,6 +145,7 @@ export async function loadDiscovered(editor?: OpenEditor, timeoutMs = 2000): Pro
   openEditor = editor;
   await fetchList(timeoutMs);
   await applyLayer();
+  followRootDrafts();
   if (devices.size) console.info(`[SPOG] ${devices.size} device(s) from the Discovery Engine`);
   return devices.size;
 }

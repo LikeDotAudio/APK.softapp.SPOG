@@ -6,6 +6,7 @@
 // router-view-tree; the axis plans are built in router-view-grid).
 import { loadAllDestinations } from './footer.js';
 import { loadsSettled } from '../pending-loads.js';
+import { touches } from '../../domain/router-doc/scope.js';
 
 export const SEP = '␟';
 
@@ -132,6 +133,28 @@ export async function loadAllSources(): Promise<void> {
 /** Activate every destination tab and wait for each pane to render. */
 export async function loadAllDest(): Promise<void> {
   loadAllDestinations();
+  await loadsSettled('destinations');
+}
+
+/** Open only the source folders whose origin chain is in `keys` (ancestorKeys of
+ *  the origins an import names), depth by depth (ROAD-3483). */
+export async function loadSourcesFor(keys: Set<string>): Promise<void> {
+  for (let depth = 0; depth < 32; depth++) {
+    const lazy = [...document.querySelectorAll<HTMLElement>('.media-group-content[data-lazy="pending"]')]
+      .filter((c) => touches(keys, c.dataset['chain'] ?? ''));
+    lazy.forEach((c) => (c.previousElementSibling as HTMLElement | null)?.click());
+    await loadsSettled('sources');
+    if (!lazy.length) break;
+  }
+}
+/** Activate only the destination tabs under a parent in `keys` (ancestorKeys of the
+ *  rooms an import names); a tab with no parent (Talent) titles itself, so it opens. */
+export async function loadDestFor(keys: Set<string>): Promise<void> {
+  document.querySelectorAll<HTMLElement>('.lcars-tab').forEach((t) => {
+    const parent = t.dataset['parentName'];
+    if (parent && !touches(keys, parent)) return;
+    try { t.click(); } catch { /* ignore */ }
+  });
   await loadsSettled('destinations');
 }
 
