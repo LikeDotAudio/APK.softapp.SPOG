@@ -21,6 +21,10 @@ export interface TwistConfig {
       reads it (ROAD-3473); the discovered layer copies it from the device's input. */
   wire?: string;
   format?: string;
+  /** The physical unit's identity, read off its label by the SCAN panel's Fill mode
+      (ROAD-3476) or typed. Locate and Verify match a scanned code against these. */
+  serial?: string;
+  asset_tag?: string;
   /** Failover feeds used when the primary crosspoint(s) go to a fault status
       (audit §6). `hot` auto-cuts, `warm` arms for one-click, `manual` records
       intent; `twist` fails over to another named twist instead of feeds. */

@@ -22,14 +22,17 @@ export const canEditLayout = (): boolean => canBuild() || canArrange();
 // Every Edit-Layout change is snapshotted, applied, then narrated to the Captain's
 // Log with an undo that restores the pre-edit Production and its draft state — so
 // "Reverse Course" undoes a rename / add / delete / re-order just like a route.
-const snapshot = (p: Production): Production => JSON.parse(JSON.stringify(p)) as Production;
-function restore(p: Production, snap: Production): void {
+// Generic over any Routes document (a room, a source leaf): the SCAN panel's Fill
+// (ROAD-3476) commits identity through this same reversible path.
+type Doc = { name?: string };
+const snapshot = <T extends Doc>(p: T): T => JSON.parse(JSON.stringify(p)) as T;
+function restore<T extends Doc>(p: T, snap: T): void {
   const rec = p as unknown as Record<string, unknown>;
   for (const k of Object.keys(p)) delete rec[k];
   Object.assign(p, snap);
 }
 /** Apply a layout mutation, persist it, re-render, and log a reversible entry. */
-export function commit(pgm: Production, url: string, rerender: () => void, describe: () => string, mutate: () => void): void {
+export function commit<T extends Doc = Production>(pgm: T, url: string, rerender: () => void, describe: () => string, mutate: () => void): void {
   const before = snapshot(pgm);
   const wasDraft = hasDraft(url);
   mutate();

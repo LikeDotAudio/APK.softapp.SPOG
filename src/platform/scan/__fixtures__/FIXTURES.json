@@ -1,0 +1,19 @@
+{
+  "qr-device.png": {
+    "format": "QRCode",
+    "text": "SN: AXR-4471-0093"
+  },
+  "datamatrix-serial.png": {
+    "format": "DataMatrix",
+    "text": "S/N 7C1-552-0918"
+  },
+  "code128-asset.png": {
+    "format": "Code128",
+    "text": "ASSET-0042117"
+  },
+  "qr-in-scene.png": {
+    "format": "QRCode",
+    "text": "https://assets.example/tag?asset=RK-07-U12"
+  },
+  "blank-label.png": null
+}

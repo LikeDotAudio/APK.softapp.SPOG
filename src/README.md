@@ -46,6 +46,21 @@ top down: skeleton first, chunks only for groups in view, editing refused until 
 1990s view's import (`ui/console/router-io.ts`) is the first adapter; it does not publish
 yet, because no SPOG view reads the pyramid.
 
+## Scanning labels (ROAD-3476)
+
+The ▦ SCAN panel (`ui/scan/`, in the seat MENU) decodes QR, DataMatrix and Code 128
+from the camera, from photos (one flash shot or a batch) or a keyboard-wedge
+scanner, and acts on the netlist (Routes/**): **Locate** opens the device / twist /
+source the code names, **Fill** writes it into the active card's `serial` or
+`asset_tag` through the authoring commit (draft + reversible Captain's Log entry,
+BUILD right), **Verify** compares it with the active card and logs a mismatch as a
+Captain's Log observation. The decisions are pure (`domain/scan/`: netlist match,
+`routeRead`, `ScanGuard` — one event per code per window). Decoding is
+`platform/scan/scan-decode.ts`: the platform `BarcodeDetector` when this runtime
+builds one, else the self-hosted `zxing-wasm` reader (pinned 3.1.5), loaded lazily;
+its `.wasm` is emitted into `dist/assets/` and is never fetched from a CDN. Test
+photos: `platform/scan/__fixtures__/make-fixtures.mjs`.
+
 ## Run
 
 ```bash

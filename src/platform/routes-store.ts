@@ -37,6 +37,9 @@ export function setLive(entries: Map<string, unknown>): void {
   for (const [url, data] of entries) live.set(url, data);
 }
 
+/** True when a URL is served by the live (discovered) layer, not disk or a draft. */
+export const isLive = (url: string): boolean => live.has(url);
+
 /** The stored draft only — the live layer ignored. For whoever builds that layer. */
 export function getStoredDraft<T = unknown>(url: string): T | null {
   const store = ls(); if (!store) return null;

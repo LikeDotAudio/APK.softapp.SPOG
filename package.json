@@ -25,7 +25,8 @@
   "dependencies": {
     "mqtt": "^5.15.1",
     "protobufjs": "^8.7.0",
-    "three": "^0.185.1"
+    "three": "^0.185.1",
+    "zxing-wasm": "3.1.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

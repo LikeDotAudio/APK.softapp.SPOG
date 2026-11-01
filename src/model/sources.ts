@@ -17,6 +17,8 @@ export interface StageBox {
   level?: number;
   items?: string[];        // audio: explicit channel labels
   status?: Status;
+  serial?: string;         // label identity — SCAN Fill / Locate / Verify (ROAD-3476)
+  asset_tag?: string;
 }
 
 export interface Production {
@@ -31,6 +33,8 @@ export interface Production {
   twists?: Array<string | TwistConfig>;
   kit?: { twists?: Array<string | TwistConfig> };
   role?: string;
+  serial?: string;         // label identity — SCAN Fill / Locate / Verify (ROAD-3476)
+  asset_tag?: string;
 }
 
 /** A name-super / lower-third graphic tied to a person (drives the LOWER THIRD
