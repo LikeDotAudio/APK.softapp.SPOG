@@ -1,10 +1,10 @@
-// src/ui/console/router-io-json — the hierarchical JSON format for the 1990s
+// src/domain/router-doc/json — the hierarchical JSON format for the 1990s
 // import/export (Phase 4, replaces the SpreadsheetML XML). Parents are nesting objects:
 // sources nest Studio → Wall → Box(→feeds); destinations nest Facility → Room →
 // twist(→routed crosspoints). It is a thin FORMAT layer over the flat Sheet model
-// (router-io-sheet): export nests the sheet rows into trees, import flattens back — so
+// (domain/router-doc/sheet): export nests the sheet rows into trees, import flattens back — so
 // device authoring + route replay reuse the exact same pipeline. Pure + unit-testable.
-import { columnMap, type Sheet } from './router-io-sheet.js';
+import { columnMap, type Sheet } from './sheet.js';
 
 const SRC_HEADERS = ['Origin', 'Feed', 'Type', 'Color', 'Status'];
 const DST_HEADERS = ['Category', 'Room', 'Twist', 'Accepts', 'Row', 'Routed Origin', 'Routed Feed', 'Type'];

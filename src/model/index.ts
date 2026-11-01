@@ -10,3 +10,4 @@ export type * from './sources.js';
 export type * from './destinations.js';
 export type * from './switcher.js';
 export type * from './auth.js';
+export type * from './pyramid.js';

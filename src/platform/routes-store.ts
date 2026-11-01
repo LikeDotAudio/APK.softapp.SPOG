@@ -60,10 +60,22 @@ export function hasDraft(url: string): boolean {
 
 /** Save (or replace) the draft for a URL and notify listeners (the dirty badge). */
 export function putDraft(url: string, data: unknown): void {
-  const store = ls(); if (!store) return;
-  try { store.setItem(keyFor(url), JSON.stringify(data)); }
-  catch (e) { console.warn('routes-store: save failed', e); return; }
-  emit();
+  putDrafts([[url, data]]);
+}
+
+/** Save many drafts and notify ONCE. An import writes thousands, and the dirty badge
+ *  recounts every stored key per notification — per-write emits made a 2,500-device
+ *  import O(n²) and held the main thread ~0.3–1 s (ROAD-3474). Returns how many landed;
+ *  stops at the first failed write (quota). */
+export function putDrafts(entries: Iterable<[string, unknown]>): number {
+  const store = ls(); if (!store) return 0;
+  let n = 0;
+  for (const [url, data] of entries) {
+    try { store.setItem(keyFor(url), JSON.stringify(data)); n++; }
+    catch (e) { console.warn('routes-store: save failed', e); break; }
+  }
+  if (n) emit();
+  return n;
 }
 
 /** Drop one URL's draft — revert that file to what's on disk. */

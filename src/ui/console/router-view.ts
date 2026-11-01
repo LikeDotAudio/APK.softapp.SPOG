@@ -118,7 +118,7 @@ export function initRouterView(): void {
       const f = fileInput.files?.[0]; if (!f) return;
       const mode = confirm('Replace ALL current routes to match the file?\n\nOK = Replace · Cancel = Merge (add only)') ? 'replace' : 'merge';
       try {
-        const s = await importWorkbook(await f.text(), mode);
+        const s = await importWorkbook(await f.text(), mode, f.name);
         buildGrid(st);
         alert(`Import complete.\n\n${s.created} new device(s) created\n${s.added} route(s) added\n${s.removed} removed\n${s.rejected.length} rejected (caps/accepts)\n${s.unmatched.length} unmatched device(s).`);
       } catch (err) { alert('Import failed: ' + (err as Error).message); }

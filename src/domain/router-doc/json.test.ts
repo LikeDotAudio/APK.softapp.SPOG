@@ -1,8 +1,8 @@
 // Unit tests for the hierarchical JSON format (pure — node env). Round-trips the flat
 // sheets → nested JSON → flat sheets and checks the nesting shape.
 import { describe, it, expect } from 'vitest';
-import { toJson, fromJson, type RouterDoc } from './router-io-json.js';
-import type { Sheet } from './router-io-sheet.js';
+import { toJson, fromJson, type RouterDoc } from './json.js';
+import type { Sheet } from './sheet.js';
 
 const src: Sheet = {
   name: 'Sources', headers: ['Origin', 'Feed', 'Type', 'Color', 'Status'],

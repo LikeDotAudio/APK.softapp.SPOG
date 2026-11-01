@@ -35,6 +35,17 @@ Each editor is a folder `editors/<name>/` whose `index.ts` default-exports one
 them — **adding an editor is "drop a folder", zero edits elsewhere.** `render(host, ctx)`
 reads only the typed `EditorContext` (resolved data), never the DOM.
 
+## Imports go through one pipeline (ROAD-3474)
+
+Every file import enters `platform/import/pipeline.ts` (`runImport`): sniff → parse,
+translate, gate and normalise in a Web Worker (`domain/pyramid/prepare`) → diff → commit
+(the caller's sink) → layout → publish. Publishing writes an L1 skeleton and one
+content-addressed (SHA-256) L2/L3 chunk per group to IndexedDB
+(`platform/pyramid/chunk-cache`), and `platform/pyramid/loader.ts` reads a project back
+top down: skeleton first, chunks only for groups in view, editing refused until L4. The
+1990s view's import (`ui/console/router-io.ts`) is the first adapter; it does not publish
+yet, because no SPOG view reads the pyramid.
+
 ## Run
 
 ```bash

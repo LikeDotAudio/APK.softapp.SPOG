@@ -5,7 +5,7 @@
 // place so the devices appear + are routable — WITHOUT a reload (routes are DOM‑only
 // and a reload would wipe them). See Documentation/Audit/1990s-View-Import-Export-Audit.md §7.4.
 
-import { getDraft, putDraft } from '../../platform/routes-store.js';
+import { getDraft, putDraft, putDrafts } from '../../platform/routes-store.js';
 import { fetchJSON } from '../../platform/discovery.js';
 import { slugId } from '../sources/format.js';
 import { renderSourcesPanel } from '../sources/panel.js';
@@ -43,12 +43,13 @@ export async function authorDevices(srcSheet: Sheet): Promise<DeviceResult> {
   // = name at a category root) matches the sheet exactly and routes resolve.
   const manifest = getDraft<string[]>(DIR + 'index.json') ?? [];
   const names: string[] = [];
+  const drafts: Array<[string, unknown]> = [];   // written in one batch — one notification
   let i = manifest.length + 1;
   for (const [origin, g] of groups) {
     const base = slugId(splitParent(origin)[1] || origin) || 'device';
     const mk = (suffix: string, extra: Record<string, unknown>): void => {
       const file = `${String(i).padStart(3, '0')}_${base}${suffix}.json`;
-      putDraft(DIR + file, { id: `imported-${slugId(origin)}${suffix}`, name: origin, color: g.color || PAL.sky67, status: g.status || 'OK', ...extra });
+      drafts.push([DIR + file, { id: `imported-${slugId(origin)}${suffix}`, name: origin, color: g.color || PAL.sky67, status: g.status || 'OK', ...extra }]);
       manifest.push(file); i++;
     };
     // Split media so the person heuristic (video[] AND items[] on one leaf) never fires;
@@ -57,7 +58,8 @@ export async function authorDevices(srcSheet: Sheet): Promise<DeviceResult> {
     if (g.audio.length) mk(g.video.length ? '-a' : '', { extraClass: 'audio-imported', items: g.audio });
     names.push(origin);
   }
-  putDraft(DIR + 'index.json', manifest);
+  drafts.push([DIR + 'index.json', manifest]);
+  putDrafts(drafts);
 
   // Register the folder in the root Sources manifest (preserving every existing entry).
   const root = getDraft<string[]>(ROOT) ?? await fetchJSON<string[]>(ROOT) ?? [];

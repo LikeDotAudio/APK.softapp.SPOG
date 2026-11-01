@@ -1,7 +1,7 @@
 // src/ui/console/router-io — the 1990s VIEW spreadsheet IMPORT / EXPORT (two tabs:
 // Sources + Destinations). Builds the workbook model from the SAME DOM scrapers the
 // crosspoint grid uses, serializes via router-io-sheet, and replays imports via
-// router-io-apply. See Documentation/Audit/1990s-View-Import-Export-Audit.md.
+// router-io-apply. Imports enter through platform/import/pipeline. See Documentation/Audit/1990s-View-Import-Export-Audit.md.
 
 import { el } from '../dom.js';
 import {
@@ -9,7 +9,10 @@ import {
 } from './router-view-gather.js';
 import { parseConfig } from './matrix-groups.js';
 import { csv, parseWorkbook, columnMap, cleanName, type Sheet } from './router-io-sheet.js';
-import { toJson, fromJson } from './router-io-json.js';
+import type { Sheets } from '../../domain/pyramid/interpret.js';
+import { runImport } from '../../platform/import/pipeline.js';
+import { memoryProjects } from '../../platform/import/projects.js';
+import { toJson } from '../../domain/router-doc/json.js';
 import { applyRoutes, type Route, type ImportMode, type ApplySummary } from './router-io-apply.js';
 import { authorDevices } from './router-io-devices.js';
 import { trueInkVar } from '../ink-var.js';
@@ -100,28 +103,17 @@ export async function exportCsv(): Promise<void> {
   download(`1990s-destinations.${ts}.csv`, csv(dst!), 'text/csv');
 }
 
-const hasCol = (s: Sheet, h: string): boolean => s.headers.some((x) => x.trim().toLowerCase() === h);
-function findDestSheet(sheets: Sheet[]): Sheet | null {
-  return sheets.find((s) => /dest/i.test(s.name) && hasCol(s, 'twist'))
-    ?? sheets.find((s) => hasCol(s, 'twist') && hasCol(s, 'routed feed')) ?? null;
-}
-function findSourcesSheet(sheets: Sheet[]): Sheet | null {
-  return sheets.find((s) => /source/i.test(s.name) && hasCol(s, 'origin'))
-    ?? sheets.find((s) => hasCol(s, 'origin') && hasCol(s, 'feed') && !hasCol(s, 'twist')) ?? null;
-}
+// The console's one routing state is one project in the pipeline's store, so a
+// re-import is a delta against the last one (and the next version of its series).
+const projects = memoryProjects();
 
-/** Parse a workbook (.xml or .csv): author any new Source devices, then replay the
- *  Destinations routes into the DOM. */
-export async function importWorkbook(text: string, mode: ImportMode): Promise<ImportSummary> {
-  // JSON (the current format) or the legacy SpreadsheetML/CSV — both flatten to sheets.
-  const sheets = text.trimStart().startsWith('{')
-    ? (() => { const { sources, destinations } = fromJson(text); return [sources, destinations]; })()
-    : parseWorkbook(text);
+/** The 1990s view's commit: author any new Source devices, then replay the
+ *  Destinations routes into the live DOM. */
+async function replay(sheets: Sheets, mode: ImportMode): Promise<ImportSummary> {
   await loadAllSources();                                   // render the existing catalog first
-  const src = findSourcesSheet(sheets);
-  const dev = src ? await authorDevices(src) : { created: 0 };   // create new devices + refresh panel
+  const dev = sheets.sources ? await authorDevices(sheets.sources) : { created: 0 };
   await loadAllSources(); await loadAllDest();              // (re)render everything for matching
-  const dst = findDestSheet(sheets);
+  const dst = sheets.destinations;
   if (!dst) {
     if (dev.created) return { created: dev.created, added: 0, removed: 0, rejected: [], unmatched: [] };
     throw new Error('No Destinations tab found (needs columns Room, Twist, Routed Feed).');
@@ -133,4 +125,18 @@ export async function importWorkbook(text: string, mode: ImportMode): Promise<Im
     imported.push({ room: col(r, 'Room').trim(), twist: col(r, 'Twist').trim(), origin: col(r, 'Routed Origin').trim(), feed });
   }
   return { created: dev.created, ...applyRoutes(imported, mode) };
+}
+
+/** Import a workbook (spog.router/1 JSON, CSV, or legacy SpreadsheetML) through the
+ *  one import pipeline (platform/import/pipeline, ROAD-3474): sniff → parse in a Web
+ *  Worker → gate → normalise → diff → commit (= the DOM replay above). Stages 7–8
+ *  (layout chunks) are skipped: no SPOG view reads the pyramid yet, and publishing
+ *  would only grow IndexedDB. */
+export async function importWorkbook(text: string, mode: ImportMode, file = '1990s-view'): Promise<ImportSummary> {
+  const r = await runImport<ImportSummary>(text, {
+    file, name: '1990s view', parseXml: parseWorkbook, projects, cache: null,
+    commit: (value) => replay(value.sheets, mode),
+  });
+  if (r.notes.length) console.info('[import]', file, r.notes.join(' · '));
+  return r.committed!;
 }
