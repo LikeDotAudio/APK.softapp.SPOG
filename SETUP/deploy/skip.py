@@ -99,9 +99,9 @@ def remote_sizes(ftp, remotes):
                 if facts.get('type') == 'file' and 'size' in facts:
                     out[f'{d}/{name}' if d else name] = int(facts['size'])
         except ftplib.error_perm as e:
-            if str(e).startswith('550'):
-                continue      # directory does not exist yet: nothing there to skip
-            return None       # 500/502: no MLSD on this server
+            if str(e)[:3] in ('500', '502'):
+                return None   # MLSD not understood / not implemented on this server
+            continue          # 550 (501 on pyftpdlib): the directory is not there yet, nothing to skip
         except (AttributeError, ValueError):
             return None
     return out

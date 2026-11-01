@@ -20,9 +20,10 @@ from deploy import skip  # noqa: E402
 class FakeFTP:
     """Enough of ftplib.FTP_TLS for skip.py: a flat {path: bytes} server with MLSD."""
 
-    def __init__(self, files=None, mlsd=True):
+    def __init__(self, files=None, mlsd=True, missing_dir='550 no such directory'):
         self.files = dict(files or {})
         self.has_mlsd = mlsd
+        self.missing_dir = missing_dir
         self.stored = []
 
     def cwd(self, _path):
@@ -46,7 +47,7 @@ class FakeFTP:
         hits = [(k[len(prefix):], {'type': 'file', 'size': str(len(v))})
                 for k, v in self.files.items() if k.startswith(prefix) and '/' not in k[len(prefix):]]
         if path and not hits:
-            raise ftplib.error_perm('550 no such directory')
+            raise ftplib.error_perm(self.missing_dir)
         return iter(hits)
 
 
@@ -106,6 +107,20 @@ class Skip(unittest.TestCase):
         done, skipped = skip.sync(ftp, self.pairs, upload)
         self.assertEqual(done, [])
         self.assertEqual(len(skipped), 3)
+
+    def test_a_new_directory_does_not_switch_the_size_check_off(self):
+        # pyftpdlib answers MLSD of a missing directory with 501, not 550; only
+        # 500/502 mean "no MLSD here", so the truncated file is still re-sent.
+        for reply in ('550 no such directory', '501 No such file or directory.'):
+            with self.subTest(reply=reply):
+                ftp = FakeFTP(missing_dir=reply)
+                skip.sync(ftp, self.pairs, upload)
+                ftp.files['ocr/eng.traineddata.gz'] = b'E' * 10
+                p = os.path.join(self.dir.name, 'fonts_new.woff2')
+                with open(p, 'wb') as f:
+                    f.write(b'font')
+                done, _ = skip.sync(ftp, self.pairs + [(p, 'fonts/new.woff2')], upload)
+                self.assertEqual(sorted(done), ['fonts/new.woff2', 'ocr/eng.traineddata.gz'])
 
     def test_force_resends_everything(self):
         ftp = FakeFTP()
