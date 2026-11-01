@@ -9,7 +9,7 @@
 // import never holds the main thread for one long task.
 import type { Skeleton, SkeletonGroup, Topology } from '../../model/pyramid.js';
 import { canonicalGroup, devicesByGroup, layoutGroup, skeletonBoxes, wiresByGroup } from '../../domain/pyramid/layout.js';
-import type { ChunkCache } from './chunk-cache.js';
+import type { ChunkCache, Evicted } from './chunk-cache.js';
 import { sha256Hex } from './hash.js';
 
 export interface Published {
@@ -18,6 +18,8 @@ export interface Published {
   layouts: number;
   /** Groups whose chunk was already in the cache under the same hash. */
   hits: number;
+  /** What the cache's bound dropped when this skeleton landed (ROAD-3481). */
+  evicted: Evicted;
 }
 
 const YIELD_EVERY = 16;
@@ -47,6 +49,6 @@ export async function deriveAndPublish(t: Topology, version: number, cache: Chun
     identity: { name: t.name, version, devices: t.devices.length, wires: t.wires.length, groups: groups.length },
     groups,
   };
-  await cache.putSkeleton(t.name, skeleton);
-  return { skeleton, layouts, hits };
+  const evicted = await cache.putSkeleton(t.name, skeleton);
+  return { skeleton, layouts, hits, evicted };
 }

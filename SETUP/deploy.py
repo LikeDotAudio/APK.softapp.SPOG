@@ -14,14 +14,17 @@ What it does, over one Explicit-FTPS connection:
         dist/<entry>.html  → /index.htm     (the site's DEFAULT document — this is
                                              the cutover: the root URL now serves
                                              the TypeScript app)
-        dist/assets/**     → /assets/**      (stale /assets cleared first, since
-                                             the bundle filename is content-hashed)
+        dist/assets/**     → /assets/**      (stale hashed /assets pruned AFTER
+                                             the new bundle landed)
         Routes/**          → /Routes/**      (data + manifests)
   4. remove the retired legacy app from the server: js/ and the dev
      index.next.html entry (sw.js is deliberately KEPT — see LEGACY_REMOTE).
 
-Routes upload is incremental by default (git diff); the small app bundle is always
-re-uploaded. When the working tree is CLEAN (nothing to commit), the incremental
+Routes upload is incremental by default (git diff). Every upload, app and data,
+skips a file the server already holds byte-for-byte: the server keeps
+/.deploy-manifest.json (SHA-256 + size per path, deploy/skip.py), checked against its
+own size listing, so the ~11.5 MB OCR engine and unchanged hashed assets are not
+re-sent on every deploy (ROAD-3481). When the working tree is CLEAN (nothing to commit), the incremental
 diff is empty, so the deploy pushes the FULL Routes tree instead of skipping — a
 committed state always publishes everything. `--all` forces a full push regardless.
 
@@ -32,6 +35,8 @@ Run:
     python3 deploy.py --all      # also upload the ENTIRE Routes tree (use on first
                                  #   cutover, or after committing files never deployed)
     python3 deploy.py --no-build # deploy the existing dist/ without rebuilding
+    python3 deploy.py --force-upload  # re-send every file, ignoring the server's
+                                 #   manifest of what it already holds
     python3 deploy.py --no-clean # skip removing the legacy js/ shell from the server
     python3 deploy.py --fresh    # MIRROR: full upload (implies --all), then walk the
                                  #   whole server and delete every file this deploy
@@ -60,7 +65,8 @@ from deploy.routes import (
     is_tree_clean, get_changed_routes, get_all_routes,
     get_routes_between, valid_diff_base,
 )
-from deploy.ftp import upload_file, remote_rmtree, fresh_sweep
+from deploy.ftp import upload_file, remote_rmtree, remote_list, fresh_sweep
+from deploy.skip import sync, prune
 from deploy.mqtt_stamp import publish_build_stamp
 from deploy.runtime_config import write_runtime_config
 
@@ -73,6 +79,9 @@ def main():
     fresh = '--fresh' in args
     force_all = fresh or any(a in ('--all', '-a', 'full') for a in args)
     no_build = '--no-build' in args
+    # Re-send every file even when the server's manifest says it is unchanged
+    # (--fresh mirrors, so it re-sends too).
+    force_upload = fresh or '--force-upload' in args
     no_clean = '--no-clean' in args
     # Side-by-side: publish to /index.next.html and leave the live /index.htm + js/
     # UNTOUCHED (no cutover, no /assets wipe, no legacy removal). This is the safe
@@ -146,22 +155,22 @@ def main():
         ftp.prot_p()
         print("Login successful.")
 
-        # App: clear stale hashed assets (cutover only — side-by-side keeps /assets
-        # so the live app's logos and any other bundle survive), upload the new
-        # bundle, then the entry HTML LAST so the page never references a
-        # not-yet-uploaded bundle.
+        # App, then data, in one pass that skips every file the server already
+        # holds byte-for-byte (deploy/skip.py: SHA-256 manifest on the server +
+        # its own size listing) — the OCR engine and unchanged hashed assets are
+        # not re-sent. The entry HTML goes LAST of the app files so the page never
+        # references a not-yet-uploaded bundle; stale hashed /assets are pruned
+        # only AFTER the new ones landed (cutover only — side-by-side keeps /assets
+        # so the live app's logos and any other bundle survive).
+        print(f"Deploying app ({len(app_files)} file(s)); {entry} → /{remote_entry}"
+              f"{f', plus {len(routes_upload)} Routes file(s)' if routes_upload else ''}:")
+        ordered = sorted(app_files, key=lambda lr: (lr[1] == remote_entry, lr[1]))
+        ordered += [(os.path.join(project_dir, rel), rel) for rel in sorted(routes_upload)]
+        sync(ftp, ordered, upload_file, force=force_upload, forget=routes_delete,
+             stale_prefixes=() if side_by_side else ('assets/',), mirror=fresh and not side_by_side)
         if not side_by_side:
-            print("Clearing stale /assets...")
-            remote_rmtree(ftp, 'assets')
-        print(f"Deploying app ({len(app_files)} file(s)); {entry} → /{remote_entry}:")
-        for local, remote in sorted(app_files, key=lambda lr: (lr[1] == remote_entry, lr[1])):
-            upload_file(ftp, local, remote)
-
-        # Data.
-        if routes_upload:
-            print(f"Uploading {len(routes_upload)} Routes file(s):")
-            for rel in sorted(routes_upload):
-                upload_file(ftp, os.path.join(project_dir, rel), rel)
+            n = prune(ftp, 'assets', {remote for _, remote in app_files}, remote_list)
+            print(f"Pruned {n} stale /assets file(s).")
         for rel in routes_delete:
             print(f"Deleting remote {rel}...")
             try:

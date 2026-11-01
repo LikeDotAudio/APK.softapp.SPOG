@@ -66,6 +66,19 @@ export async function idbGetAll<T>(store: StoreName): Promise<T[]> {
   });
 }
 
+/** Every key of a store (no values — the chunk sweep must not read MBs to find garbage). */
+export async function idbKeys(store: StoreName): Promise<string[]> {
+  const d = await db();
+  if (!d) return [];
+  return new Promise((resolve) => {
+    try {
+      const req = d.transaction(store, 'readonly').objectStore(store).getAllKeys();
+      req.onsuccess = () => resolve((req.result ?? []).map(String));
+      req.onerror = () => resolve([]);
+    } catch { resolve([]); }
+  });
+}
+
 export async function idbDelete(store: StoreName, key: string): Promise<void> {
   const d = await db();
   if (!d) return;

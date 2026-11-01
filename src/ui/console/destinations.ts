@@ -9,6 +9,7 @@ import { stripOrder } from '../sources/format.js';
 import { Footer, type GroupHandle } from './footer.js';
 import { type OpenEditor } from './matrix.js';
 import { renderPrograms } from './render-programs.js';
+import { trackLoad } from '../pending-loads.js';
 
 // Re-export so existing importers of console/destinations keep resolving.
 export { renderPrograms } from './render-programs.js';
@@ -37,7 +38,7 @@ export async function addDestinationTree(
       Footer.addTab({ id, name: stripOrder(fileName).toUpperCase() }, {
         group: parentGroup, active: false, color,
         onActivate: () => {
-          void fetchJSON<Production>(baseUrl + f.href).then((data) => {
+          void trackLoad('destinations', fetchJSON<Production>(baseUrl + f.href).then((data) => {
             if (!data) return;
             const explicitId = data.id || id;
             if (data.role && !explicitId.startsWith(data.role + 's-')) {
@@ -54,7 +55,7 @@ export async function addDestinationTree(
             if (!pane) return;
             renderPrograms(data, pane, openEditor, baseUrl + f.href);
             afterRender.forEach((cb) => { try { cb(data, pane); } catch (e) { console.warn('destination after-render:', e); } });
-          });
+          }));
         },
       });
     });

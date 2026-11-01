@@ -12,6 +12,7 @@ import { inferPoolKind, renderSourceLeaf } from './pools.js';
 import { renderGang } from './gang.js';
 import { applyScope } from '../console/auth-panel.js';
 import { stampIcon } from '../icon-face.js';
+import { trackLoad } from '../pending-loads.js';
 
 /** Optional hook fired after a subtree renders (Phase 3 wires drag here). */
 export type RenderedHook = () => void;
@@ -54,15 +55,17 @@ export async function renderSourceTree(
     const groupColor = inheritColor ?? paletteAt(AUDIO_POOL_COLORS, idx);
     const content = makeMediaGroup(container, stripOrder(d.name), groupColor, depth);
     const header = content.previousElementSibling as HTMLElement | null;
-    let loaded = false;
+    // data-lazy says whether this folder's leaves were ever asked for, so
+    // loadAllSources can open exactly the folders still unloaded.
+    content.dataset.lazy = 'pending';
     const load = async (): Promise<void> => {
-      if (loaded) return;
-      loaded = true;
+      if (content.dataset.lazy !== 'pending') return;
+      content.dataset.lazy = 'loaded';
       const childParent = parentLabel ? `${parentLabel} — ${stripOrder(d.name)}` : stripOrder(d.name);
       await renderSourceTree(baseUrl + d.href, content, depth + 1, groupColor, childParent, onRendered);
       onRendered?.();
     };
-    if (header) header.addEventListener('click', () => { void load(); });
+    if (header) header.addEventListener('click', () => { void trackLoad('sources', load()); });
   });
 
   applyScope(container);

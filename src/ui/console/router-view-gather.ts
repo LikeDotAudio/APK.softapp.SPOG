@@ -5,6 +5,7 @@
 // Also the shared type home: RVState + the SEP key delimiter (grouping now lives in
 // router-view-tree; the axis plans are built in router-view-grid).
 import { loadAllDestinations } from './footer.js';
+import { loadsSettled } from '../pending-loads.js';
 
 export const SEP = '␟';
 
@@ -118,20 +119,20 @@ export function gatherLinks(): { cross: Set<string>; cS: Set<string>; cR: Set<st
   return { cross, cS, cR };
 }
 
+/** Open every source folder not yet loaded, wait for its leaves, repeat for the
+ *  subfolders that revealed — until none is left (ROAD-3481: no fixed sleeps). */
 export async function loadAllSources(): Promise<void> {
-  for (let p = 0; p < 4; p++) {
-    let clicked = 0;
-    document.querySelectorAll<HTMLElement>('.media-group-header').forEach((h) => {
-      const c = h.nextElementSibling;
-      if (c && !c.querySelector('.signal-node')) { h.click(); clicked++; }
-    });
-    if (!clicked) break;
-    await new Promise((r) => setTimeout(r, 220));
+  for (let depth = 0; depth < 32; depth++) {
+    const lazy = document.querySelectorAll<HTMLElement>('.media-group-content[data-lazy="pending"]');
+    lazy.forEach((c) => (c.previousElementSibling as HTMLElement | null)?.click());
+    await loadsSettled('sources');
+    if (!lazy.length) break;
   }
 }
+/** Activate every destination tab and wait for each pane to render. */
 export async function loadAllDest(): Promise<void> {
   loadAllDestinations();
-  await new Promise((r) => setTimeout(r, 600));
+  await loadsSettled('destinations');
 }
 
 export const splitParent = (s: string): [string, string] => {

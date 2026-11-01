@@ -13,6 +13,7 @@ import type { Production, TwistConfig, TipSpec, Hex } from '../model/index.js';
 import { el } from '../ui/dom.js';
 import { expectationTip } from '../ui/tip.js';
 import { loadAllDestinations } from '../ui/console/footer.js';
+import { loadsSettled } from '../ui/pending-loads.js';
 import { applyScope } from '../ui/console/auth-panel.js';
 import { BLURBS } from './blurbs.js';
 import { PAL } from '../domain/palette.js';
@@ -144,5 +145,5 @@ export function openFromHash(): void {
   };
   if (tryOpen()) return;
   loadAllDestinations();               // twists are lazy — render every tab, then retry
-  setTimeout(tryOpen, 700);
+  void loadsSettled('destinations').then(tryOpen);
 }

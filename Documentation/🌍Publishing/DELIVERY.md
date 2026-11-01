@@ -43,9 +43,13 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
 1. `npm run build` (skip with `--no-build`), then `dist/spog-config.js` from `SPOG_BROKER` /
    `SPOG_BUS_KEY` when either is set (`SETUP/deploy/runtime_config.py`).
 2. Regenerate `Routes/**/index.json` manifests (the app discovers data from them).
-3. Upload `dist/<entry>.html` as `/index.htm`, `dist/assets/**` to `/assets/` (stale hashed
-   assets cleared first), and the `Routes/` files changed between `DEPLOY_DIFF_BASE` and
-   `DEPLOY_DIFF_HEAD` (`--all` for the whole tree; a clean tree pushes everything).
+3. Upload `dist/<entry>.html` as `/index.htm`, `dist/assets/**` to `/assets/`, and the `Routes/`
+   files changed between `DEPLOY_DIFF_BASE` and `DEPLOY_DIFF_HEAD` (`--all` for the whole tree;
+   a clean tree pushes everything). A file the server already holds byte-for-byte is skipped:
+   the server keeps `/.deploy-manifest.json` (SHA-256 + size per path, `SETUP/deploy/skip.py`),
+   checked against the server's own MLSD sizes, so the ~11.5 MB OCR engine under `/ocr/` is
+   not re-sent every deploy. Stale hashed `/assets/` files are pruned after the new bundle
+   lands. `--force-upload` (and `--fresh`) re-send everything.
 4. Remove the retired `js/` and `index.next.html` from the server (`LEGACY_REMOTE`; `sw.js`
    is kept as a kill-switch worker). `--fresh` also sweeps every server file this deploy did
    not produce.

@@ -44,7 +44,14 @@ content-addressed (SHA-256) L2/L3 chunk per group to IndexedDB
 (`platform/pyramid/chunk-cache`), and `platform/pyramid/loader.ts` reads a project back
 top down: skeleton first, chunks only for groups in view, editing refused until L4. The
 1990s view's import (`ui/console/router-io.ts`) is the first adapter; it does not publish
-yet, because no SPOG view reads the pyramid.
+yet, because no SPOG view reads the pyramid. The cache is bounded by project (ROAD-3481):
+each publish keeps the 8 most recently published or opened projects and sweeps every chunk
+none of them names, so a re-import's replaced chunks do not pile up in IndexedDB
+(`chunk-cache.idb.test.ts` runs the real store path under `fake-indexeddb`).
+
+The console's lazy loads (a source folder on first open, a destination tab on first
+activate) register in `ui/pending-loads.ts`; whoever opens them all (the 1990s view's
+`loadAllSources`/`loadAllDest`, an editor deep link) awaits `loadsSettled`, never a sleep.
 
 ## Scanning labels (ROAD-3476)
 
