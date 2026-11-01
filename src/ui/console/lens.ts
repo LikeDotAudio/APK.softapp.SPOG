@@ -15,6 +15,7 @@ import {
   toLensState, isolateLens, toggleLens, resetLens, withStrength, lensMask, disciplineCounts, isAll,
   type LensState, type Mask,
 } from '../../domain/lens/mask.js';
+import type { DisciplineId } from '../../domain/lens/disciplines.js';
 import { gatherScene } from './lens-gather.js';
 import { buildLensBar, paintLensBars, ensureLensStyles, type LensAction } from './lens-bar.js';
 
@@ -54,7 +55,21 @@ export function applyLens(root: ParentNode = document): void {
       if (best) paintEl(g.el, best);
     }
   }
-  paintLensBars(state, disciplineCounts(res), root);
+  // Each room's toolbar counts the crosspoints in THAT room (ROAD-3479); a bar
+  // outside any room keeps the console-wide count.
+  const perRoom = new Map<Element, Map<DisciplineId, number>>();
+  for (const e of scene.graph.edges) {
+    const row = scene.nodeEls.get(e.to)?.closest('.program-row');
+    if (!row) continue;
+    let m = perRoom.get(row);
+    if (!m) { m = new Map(); perRoom.set(row, m); }
+    for (const id of res.disciplines.get(e.id) ?? []) m.set(id, (m.get(id) ?? 0) + 1);
+  }
+  const all = disciplineCounts(res), none = new Map<DisciplineId, number>();
+  paintLensBars(state, (bar) => {
+    const row = bar.closest('.program-row');
+    return row ? perRoom.get(row) ?? none : all;
+  }, root);
 }
 
 function schedule(): void {

@@ -25,8 +25,8 @@ export function theadHtml(col: AxisPlan<HTMLElement | null>): string {
   }
   // trailing: a twist header per leaf, or a collapsed summary rowspanning to the base
   col.items.forEach((it, c) => {
-    if (it.agg) put(it.cut + 1, c, { html: `<th class="rv-twisthead grp" rowspan="${it.trailing.cross}">${esc(it.trailing.label)}</th>`, rs: it.trailing.cross, cs: 1 });
-    else put(DEPTH, c, { html: `<th class="rv-twisthead">${esc(it.leaf)}</th>`, rs: 1, cs: 1 });
+    if (it.agg) put(it.cut + 1, c, { html: `<th class="rv-twisthead grp" data-c="${c}" rowspan="${it.trailing.cross}">${esc(it.trailing.label)}</th>`, rs: it.trailing.cross, cs: 1 });
+    else put(DEPTH, c, { html: `<th class="rv-twisthead" data-c="${c}">${esc(it.leaf)}</th>`, rs: 1, cs: 1 });
   });
 
   let html = '';
@@ -48,7 +48,7 @@ export function rowHeaderHtml(item: PlanItem<HTMLElement | null>, i: number, row
     if (cell) html += `<td class="rv-rhead lv${l}${cell.collapsed ? ' grp' : ''}" rowspan="${cell.span}" data-collapse="${esc(cell.key)}">${fold(cell.collapsed)} ${esc(cell.label)}</td>`;
   }
   html += item.agg
-    ? `<td class="rv-feedhead grp" colspan="${item.trailing.cross}">${esc(item.trailing.label)}</td>`
-    : `<td class="rv-feedhead">${esc(item.leaf)}</td>`;
+    ? `<td class="rv-feedhead grp" data-r="${i}" colspan="${item.trailing.cross}">${esc(item.trailing.label)}</td>`
+    : `<td class="rv-feedhead" data-r="${i}">${esc(item.leaf)}</td>`;
   return html;
 }

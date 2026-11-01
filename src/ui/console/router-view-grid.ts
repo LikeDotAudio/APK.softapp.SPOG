@@ -9,6 +9,8 @@ import { buildAxisPlan, type PlanLeaf } from './router-view-tree.js';
 import { theadHtml, rowHeaderHtml } from './router-view-render.js';
 import { planSalvo, runSalvo } from './router-view-salvo.js';
 import { SEP, firstLine, gatherSenderNodes, gatherLinks, type RVState } from './router-view-gather.js';
+import { applyLens } from './lens.js';
+import { lensOpacity, itemOpacity, lensAttr, paintHeads } from './router-view-lens.js';
 
 type Ref = HTMLElement | null;
 
@@ -19,7 +21,7 @@ export function saveCollapsed(st: RVState): void {
 const segsOf = (s: string): string[] => s.split(' — ').map((x) => x.trim()).filter(Boolean);
 
 /** Rows = source feeds. Origin path (Studio → Wall → Box) + feed label. */
-function rowLeaves(st: RVState, cS: Set<string>): Array<PlanLeaf<Ref>> {
+function rowLeaves(st: RVState, cS: Set<string>, op: Map<string, number>): Array<PlanLeaf<Ref>> {
   const sf = st.fs.value.trim().toLowerCase();
   const match = (o: string, l: string): boolean => !sf || o.toLowerCase().includes(sf) || l.toLowerCase().includes(sf);
   const out: Array<PlanLeaf<Ref>> = [];
@@ -28,7 +30,9 @@ function rowLeaves(st: RVState, cS: Set<string>): Array<PlanLeaf<Ref>> {
     const k = origin + SEP + label;
     if (seen.has(k) || !label) return;
     if (!(st.showAllSrc || cS.has(k)) || !match(origin, label)) return;
-    seen.add(k);
+    const o = lensOpacity(node);
+    if (o === 0) return;                                   // the lens HIDES this feed
+    seen.add(k); op.set(k, o);
     out.push({ segs: segsOf(origin), leaf: label, id: [origin, label], ref: node });
   };
   gatherSenderNodes().forEach((labels, origin) => labels.forEach((node, label) => add(origin, label, node)));
@@ -37,7 +41,7 @@ function rowLeaves(st: RVState, cS: Set<string>): Array<PlanLeaf<Ref>> {
 }
 
 /** Columns = destination twists. Facility → Floor → Room path (Room = production). */
-function colLeaves(st: RVState, cR: Set<string>): Array<PlanLeaf<Ref>> {
+function colLeaves(st: RVState, cR: Set<string>, op: Map<string, number>): Array<PlanLeaf<Ref>> {
   const rf = st.fr.value.trim().toLowerCase();
   const match = (p: string, t: string): boolean => !rf || p.toLowerCase().includes(rf) || t.toLowerCase().includes(rf);
   const out: Array<PlanLeaf<Ref>> = [];
@@ -45,6 +49,9 @@ function colLeaves(st: RVState, cR: Set<string>): Array<PlanLeaf<Ref>> {
     const prod = tw.dataset.prodName || (tw.closest('.program-row')?.querySelector<HTMLElement>('.program-title')?.innerText.trim() ?? 'UNKNOWN');
     const twist = tw.querySelector<HTMLElement>('.twist-title')?.innerText.trim() ?? 'TWIST';
     if (!(st.showAllDst || cR.has(prod + SEP + twist)) || !match(prod, twist)) return;
+    const o = lensOpacity(tw);
+    if (o === 0) return;                                   // the lens HIDES this twist
+    op.set(prod + SEP + twist, o);
     const room = prod.split(' — ').pop()?.trim() || prod;
     const segs = [tw.dataset.prodCat || '', tw.dataset.prodFloor || '', room].filter(Boolean);
     out.push({ segs, leaf: twist, id: [prod, twist], ref: tw });
@@ -53,11 +60,14 @@ function colLeaves(st: RVState, cR: Set<string>): Array<PlanLeaf<Ref>> {
 }
 
 export function buildGrid(st: RVState): void {
+  applyLens();   // paint the seat's lens on what the load just drew; the grid reads it
   const { cross, cS, cR } = gatherLinks();
   st.crossSet = cross;
-  st.rowPlan = buildAxisPlan(rowLeaves(st, cS), st.rowCollapsed, 'r:');
-  st.colPlan = buildAxisPlan(colLeaves(st, cR), st.colCollapsed, 'c:');
+  const rOp = new Map<string, number>(), cOp = new Map<string, number>();
+  st.rowPlan = buildAxisPlan(rowLeaves(st, cS, rOp), st.rowCollapsed, 'r:');
+  st.colPlan = buildAxisPlan(colLeaves(st, cR, cOp), st.colCollapsed, 'c:');
   const rows = st.rowPlan.items, cols = st.colPlan.items;
+  const rowOp = rows.map((r) => itemOpacity(r.ids, rOp, SEP)), colOp = cols.map((c) => itemOpacity(c.ids, cOp, SEP));
 
   if (!rows.length || !cols.length) {
     st.body.innerHTML = `<div class="rv-msg">${!rows.length && !cols.length
@@ -73,14 +83,18 @@ export function buildGrid(st: RVState): void {
   rows.forEach((r, ri) => {
     body += '<tr>' + rowHeaderHtml(r, ri, st.rowPlan!);
     cols.forEach((c, ci) => {
-      const grp = r.agg || c.agg;
-      body += `<td class="rv-cell${lit(ri, ci) ? ' on' : ''}${grp ? ' grp' : ''}" data-r="${ri}" data-c="${ci}"></td>`;
+      const grp = r.agg || c.agg, on = lit(ri, ci);
+      // A routed single cell is a crosspoint clone: it takes that edge's own mask.
+      const op = on && !grp && c.ref ? lensOpacity(findDropped(c.ref, r.ids[0]![0], r.ids[0]![1])) : Math.min(rowOp[ri]!, colOp[ci]!);
+      const la = lensAttr(op);
+      body += `<td class="rv-cell${on ? ' on' : ''}${grp ? ' grp' : ''}${la.cls}"${la.style} data-r="${ri}" data-c="${ci}"></td>`;
     });
     body += '</tr>';
   });
   const tbl = document.createElement('table');
   tbl.className = 'rv-grid';
   tbl.innerHTML = `<thead>${theadHtml(st.colPlan)}</thead><tbody>${body}</tbody>`;
+  paintHeads(tbl, rowOp, colOp);
   st.body.innerHTML = '';
   st.body.appendChild(tbl);
   const countEl = st.overlay?.querySelector<HTMLElement>('.rv-count');

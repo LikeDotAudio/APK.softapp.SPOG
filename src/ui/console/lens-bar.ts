@@ -66,9 +66,13 @@ export function buildLensBar(act: (a: LensAction) => void): HTMLElement {
   return bar;
 }
 
-/** Paint every toolbar from the one lens state + the edge count per discipline. */
-export function paintLensBars(s: LensState, counts: Map<DisciplineId, number>, root: ParentNode = document): void {
+/** Paint every toolbar from the one lens state + the edge count per discipline
+ *  (one map for every bar, or a map per bar — a room's own crosspoints). */
+export function paintLensBars(
+  s: LensState, countsFor: Map<DisciplineId, number> | ((bar: HTMLElement) => Map<DisciplineId, number>), root: ParentNode = document,
+): void {
   root.querySelectorAll<HTMLElement>('.lens-bar').forEach((bar) => {
+    const counts = typeof countsFor === 'function' ? countsFor(bar) : countsFor;
     bar.querySelectorAll<HTMLElement>('button[data-lens]').forEach((b) => {
       const id = b.dataset.lens as DisciplineId | 'all';
       if (id === 'all') { b.setAttribute('aria-pressed', String(s.showing === null)); return; }

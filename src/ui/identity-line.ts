@@ -36,8 +36,9 @@ padding:1px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}`;
 export function paintAfter(title: Element | null | undefined, o: unknown): void {
   if (!title?.parentElement) return;
   const text = identityText(o);
-  let line = title.nextElementSibling;
-  if (!line?.classList.contains('identity-line')) line = null;
+  // One title per parent (room row / twist / pool group), and the lens bar may sit
+  // between the title and the line — so look among the parent's children.
+  let line = title.parentElement.querySelector(':scope > .identity-line');
   if (!text) { line?.remove(); return; }
   addStyles('identity-line-styles', CSS);
   if (!line) {
