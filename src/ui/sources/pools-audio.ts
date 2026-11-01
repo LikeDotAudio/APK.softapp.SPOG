@@ -3,7 +3,7 @@
 import type { SourceLeaf } from '../../model/index.js';
 import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { slugId, faultTag, monoEmoji, styleSignalNode } from './format.js';
-import { wireFold, tagOrigin } from './pools-fold.js';
+import { wireFold, tagOrigin, tagWire } from './pools-fold.js';
 import { addStyles } from '../dom.js';
 import { PAL } from '../../domain/palette.js';
 import { inkAttr, inkValue } from '../ink-var.js';
@@ -41,6 +41,7 @@ export function renderAudioPool(data: SourceLeaf, container: HTMLElement, color?
     styleSignalNode(node, poolColor);
     node.dataset.status = data.status || 'OK';
     if (data.type) node.dataset.type = data.type;
+    tagWire(node, data, label);
     if (faulted) node.classList.add('fault');
     grid.appendChild(node);
   };

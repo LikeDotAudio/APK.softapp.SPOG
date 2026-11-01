@@ -76,7 +76,10 @@ export function buildLayer(list: DeviceSetup[], srcRoot: string[], destRoot: str
     }
     const twists = d.inputs
       .filter((i) => i.kind === 'audio' || i.kind === 'video')
-      .map((i) => ({ name: i.name, accepts: i.kind, ...(i.kind === 'video' ? { maxVideo: 1 } : {}), from: i.from ?? null }));
+      .map((i) => ({
+        name: i.name, accepts: i.kind, ...(i.kind === 'video' ? { maxVideo: 1 } : {}), from: i.from ?? null,
+        ...(i.wire ? { wire: i.wire } : {}), ...(i.format ? { format: i.format } : {}),
+      }));
     const f = `${n}_${base}.json`;
     out.set(DEST_DIR + f, {
       id: `disc-${d.key}`,

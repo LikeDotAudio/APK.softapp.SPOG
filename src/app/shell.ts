@@ -31,6 +31,7 @@ import { initChirality, applyStoredChirality, getChirality } from '../ui/console
 import { getPrefs, patchPrefs } from '../platform/prefs.js';
 import { initColourScheme, applyStoredColourScheme } from '../ui/console/colour-scheme.js';
 import { initAuthoring } from '../ui/console/authoring.js';
+import { initDisciplineLens } from '../ui/console/lens.js';
 import { getBus, advertiseAll, startLogBridge } from '../platform/mqtt/index.js';
 import { initSeatSync } from '../platform/seat-sync.js';
 import { bindGfxMonitorBus } from '../platform/gfx-monitor.js';
@@ -153,6 +154,7 @@ export async function buildConsole(BUILD: BuildStamp): Promise<void> {
   initChirality();   // handedness toggle (sources rail edge + drag-ghost side)
   initColourScheme();   // palette launcher (left of chirality) → Colour & Vision editor
   initAuthoring();   // single-pane layout editing (EDIT LAYOUT toggle, bottom-left)
+  initDisciplineLens();   // Discipline Lens toolbar in each room header — a view setting, never the project (ROAD-3473)
   initAcademy();   // first-load quick-start overlay + ACADEMY button (credit-row)
   initMergeObserver();   // ⚖ MERGE mediator launcher + panel (launcher adopted into the MENU below)
   initUserMenu();   // seat menu beside the log — adopts academy/1990s/display/chirality/credits/merge

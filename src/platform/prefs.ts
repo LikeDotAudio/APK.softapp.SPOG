@@ -23,6 +23,9 @@ export interface UiPrefs {
   heartbeat?: boolean;
   /** STATE glyph layer (state-glyphs.ts): auto (on in grey/mono/high-vis) | on | off. */
   stateGlyphs?: 'auto' | 'on' | 'off';
+  /** The Discipline Lens (ROAD-3473): which disciplines show (null = ALL) and the DIM→HIDE
+      strength 0…1. A VIEW setting — it lives here, never in a project or its netlist. */
+  lens?: { showing: string[] | null; strength: number };
 }
 export interface Prefs {
   v: 1;

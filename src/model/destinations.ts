@@ -17,6 +17,10 @@ export interface TwistConfig {
   maxVideo?: number;
   maxAudio?: number;
   cameraInput?: boolean;   // "CAM N" twists fed into a destination
+  /** What this input receives on ('dante' | 'aes67' | 'ST 2110-20' …) — the Discipline Lens
+      reads it (ROAD-3473); the discovered layer copies it from the device's input. */
+  wire?: string;
+  format?: string;
   /** Failover feeds used when the primary crosspoint(s) go to a fault status
       (audit §6). `hot` auto-cuts, `warm` arms for one-click, `manual` records
       intent; `twist` fails over to another named twist instead of feeds. */

@@ -87,6 +87,12 @@ export interface SourceLeaf {
   items?: string[];               // audio feeds (mic/processed/return) for a person/audio leaf
   video?: string[];               // video feeds (camera) — kept SEPARATE from `items`, never nested
   kind?: 'video' | 'audio';       // explicit pool kind — overrides the shape heuristic
+  /** What the leaf's feeds ride on ('dante' | 'aes67' | 'ST 2110-30' …) — read by the
+      Discipline Lens (ROAD-3473); a per-feed `device.outputs[].wire` wins over it. */
+  wire?: string;
+  format?: string;
+  /** The discovered device a leaf was built from (discovered-layer.ts) — its per-output wire. */
+  device?: { outputs?: Array<{ name: string; wire?: string; format?: string | null }> };
   title?: string;                 // name-super / lower-third title (a graphical element)
   role?: string;                  // talent type (host, co-host, correspondent, …)
   // person (SINGLE unified model — a person is both a source and a destination):

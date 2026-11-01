@@ -21,7 +21,7 @@ describe('discovered — the engine setup as Routes', () => {
     expect(src.name).toBe('Stagebox');
     expect(src.items).toEqual(['Mic 1', 'Mic 2']);
     const dst = layer.get(`Routes/Destinations/${FOLDER}/001_Stagebox.json`) as { twists: { name: string; accepts: string; from: unknown }[] };
-    expect(dst.twists).toEqual([{ name: 'Out L', accepts: 'audio', from: { device: 'Desk', channel: 'Main L', status: 'ok' } }]);
+    expect(dst.twists).toEqual([{ name: 'Out L', accepts: 'audio', from: { device: 'Desk', channel: 'Main L', status: 'ok' }, wire: 'dante' }]);
   });
 
   it('every device is presented — one with no media in or out still gets a destination tab', () => {

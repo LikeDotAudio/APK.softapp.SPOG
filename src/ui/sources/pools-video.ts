@@ -5,7 +5,7 @@ import { addStyles } from '../dom.js';
 import type { SourceLeaf } from '../../model/index.js';
 import { isFaultStatus } from '../../domain/routing-core/index.js';
 import { slugId, faultTag, monoEmoji, styleSignalNode, shadeColor } from './format.js';
-import { wireFold, tagOrigin } from './pools-fold.js';
+import { wireFold, tagOrigin, tagWire } from './pools-fold.js';
 import { PAL } from '../../domain/palette.js';
 import { inkAttr, inkValue, setInkVar } from '../ink-var.js';
 
@@ -118,6 +118,7 @@ export function renderVideoPool(data: SourceLeaf, container: HTMLElement): void 
         node.draggable = true;
         styleSignalNode(node, poolColor);
         node.dataset.status = data.status || 'OK';
+        tagWire(node, data, label);
         if (faulted) node.classList.add('fault');
         grid.appendChild(node);
       });

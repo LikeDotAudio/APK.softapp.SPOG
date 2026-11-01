@@ -1,5 +1,6 @@
 // src/ui/sources/pools-fold — fold/accordion behaviour + origin tagging shared
 // by every pool renderer (extracted from pools.ts). No behaviour change.
+import type { SourceLeaf } from '../../model/index.js';
 
 // ---- fold behaviour (port of js/globals.js togglePool) ----------------------
 export function togglePool(header: HTMLElement): void {
@@ -28,3 +29,14 @@ export function wireFold(group: HTMLElement): void {
 export const tagOrigin = (root: ParentNode, origin: string): void => {
   root.querySelectorAll<HTMLElement>('.signal-node').forEach((n) => { n.dataset.origin = origin; });
 };
+
+/** Carry what a feed rides on onto its node (`data-wire` / `data-format`), from the
+ *  discovered device's matching output or the leaf's own `wire`/`format`. Clones keep the
+ *  attributes, so a routed crosspoint tells the Discipline Lens (ROAD-3473) its carrier. */
+export function tagWire(node: HTMLElement, data: SourceLeaf, label: string): void {
+  const out = data.device?.outputs?.find((o) => o.name === label);
+  const wire = out?.wire || data.wire;
+  const format = out?.format || data.format;
+  if (wire) node.dataset.wire = wire;
+  if (format) node.dataset.format = format;
+}
