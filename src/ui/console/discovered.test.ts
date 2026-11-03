@@ -24,6 +24,37 @@ describe('discovered — the engine setup as Routes', () => {
     expect(dst.twists).toEqual([{ name: 'Out L', accepts: 'audio', from: { device: 'Desk', channel: 'Main L', status: 'ok' }, wire: 'dante' }]);
   });
 
+  it('SAP and Ravenna streams are emitted as individual source leaves with channel lists', () => {
+    const layer = buildLayer([dev({
+      id: 'mac:00:07:f5:42:06:a2',
+      name: 'WBS-32me.local',
+      key: 'wbs_32me',
+      wires: ['aes67', 'ravenna', 'sap'],
+      outputs: [
+        { id: 'stream:32ME-STREAM-1', name: '32ME-STREAM-1', kind: 'audio', wire: 'aes67', format: 'L24 48000Hz 8ch' },
+        { id: 'stream:32ME-STREAM-2', name: '32ME-STREAM-2', kind: 'audio', wire: 'aes67', format: 'L24 48000Hz 8ch' }
+      ],
+      inputs: []
+    })], [], []);
+
+    const srcFiles = layer.get(`Routes/Sources/${FOLDER}/index.json`) as string[];
+    expect(srcFiles.length).toBe(4); // 2 streams x 2 flavors (RAVENNA and SAP)
+    expect(srcFiles).toContain('001_WBS-32me-local_32ME-STREAM-1-RAVENNA.json');
+    expect(srcFiles).toContain('002_WBS-32me-local_32ME-STREAM-1-SAP.json');
+    expect(srcFiles).toContain('003_WBS-32me-local_32ME-STREAM-2-RAVENNA.json');
+    expect(srcFiles).toContain('004_WBS-32me-local_32ME-STREAM-2-SAP.json');
+
+    const s1 = layer.get(`Routes/Sources/${FOLDER}/001_WBS-32me-local_32ME-STREAM-1-RAVENNA.json`) as { name: string; items: string[]; wire: string };
+    expect(s1.name).toBe('32ME-STREAM-1 (RAVENNA)');
+    expect(s1.items).toEqual(['CH 1', 'CH 2', 'CH 3', 'CH 4', 'CH 5', 'CH 6', 'CH 7', 'CH 8']);
+    expect(s1.wire).toBe('ravenna');
+
+    const s2 = layer.get(`Routes/Sources/${FOLDER}/002_WBS-32me-local_32ME-STREAM-1-SAP.json`) as { name: string; items: string[]; wire: string };
+    expect(s2.name).toBe('32ME-STREAM-1 (SAP)');
+    expect(s2.items).toEqual(['CH 1', 'CH 2', 'CH 3', 'CH 4', 'CH 5', 'CH 6', 'CH 7', 'CH 8']);
+    expect(s2.wire).toBe('sap');
+  });
+
   it('every device is presented — one with no media in or out still gets a destination tab', () => {
     const layer = buildLayer([dev({ name: 'HL-L2405W', key: 'printer', outputs: [], inputs: [] })], [], []);
     expect(layer.get('Routes/Sources/index.json')).toEqual([]);

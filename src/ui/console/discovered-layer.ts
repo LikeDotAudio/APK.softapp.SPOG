@@ -12,6 +12,8 @@ export interface DeviceIO {
   wire: string;            // 'dante' | 'aes67' | 'chromecast' | 'visa' | …
   channel?: number;
   format?: string | null;
+  address?: string | null;
+  port?: number | null;
   from?: { device: string; channel: string; status: string } | null;
 }
 
@@ -69,6 +71,19 @@ export function movedRoots(
   return same(src, last.src) && same(dest, last.dest) ? null : { src, dest };
 }
 
+function streamChannels(format?: string | null, name?: string): string[] {
+  if (format) {
+    const m = format.match(/(\d+)\s*ch\b/i);
+    if (m && m[1]) {
+      const count = parseInt(m[1], 10);
+      if (count > 0 && count <= 64) {
+        return Array.from({ length: count }, (_, idx) => `CH ${idx + 1}`);
+      }
+    }
+  }
+  return [name || 'CH 1'];
+}
+
 /** The live layer for a set of devices — pure, so it is testable. `srcRoot` /
  *  `destRoot` are the root manifests as they stand without this layer. */
 export function buildLayer(list: DeviceSetup[], srcRoot: string[], destRoot: string[]): Map<string, unknown> {
@@ -76,38 +91,89 @@ export function buildLayer(list: DeviceSetup[], srcRoot: string[], destRoot: str
   const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }) || a.key.localeCompare(b.key));
   const srcFiles: string[] = [];
   const destFiles: string[] = [];
-  sorted.forEach((d, i) => {
-    const n = String(i + 1).padStart(3, '0');
+  sorted.forEach((d) => {
     const base = slugId(d.name) || d.key;
-    const audio = d.outputs.filter((o) => o.kind === 'audio').map((o) => o.name);
     const video = d.outputs.filter((o) => o.kind === 'video').map((o) => o.name);
-    const common = { name: d.name, color: PAL.sky67, status: d.online ? 'OK' : 'OFFLINE', device: d };
-    // Split media so the person heuristic (video[] AND items[] on one leaf)
-    // never fires; both leaves share `name`, so they merge under one origin.
-    if (audio.length) {
+
+    // Streams: each SAP and Ravenna / AES67 stream is a separate source
+    const streamOutputs = d.outputs.filter((o) =>
+      o.kind === 'audio' && (o.id.startsWith('stream:') || o.wire === 'aes67' || o.wire === 'ravenna' || o.wire === 'sap')
+    );
+    const nonStreamAudio = d.outputs.filter((o) =>
+      o.kind === 'audio' && !o.id.startsWith('stream:') && o.wire !== 'aes67' && o.wire !== 'ravenna' && o.wire !== 'sap'
+    ).map((o) => o.name);
+
+    const common = { color: PAL.sky67, status: d.online ? 'OK' : 'OFFLINE', device: d };
+
+    // 1. Non-stream audio (e.g. Dante channels Ch1..Ch16 on Metro16)
+    if (nonStreamAudio.length) {
+      const n = String(srcFiles.length + 1).padStart(3, '0');
       const f = `${n}_${base}${video.length ? '-a' : ''}.json`;
-      out.set(SRC_DIR + f, { id: `disc-${d.key}${video.length ? '-a' : ''}`, extraClass: 'audio-imported', items: audio, ...common });
+      out.set(SRC_DIR + f, { id: `disc-${d.key}${video.length ? '-a' : ''}`, name: d.name, extraClass: 'audio-imported', items: nonStreamAudio, ...common });
       srcFiles.push(f);
     }
+
+    // 2. Stream audio: each SAP and Ravenna stream is its own source leaf
+    streamOutputs.forEach((s) => {
+      const isRavenna = s.wire === 'ravenna' || (s.wire === 'aes67' && d.wires.includes('ravenna'));
+      const isSap = s.wire === 'sap' || (s.wire === 'aes67' && d.wires.includes('sap'));
+      const flavors: { tag: string; wire: string }[] = [];
+
+      if (isRavenna && isSap) {
+        flavors.push({ tag: 'RAVENNA', wire: 'ravenna' });
+        flavors.push({ tag: 'SAP', wire: 'sap' });
+      } else if (isSap) {
+        flavors.push({ tag: 'SAP', wire: 'sap' });
+      } else if (isRavenna) {
+        flavors.push({ tag: 'RAVENNA', wire: 'ravenna' });
+      } else {
+        flavors.push({ tag: (s.wire || 'AES67').toUpperCase(), wire: s.wire || 'aes67' });
+      }
+
+      flavors.forEach(({ tag, wire }) => {
+        const n = String(srcFiles.length + 1).padStart(3, '0');
+        const streamSlug = slugId(`${s.name}-${tag}`);
+        const f = `${n}_${base}_${streamSlug}.json`;
+        const channels = streamChannels(s.format, s.name);
+        const displayName = s.name.toUpperCase().includes(tag) ? s.name : `${s.name} (${tag})`;
+        out.set(SRC_DIR + f, {
+          id: `disc-${d.key}-${streamSlug}`,
+          name: displayName,
+          extraClass: 'audio-imported audio-stream',
+          items: channels,
+          wire: wire,
+          format: s.format ?? null,
+          address: s.address ?? d.address,
+          port: s.port ?? null,
+          ...common
+        });
+        srcFiles.push(f);
+      });
+    });
+
+    // 3. Video outputs
     if (video.length) {
-      const f = `${n}_${base}${audio.length ? '-v' : ''}.json`;
-      out.set(SRC_DIR + f, { id: `disc-${d.key}${audio.length ? '-v' : ''}`, kind: 'video', extraClass: 'video-imported', video, ...common });
+      const n = String(srcFiles.length + 1).padStart(3, '0');
+      const f = `${n}_${base}${nonStreamAudio.length ? '-v' : ''}.json`;
+      out.set(SRC_DIR + f, { id: `disc-${d.key}${nonStreamAudio.length ? '-v' : ''}`, name: d.name, kind: 'video', extraClass: 'video-imported', video, ...common });
       srcFiles.push(f);
     }
+
     const twists = d.inputs
       .filter((i) => i.kind === 'audio' || i.kind === 'video')
       .map((i) => ({
         name: i.name, accepts: i.kind, ...(i.kind === 'video' ? { maxVideo: 1 } : {}), from: i.from ?? null,
         ...(i.wire ? { wire: i.wire } : {}), ...(i.format ? { format: i.format } : {}),
       }));
-    const f = `${n}_${base}.json`;
-    out.set(DEST_DIR + f, {
+    const dn = String(destFiles.length + 1).padStart(3, '0');
+    const df = `${dn}_${base}.json`;
+    out.set(DEST_DIR + df, {
       id: `disc-${d.key}`,
       name: d.name.toUpperCase(),
       device: d,
       twists: twists.length ? twists : [{ name: 'Device', accepts: 'both' }],
     });
-    destFiles.push(f);
+    destFiles.push(df);
   });
   if (srcFiles.length) out.set(SRC_DIR + 'index.json', srcFiles);
   if (destFiles.length) out.set(DEST_DIR + 'index.json', destFiles);
