@@ -61,10 +61,30 @@ describe('discovered — the engine setup as Routes', () => {
   });
 
   it('every device is presented — one with no media in or out still gets a destination tab', () => {
-    const layer = buildLayer([dev({ name: 'HL-L2405W', key: 'printer', wires: ['mdns', 'nic', 'ping'], outputs: [], inputs: [] })], [], []);
+    const layer = buildLayer([dev({ name: 'HL-L2405W', key: 'printer', make: '', model: '', wires: ['mdns', 'nic', 'ping'], outputs: [], inputs: [] })], [], []);
     expect(layer.get('Routes/Sources/index.json')).toEqual([]);
-    const dst = layer.get(`Routes/Destinations/${FOLDER}/${NET}/001_MDNS/001_HL-L2405W.json`) as { twists: unknown[] };
+    const dst = layer.get(`Routes/Destinations/${FOLDER}/${NET}/005_Network/001_MDNS/001_HL-L2405W.json`) as { twists: unknown[] };
     expect(dst.twists).toEqual([{ name: 'Device', accepts: 'both' }]);
+  });
+
+  it('Network and Control: each wire under its domain, spilled by make then model; units named by serial', () => {
+    const hp = ['S1', 'S2'].map((sn) => dev({ name: 'HEWLETT-PACKARD-34401A', key: `hp-${sn}`, make: 'Hewlett-Packard', model: '34401A', serial: sn, wires: ['visa', 'ping'] }));
+    const gen = dev({ name: 'AGILENT-33210A', key: 'gen', make: 'Agilent Technologies', model: '33210A', serial: 'G1', wires: ['visa'] });
+    const bare = dev({ name: '6060B', key: 'load', make: '', model: '', wires: ['visa'] });
+    const sim = dev({ name: 'Sim', key: 'sim', make: '', model: '', wires: ['trunk_sim'] });
+    const wwb = dev({ name: 'WWB', key: 'wwb', make: '', model: '', wires: ['wireless_wwb'] });
+    const sw = dev({ name: 'Switch', key: 'sw', make: '', model: '', wires: ['snmp', 'ping'] });
+    const layer = buildLayer([...hp, gen, bare, sim, wwb, sw], [], [], (d) => classify(d, null));
+    const N = `Routes/Destinations/${FOLDER}/${NET}`;
+    expect(layer.get(`${N}/index.json`)).toEqual(['001_Audio/', '002_Intercom/', '003_Routers/', '004_Testing/']);
+    expect(layer.get(`${N}/001_Audio/index.json`)).toEqual(['001_WIRELESS_WWB/']);
+    expect(layer.get(`${N}/002_Intercom/index.json`)).toEqual(['001_TRUNK_SIM/']);
+    expect(layer.get(`${N}/003_Routers/index.json`)).toEqual(['001_SNMP/']);
+    expect(layer.get(`${N}/004_Testing/001_VISA/index.json`)).toEqual(['001_6060B.json', 'AGILENT TECHNOLOGIES/', 'HEWLETT-PACKARD/']);
+    expect(layer.get(`${N}/004_Testing/001_VISA/AGILENT%20TECHNOLOGIES/index.json`)).toEqual(['001_AGILENT-33210A.json']);
+    expect(layer.get(`${N}/004_Testing/001_VISA/HEWLETT-PACKARD/index.json`)).toEqual(['34401A/']);
+    expect(layer.get(`${N}/004_Testing/001_VISA/HEWLETT-PACKARD/34401A/index.json`)).toEqual(['001_S1.json', '002_S2.json']);
+    expect((layer.get(`${N}/004_Testing/001_VISA/HEWLETT-PACKARD/34401A/002_S2.json`) as { name: string }).name).toBe('S2');
   });
 
   it('groups: what you can control first, then inputs and outputs, then the rest by wire', () => {
@@ -73,16 +93,17 @@ describe('discovered — the engine setup as Routes', () => {
     const both = dev({ name: 'Box', key: 'box', inputs: [{ id: 'i', name: 'In', kind: 'audio', wire: 'dante' }], outputs: [{ id: 'o', name: 'Out', kind: 'audio', wire: 'dante' }] });
     const tv = dev({ name: 'TV', key: 'tv', wires: ['appletv', 'mdns'], inputs: [{ id: 'i', name: 'HDMI', kind: 'video', wire: 'appletv' }] });
     const mic = dev({ name: 'Mic', key: 'mic', outputs: [{ id: 'o', name: 'Mic', kind: 'audio', wire: 'dante' }] });
-    const nics = ['b', 'a'].map((n) => dev({ name: `nic-${n}`, key: `nic-${n}`, wires: ['nic', 'ping'] }));
-    const mirror = dev({ name: 'APK:audio:nic:x', key: 'nmos-x', wires: ['nmos', 'nmos_device'], inputs: [{ id: 'r', name: 'x in', kind: 'data', wire: 'nmos' }] });
+    const nics = ['b', 'a'].map((n) => dev({ name: `nic-${n}`, key: `nic-${n}`, make: '', model: '', wires: ['nic', 'ping'] }));
+    const mirror = dev({ name: 'APK:audio:nic:x', key: 'nmos-x', make: '', model: '', wires: ['nmos', 'nmos_device'], inputs: [{ id: 'r', name: 'x in', kind: 'data', wire: 'nmos' }] });
     const panels: Record<string, { command: boolean; pages: number }> = { meter: { command: true, pages: 2 }, cast: { command: false, pages: 1 } };
     const layer = buildLayer([mirror, ...nics, mic, tv, both, display, touch], [], [], (d) => classify(d, panels[d.key] ?? null));
     // every group present, in order (no meter in this bench: Meters is withdrawn)
     expect(layer.get(`Routes/Destinations/${FOLDER}/index.json`)).toEqual(Object.values(CLASS_FOLDERS).filter((f) => f !== CLASS_FOLDERS.meter).map((f) => `${f}/`));
     expect(layer.get(`Routes/Destinations/${FOLDER}/${encodeURIComponent(CLASS_FOLDERS.touch)}/index.json`)).toEqual(['001_Meter.json']);
     expect(layer.get(`Routes/Destinations/${FOLDER}/${encodeURIComponent(CLASS_FOLDERS.in)}/index.json`)).toEqual(['001_TV.json']);
-    expect(layer.get(`Routes/Destinations/${FOLDER}/${NET}/index.json`)).toEqual(['001_NIC/', '002_NMOS/']);
-    expect(layer.get(`Routes/Destinations/${FOLDER}/${NET}/001_NIC/index.json`)).toEqual(['001_nic-a.json', '002_nic-b.json']);
+    expect(layer.get(`Routes/Destinations/${FOLDER}/${NET}/index.json`)).toEqual(['001_Audio/', '005_Network/']);
+    expect(layer.get(`Routes/Destinations/${FOLDER}/${NET}/001_Audio/index.json`)).toEqual(['001_NMOS/']);
+    expect(layer.get(`Routes/Destinations/${FOLDER}/${NET}/005_Network/001_NIC/index.json`)).toEqual(['001_nic-a.json', '002_nic-b.json']);
     // a panel with no command only displays; data I/O is not signal
     expect(classify(display, { command: false, pages: 3 })).toBe('display');
     expect(classify(touch, { command: true, pages: 0 })).toBe('display');

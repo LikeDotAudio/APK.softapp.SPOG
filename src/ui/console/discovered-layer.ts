@@ -5,7 +5,7 @@
 import { slugId } from '../sources/format.js';
 import { PAL } from '../../domain/palette.js';
 import { streamChannels, type DeviceSetup } from './discovered-types.js';
-import { classify, groupPath, primaryWire, type DeviceClass } from './discovered-groups.js';
+import { classify, groupPath, networkPaths, type DeviceClass } from './discovered-groups.js';
 import type { MeterInfo } from './discovered-meters.js';
 
 export * from './discovered-types.js';
@@ -47,9 +47,8 @@ export function buildLayer(
   const out = new Map<string, unknown>();
   const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }) || a.key.localeCompare(b.key));
   const classes = new Map(sorted.map((d) => [d.key, classOf(d)] as const));
-  // <NNN>_<WIRE> under Network and Control, numbered in name order of the wires present.
-  const wires = [...new Set(sorted.filter((d) => classes.get(d.key) === 'network').map(primaryWire))].sort();
-  const wireFolders = new Map(wires.map((w, i) => [w, `${String(i + 1).padStart(3, '0')}_${w.toUpperCase()}`] as const));
+  // Network and Control: <Domain>/<WIRE>/<Make>/<Model>/ (discovered-groups networkPaths).
+  const net = networkPaths(sorted.filter((d) => classes.get(d.key) === 'network'));
   const srcTree = folder();
   const destTree = folder();
   const into = (tree: Folder, path: string[]): Folder => path.reduce((f, name) => {
@@ -59,7 +58,7 @@ export function buildLayer(
   }, tree);
   // The Meters group opens with a DATA LOGGER: route there, graph any meter (editors/data-logger).
   if (sorted.some((d) => classes.get(d.key) === 'meter' && meters.has(d.key))) {
-    const path = groupPath(sorted[0]!, 'meter', wireFolders);
+    const path = groupPath(sorted[0]!, 'meter', net);
     out.set(DEST_DIR + path.map(seg).join('') + '000_Data Logger.json', {
       id: 'disc-data-logger', name: 'DATA LOGGER',
       twists: [1, 2, 3, 4].map((n) => ({ name: `LOGGER ${n}`, accepts: 'both' })),
@@ -67,7 +66,7 @@ export function buildLayer(
     into(destTree, path).files.push('000_Data Logger.json');
   }
   sorted.forEach((d) => {
-    const path = groupPath(d, classes.get(d.key)!, wireFolders);
+    const path = groupPath(d, classes.get(d.key)!, net);
     const srcDir = SRC_DIR + path.map(seg).join('');
     const destDir = DEST_DIR + path.map(seg).join('');
     const srcFiles = into(srcTree, path).files;
@@ -163,11 +162,13 @@ export function buildLayer(
         name: i.name, accepts: i.kind, ...(i.kind === 'video' ? { maxVideo: 1 } : {}), from: i.from ?? null,
         ...(i.wire ? { wire: i.wire } : {}), ...(i.format ? { format: i.format } : {}),
       }));
+    // A unit in a shared model folder is named by its serial: the folder is the model.
+    const unit = net.get(d.key)?.name;
     const dn = String(destFiles.length + 1).padStart(3, '0');
-    const df = `${dn}_${base}.json`;
+    const df = `${dn}_${(unit && slugId(unit)) || base}.json`;
     out.set(destDir + df, {
       id: `disc-${d.key}`,
-      name: d.name.toUpperCase(),
+      name: unit ?? d.name.toUpperCase(),
       device: d,
       twists: twists.length ? twists : [{ name: 'Device', accepts: 'both' }],
     });

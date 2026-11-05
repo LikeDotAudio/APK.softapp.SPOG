@@ -15,7 +15,7 @@ import type { DeviceIO, DeviceSetup } from './discovered-types.js';
      003_Inputs and Outputs   audio/video both ways
      004_Outputs              audio/video out only (a source)
      005_Inputs               audio/video in only (a destination)
-     006_Network and Control  no audio/video: <NNN>_<WIRE>/ per primary wire       */
+     006_Network and Control  no audio/video: <Domain>/<WIRE>/<Make>/<Model>/ below */
 
 export type DeviceClass = 'meter' | 'touch' | 'display' | 'both' | 'out' | 'in' | 'network';
 
@@ -55,9 +55,66 @@ export function classify(d: DeviceSetup, panel: PanelFacts | null): DeviceClass 
   return 'network';
 }
 
+/* ─────────── Network and Control, by domain ───────────
+   A flat run of wires (AVB, MDNS, … VISA, WIRELESS_WWB) reads as one long
+   menu. Each wire is laid one level down, under the domain it serves, and the
+   devices on it spill further by make, then model:
+
+     006_Network and Control/<NNN>_<Domain>/<NNN>_<WIRE>/<Make>/<Model>/
+
+   The domains are wire VOCABULARY (as GENERIC_WIRES is), not a device list:
+   a wire nobody named here falls to Network. A prefix ending in '_' matches
+   the family (wireless_csv, wireless_wwb, trunk_sim …). */
+export const WIRE_DOMAINS: ReadonlyArray<{ folder: string; wires: readonly string[] }> = [
+  { folder: '001_Audio', wires: ['avb', 'milan', 'aes67', 'aes70', 'dante', 'ravenna', 'sap', 'ptp', 'nmos', 'nmos_control', 'midi', 'osc', 'ember', 'soundcard_in', 'soundcard_out', 'wireless_'] },
+  { folder: '002_Intercom', wires: ['trunk_'] },
+  { folder: '003_Routers', wires: ['snmp', 'netgear', 'trendnet', 'wifi', 'netbox'] },
+  { folder: '004_Testing', wires: ['visa', 'serial_com', 'serial', 'usbtmc', 'scpi'] },
+];
+export const OTHER_DOMAIN = '005_Network';
+
+/** The domain folder a wire is laid under. */
+export function domainOf(wire: string): string {
+  const w = wire.toLowerCase();
+  const hit = WIRE_DOMAINS.find((d) => d.wires.some((x) => (x.endsWith('_') ? w.startsWith(x) : w === x)));
+  return hit?.folder ?? OTHER_DOMAIN;
+}
+
+const clean = (s: string | null | undefined): string => (s ?? '').replace(/[\\/]/g, '-').trim();
+
+/** Where each Network-and-Control device goes below the class folder, and the
+ *  name its tab carries: domain → wire → make → model. A make level is laid
+ *  only when the device says its make; a model level only when two or more
+ *  units share it — and then each unit is named by serial (else address), as
+ *  the model is already the folder. Pure, so it is testable. */
+export function networkPaths(list: DeviceSetup[]): Map<string, { path: string[]; name?: string }> {
+  const out = new Map<string, { path: string[]; name?: string }>();
+  const byDomain = new Map<string, DeviceSetup[]>();
+  list.forEach((d) => {
+    const dom = domainOf(primaryWire(d));
+    byDomain.set(dom, [...(byDomain.get(dom) ?? []), d]);
+  });
+  byDomain.forEach((devs, dom) => {
+    const wires = [...new Set(devs.map(primaryWire))].sort();
+    const wireFolder = new Map(wires.map((w, i) => [w, `${String(i + 1).padStart(3, '0')}_${w.toUpperCase()}`] as const));
+    const modelKey = (d: DeviceSetup): string => `${primaryWire(d)}|${clean(d.make).toLowerCase()}|${clean(d.model).toLowerCase()}`;
+    const units = new Map<string, number>();
+    devs.forEach((d) => { if (clean(d.model)) units.set(modelKey(d), (units.get(modelKey(d)) ?? 0) + 1); });
+    devs.forEach((d) => {
+      const path = [dom, wireFolder.get(primaryWire(d))!];
+      if (clean(d.make)) path.push(clean(d.make).toUpperCase());
+      const shared = (units.get(modelKey(d)) ?? 0) > 1;
+      if (shared) path.push(clean(d.model).toUpperCase());
+      const unit = clean(d.serial) || clean(d.address);
+      out.set(d.key, shared && unit ? { path, name: unit.toUpperCase() } : { path });
+    });
+  });
+  return out;
+}
+
 /** The folder path (under 000_Discovered/) a device's files go in, raw names. */
-export function groupPath(d: DeviceSetup, cls: DeviceClass, wireFolders: Map<string, string>): string[] {
+export function groupPath(d: DeviceSetup, cls: DeviceClass, net: Map<string, { path: string[] }>): string[] {
   const top = CLASS_FOLDERS[cls];
   if (cls !== 'network') return [top];
-  return [top, wireFolders.get(primaryWire(d)) ?? primaryWire(d).toUpperCase()];
+  return [top, ...(net.get(d.key)?.path ?? [OTHER_DOMAIN, primaryWire(d).toUpperCase()])];
 }
