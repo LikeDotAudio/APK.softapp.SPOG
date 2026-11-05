@@ -122,8 +122,7 @@ export const Footer = {
     resetIdleTimer();
   },
 
-  /** `first`: shown at the start of the footer whatever the seat's handedness (a CSS
-   *  order, since a right-handed footer is a row-reverse) — DISCOVERED uses it. */
+  /** `first`: leads the footer whatever the seat's handedness (CSS order) — DISCOVERED. */
   addGroup(label: string, opts: { color?: string; collapsed?: boolean; parent?: GroupHandle | null; first?: boolean } = {}): GroupHandle | null {
     if (!tabsContainer) return null;
     const color = opts.color || '255,170,0';
