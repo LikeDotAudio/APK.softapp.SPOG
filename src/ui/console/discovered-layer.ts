@@ -140,7 +140,9 @@ export function buildLayer(
     const meter = classes.get(d.key) === 'meter' ? meters.get(d.key) : undefined;
     if (meter) {
       const mn = String(destFiles.length + 1).padStart(3, '0');
-      const mf = `${mn}_${base}.json`;
+      // The footer tab is the file's name: name it by the meter's label, so four
+      // 34401As read as four ports, not one model four times.
+      const mf = `${mn}_${slugId(meter.label.replace(/^\S+\s+/, '')) || base}.json`;
       out.set(destDir + mf, {
         id: `disc-${d.key}`,
         name: meter.label.toUpperCase(),

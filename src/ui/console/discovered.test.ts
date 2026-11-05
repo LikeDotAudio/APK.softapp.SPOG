@@ -141,10 +141,10 @@ describe('discovered — the engine setup as Routes', () => {
     const layer = buildLayer([box, scope, dmm], [], [], classOf, meters);
     const M = encodeURIComponent(CLASS_FOLDERS.meter);
     expect((layer.get(`Routes/Destinations/${FOLDER}/index.json`) as string[])[0]).toBe(`${CLASS_FOLDERS.meter}/`);
-    expect(layer.get(`Routes/Destinations/${FOLDER}/${M}/index.json`)).toEqual(['000_Data Logger.json', '002_34401A.json', '003_54641D.json']);
+    expect(layer.get(`Routes/Destinations/${FOLDER}/${M}/index.json`)).toEqual(['000_Data Logger.json', '002_34401A-dev-ttyUSB3.json', '003_54641D-MY42000747.json']);
     const logger = layer.get(`Routes/Destinations/${FOLDER}/${M}/000_Data Logger.json`) as { twists: { name: string }[] };
     expect(logger.twists.map((t) => t.name)).toEqual(['LOGGER 1', 'LOGGER 2', 'LOGGER 3', 'LOGGER 4']);
-    const d = layer.get(`Routes/Destinations/${FOLDER}/${M}/003_54641D.json`) as { name: string; bim: string; twists: { name: string }[] };
+    const d = layer.get(`Routes/Destinations/${FOLDER}/${M}/003_54641D-MY42000747.json`) as { name: string; bim: string; twists: { name: string }[] };
     expect(d.name).toBe('KEYSIGHT 54641D #MY42000747');
     expect(d.bim).toBe('keysight/54641d');
     expect(d.twists.map((t) => t.name)).toEqual(['CH 1', 'CH 2']);
