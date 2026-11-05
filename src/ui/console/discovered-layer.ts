@@ -44,12 +44,14 @@ export function buildLayer(
   list: DeviceSetup[], srcRoot: string[], destRoot: string[],
   classOf: (d: DeviceSetup) => DeviceClass = (d) => classify(d, null),
   meters: Map<string, MeterInfo> = new Map(),
+  typeOf: (d: DeviceSetup) => string = () => '',
 ): Map<string, unknown> {
   const out = new Map<string, unknown>();
   const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }) || a.key.localeCompare(b.key));
   const classes = new Map(sorted.map((d) => [d.key, classOf(d)] as const));
-  // Network and Control: <Domain>/<WIRE>/<Make>/<Model>/ (discovered-groups networkPaths).
-  const net = networkPaths(sorted.filter((d) => classes.get(d.key) === 'network'));
+  // Network and Control: <Domain>/<WIRE>/<Make>/<Model>/, or <TYPE>/<MODEL>/<MAKE>/ when the
+  // type is known (discovered-groups networkPaths).
+  const net = networkPaths(sorted.filter((d) => classes.get(d.key) === 'network'), typeOf);
   const srcTree = folder();
   const destTree = folder();
   const into = (tree: Folder, path: string[]): Folder => path.reduce((f, name) => {

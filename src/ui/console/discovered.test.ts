@@ -1,3 +1,4 @@
+import { familyIndex } from './discovered-families.js';
 import { describe, it, expect } from 'vitest';
 import { buildLayer, movedRoots, classify, matchMeters, visa, CLASS_FOLDERS, FOLDER, type DeviceSetup } from './discovered-layer.js';
 
@@ -85,6 +86,22 @@ describe('discovered — the engine setup as Routes', () => {
     expect(layer.get(`${N}/004_Testing/001_VISA/HEWLETT-PACKARD/index.json`)).toEqual(['34401A/']);
     expect(layer.get(`${N}/004_Testing/001_VISA/HEWLETT-PACKARD/34401A/index.json`)).toEqual(['001_S1.json', '002_S2.json']);
     expect((layer.get(`${N}/004_Testing/001_VISA/HEWLETT-PACKARD/34401A/002_S2.json`) as { name: string }).name).toBe('S2');
+  });
+
+  it('a typed instrument is laid TYPE → MODEL → MAKE, each unit named by serial (owner, 2026-11-05)', () => {
+    const gens = [['MY48000299', '33210A'], ['MY44044028', '33220A']].map(([sn, model]) =>
+      dev({ name: model!, key: `gen-${sn}`, make: 'Agilent Technologies', model: model!, serial: sn!, wires: ['visa'] }));
+    const dmm = dev({ name: '34401A', key: 'dmm', make: 'HEWLETT-PACKARD', model: '34401A', serial: '', address: '/dev/ttyUSB0', wires: ['visa'] });
+    const odd = dev({ name: 'Mystery', key: 'odd', make: 'ACME', model: 'X1', serial: 'Q', wires: ['visa'] });
+    const families = familyIndex([{ model: '33210A', family: 'Generator' }, { model: '33220a', family: 'Generator' }, { model: '34401A', family: 'DMM' }]);
+    const typeOf = (d: { model: string }): string => families.get(d.model.toLowerCase()) ?? '';
+    const layer = buildLayer([...gens, dmm, odd], [], [], (d) => classify(d, null), new Map(), typeOf);
+    const V = `Routes/Destinations/${FOLDER}/${NET}/004_Testing/001_VISA`;
+    expect(layer.get(`${V}/index.json`)).toEqual(['ACME/', 'DMM/', 'GENERATOR/']);           // by type; the unknown keeps its make
+    expect(layer.get(`${V}/GENERATOR/index.json`)).toEqual(['33210A/', '33220A/']);
+    expect(layer.get(`${V}/GENERATOR/33220A/index.json`)).toEqual(['AGILENT TECHNOLOGIES/']);
+    expect(layer.get(`${V}/GENERATOR/33220A/AGILENT%20TECHNOLOGIES/index.json`)).toEqual(['001_MY44044028.json']);
+    expect(layer.get(`${V}/DMM/34401A/HEWLETT-PACKARD/index.json`)).toEqual(['001_-DEV-TTYUSB0.json']);
   });
 
   it('groups: what you can control first, then inputs and outputs, then the rest by wire', () => {

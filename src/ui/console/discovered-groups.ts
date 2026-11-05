@@ -86,8 +86,17 @@ const clean = (s: string | null | undefined): string => (s ?? '').replace(/[\\/]
  *  name its tab carries: domain → wire → make → model. A make level is laid
  *  only when the device says its make; a model level only when two or more
  *  units share it — and then each unit is named by serial (else address), as
- *  the model is already the folder. Pure, so it is testable. */
-export function networkPaths(list: DeviceSetup[]): Map<string, { path: string[]; name?: string }> {
+ *  the model is already the folder.
+ *
+ *  A device whose TYPE is known (`typeOf` — an instrument's family from the
+ *  instrument library: DMM, Generator, Oscilloscope …) is laid by what it IS
+ *  first: domain → wire → TYPE → MODEL → MAKE, each unit named by serial
+ *  (else address). Owner, 2026-11-05: "the visa should present by group type
+ *  not by manufacturer … type then model then manufacturer".
+ *  Pure, so it is testable. */
+export function networkPaths(
+  list: DeviceSetup[], typeOf: (d: DeviceSetup) => string = () => '',
+): Map<string, { path: string[]; name?: string }> {
   const out = new Map<string, { path: string[]; name?: string }>();
   const byDomain = new Map<string, DeviceSetup[]>();
   list.forEach((d) => {
@@ -102,6 +111,15 @@ export function networkPaths(list: DeviceSetup[]): Map<string, { path: string[];
     devs.forEach((d) => { if (clean(d.model)) units.set(modelKey(d), (units.get(modelKey(d)) ?? 0) + 1); });
     devs.forEach((d) => {
       const path = [dom, wireFolder.get(primaryWire(d))!];
+      const type = clean(typeOf(d));
+      if (type) {
+        path.push(type.toUpperCase());
+        if (clean(d.model)) path.push(clean(d.model).toUpperCase());
+        if (clean(d.make)) path.push(clean(d.make).toUpperCase());
+        const unit = clean(d.serial) || clean(d.address);
+        out.set(d.key, unit ? { path, name: unit.toUpperCase() } : { path });
+        return;
+      }
       if (clean(d.make)) path.push(clean(d.make).toUpperCase());
       const shared = (units.get(modelKey(d)) ?? 0) > 1;
       if (shared) path.push(clean(d.model).toUpperCase());
