@@ -133,10 +133,13 @@ export async function renderSourcesPanel(panel: HTMLElement, onRendered?: Render
   // `icons/` holds the ICON-face tiles, not a source category (deploy.py keeps it
   // out of the manifests too — this guard covers a stale/hand-built index.json).
   const dirs = allDirs.filter((d) => !/^\.?icons?\/?$/i.test(stripOrder(d.name)));
-  const peopleContent = buildSuperPool(panel, 'Talent', paletteAt(SOURCE_POOL_COLORS, 0));
-  const built = [{ content: peopleContent, url: 'Routes/Talent/' }];
+  // DISCOVERED leads the rail, above TALENT: what is really on the network first.
+  const isDisc = (d: { name: string }) => /^\d*_?Discovered$/i.test(d.name.replace(/\/$/, ''));
+  const built: { content: HTMLElement; url: string }[] = dirs.filter(isDisc).map((cat) => (
+    { content: buildSuperPool(panel, cat.name, paletteAt(SOURCE_POOL_COLORS, 0)), url: 'Routes/Sources/' + cat.href }));
+  built.push({ content: buildSuperPool(panel, 'Talent', paletteAt(SOURCE_POOL_COLORS, 0)), url: 'Routes/Talent/' });
 
-  dirs.forEach((cat, i) => {
+  dirs.filter((d) => !isDisc(d)).forEach((cat, i) => {
     const color = paletteAt(SOURCE_POOL_COLORS, i + 1);
     const content = buildSuperPool(panel, cat.name, color);
     built.push({ content, url: 'Routes/Sources/' + cat.href });
