@@ -14,9 +14,25 @@
 // A device with several panels (a Dante box has one per channel too) shows the
 // shortest key — the device's own console, not one of its channels.
 
-import type { DeviceSetup } from './discovered-layer.js';
+import { primaryWire, type DeviceSetup } from './discovered-layer.js';
 
-export interface PanelRef { key: string; folder: string; serial: string }
+export { primaryWire, GENERIC_WIRES } from './discovered-layer.js';
+
+/** One retained panel, as much of it as SPOG needs: who it is (key, folder,
+ *  serial, model, resource), whether it takes commands (`command`: the document
+ *  names a `device.write_topic`), and how many pages it has (`pages`: its
+ *  placements that carry frames). A panel with a command and at least one page
+ *  is a TOUCH PANEL — a front panel that controls the box; one without a command
+ *  only DISPLAYS it. */
+export interface PanelRef {
+  key: string;
+  folder: string;
+  serial: string;
+  model?: string;
+  resource?: string;
+  command?: boolean;
+  pages?: number;
+}
 
 export const PANELS_TOPIC = 'APK.audio/System/Gui/Panels/+';
 
@@ -25,10 +41,25 @@ const norm = (s: string | null | undefined): string => String(s ?? '').toLowerCa
 /** A retained panel document as a PanelRef, or null for an erase / a stranger. */
 export function panelRef(topic: string, payload: unknown): PanelRef | null {
   if (!payload || typeof payload !== 'object') return null;
-  const p = payload as { key?: unknown; folder?: unknown; device?: { serial?: unknown } };
+  const p = payload as {
+    key?: unknown; folder?: unknown; placements?: unknown;
+    device?: { serial?: unknown; model?: unknown; resource?: unknown; write_topic?: unknown };
+  };
   const key = typeof p.key === 'string' ? p.key : topic.split('/').pop() ?? '';
   if (!key) return null;
-  return { key, folder: typeof p.folder === 'string' ? p.folder : key, serial: String(p.device?.serial ?? '') };
+  const pages = Array.isArray(p.placements)
+    ? p.placements.filter((pl) => !!pl && Array.isArray((pl as { frames?: unknown }).frames) && (pl as { frames: unknown[] }).frames.length > 0).length
+    : 0;
+  const ref: PanelRef = {
+    key,
+    folder: typeof p.folder === 'string' ? p.folder : key,
+    serial: p.device?.serial == null ? '' : String(p.device.serial),
+    command: typeof p.device?.write_topic === 'string' && p.device.write_topic.length > 0,
+    pages,
+  };
+  if (typeof p.device?.model === 'string' && p.device.model) ref.model = p.device.model;
+  if (typeof p.device?.resource === 'string' && p.device.resource) ref.resource = p.device.resource;
+  return ref;
 }
 
 /** The panel that is this device's GUI, or null. */
@@ -54,3 +85,35 @@ export const routeSlug = (v: string): string =>
  *  on that device's tab. `osBase` is the OS's index.html. */
 export const panelUrl = (osBase: string, p: PanelRef): string =>
   `${osBase}?solo=Device_Consoles&tab=${encodeURIComponent(routeSlug(p.folder))}`;
+
+/** The touch panel, RUNNING — the Touch Panel Builder's run.html: the device's
+ *  presented panel full size, every touch a command to the box, every readout
+ *  its readback. `?panelrunner=<url>` overrides where it is served. */
+export const RUNNER_PATH = '/Softapps/EDITORS/EDITORS.TouchPanelBuilder/run.html';
+
+/** The protocol a runner link names: the device's own wire for an instrument
+ *  (`visa`), else the most specific wire it was found on. */
+export function runnerProtocol(device: DeviceSetup): string {
+  if (device.wires.includes('visa')) return 'visa';
+  return primaryWire(device);
+}
+
+/** Where the running front panel for this device is: run.html with the box's
+ *  link (`?model=&serial=&resource=&protocol=`). The panel's own identity wins
+ *  over the engine's (it is what run.html matches the presented panel by). */
+export function runnerUrl(base: string, device: DeviceSetup, panel: PanelRef | null): string {
+  const q = new URLSearchParams();
+  const model = panel?.model || device.model || device.name;
+  const serial = panel?.serial || device.serial;
+  const resource = panel?.resource || device.address;
+  if (model) q.set('model', model);
+  if (serial) q.set('serial', serial);
+  if (resource) q.set('resource', resource);
+  q.set('protocol', runnerProtocol(device));
+  return `${base}?${q.toString()}`;
+}
+
+/** A device has a front panel to run when it presents one, or when it is an
+ *  instrument with a model (run.html builds its panel from the model's api.json). */
+export const hasFrontPanel = (device: DeviceSetup, panel: PanelRef | null): boolean =>
+  !!panel || (device.wires.includes('visa') && !!device.model);

@@ -7,7 +7,7 @@ import { describe, it, expect, beforeAll, vi } from 'vitest';
 vi.mock('../sources/panel.js', () => ({ renderSourcesPanel: async () => {} }));
 vi.mock('../sources/interact.js', () => ({ wireSourceNodes: () => {} }));
 vi.mock('./footer.js', () => ({ Footer: {}, footerGroups: () => [] }));
-vi.mock('./destinations.js', () => ({ addDestinationTree: async () => {} }));
+vi.mock('./destinations.js', () => ({ addDestinationTree: async () => {}, onDestinationRendered: () => {} }));
 vi.mock('./matrix.js', () => ({}));
 vi.mock('../palette.js', () => ({ DEST_GROUP_COLORS: [], rgbAt: () => '0,0,0' }));
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { panelFor, panelRef, panelUrl, type PanelRef } from './discovered-gui-match.js';
+import { panelFor, panelRef, panelUrl, runnerUrl, hasFrontPanel, primaryWire, type PanelRef } from './discovered-gui-match.js';
 import type { DeviceSetup } from './discovered-layer.js';
 
 const dev = (over: Partial<DeviceSetup>): DeviceSetup => ({
@@ -26,7 +26,27 @@ describe('discovered-gui-match — a device and its own panel', () => {
   it('reads a retained panel, treats an erase as none, and addresses the solo OS tab', () => {
     expect(panelRef('APK.audio/System/Gui/Panels/k', null)).toBeNull();
     const ref = panelRef('APK.audio/System/Gui/Panels/k', { key: 'k', folder: 'Metro16-DANTE2AVB_dante', device: { serial: 's' } });
-    expect(ref).toEqual({ key: 'k', folder: 'Metro16-DANTE2AVB_dante', serial: 's' });
+    expect(ref).toEqual({ key: 'k', folder: 'Metro16-DANTE2AVB_dante', serial: 's', command: false, pages: 0 });
     expect(panelUrl('/APK%3AOS/index.html', ref!)).toBe('/APK%3AOS/index.html?solo=Device_Consoles&tab=metro16-dante2avb-dante');
+  });
+  it('reads whether a panel takes commands and how many pages it has', () => {
+    const ref = panelRef('APK.audio/System/Gui/Panels/hp', {
+      key: 'hp', folder: 'HP_visa',
+      device: { serial: 'MY42000747', model: '34401A', resource: 'TCPIP::44.44.44.222::gpib7,22::INSTR', write_topic: 'X/Write' },
+      placements: [{ at: 'Instruments', frames: [{ path: 'a.json' }] }, { at: 'Probe', frames: [{}] }, { at: 'Empty', frames: [] }],
+    });
+    expect(ref).toMatchObject({ command: true, pages: 2, model: '34401A', resource: 'TCPIP::44.44.44.222::gpib7,22::INSTR' });
+  });
+  it('links the running front panel by the panel\'s identity, protocol from the wire', () => {
+    const d = dev({ name: 'HEWLETT-PACKARD 34401A', model: '34401A', serial: 'MY42000747', address: 'GPIB::22', wires: ['visa'] });
+    const url = runnerUrl('/run.html', d, { key: 'hp', folder: 'f', serial: 'MY42000747', resource: 'TCPIP::x::INSTR', command: true, pages: 1 });
+    const q = new URLSearchParams(url.split('?')[1]);
+    expect(q.get('model')).toBe('34401A');
+    expect(q.get('resource')).toBe('TCPIP::x::INSTR');
+    expect(q.get('protocol')).toBe('visa');
+    expect(hasFrontPanel(d, null)).toBe(true);
+    expect(hasFrontPanel(dev({ wires: ['nic', 'ping'] }), null)).toBe(false);
+    expect(primaryWire(dev({ wires: ['mdns', 'nic', 'ping'] }))).toBe('mdns');
+    expect(primaryWire(dev({ wires: ['appletv', 'mdns', 'nic'] }))).toBe('appletv');
   });
 });
