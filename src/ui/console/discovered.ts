@@ -33,9 +33,9 @@ import { DEST_GROUP_COLORS, rgbAt } from '../palette.js';
 import { panelOf, onPanelsChanged } from './discovered-gui.js';
 import {
   buildLayer, classify, movedRoots, isSetup, SETUP_URL, SETUP_TOPIC, SRC_ROOT, DEST_ROOT, DEST_DIR,
-  matchMeters, BIM_INSTANCES_URL, BIM_PARTS_URL,
-  type DeviceSetup, type Roots, type MeterInfo, type BimInstance, type BimPart,
+  type DeviceSetup, type Roots,
 } from './discovered-layer.js';
+import { fetchMeters, rematch, meterMap } from './discovered-bim.js';
 
 export { buildLayer, FOLDER, type DeviceSetup, type DeviceIO } from './discovered-layer.js';
 
@@ -63,37 +63,8 @@ let roots: Roots | null = null;   // what the live layer was last built on
 /* Which group each device is in follows its panel: a panel arriving can move a
    device from Network and Control to Touch Panels, so a change in the panel
    index re-lays the layer — but only when some device actually changed group. */
-const classOf = (d: DeviceSetup): ReturnType<typeof classify> => (meters.has(d.key) ? 'meter' : classify(d, panelOf(d)));
+const classOf = (d: DeviceSetup): ReturnType<typeof classify> => (meterMap().has(d.key) ? 'meter' : classify(d, panelOf(d)));
 
-/* METERS: which discovered devices the BIM library calls measuring instruments,
-   and their inputs (discovered-layer matchMeters). Read beside the engine's list;
-   a host without the library simply has no Meters group. */
-let meters = new Map<string, MeterInfo>();
-let bimInstances: BimInstance[] = [];
-let bimParts: BimPart[] = [];
-async function fetchMeters(timeoutMs: number): Promise<boolean> {
-  try {
-    const get = async <T,>(url: string): Promise<T | null> => {
-      const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), timeoutMs);
-      const res = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
-      clearTimeout(t);
-      return res.ok ? (await res.json()) as T : null;
-    };
-    const inst = await get<{ items: BimInstance[] }>(BIM_INSTANCES_URL);
-    if (!inst) return false;
-    bimInstances = inst.items ?? [];
-    const ids = [...new Set(bimInstances.filter((i) => i.part?.category === 'Test & Measurement').map((i) => i.part?.id).filter(Boolean))] as string[];
-    if (ids.length) bimParts = (await get<{ items: BimPart[] }>(BIM_PARTS_URL + ids.map(encodeURIComponent).join(',')))?.items ?? bimParts;
-  } catch { return false; /* no library behind this host */ }
-  return rematch();
-}
-function rematch(): boolean {
-  const next = matchMeters([...devices.values()], bimInstances, bimParts);
-  const changed = JSON.stringify([...next]) !== JSON.stringify([...meters]);
-  meters = next;
-  return changed;
-}
 let lastClasses = '';
 const classSignature = (): string => [...devices.values()].map((d) => `${d.key}=${classOf(d)}`).sort().join('|');
 let followingPanels = false;
@@ -104,8 +75,8 @@ function followPanels(): void {
 }
 function lay(next: Roots): void {
   roots = next;
-  rematch();
-  setLive(buildLayer([...devices.values()], next.src, next.dest, classOf, meters));
+  rematch([...devices.values()]);
+  setLive(buildLayer([...devices.values()], next.src, next.dest, classOf, meterMap()));
   lastClasses = classSignature();
 }
 
@@ -191,7 +162,7 @@ async function fetchList(timeoutMs: number): Promise<boolean> {
 export async function loadDiscovered(editor?: OpenEditor, timeoutMs = 2000): Promise<number> {
   openEditor = editor;
   await fetchList(timeoutMs);
-  await fetchMeters(timeoutMs);
+  await fetchMeters([...devices.values()], timeoutMs);
   await applyLayer();
   followRootDrafts();
   followPanels();
@@ -210,7 +181,7 @@ export function followDiscovered(bus: TwistBus): () => void {
     else if (devices.delete(key)) { seenAt.delete(key); scheduleRebuild(); }
   });
   const poll = setInterval(() => {
-    void Promise.all([fetchList(5000), fetchMeters(5000)]).then(([a, b]) => { if (a || b) scheduleRebuild(); });
+    void Promise.all([fetchList(5000), fetchMeters([...devices.values()], 5000)]).then(([a, b]) => { if (a || b) scheduleRebuild(); });
   }, POLL_MS);
   const decay = setInterval(() => {
     const cutoff = Date.now() - STALE_MS;
