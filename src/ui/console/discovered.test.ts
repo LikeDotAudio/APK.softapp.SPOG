@@ -111,11 +111,16 @@ describe('discovered — the engine setup as Routes', () => {
     const scope = dev({ name: '54641D', key: 'visa_MY42000747', make: 'AGILENT TECHNOLOGIES', model: '54641D', serial: 'MY42000747',
       address: 'tcpip0::44.44.44.222::gpib7,6::instr', wires: ['visa'] });
     const dmm = dev({ name: '34401A', key: 'visa_ttyUSB3', make: 'HEWLETT-PACKARD', model: '34401A', serial: '',
-      address: 'asrl/dev/ttyUSB3::instr', wires: ['visa'] });
+      address: '/dev/ttyUSB3', wires: ['visa'] });   // discovery's spelling of ASRL/dev/ttyUSB3::INSTR
     const box = dev({ name: 'Box', key: 'box', outputs: [{ id: 'o', name: 'Out', kind: 'audio', wire: 'dante' }] });
+    // the same scope seen a second time on the network: one bench device is one meter
+    const scopeNic = dev({ name: 'Agilent 54641D', key: 'mac_00_30', serial: 'MY42000747', address: '44.44.44.222', wires: ['nic', 'ping', 'visa'] });
+    const psu = dev({ name: '66101A', key: 'visa_psu', serial: '', address: 'tcpip0::44.44.44.222::gpib7,30,0::instr', wires: ['visa'] });
     const instances = [
       { key: 'serial:x', state: 'online', serial: 'MY42000747', resource: 'TCPIP::44.44.44.222::gpib7,6::INSTR',
         part: { id: 'keysight/54641d', manufacturer: 'Keysight', model: '54641D', category: 'Test & Measurement' } },
+      { key: 'psu', state: 'online', serial: null, resource: 'TCPIP::44.44.44.222::gpib7,30,0::INSTR',
+        part: { id: 'keysight/66101a', manufacturer: 'Keysight', model: '66101A', category: 'Test & Measurement' } },
       { key: 'usb:y', state: 'online', serial: null, resource: 'ASRL/dev/ttyUSB3::INSTR',
         part: { id: 'keysight/34401a', manufacturer: 'Keysight', model: '34401A', category: 'Test & Measurement' } },
       { key: 'mac:z', state: 'online', serial: null, resource: null, part: { id: 'shure/sm58', category: 'Microphones' } },
@@ -123,9 +128,10 @@ describe('discovered — the engine setup as Routes', () => {
     const parts = [
       { id: 'keysight/54641d', ports: [{ group: 'CH', side: 'input', domain: 'signal', count: 2 }, { group: 'MAINS', side: 'input', domain: 'power', count: 1 }, { group: 'GPIB', side: 'connection', domain: 'control' }] },
       { id: 'keysight/34401a', ports: [{ group: 'HI', side: 'input', domain: 'signal', count: 1 }] },
+      { id: 'keysight/66101a', ports: [{ group: 'OUT', side: 'output', domain: 'power', count: 1 }] },
     ];
     expect(visa('tcpip0::44.44.44.222::gpib7,6::instr')).toBe('TCPIP::44.44.44.222::GPIB7,6::INSTR');
-    const meters = matchMeters([scope, dmm, box], instances, parts);
+    const meters = matchMeters([scopeNic, scope, dmm, box, psu], instances, parts);
     expect([...meters.keys()].sort()).toEqual(['visa_MY42000747', 'visa_ttyUSB3']);
     expect(meters.get('visa_MY42000747')!.label).toBe('Keysight 54641D #MY42000747');
     expect(meters.get('visa_MY42000747')!.inputs).toEqual([{ name: 'CH 1', accepts: 'audio' }, { name: 'CH 2', accepts: 'audio' }]);

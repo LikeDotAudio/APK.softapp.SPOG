@@ -42,16 +42,25 @@ const MEASURING = 'Test & Measurement';
 export const visa = (r: string | null | undefined): string =>
   String(r ?? '').trim().toUpperCase().replace(/^(TCPIP|GPIB|ASRL|USB|VXI|PXI)0::/, '$1::');
 
-/** Every discovered device the library calls a measuring instrument, by device
- *  key — matched by serial, else by VISA resource. Inputs: the part's input
- *  terminals, power excluded; a group of N is N twists (at most 32). */
+/** The part of an address that names the port: no ASRL prefix, no ::INSTR —
+ *  discovery writes a serial port as `/dev/ttyUSB0`, VISA as `ASRL/dev/ttyUSB0::INSTR`. */
+export const visaCore = (r: string | null | undefined): string =>
+  visa(r).replace(/^ASRL/, '').replace(/::INSTR$/, '');
+
+/** Every discovered device the library calls a measuring instrument you can route
+ *  INTO, by device key — matched by serial, else by address. One bench device is
+ *  one meter: when two sightings match it, the VISA one keeps it. Inputs: the
+ *  part's input terminals, power excluded; a group of N is N twists (at most 32).
+ *  A measuring part with no input (a power module) is a source, not a meter. */
 export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], parts: BimPart[]): Map<string, MeterInfo> {
   const byPart = new Map(parts.map((p) => [p.id, p] as const));
   const out = new Map<string, MeterInfo>();
-  for (const d of devices) {
+  const claimed = new Set<string>();
+  const visaFirst = [...devices].sort((a, b) => Number(!a.wires.includes('visa') || !a.key.startsWith('visa')) - Number(!b.wires.includes('visa') || !b.key.startsWith('visa')));
+  for (const d of visaFirst) {
     const serial = (d.serial || '').trim();
-    const inst = instances.find((i) => i.part?.category === MEASURING && (
-      (serial !== '' && String(i.serial ?? '') === serial) || (!!d.address && visa(i.resource) === visa(d.address))));
+    const inst = instances.find((i) => i.part?.category === MEASURING && !claimed.has(i.key) && (
+      (serial !== '' && String(i.serial ?? '') === serial) || (!!d.address && visaCore(i.resource) === visaCore(d.address))));
     if (!inst?.part?.id) continue;
     const inputs: MeterInfo['inputs'] = [];
     for (const p of byPart.get(inst.part.id)?.ports ?? []) {
@@ -61,6 +70,8 @@ export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], pa
       const name = p.group || p.terminal || 'IN';
       for (let k = 1; k <= n; k++) inputs.push({ name: n > 1 ? `${name} ${k}` : name, accepts });
     }
+    if (!inputs.length) continue;
+    claimed.add(inst.key);
     const make = inst.part.manufacturer || d.make;
     out.set(d.key, {
       label: `${make} ${inst.part.model ?? d.model}${serial ? ` #${serial}` : ''}`.trim(),
