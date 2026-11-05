@@ -4,7 +4,8 @@
 
 import { slugId } from '../sources/format.js';
 import { PAL } from '../../domain/palette.js';
-import { streamChannels, type DeviceSetup } from './discovered-types.js';
+import { type DeviceSetup } from './discovered-types.js';
+import { layStreams } from './discovered-streams.js';
 import { classify, groupPath, networkPaths, type DeviceClass } from './discovered-groups.js';
 import type { MeterInfo } from './discovered-meters.js';
 
@@ -57,7 +58,7 @@ export function buildLayer(
     return sub;
   }, tree);
   // The Meters group opens with a DATA LOGGER: route there, graph any meter (editors/data-logger).
-  if (sorted.some((d) => classes.get(d.key) === 'meter' && meters.has(d.key))) {
+  if (sorted.some((d) => classes.get(d.key) === 'meter' && meters.get(d.key)?.role === 'meter')) {
     const path = groupPath(sorted[0]!, 'meter', net);
     out.set(DEST_DIR + path.map(seg).join('') + '000_Data Logger.json', {
       id: 'disc-data-logger', name: 'DATA LOGGER',
@@ -92,43 +93,21 @@ export function buildLayer(
       srcFiles.push(f);
     }
 
-    // 2. Stream audio: each SAP and Ravenna stream is its own source leaf
-    streamOutputs.forEach((s) => {
-      const isRavenna = s.wire === 'ravenna' || (s.wire === 'aes67' && d.wires.includes('ravenna'));
-      const isSap = s.wire === 'sap' || (s.wire === 'aes67' && d.wires.includes('sap'));
-      const flavors: { tag: string; wire: string }[] = [];
+    // 2. Stream audio: each SAP and Ravenna stream is its own source leaf (discovered-streams)
+    layStreams(out, d, streamOutputs, srcDir, srcFiles, base, common);
 
-      if (isRavenna && isSap) {
-        flavors.push({ tag: 'RAVENNA', wire: 'ravenna' });
-        flavors.push({ tag: 'SAP', wire: 'sap' });
-      } else if (isSap) {
-        flavors.push({ tag: 'SAP', wire: 'sap' });
-      } else if (isRavenna) {
-        flavors.push({ tag: 'RAVENNA', wire: 'ravenna' });
-      } else {
-        flavors.push({ tag: (s.wire || 'AES67').toUpperCase(), wire: s.wire || 'aes67' });
-      }
-
-      flavors.forEach(({ tag, wire }) => {
-        const n = String(srcFiles.length + 1).padStart(3, '0');
-        const streamSlug = slugId(`${s.name}-${tag}`);
-        const f = `${n}_${base}_${streamSlug}.json`;
-        const channels = streamChannels(s.format, s.name);
-        const displayName = s.name.toUpperCase().includes(tag) ? s.name : `${s.name} (${tag})`;
-        out.set(srcDir + f, {
-          id: `disc-${d.key}-${streamSlug}`,
-          name: displayName,
-          extraClass: 'audio-imported audio-stream',
-          items: channels,
-          wire: wire,
-          format: s.format ?? null,
-          address: s.address ?? d.address,
-          port: s.port ?? null,
-          ...common
-        });
-        srcFiles.push(f);
+    // 2b. The jacks the BIM library says it gives OUT — a generator's OUTPUT and
+    //     SYNC, a supply's DC OUT ±, a router's coax outs: one source leaf.
+    const bim = meters.get(d.key);
+    if (bim?.outputs.length) {
+      const n = String(srcFiles.length + 1).padStart(3, '0');
+      const f = `${n}_${slugId(bim.label) || base}-bim.json`;
+      out.set(srcDir + f, {
+        id: `disc-${d.key}-bim`, name: bim.label.toUpperCase(), extraClass: 'audio-imported bim-output',
+        items: bim.outputs.map((o) => o.name), domains: bim.outputs.map((o) => o.domain), bim: bim.part, ...common,
       });
-    });
+      srcFiles.push(f);
+    }
 
     // 3. Video outputs
     if (video.length) {
@@ -138,7 +117,7 @@ export function buildLayer(
       srcFiles.push(f);
     }
 
-    const meter = classes.get(d.key) === 'meter' ? meters.get(d.key) : undefined;
+    const meter = classes.get(d.key) === 'meter' && bim?.role === 'meter' ? bim : undefined;
     if (meter) {
       const mn = String(destFiles.length + 1).padStart(3, '0');
       // The footer tab is the file's name: name it by the meter's label, so four
@@ -156,7 +135,7 @@ export function buildLayer(
       return;
     }
 
-    const twists = d.inputs
+    const twists: Array<Record<string, unknown>> = d.inputs
       .filter((i) => i.kind === 'audio' || i.kind === 'video')
       .map((i) => ({
         name: i.name, accepts: i.kind, ...(i.kind === 'video' ? { maxVideo: 1 } : {}), from: i.from ?? null,
@@ -164,11 +143,14 @@ export function buildLayer(
       }));
     // A unit in a shared model folder is named by its serial: the folder is the model.
     const unit = net.get(d.key)?.name;
+    // A device the library knows takes what its part's input jacks take.
+    if (!twists.length && bim) bim.inputs.forEach((i) => twists.push({ name: i.name, accepts: i.accepts }));
     const dn = String(destFiles.length + 1).padStart(3, '0');
     const df = `${dn}_${(unit && slugId(unit)) || base}.json`;
     out.set(destDir + df, {
       id: `disc-${d.key}`,
-      name: unit ?? d.name.toUpperCase(),
+      name: unit ?? (bim ? bim.label.toUpperCase() : d.name.toUpperCase()),
+      ...(bim ? { bim: bim.part } : {}),
       device: d,
       twists: twists.length ? twists : [{ name: 'Device', accepts: 'both' }],
     });

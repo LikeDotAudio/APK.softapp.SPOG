@@ -11,12 +11,19 @@ import type { DeviceSetup } from './discovered-types.js';
    running front panel is still a meter), and its destination's twists are the
    input terminals its part declares. Data, not a device list. */
 
-/** What the library says about one discovered meter (matchMeters). */
+/** What the library says about one discovered device it knows (matchMeters):
+ *  its jacks as the part declares them — what it takes IN, what it gives OUT —
+ *  and the role those make it. A measuring part whose outputs are at least its
+ *  inputs is a SOURCE (generators, supplies); otherwise it is a meter. Any other
+ *  part is in / out / both by the jacks it has. */
+export type BimRole = 'meter' | 'out' | 'both' | 'in';
 export interface MeterInfo {
   label: string;
   part: string;
   symbol?: string;
+  role: BimRole;
   inputs: { name: string; accepts: 'audio' | 'video' | 'both' }[];
+  outputs: { name: string; domain: string }[];
 }
 
 /** One bench device as the BIM library reports it (/api/bim/instances). */
@@ -47,38 +54,52 @@ export const visa = (r: string | null | undefined): string =>
 export const visaCore = (r: string | null | undefined): string =>
   visa(r).replace(/^ASRL/, '').replace(/::INSTR$/, '');
 
-/** Every discovered device the library calls a measuring instrument you can route
- *  INTO, by device key — matched by serial, else by address. One bench device is
- *  one meter: when two sightings match it, the VISA one keeps it. Inputs: the
- *  part's input terminals, power excluded; a group of N is N twists (at most 32).
- *  A measuring part with no input (a power module) is a source, not a meter. */
+const expand = (p: { group?: string; terminal?: string; count?: number }): string[] => {
+  const n = Math.max(1, Math.min(p.count ?? 1, 32));
+  const name = p.group || p.terminal || '?';
+  return Array.from({ length: n }, (_, k) => (n > 1 ? `${name} ${k + 1}` : name));
+};
+
+/** Every discovered device the BIM library knows, by device key — matched by
+ *  address first, else by a serial only ONE bench unit carries (a 6612x module
+ *  reports serial 0; four of them must not all be the first). One bench device
+ *  is one entry: when two sightings match it, the VISA one keeps it.
+ *  Inputs: input jacks, power excluded (mains is not a route). Outputs: every
+ *  output jack — signal, clock AND power: a supply's DC OUT is what it gives. */
 export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], parts: BimPart[]): Map<string, MeterInfo> {
   const byPart = new Map(parts.map((p) => [p.id, p] as const));
   const out = new Map<string, MeterInfo>();
   const claimed = new Set<string>();
+  const serialCount = new Map<string, number>();
+  instances.forEach((i) => { const s = String(i.serial ?? '').trim(); if (s) serialCount.set(s, (serialCount.get(s) ?? 0) + 1); });
   const visaFirst = [...devices].sort((a, b) => Number(!a.wires.includes('visa') || !a.key.startsWith('visa')) - Number(!b.wires.includes('visa') || !b.key.startsWith('visa')));
   for (const d of visaFirst) {
     const serial = (d.serial || '').trim();
-    const inst = instances.find((i) => i.part?.category === MEASURING && !claimed.has(i.key) && (
-      (serial !== '' && String(i.serial ?? '') === serial) || (!!d.address && visaCore(i.resource) === visaCore(d.address))));
+    const open = instances.filter((i) => !!i.part?.id && !claimed.has(i.key));
+    const inst = (d.address ? open.find((i) => !!i.resource && visaCore(i.resource) === visaCore(d.address)) : undefined)
+      ?? (serial && serialCount.get(serial) === 1 ? open.find((i) => String(i.serial ?? '').trim() === serial) : undefined);
     if (!inst?.part?.id) continue;
     const inputs: MeterInfo['inputs'] = [];
+    const outputs: MeterInfo['outputs'] = [];
     for (const p of byPart.get(inst.part.id)?.ports ?? []) {
+      if (p.side === 'output') expand(p).forEach((name) => outputs.push({ name, domain: p.domain ?? 'signal' }));
       if (p.side !== 'input' || p.domain === 'power') continue;
       const accepts = p.domain === 'video' ? 'video' : (p.domain === 'audio' || p.domain === 'signal' ? 'audio' : 'both');
-      const n = Math.max(1, Math.min(p.count ?? 1, 32));
-      const name = p.group || p.terminal || 'IN';
-      for (let k = 1; k <= n; k++) inputs.push({ name: n > 1 ? `${name} ${k}` : name, accepts });
+      expand(p).forEach((name) => inputs.push({ name, accepts }));
     }
-    if (!inputs.length) continue;
+    if (!inputs.length && !outputs.length) continue;
+    const measuring = inst.part.category === MEASURING;
+    const role: BimRole = measuring
+      ? (outputs.length >= inputs.length ? 'out' : 'meter')
+      : (inputs.length && outputs.length ? 'both' : outputs.length ? 'out' : 'in');
     claimed.add(inst.key);
     const make = inst.part.manufacturer || d.make;
     out.set(d.key, {
       // no serial (four 34401As on four serial ports): the port tells them apart
-      label: `${make} ${inst.part.model ?? d.model}${serial ? ` #${serial}` : d.address ? ` @ ${d.address}` : ''}`.trim(),
+      label: `${make} ${inst.part.model ?? d.model}${serial && serial !== '0' ? ` #${serial}` : d.address ? ` @ ${d.address}` : ''}`.trim(),
       part: inst.part.id,
       ...(inst.part.symbol ? { symbol: inst.part.symbol } : {}),
-      inputs,
+      role, inputs, outputs,
     });
   }
   return out;

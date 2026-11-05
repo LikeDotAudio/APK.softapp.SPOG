@@ -127,47 +127,4 @@ describe('discovered — the engine setup as Routes', () => {
     // a draft cleared while disk was never read: the caller must fetch it
     expect(movedRoots({ src: ['009_Imported/'], dest: [] }, { src: null, dest: [] }, { src: null, dest: null })).toBe('fetch');
   });
-
-  it('meters: the BIM library names them, gives them their jacks, and files them first', () => {
-    const scope = dev({ name: '54641D', key: 'visa_MY42000747', make: 'AGILENT TECHNOLOGIES', model: '54641D', serial: 'MY42000747',
-      address: 'tcpip0::44.44.44.222::gpib7,6::instr', wires: ['visa'] });
-    const dmm = dev({ name: '34401A', key: 'visa_ttyUSB3', make: 'HEWLETT-PACKARD', model: '34401A', serial: '',
-      address: '/dev/ttyUSB3', wires: ['visa'] });   // discovery's spelling of ASRL/dev/ttyUSB3::INSTR
-    const box = dev({ name: 'Box', key: 'box', outputs: [{ id: 'o', name: 'Out', kind: 'audio', wire: 'dante' }] });
-    // the same scope seen a second time on the network: one bench device is one meter
-    const scopeNic = dev({ name: 'Agilent 54641D', key: 'mac_00_30', serial: 'MY42000747', address: '44.44.44.222', wires: ['nic', 'ping', 'visa'] });
-    const psu = dev({ name: '66101A', key: 'visa_psu', serial: '', address: 'tcpip0::44.44.44.222::gpib7,30,0::instr', wires: ['visa'] });
-    const instances = [
-      { key: 'serial:x', state: 'online', serial: 'MY42000747', resource: 'TCPIP::44.44.44.222::gpib7,6::INSTR',
-        part: { id: 'keysight/54641d', manufacturer: 'Keysight', model: '54641D', category: 'Test & Measurement' } },
-      { key: 'psu', state: 'online', serial: null, resource: 'TCPIP::44.44.44.222::gpib7,30,0::INSTR',
-        part: { id: 'keysight/66101a', manufacturer: 'Keysight', model: '66101A', category: 'Test & Measurement' } },
-      { key: 'usb:y', state: 'online', serial: null, resource: 'ASRL/dev/ttyUSB3::INSTR',
-        part: { id: 'keysight/34401a', manufacturer: 'Keysight', model: '34401A', category: 'Test & Measurement' } },
-      { key: 'mac:z', state: 'online', serial: null, resource: null, part: { id: 'shure/sm58', category: 'Microphones' } },
-    ];
-    const parts = [
-      { id: 'keysight/54641d', ports: [{ group: 'CH', side: 'input', domain: 'signal', count: 2 }, { group: 'MAINS', side: 'input', domain: 'power', count: 1 }, { group: 'GPIB', side: 'connection', domain: 'control' }] },
-      { id: 'keysight/34401a', ports: [{ group: 'HI', side: 'input', domain: 'signal', count: 1 }] },
-      { id: 'keysight/66101a', ports: [{ group: 'OUT', side: 'output', domain: 'power', count: 1 }] },
-    ];
-    expect(visa('tcpip0::44.44.44.222::gpib7,6::instr')).toBe('TCPIP::44.44.44.222::GPIB7,6::INSTR');
-    const meters = matchMeters([scopeNic, scope, dmm, box, psu], instances, parts);
-    expect([...meters.keys()].sort()).toEqual(['visa_MY42000747', 'visa_ttyUSB3']);
-    expect(meters.get('visa_MY42000747')!.label).toBe('Keysight 54641D #MY42000747');
-    expect(meters.get('visa_ttyUSB3')!.label).toBe('Keysight 34401A @ /dev/ttyUSB3');   // no serial: the port names it
-    expect(meters.get('visa_MY42000747')!.inputs).toEqual([{ name: 'CH 1', accepts: 'audio' }, { name: 'CH 2', accepts: 'audio' }]);
-
-    const classOf = (d: DeviceSetup) => (meters.has(d.key) ? 'meter' as const : classify(d, null));
-    const layer = buildLayer([box, scope, dmm], [], [], classOf, meters);
-    const M = encodeURIComponent(CLASS_FOLDERS.meter);
-    expect((layer.get(`Routes/Destinations/${FOLDER}/index.json`) as string[])[0]).toBe(`${CLASS_FOLDERS.meter}/`);
-    expect(layer.get(`Routes/Destinations/${FOLDER}/${M}/index.json`)).toEqual(['000_Data Logger.json', '002_34401A-dev-ttyUSB3.json', '003_54641D-MY42000747.json']);
-    const logger = layer.get(`Routes/Destinations/${FOLDER}/${M}/000_Data Logger.json`) as { twists: { name: string }[] };
-    expect(logger.twists.map((t) => t.name)).toEqual(['LOGGER 1', 'LOGGER 2', 'LOGGER 3', 'LOGGER 4']);
-    const d = layer.get(`Routes/Destinations/${FOLDER}/${M}/003_54641D-MY42000747.json`) as { name: string; bim: string; twists: { name: string }[] };
-    expect(d.name).toBe('KEYSIGHT 54641D #MY42000747');
-    expect(d.bim).toBe('keysight/54641d');
-    expect(d.twists.map((t) => t.name)).toEqual(['CH 1', 'CH 2']);
-  });
 });

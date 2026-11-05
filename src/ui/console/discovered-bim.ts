@@ -5,8 +5,8 @@
 import { matchMeters, BIM_INSTANCES_URL, BIM_PARTS_URL, type MeterInfo, type BimInstance, type BimPart } from './discovered-meters.js';
 import type { DeviceSetup } from './discovered-types.js';
 
-/* METERS: which discovered devices the BIM library calls measuring instruments,
-   and their inputs (discovered-layer matchMeters). Read beside the engine's list;
+/* BIM: which discovered devices the BIM library knows, their jacks in and out,
+   and the role that gives them — meter, source, both (discovered-meters matchMeters). Read beside the engine's list;
    a host without the library simply has no Meters group. */
 let meters = new Map<string, MeterInfo>();
 export const meterMap = (): Map<string, MeterInfo> => meters;
@@ -24,7 +24,7 @@ export async function fetchMeters(devices: DeviceSetup[], timeoutMs: number): Pr
     const inst = await get<{ items: BimInstance[] }>(BIM_INSTANCES_URL);
     if (!inst) return false;
     bimInstances = inst.items ?? [];
-    const ids = [...new Set(bimInstances.filter((i) => i.part?.category === 'Test & Measurement').map((i) => i.part?.id).filter(Boolean))] as string[];
+    const ids = [...new Set(bimInstances.map((i) => i.part?.id).filter(Boolean))] as string[];
     if (ids.length) bimParts = (await get<{ items: BimPart[] }>(BIM_PARTS_URL + ids.map(encodeURIComponent).join(',')))?.items ?? bimParts;
   } catch { return false; /* no library behind this host */ }
   return rematch(devices);
