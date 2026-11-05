@@ -63,15 +63,29 @@ export function panelRef(topic: string, payload: unknown): PanelRef | null {
 }
 
 /** The panel that is this device's GUI, or null. */
+/* A panel's normalised serial and key, computed once per panel object: panelFor
+   runs for every device against every panel, and normalising inside that loop
+   cost 30 s of CPU on a 220-device, 300-panel bench (profiled 2026-11-05). */
+const IP_NAME = /^\d{1,3}(\.\d{1,3}){3}$|^[0-9a-f:]+:[0-9a-f:]*$/i;
+
+const normed = new WeakMap<PanelRef, { serial: string; key: string }>();
+function normOf(p: PanelRef): { serial: string; key: string } {
+  let n = normed.get(p);
+  if (!n) { n = { serial: norm(p.serial), key: norm(p.key) }; normed.set(p, n); }
+  return n;
+}
+
 export function panelFor(device: DeviceSetup, panels: Iterable<PanelRef>): PanelRef | null {
   const ids = new Set([norm(device.serial), norm(device.mac)].filter((s) => s.length >= 6));
-  const name = norm(device.name);
+  // An address is not a name: a GPIB gateway called 44.44.44.222 would otherwise
+  // "carry" the key of every instrument behind it (TCPIP::44.44.44.222::gpib7,…).
+  const name = IP_NAME.test(device.name.trim()) ? '' : norm(device.name);
   const hits: PanelRef[] = [];
   for (const p of panels) {
-    const serial = norm(p.serial);
+    const { serial, key } = normOf(p);
     if ((serial && ids.has(serial))
       || (serial.length >= 8 && name.includes(serial))
-      || (name.length >= 4 && norm(p.key).includes(name))) hits.push(p);
+      || (name.length >= 4 && key.includes(name))) hits.push(p);
   }
   hits.sort((a, b) => a.key.length - b.key.length || a.key.localeCompare(b.key));
   return hits[0] ?? null;

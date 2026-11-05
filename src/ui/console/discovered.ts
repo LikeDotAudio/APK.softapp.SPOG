@@ -71,7 +71,16 @@ let followingPanels = false;
 function followPanels(): void {
   if (followingPanels) return;
   followingPanels = true;
-  onPanelsChanged(() => { if (roots && classSignature() !== lastClasses) scheduleRebuild(); });
+  // Retained panels arrive in a burst of hundreds at connect; judge the burst
+  // once, not once per panel (each judgement matches every device to every panel).
+  let pending: ReturnType<typeof setTimeout> | undefined;
+  onPanelsChanged(() => {
+    if (pending) return;
+    pending = setTimeout(() => {
+      pending = undefined;
+      if (roots && classSignature() !== lastClasses) scheduleRebuild();
+    }, 750);
+  });
 }
 function lay(next: Roots): void {
   roots = next;

@@ -47,6 +47,26 @@ rooms. The rest of this document is mostly about those rooms.
   Twists with no matching editor fall through to a generic switcher-matrix modal where you
   drag rows to reorder priority and switcher-input assignments.
 
+- **The simulator (on by default)** — every source, room and person defined in `Routes/**`
+  JSON runs as a live device (`platform/sim/`): its INPUTS are controls (ONLINE, per-channel
+  GAIN and MUTE), its OUTPUTS are reports (STATUS, per-channel LEVEL meters, video FORMAT and
+  TALLY), and the Device editor drives them like a real box. Meters follow gain and mute, and
+  pulling ONLINE takes the box OFFLINE. It runs locally in each console and never claims devices on
+  the bus. The discovered layer is real hardware and is never simulated. `?sim=off` (or
+  localStorage `spog.sim` = `off`) turns it off; `?sim=on` forces it on.
+
+- **Discovered, grouped** — the DISCOVERED group is laid out by what you can do with each device
+  (`ui/console/discovered-layer.ts` `classify`): **Touch Panels** first (the device presents a
+  panel with a command and pages), then **Displays** (a panel with no command), **Inputs and
+  Outputs**, **Outputs**, **Inputs** (audio/video), and **Network and Control** for the rest,
+  sub-grouped by the wire it was found on (NMOS, VISA, NIC, PTP…). A device moves group when its
+  panel arrives or leaves.
+
+- **Front panels** — a touch-panel device's tab leads with its front panel RUNNING (the Touch
+  Panel Builder's `run.html`): each touch sends a command to the box, and each readout shows the box's readback.
+  An instrument with no panel on the bus runs the panel built from its model's api.json. FULL SCREEN puts
+  it on the whole glass. `?panelrunner=<url>` points at another runner.
+
 - **Fault propagation** — any source whose `status` isn't `OK` (e.g. `LOST CLOCK`) pulses red,
   and every destination it's routed into inherits the alarm, end-to-end. With state glyphs on
   (seat pref **State glyphs: Auto / On / Off**, or `?glyphs=on|off`) a `⚠` also marks the

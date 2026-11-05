@@ -15,6 +15,7 @@ import { buildConsole } from './shell.js';
 import { openFromHash } from './editor-dispatch.js';
 import { handleDestDeepLink } from '../ui/console/footer-deeplink.js';
 import { initDeviceReceiver } from '../platform/device/receiver.js';
+import { startSimulator } from '../platform/sim/simulator.js';
 import { PAL } from '../domain/palette.js';
 
 // Real build stamp shown beside the credit byline — injected by Vite's `define`
@@ -25,6 +26,8 @@ const BUILD = typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : { short: 'dev
 
 buildConsole(BUILD).then(() => {
   initDeviceReceiver();
+  // Every source, room and person defined in Routes/** runs as a live device (?sim=off stops it).
+  void startSimulator().catch((e: unknown) => console.warn('[SPOG] simulator did not start:', e));
   handleDestDeepLink();
   openFromHash();
 }).catch((e: unknown) => {

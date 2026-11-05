@@ -29,8 +29,11 @@ const waiting = new Map<HTMLElement, DeviceSetup>();
 const panelListeners = new Set<() => void>();
 
 /** This device's panel, if one is on the bus (for grouping and drawing). */
+const matched = new Map<string, PanelRef | null>();   // device key → its panel, until the index moves
 export function panelOf(device: DeviceSetup): PanelRef | null {
-  return panelFor(device, panels.values());
+  const k = `${device.key}|${device.serial}|${device.mac}|${device.name}`;
+  if (!matched.has(k)) matched.set(k, panelFor(device, panels.values()));
+  return matched.get(k) ?? null;
 }
 
 /** Told whenever the panel index changes (a panel arrives or leaves). */
@@ -137,6 +140,7 @@ export function initDiscoveredGui(bus: TwistBus): void {
     const key = topic.split('/').pop() ?? '';
     const ref = panelRef(topic, payload);
     if (ref) panels.set(key, ref); else panels.delete(key);
+    matched.clear();
     panelListeners.forEach((cb) => { try { cb(); } catch (e) { console.warn('panels listener:', e); } });
     for (const [slot, device] of waiting) {
       if (!slot.isConnected) waiting.delete(slot);

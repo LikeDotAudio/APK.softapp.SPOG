@@ -8,6 +8,9 @@ import { getDiscoveredDevices, getDevice, onDevicesChanged } from '../../platfor
 import { createControlWidget } from './controls.js';
 import { PAL } from '../../domain/palette.js';
 
+/** Above this many devices the switcher is a grouped picker, not tabs. */
+const MAX_TABS = 12;
+
 export function renderDeviceEditor(host: HTMLElement, ctx: EditorContext): void {
   addStyles(CSS_ID, CSS);
   host.innerHTML = '';
@@ -32,7 +35,31 @@ export function renderDeviceEditor(host: HTMLElement, ctx: EditorContext): void 
     );
 
     const tabs = el('div', { class: 'dev-tabs' });
-    for (const d of devs) {
+    if (devs.length > MAX_TABS) {
+      // The simulator runs every device defined in Routes/** (hundreds): a picker
+      // grouped by category, not a rail of hundreds of tabs.
+      const pick = el('select', { class: 'dev-tab-btn active' }) as HTMLSelectElement;
+      const byCat = new Map<string, DeviceManifest[]>();
+      for (const d of devs) {
+        const c = d.category || 'GEAR';
+        if (!byCat.has(c)) byCat.set(c, []);
+        byCat.get(c)!.push(d);
+      }
+      for (const [cat, list] of [...byCat.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+        const group = document.createElement('optgroup');
+        group.label = cat;
+        for (const d of list.sort((x, y) => x.name.localeCompare(y.name, undefined, { numeric: true }))) {
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = d.name;
+          opt.selected = d.id === activeDevId;
+          group.append(opt);
+        }
+        pick.append(group);
+      }
+      pick.addEventListener('change', () => { activeDevId = pick.value; redraw(); });
+      tabs.append(pick);
+    } else for (const d of devs) {
       const btn = el('button', {
         class: `dev-tab-btn${d.id === activeDevId ? ' active' : ''}`,
         textContent: d.name,

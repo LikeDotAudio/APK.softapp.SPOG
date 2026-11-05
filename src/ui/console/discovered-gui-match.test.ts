@@ -49,4 +49,8 @@ describe('discovered-gui-match — a device and its own panel', () => {
     expect(primaryWire(dev({ wires: ['mdns', 'nic', 'ping'] }))).toBe('mdns');
     expect(primaryWire(dev({ wires: ['appletv', 'mdns', 'nic'] }))).toBe('appletv');
   });
+  it('an IP-named device is not matched to the panels of instruments behind it', () => {
+    const gateway = dev({ name: '44.44.44.222', serial: '', mac: null });
+    expect(panelFor(gateway, [P('visa-TCPIP-44-44-44-222-gpib7-10-INSTR', 'MY1', 'x')])).toBeNull();
+  });
 });
