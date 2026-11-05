@@ -21,6 +21,10 @@ export function hexToRgb(hex: string | undefined): string | null {
 const G = 'var(--group-lcars-c)', L = 'var(--lcars-c)';
 export const FOOTER_CSS = `
 .lcars-topbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;padding:8px;margin-bottom:16px;border:none;}
+/* A group added with { first: true } leads the footer: lowest order in a row, highest in a
+   right-handed row-reverse (lcars.css), so it is the left-most either way. */
+.lcars-topbar > .lcars-group-first{order:-1;}
+html[data-chirality="right"] .lcars-topbar > .lcars-group-first{order:1;}
 .lcars-group{--group-lcars-c:${PAL.amber50s100};display:flex;align-items:flex-end;gap:6px;padding:4px;border-radius:20px;background:${alpha(G, .08)};position:relative;}
 .lcars-group-label{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:12px;line-height:1;color:${PAL.black};background:var(--group-lcars-c);padding:11px 18px;border-radius:16px 4px 4px 16px;white-space:nowrap;cursor:pointer;}
 .lcars-group-caret{font-size:10px;transition:transform 0.2s;}

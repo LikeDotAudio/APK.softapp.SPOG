@@ -14,7 +14,9 @@ export * from './discovered-meters.js';
 
 export const SETUP_URL = '/discovery/api/setup';
 export const SETUP_TOPIC = 'APK.audio/Discovery/_engine/setup/+';
-export const FOLDER = '090_Discovered';
+/* 000_: DISCOVERED is the first category in the sources rail — what is really
+   on the network comes before what is only drawn (owner, 2026-11-05). */
+export const FOLDER = '000_Discovered';
 export const SRC_ROOT = 'Routes/Sources/index.json';
 export const DEST_ROOT = 'Routes/Destinations/index.json';
 export const SRC_DIR = `Routes/Sources/${FOLDER}/`;
@@ -23,7 +25,7 @@ export const DEST_DIR = `Routes/Destinations/${FOLDER}/`;
 
 const withFolder = (root: string[], has: boolean): string[] => {
   const rest = root.filter((e) => e.replace(/\/$/, '') !== FOLDER);
-  return has ? [...rest, `${FOLDER}/`] : rest;
+  return has ? [`${FOLDER}/`, ...rest] : rest;
 };
 
 /** A folder's URL segment, as listDirectory spells an index entry's href. */

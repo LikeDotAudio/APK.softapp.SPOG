@@ -18,8 +18,8 @@ describe('discovered — the engine setup as Routes', () => {
       inputs: [{ id: 'dante:rx:1', name: 'Out L', kind: 'audio', wire: 'dante', from: { device: 'Desk', channel: 'Main L', status: 'ok' } }],
     })], ['001_Studio/'], ['001_Control Room/']);
 
-    expect(layer.get('Routes/Sources/index.json')).toEqual(['001_Studio/', `${FOLDER}/`]);
-    expect(layer.get('Routes/Destinations/index.json')).toEqual(['001_Control Room/', `${FOLDER}/`]);
+    expect(layer.get('Routes/Sources/index.json')).toEqual([`${FOLDER}/`, '001_Studio/']);
+    expect(layer.get('Routes/Destinations/index.json')).toEqual([`${FOLDER}/`, '001_Control Room/']);
     expect(layer.get(`Routes/Sources/${FOLDER}/index.json`)).toEqual([`${CLASS_FOLDERS.both}/`]);
     expect(layer.get(`Routes/Sources/${FOLDER}/${IO}/index.json`)).toEqual(['001_Stagebox.json']);
     const src = layer.get(`Routes/Sources/${FOLDER}/${IO}/001_Stagebox.json`) as { items: string[]; name: string };

@@ -13,7 +13,7 @@
 // N consoles each claiming the same devices on a shared broker. A value an
 // operator sets still goes out through publishDeviceValue like any other.
 //
-// The discovered layer (090_Discovered) is real hardware and is never simulated.
+// The discovered layer (000_Discovered) is real hardware and is never simulated.
 //
 // OFF: ?sim=off on the URL, or localStorage `spog.sim` = "off" (a seat that
 // wants only real devices). ?sim=on forces it back on.

@@ -80,7 +80,8 @@ export async function buildDestinations(openEditor?: OpenEditor): Promise<void> 
   destDir.dirs = destDir.dirs.filter((d) => !/^\.?icons?\/?$/i.test(stripOrder(d.name)));
   await Promise.all(destDir.dirs.map((cat: Entry, di: number) => {
     const colorRgb = rgbAt(DEST_GROUP_COLORS, di);
-    const catGroup = Footer.addGroup(stripOrder(cat.name).toUpperCase(), { color: colorRgb, collapsed: true });
+    // The discovered layer's folder leads the footer (Footer.addGroup `first`).
+    const catGroup = Footer.addGroup(stripOrder(cat.name).toUpperCase(), { color: colorRgb, collapsed: true, first: /^\d*_?Discovered\/?$/i.test(cat.name) });
     // Rooms directly under a category inherit IT as their type ("ENCODERS —
     // ENCODER 1") — this also keeps the UI's twist topics aligned with the
     // advertise pass, which has always walked with the category as parent.

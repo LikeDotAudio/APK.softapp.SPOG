@@ -55,7 +55,7 @@ export function classify(d: DeviceSetup, panel: PanelFacts | null): DeviceClass 
   return 'network';
 }
 
-/** The folder path (under 090_Discovered/) a device's files go in, raw names. */
+/** The folder path (under 000_Discovered/) a device's files go in, raw names. */
 export function groupPath(d: DeviceSetup, cls: DeviceClass, wireFolders: Map<string, string>): string[] {
   const top = CLASS_FOLDERS[cls];
   if (cls !== 'network') return [top];

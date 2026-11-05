@@ -6,10 +6,10 @@
 // `/discovery/api/setup`. This module turns that into Routes/** the console
 // already knows how to draw:
 //
-//   a device's OUTPUTS → a source leaf under Routes/Sources/090_Discovered/
+//   a device's OUTPUTS → a source leaf under Routes/Sources/000_Discovered/
 //                        (audio as `items`, video as `video`, as the importer
 //                        in router-io-devices.ts writes them)
-//   a device's INPUTS  → a destination under Routes/Destinations/090_Discovered/,
+//   a device's INPUTS  → a destination under Routes/Destinations/000_Discovered/,
 //                        one twist per input (accepts audio / video). Every
 //                        device found gets a destination tab, inputs or not,
 //                        so every device is presented.
@@ -124,7 +124,7 @@ async function redraw(): Promise<void> {
   if (old) Footer.removeGroup(old);
   if (devices.size) {
     const color = rgbAt(DEST_GROUP_COLORS, 6);
-    const group = Footer.addGroup(GROUP_LABEL, { color, collapsed: true });
+    const group = Footer.addGroup(GROUP_LABEL, { color, collapsed: true, first: true });
     await addDestinationTree(DEST_DIR, group, color, 'Discovered', openEditor, 'Discovered');
   }
 }

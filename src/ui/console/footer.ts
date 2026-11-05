@@ -122,12 +122,14 @@ export const Footer = {
     resetIdleTimer();
   },
 
-  addGroup(label: string, opts: { color?: string; collapsed?: boolean; parent?: GroupHandle | null } = {}): GroupHandle | null {
+  /** `first`: shown at the start of the footer whatever the seat's handedness (a CSS
+   *  order, since a right-handed footer is a row-reverse) — DISCOVERED uses it. */
+  addGroup(label: string, opts: { color?: string; collapsed?: boolean; parent?: GroupHandle | null; first?: boolean } = {}): GroupHandle | null {
     if (!tabsContainer) return null;
     const color = opts.color || '255,170,0';
     const parent = opts.parent || null;
     const group = document.createElement('div');
-    group.className = 'lcars-group' + (opts.collapsed ? ' collapsed' : '');
+    group.className = 'lcars-group' + (opts.collapsed ? ' collapsed' : '') + (opts.first && !parent ? ' lcars-group-first' : '');
     setInkVar(group, '--group-lcars', color);
     const labelEl = document.createElement('div');
     labelEl.className = 'lcars-group-label';
