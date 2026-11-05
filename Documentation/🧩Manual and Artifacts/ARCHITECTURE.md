@@ -80,7 +80,9 @@ click twist → app/editor-dispatch.ts → editors/registry.ts match → app/con
 | Console shell | `ui/console/` (91 files: footer, destinations, matrix DnD, helix, captains-log*, timeline, colour engine, router-view, fixtures) |
 | Sources panel | `ui/sources/` (panel, pools, gang cells, format) |
 | Shared painters | `ui/test-card/` (test frame + wall ticker), `ui/clock-faces/` (CLOCK + TIMER wall clock; the TIME.clockFaces submodule, read through its `ALL_FACES` list — a second checkout of the repo the root mounts at `Softapps/TIME/TIME.clockFaces`, kept on one commit with `npm run check:clock-faces`), `ui/weather/` (forecast data + strip, used by the Graphics Engine) |
-| Editors | `editors/<name>/index.ts` — 25 folders, auto-registered; editors never import editors |
+| Editors | `editors/<name>/index.ts` — 27 folders, auto-registered; editors never import editors |
+| Discovered layer | `ui/console/discovered-*.ts`: `-types` (shapes, roots), `-groups` (classes, folders, `classify`), `-meters` (`matchMeters` from the BIM library), `-bim` (its fetch), `-class` (`classOf`), `-layer` (`buildLayer`, re-exports all) |
+| Outside topics | `EditorServices.watchTopic` / `sendTopic` and `TwistBus.publishExternal` — an editor may listen to / send plain text on an ABSOLUTE topic outside SPOG's root (the data logger on an instrument's `…/Read` / `…/Write`) |
 | Vision mixer | `editors/vision-mixer/`: `schema.ts` (`DEFAULT_SWITCHER`: 24 in — 1-12 video, 13-18 program, 19-24 graphics), `me.ts`, `scenes.ts` (whole-switcher registers incl. DSK PRE-ROUTE `dskSrc`), `preroute.ts`/`gfx-route.ts`, `gfx-take*.ts`, `gfx-feed.ts` |
 | Multiviewer | `editors/multi-viewer/`: `wallCells()` + `gfxOverflow()` in `auto-gfx.ts` |
 | Captain's Log | `ui/console/captains-log*.ts`: state, narrate, persist (`hydrateLog` row-guarded), reroute (`reversalPlan`, group re-find), timeline |

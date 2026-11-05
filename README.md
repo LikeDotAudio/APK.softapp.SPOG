@@ -56,11 +56,23 @@ rooms. The rest of this document is mostly about those rooms.
   localStorage `spog.sim` = `off`) turns it off; `?sim=on` forces it on.
 
 - **Discovered, grouped** — the DISCOVERED group is laid out by what you can do with each device
-  (`ui/console/discovered-layer.ts` `classify`): **Touch Panels** first (the device presents a
+  (`ui/console/discovered-layer.ts` `classify`): **Meters** first — every device the BIM library
+  (DATABASE.server.BIM) files under Test & Measurement that has an input, labelled make · model ·
+  serial (or its port when it has none), its twists the jacks its part declares
+  (`discovered-meters.ts`, matched by serial else VISA address), opened by a **DATA LOGGER** —
+  then **Touch Panels** (the device presents a
   panel with a command and pages), then **Displays** (a panel with no command), **Inputs and
   Outputs**, **Outputs**, **Inputs** (audio/video), and **Network and Control** for the rest,
   sub-grouped by the wire it was found on (NMOS, VISA, NIC, PTP…). A device moves group when its
   panel arrives or leaves.
+
+- **Data Logger** — a LOGGER / GRAPH / TREND twist (`editors/data-logger`): tick any bench meter,
+  it listens to the meter's own `…/Read` and can poll it (its query on `…/Write`), draws a strip
+  chart (1 min / 10 min / 1 h) with last / min / max, and exports the run as CSV.
+
+- **OBS Recorder** — ENCODER → OBS RECORDER (`editors/obs-recorder`): drives OBS Studio over its
+  obs-websocket v5 server (Tools → WebSocket Server Settings, port 4455): record start / stop /
+  pause / resume with the timecode, stream start / stop, program scene, and the feeds routed in.
 
 - **Front panels** — a touch-panel device's tab leads with its front panel RUNNING (the Touch
   Panel Builder's `run.html`): each touch sends a command to the box, and each readout shows the box's readback.

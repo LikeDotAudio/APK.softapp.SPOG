@@ -30,6 +30,14 @@ cited, not copied. The visual law for this app is [LCARS.md](LCARS.md) and
 | **One build entry for anyone who serves SPOG.** Consumers run `npm run build:image` (or take `Docker/dist.Dockerfile`'s `dist` stage) and never name SPOG's files. | `SETUP/build-image.mjs` (the contract in its header), `Docker/dist.Dockerfile` |
 | **CI is the only deploy.** Local deploy scripts refuse. | `deploy*` scripts in `package.json`; `.github/workflows/deploy-production.yml` |
 
+## A meter is a destination, and the library says which devices are meters
+
+A signal goes INTO a meter, so every bench meter is a destination. Which discovered device is a meter, what to
+call it and which jacks it has are not SPOG's to decide: the BIM library (DATABASE.server.BIM) says so — the
+department of its part, its input terminals — and SPOG matches by identity (serial, else the VISA address,
+never the IP). One bench device is one meter; a measuring part with no input (a power module) is a source.
+Monitoring is a destination too: the Data Logger graphs what any meter says, and OBS is a recorder you route to.
+
 ## Where the code bends a rule
 
 - **Typed bus data is `any` in places.** `countersOf()` in `dest-fixtures-counters.ts` reads the
