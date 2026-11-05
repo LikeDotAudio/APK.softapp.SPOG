@@ -47,12 +47,13 @@
   <span class="count" id="count">0</span>
 </header>
 <div class="status" id="status">— not connected —</div>
-<table>
-  <thead><tr><th style="width:44%">TOPIC (SPOG/…)</th><th>PAYLOAD</th><th style="width:70px">AGE</th></tr></thead>
-  <tbody id="rows"><tr><td colspan="3" class="empty">— not connected —</td></tr></tbody>
-</table>
+<div class="apk-table-host" data-apk-table-host="spog-mqtt-tree" data-apk-opts="{&quot;id&quot;: &quot;spog-mqtt-tree&quot;, &quot;bodyId&quot;: &quot;rows&quot;}"><template data-apk-part="head"><tr><th style="width:44%">TOPIC (SPOG/…)</th><th>PAYLOAD</th><th style="width:70px">AGE</th></tr></template><template data-apk-part="body"><tr><td colspan="3" class="empty">— not connected —</td></tr></template></div>
 <!-- mqtt.js from the npm dependency (bundled by Vite), not an unversioned unpkg URL. -->
 <script type="module">
+  // THE ONE TABLE (window.APKTable), first: it stands the table host above in,
+  // so #rows exists by the time this module reads it.
+  import './vendor/apk-table/apk-table.js';
+  import './vendor/apk-table/apk-table.css';
   import mqtt from 'mqtt';
   const ROOT = 'SPOG';
   const q = new URLSearchParams(location.search);

@@ -306,8 +306,7 @@
 
   <h2>Audit — where each part lives in this codebase</h2>
   <div class="scroll">
-  <table>
-    <tr><th>Part</th><th>Instance</th><th>Where</th><th>Geometry</th></tr>
+  <div class="apk-table-host" data-apk-table-host="spog-lcars-rules-audit" data-apk-opts="{&quot;id&quot;: &quot;spog-lcars-rules-audit&quot;}"><template data-apk-part="head"><tr><th>Part</th><th>Instance</th><th>Where</th><th>Geometry</th></tr></template><template data-apk-part="body">
     <tr><td>Elbow</td><td>Twist frame elbow (one-piece: spine head + arm root)</td>
         <td><code>lcars.css · .twist-container::before</code></td>
         <td>45px spine border, 20px arm border, outer R25 (monitor tiles R16)</td></tr>
@@ -365,7 +364,7 @@
     <tr><td>Seam</td><td>Elbow ↔ arm gap on every twist</td>
         <td><code>lcars.css · ::before ends 100px / ::after starts 110px</code></td>
         <td>10px black; constant along the run</td></tr>
-  </table>
+  </template></div>
   </div>
 
   <p class="foot">TWISTROUTING · LCARS-RULES.html — companion to LCARS.md · palette per §2
@@ -374,5 +373,7 @@
      style="color:var(--bluebell)">blue bell</span>) · all diagram geometry on this page
      obeys the Corner Law it documents.</p>
 </div>
+<!-- THE ONE TABLE: stands the audit table above in (and makes it sortable). -->
+<script src="../../vendor/apk-table/apk-table.js"></script>
 </body>
 </html>
