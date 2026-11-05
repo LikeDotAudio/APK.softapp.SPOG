@@ -75,8 +75,8 @@ describe('editor dispatch', () => {
     }
   });
 
-  it('registers all 26 editors', () => {
-    expect(PLUGINS.length).toBe(26);   // + data-logger (meters as a graph)
+  it('registers all 27 editors', () => {
+    expect(PLUGINS.length).toBe(27);   // + data-logger (meters as a graph), obs-recorder
   });
 
   it('orders plugins by ascending precedence (legacy import order)', () => {

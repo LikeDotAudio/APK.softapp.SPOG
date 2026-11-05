@@ -1,0 +1,19 @@
+{
+  "id": "obs1",
+  "name": "OBS RECORDER",
+  "twists": [
+    {
+      "name": "Video Destination",
+      "accepts": "video",
+      "maxVideo": 1
+    },
+    {
+      "name": "Audio Destination",
+      "accepts": "audio"
+    },
+    {
+      "name": "OBS Recorder",
+      "accepts": "both"
+    }
+  ]
+}
