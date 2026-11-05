@@ -74,7 +74,8 @@ export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], pa
     claimed.add(inst.key);
     const make = inst.part.manufacturer || d.make;
     out.set(d.key, {
-      label: `${make} ${inst.part.model ?? d.model}${serial ? ` #${serial}` : ''}`.trim(),
+      // no serial (four 34401As on four serial ports): the port tells them apart
+      label: `${make} ${inst.part.model ?? d.model}${serial ? ` #${serial}` : d.address ? ` @ ${d.address}` : ''}`.trim(),
       part: inst.part.id,
       ...(inst.part.symbol ? { symbol: inst.part.symbol } : {}),
       inputs,

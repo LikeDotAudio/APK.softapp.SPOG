@@ -134,6 +134,7 @@ describe('discovered — the engine setup as Routes', () => {
     const meters = matchMeters([scopeNic, scope, dmm, box, psu], instances, parts);
     expect([...meters.keys()].sort()).toEqual(['visa_MY42000747', 'visa_ttyUSB3']);
     expect(meters.get('visa_MY42000747')!.label).toBe('Keysight 54641D #MY42000747');
+    expect(meters.get('visa_ttyUSB3')!.label).toBe('Keysight 34401A @ /dev/ttyUSB3');   // no serial: the port names it
     expect(meters.get('visa_MY42000747')!.inputs).toEqual([{ name: 'CH 1', accepts: 'audio' }, { name: 'CH 2', accepts: 'audio' }]);
 
     const classOf = (d: DeviceSetup) => (meters.has(d.key) ? 'meter' as const : classify(d, null));
