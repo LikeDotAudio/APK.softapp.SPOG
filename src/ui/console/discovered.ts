@@ -32,11 +32,10 @@ import { DEST_GROUP_COLORS, rgbAt } from '../palette.js';
 
 import { onPanelsChanged } from './discovered-gui.js';
 import {
-  buildLayer, movedRoots, isSetup, SETUP_URL, SETUP_TOPIC, SRC_ROOT, DEST_ROOT, DEST_DIR,
+  buildLayer, movedRoots, isSetup, SETUP_URL, SETUP_TOPIC, SRC_ROOT, DEST_ROOT, DEST_DIR, fetchFamilies, typeOf,
   type DeviceSetup, type Roots,
 } from './discovered-layer.js';
 import { fetchMeters, rematch, meterMap } from './discovered-bim.js';
-import { fetchFamilies, typeOf } from './discovered-families.js';
 import { classOf, classSignature as signatureOf } from './discovered-class.js'; // meter > panel > I/O
 
 export { buildLayer, FOLDER, type DeviceSetup, type DeviceIO } from './discovered-layer.js';
@@ -163,7 +162,7 @@ async function fetchList(timeoutMs: number): Promise<boolean> {
       if (Array.isArray(list)) for (const d of list) if (isSetup(d) && note(d)) changed = true;
     }
   } catch { /* no engine behind this host — the console runs without it */ }
-  const typed = await fetchFamilies(timeoutMs);                               // + what type each is (instrument library)
+  const typed = await fetchFamilies(timeoutMs);                                       // + what type each is (instrument library)
   return (await fetchMeters([...devices.values()], timeoutMs)) || typed || changed;   // + which are meters (BIM library)
 }
 

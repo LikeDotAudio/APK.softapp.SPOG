@@ -12,6 +12,7 @@ import type { MeterInfo } from './discovered-meters.js';
 export * from './discovered-types.js';
 export * from './discovered-groups.js';
 export * from './discovered-meters.js';
+export * from './discovered-families.js';
 
 export const SETUP_URL = '/discovery/api/setup';
 export const SETUP_TOPIC = 'APK.audio/Discovery/_engine/setup/+';
