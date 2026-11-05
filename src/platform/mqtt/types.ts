@@ -74,6 +74,9 @@ export interface TwistBus {
   publishValue<T>(topicSuffix: string, value: T, opts?: { throttle?: boolean; seat?: number; label?: string }): void;
   /** Publish an already-shaped retained payload (log entries, presence, …). */
   publishRaw(topicSuffix: string, payload: unknown, opts?: { retain?: boolean }): void;
+  /** Plain text to an ABSOLUTE topic outside SPOG's root, not retained, never encrypted —
+   *  e.g. a SCPI query on an instrument's own `…/Write` (the data logger's poll). */
+  publishExternal(topic: string, text: string): void;
   /** Subscribe to a topic filter (relative to the SPOG root). Returns an unsubscribe. */
   subscribe(topicFilter: string, cb: (topic: string, payload: unknown) => void): () => void;
   dispose(): void;

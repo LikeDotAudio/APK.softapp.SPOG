@@ -52,6 +52,10 @@ export interface EditorServices {
   publishParam?(name: string, value: unknown, opts?: { throttle?: boolean }): void;
   /** Subscribe to a parameter (backend echoes / other consoles). Returns an unsubscribe. */
   onParam?(name: string, cb: (value: unknown) => void): () => void;
+  /** Listen to an ABSOLUTE bus topic outside SPOG's root (an instrument's `…/Read`). */
+  watchTopic?(topic: string, cb: (payload: unknown, topic: string) => void): () => void;
+  /** Send plain text to an ABSOLUTE topic (a SCPI query on an instrument's `…/Write`). */
+  sendTopic?(topic: string, text: string): void;
 }
 
 export type EditorRender = (host: HTMLElement, ctx: EditorContext) => void;

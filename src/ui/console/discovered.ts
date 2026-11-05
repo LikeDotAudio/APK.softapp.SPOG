@@ -30,12 +30,13 @@ import { addDestinationTree } from './destinations.js';
 import { type OpenEditor } from './matrix.js';
 import { DEST_GROUP_COLORS, rgbAt } from '../palette.js';
 
-import { panelOf, onPanelsChanged } from './discovered-gui.js';
+import { onPanelsChanged } from './discovered-gui.js';
 import {
-  buildLayer, classify, movedRoots, isSetup, SETUP_URL, SETUP_TOPIC, SRC_ROOT, DEST_ROOT, DEST_DIR,
+  buildLayer, movedRoots, isSetup, SETUP_URL, SETUP_TOPIC, SRC_ROOT, DEST_ROOT, DEST_DIR,
   type DeviceSetup, type Roots,
 } from './discovered-layer.js';
 import { fetchMeters, rematch, meterMap } from './discovered-bim.js';
+import { classOf, classSignature as signatureOf } from './discovered-class.js'; // meter > panel > I/O
 
 export { buildLayer, FOLDER, type DeviceSetup, type DeviceIO } from './discovered-layer.js';
 
@@ -63,10 +64,8 @@ let roots: Roots | null = null;   // what the live layer was last built on
 /* Which group each device is in follows its panel: a panel arriving can move a
    device from Network and Control to Touch Panels, so a change in the panel
    index re-lays the layer — but only when some device actually changed group. */
-const classOf = (d: DeviceSetup): ReturnType<typeof classify> => (meterMap().has(d.key) ? 'meter' : classify(d, panelOf(d)));
-
 let lastClasses = '';
-const classSignature = (): string => [...devices.values()].map((d) => `${d.key}=${classOf(d)}`).sort().join('|');
+const classSignature = (): string => signatureOf(devices.values());
 let followingPanels = false;
 function followPanels(): void {
   if (followingPanels) return;
@@ -163,7 +162,7 @@ async function fetchList(timeoutMs: number): Promise<boolean> {
       if (Array.isArray(list)) for (const d of list) if (isSetup(d) && note(d)) changed = true;
     }
   } catch { /* no engine behind this host — the console runs without it */ }
-  return changed;
+  return (await fetchMeters([...devices.values()], timeoutMs)) || changed;   // + which are meters (BIM library)
 }
 
 /** BEFORE the console first renders: read the engine's list once, so the first
@@ -171,7 +170,6 @@ async function fetchList(timeoutMs: number): Promise<boolean> {
 export async function loadDiscovered(editor?: OpenEditor, timeoutMs = 2000): Promise<number> {
   openEditor = editor;
   await fetchList(timeoutMs);
-  await fetchMeters([...devices.values()], timeoutMs);
   await applyLayer();
   followRootDrafts();
   followPanels();
@@ -189,9 +187,7 @@ export function followDiscovered(bus: TwistBus): () => void {
     if (isSetup(payload)) { if (note(payload)) scheduleRebuild(); }
     else if (devices.delete(key)) { seenAt.delete(key); scheduleRebuild(); }
   });
-  const poll = setInterval(() => {
-    void Promise.all([fetchList(5000), fetchMeters([...devices.values()], 5000)]).then(([a, b]) => { if (a || b) scheduleRebuild(); });
-  }, POLL_MS);
+  const poll = setInterval(() => { void fetchList(5000).then((c) => { if (c) scheduleRebuild(); }); }, POLL_MS);
   const decay = setInterval(() => {
     const cutoff = Date.now() - STALE_MS;
     let gone = false;

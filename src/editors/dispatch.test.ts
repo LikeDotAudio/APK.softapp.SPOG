@@ -75,8 +75,8 @@ describe('editor dispatch', () => {
     }
   });
 
-  it('registers all 25 editors', () => {
-    expect(PLUGINS.length).toBe(25);
+  it('registers all 26 editors', () => {
+    expect(PLUGINS.length).toBe(26);   // + data-logger (meters as a graph)
   });
 
   it('orders plugins by ascending precedence (legacy import order)', () => {

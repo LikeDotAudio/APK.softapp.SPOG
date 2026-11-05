@@ -55,6 +55,15 @@ export function buildLayer(
     if (!sub) { sub = folder(); f.dirs.set(name, sub); }
     return sub;
   }, tree);
+  // The Meters group opens with a DATA LOGGER: route there, graph any meter (editors/data-logger).
+  if (sorted.some((d) => classes.get(d.key) === 'meter' && meters.has(d.key))) {
+    const path = groupPath(sorted[0]!, 'meter', wireFolders);
+    out.set(DEST_DIR + path.map(seg).join('') + '000_Data Logger.json', {
+      id: 'disc-data-logger', name: 'DATA LOGGER',
+      twists: [1, 2, 3, 4].map((n) => ({ name: `LOGGER ${n}`, accepts: 'both' })),
+    });
+    into(destTree, path).files.push('000_Data Logger.json');
+  }
   sorted.forEach((d) => {
     const path = groupPath(d, classes.get(d.key)!, wireFolders);
     const srcDir = SRC_DIR + path.map(seg).join('');

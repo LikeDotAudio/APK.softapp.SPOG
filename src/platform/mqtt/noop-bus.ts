@@ -13,6 +13,7 @@ function noopBus(sessionId: string): TwistBus {
     publishConfig: () => {},
     publishValue: () => {},
     publishRaw: () => {},
+    publishExternal: () => {},
     subscribe: () => () => {},
     dispose: () => {},
   };

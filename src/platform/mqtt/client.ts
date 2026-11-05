@@ -158,6 +158,10 @@ export function createTwistBus(): TwistBus {
       send(full(suffix), payload, opts?.retain ?? true);
     },
 
+    publishExternal(topic, text): void {
+      if (client) client.publish(topic.replace(/^\/+/, ''), String(text), { retain: false, qos: 0 });
+    },
+
     subscribe(filter, cb): () => void {
       const entry = { filter: filter.replace(/^\/+/, ''), cb };
       subs.add(entry);

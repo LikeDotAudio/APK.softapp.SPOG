@@ -76,5 +76,7 @@ export function twistServices(prodDisplayName: string, twistName: string): Edito
       const offBus = bus.subscribe(topic, (_t, p) => mergeManager.ingestForeign(topic, pname, p));
       return () => { offApply(); offBus(); };
     },
+    watchTopic(topic, cb) { return bus.subscribe(topic, (t, p) => cb(p, t)); },
+    sendTopic(topic, text) { bus.publishExternal(topic, text); },
   };
 }

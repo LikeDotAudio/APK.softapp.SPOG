@@ -22,6 +22,7 @@ export function broker() {
       status: () => ({ enabled: true, connected: true }),
       publishConfig: () => {}, publishValue: () => {},
       publishRaw: (topic: string, payload: unknown) => { pubs.push(topic); deliver(origin, topic, payload); },
+      publishExternal: () => {},
       subscribe: (filter: string, cb: (t: string, p: unknown) => void) => {
         const s = { origin, filter, cb };
         subs.add(s);
