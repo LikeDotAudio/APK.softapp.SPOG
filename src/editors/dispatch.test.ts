@@ -66,6 +66,7 @@ const EXPECT: Array<[string, string | null]> = [
   ['Wireless Controller', 'wireless'],   // RF telemetry: packs + coordination controllers
   ['Device Interface', 'device'],        // Universal Device Editor
   ['Hardware Rack', 'device'],
+  ['INSTRUMENT', 'instrument'],          // a bench meter's jack, dispatched by its twist's thing.json roles
 ];
 
 describe('editor dispatch', () => {
@@ -76,7 +77,7 @@ describe('editor dispatch', () => {
   });
 
   it('registers all 27 editors', () => {
-    expect(PLUGINS.length).toBe(27);   // + data-logger (meters as a graph), obs-recorder
+    expect(PLUGINS.length).toBe(28);   // + data-logger (meters as a graph), obs-recorder, instrument (ROAD-3516)
   });
 
   it('orders plugins by ascending precedence (legacy import order)', () => {

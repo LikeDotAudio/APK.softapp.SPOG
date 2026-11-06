@@ -9,6 +9,7 @@
 
 import { withTrueColour } from '../domain/true-colour.js';
 import { PAL, alpha } from '../domain/palette.js';
+import { tripleColour } from '../domain/colour-resolve.js';
 
 export interface AudioWaveOpts {
   /** Red "attention" trace (the IFB uses it while a Talk key is held). */
@@ -80,4 +81,30 @@ function paintLissajous(cv: HTMLCanvasElement, corr: number, frame: number, amp:
     i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
   }
   ctx.stroke();
+}
+
+/** One stacked lane per trace — [bytes 0..255 (128 = centre), label, "r,g,b"].
+ *  The Meter Input's L/R/L+R scope (scopes-audio drawScope3) and a bench
+ *  scope's channels (editors/instrument) draw through this one painter. */
+export type Lane = [Uint8Array | null, string, string];
+export function drawLanes(cv: HTMLCanvasElement, lanes: Lane[]): void {
+  const c = cv.getContext('2d'); if (!c) return; const W = cv.width, H = cv.height; c.clearRect(0, 0, W, H);
+  if (!lanes.length) return;
+  const lh = H / lanes.length;
+  c.font = 'bold 9px "Courier New",monospace';
+  lanes.forEach(([data, label, rgb], li) => {
+    const y0 = li * lh, mid = y0 + lh / 2;
+    c.strokeStyle = PAL.sky13; c.beginPath(); c.moveTo(0, mid); c.lineTo(W, mid); c.stroke();
+    c.fillStyle = PAL.sky44s20; c.fillText(label, 5, y0 + 12);
+    if (!data) return;
+    c.globalCompositeOperation = 'lighter';
+    c.strokeStyle = tripleColour(rgb, 0.5); c.lineWidth = 1; c.beginPath();
+    for (let x = 0; x < W; x++) {
+      const v = (data[(x / W * data.length) | 0] ?? 128) / 128 - 1;
+      const y = mid - v * (lh / 2) * 0.82;
+      x ? c.lineTo(x, y) : c.moveTo(x, y);
+    }
+    c.stroke();
+    c.globalCompositeOperation = 'source-over';
+  });
 }

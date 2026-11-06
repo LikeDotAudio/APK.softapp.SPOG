@@ -4,6 +4,7 @@
 
 import { matchMeters, BIM_INSTANCES_URL, BIM_PARTS_URL, type MeterInfo, type BimInstance, type BimPart } from './discovered-meters.js';
 import type { DeviceSetup } from './discovered-types.js';
+import { rolesOf, typeOf } from './discovered-families.js';
 
 /* BIM: which discovered devices the BIM library knows, their jacks in and out,
    and the role that gives them — meter, source, both (discovered-meters matchMeters). Read beside the engine's list;
@@ -30,7 +31,7 @@ export async function fetchMeters(devices: DeviceSetup[], timeoutMs: number): Pr
   return rematch(devices);
 }
 export function rematch(devices: DeviceSetup[]): boolean {
-  const next = matchMeters(devices, bimInstances, bimParts);
+  const next = matchMeters(devices, bimInstances, bimParts, { rolesOf, typeOf });
   const changed = JSON.stringify([...next]) !== JSON.stringify([...meters]);
   meters = next;
   return changed;

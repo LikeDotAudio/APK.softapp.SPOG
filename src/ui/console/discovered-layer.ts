@@ -8,6 +8,7 @@ import { type DeviceSetup } from './discovered-types.js';
 import { layStreams } from './discovered-streams.js';
 import { classify, groupPath, networkPaths, type DeviceClass } from './discovered-groups.js';
 import type { MeterInfo } from './discovered-meters.js';
+import type { TwistInstrument } from '../../model/destinations.js';
 
 export * from './discovered-types.js';
 export * from './discovered-groups.js';
@@ -69,6 +70,8 @@ export function buildLayer(
     });
     into(destTree, path).files.push('000_Data Logger.json');
   }
+  const instrumentOf = (m: MeterInfo, d: DeviceSetup): TwistInstrument => ({
+    label: m.label, family: m.family, model: d.model, roles: [...m.roles], ...(m.prefix ? { prefix: m.prefix } : {}) });
   sorted.forEach((d) => {
     const path = groupPath(d, classes.get(d.key)!, net);
     const srcDir = SRC_DIR + path.map(seg).join('');
@@ -132,7 +135,10 @@ export function buildLayer(
         device: d,
         bim: meter.part,
         status: d.online ? 'OK' : 'OFFLINE',
-        twists: meter.inputs.length ? meter.inputs.map((i) => ({ name: i.name, accepts: i.accepts })) : [{ name: 'Input', accepts: 'both' }],
+        // Each jack carries what its family IS (thing.json roles): a metering or
+        // monitoring box's twist opens the instrument editor (editors/instrument).
+        twists: (meter.inputs.length ? meter.inputs : [{ name: 'Input', accepts: 'both' as const }]).map((i) => ({
+          name: i.name, accepts: i.accepts, instrument: instrumentOf(meter, d) })),
       });
       destFiles.push(mf);
       return;

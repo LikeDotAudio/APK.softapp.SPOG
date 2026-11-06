@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildLayer, movedRoots, classify, matchMeters, visa, CLASS_FOLDERS, FOLDER, type DeviceSetup } from './discovered-layer.js';
+import { buildLayer, movedRoots, classify, matchMeters, roleFromThing, roleIndex, visa, CLASS_FOLDERS, FOLDER, type DeviceSetup } from './discovered-layer.js';
 
 const IO = encodeURIComponent(CLASS_FOLDERS.both);
 const OUT = encodeURIComponent(CLASS_FOLDERS.out);
@@ -88,5 +88,31 @@ describe('discovered — what the BIM library says a device takes in and gives o
     expect(g.bim).toBe('k/33210a');
     const r = layer.get(`Routes/Destinations/${FOLDER}/${IO}/001_Router.json`) as { twists: { name: string }[] };
     expect(r.twists.map((t) => t.name)).toEqual(['IN 1', 'IN 2']);   // the router's coax inputs, from its part
+  });
+
+  it('the family\'s thing.json roles decide (ROAD-3516): inputs + metering is a meter whose jacks open the instrument editor', () => {
+    expect(roleFromThing(['source', 'inputs', 'metering'], 2, 2)).toBe('meter');   // an SMU: the BIM count alone said source
+    expect(roleFromThing(['source', 'metering'], 1, 2)).toBe('out');               // a supply meters what it sources
+    expect(roleFromThing(['inputs'], 2, 3)).toBe('both');                          // a router
+    expect(roleFromThing([], 2, 3)).toBeNull();                                    // no thing.json: the BIM decides
+    const lib = roleIndex([{ model: '2450', roles: ['source', 'inputs', 'metering'] }, { model: 'X', roles: [] }]);
+    expect([...lib.keys()]).toEqual(['2450']);
+    const smu = dev({ name: '2450', key: 'visa_smu', make: 'KEITHLEY', model: '2450', serial: 'S1', address: 'TCPIP0::10.0.0.5::INSTR', wires: ['visa'] });
+    const prefix = 'APK.audio/System/Protocols/visa/Device/SMU/2450/DevS1';
+    const instances = [{ key: 's', state: 'online', serial: 'S1', resource: 'TCPIP::10.0.0.5::INSTR', panel: { prefix },
+      part: { id: 'k/2450', manufacturer: 'Keithley', model: '2450', category: 'Test & Measurement' } }];
+    const parts = [{ id: 'k/2450', ports: [{ group: 'FORCE HI', side: 'input', domain: 'signal' }, { group: 'SENSE HI', side: 'input', domain: 'signal' },
+      { group: 'OUT A', side: 'output', domain: 'signal' }, { group: 'OUT B', side: 'output', domain: 'signal' }] }];
+    const library = { rolesOf: (d: { model?: string }) => lib.get(String(d.model).toLowerCase()) ?? [], typeOf: () => 'SMU' };
+    expect(matchMeters([smu], instances, parts).get('visa_smu')!.role).toBe('out');   // without the library: the BIM count
+    const bim = matchMeters([smu], instances, parts, library);
+    const m = bim.get('visa_smu')!;
+    expect([m.role, m.family, m.prefix]).toEqual(['meter', 'SMU', prefix]);
+    const layer = buildLayer([smu], [], [], () => 'meter', bim);
+    const M = encodeURIComponent(CLASS_FOLDERS.meter);
+    const files = layer.get(`Routes/Destinations/${FOLDER}/${M}/index.json`) as string[];
+    const d = layer.get(`Routes/Destinations/${FOLDER}/${M}/${files[1]}`) as { twists: { name: string; instrument: { roles: string[]; prefix: string; family: string } }[] };
+    expect(d.twists.map((t) => t.name)).toEqual(['FORCE HI', 'SENSE HI']);
+    expect(d.twists[0]!.instrument).toEqual({ label: 'Keithley 2450 #S1', family: 'SMU', model: '2450', roles: ['source', 'inputs', 'metering'], prefix });
   });
 });

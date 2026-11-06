@@ -9,7 +9,15 @@ import type { DeviceSetup } from './discovered-types.js';
    measuring instrument and which jacks it has. A device the library files under
    "Test & Measurement" is a METER, ahead of every other class (a meter with a
    running front panel is still a meter), and its destination's twists are the
-   input terminals its part declares. Data, not a device list. */
+   input terminals its part declares. Data, not a device list.
+
+   ROAD-3516: the FAMILY says what it is first. Each INSTRUMENT.<Family> repo's
+   thing.json names its roles (inputs / metering / monitoring / source), served on
+   the instrument catalogue (discovered-families rolesOf). A family that takes
+   inputs AND measures them (metering or monitoring) is a meter — a destination
+   whose twists are its part's input jacks, opening the instrument editor on its
+   readings and trace (editors/instrument). A source with no inputs is a source.
+   Only a box whose family names no roles falls back to the BIM category. */
 
 /** What the library says about one discovered device it knows (matchMeters):
  *  its jacks as the part declares them — what it takes IN, what it gives OUT —
@@ -22,6 +30,12 @@ export interface MeterInfo {
   part: string;
   symbol?: string;
   role: BimRole;
+  /** Its family's thing.json roles, [] when the library names none. */
+  roles: readonly string[];
+  /** Its family in the instrument library (DMM, Oscilloscope …), '' when unknown. */
+  family: string;
+  /** Its bus prefix (`APK.audio/System/Protocols/visa/Device/<F>/<M>/Dev…`), from the panel it presents. */
+  prefix?: string;
   inputs: { name: string; accepts: 'audio' | 'video' | 'both' }[];
   outputs: { name: string; domain: string }[];
 }
@@ -32,6 +46,7 @@ export interface BimInstance {
   state: string;
   serial?: string | null;
   resource?: string | null;
+  panel?: { prefix?: string } | null;
   part?: { id?: string; manufacturer?: string; model?: string; name?: string; category?: string; class?: string; symbol?: string };
 }
 
@@ -54,6 +69,23 @@ export const visa = (r: string | null | undefined): string =>
 export const visaCore = (r: string | null | undefined): string =>
   visa(r).replace(/^ASRL/, '').replace(/::INSTR$/, '');
 
+/** What a family's roles make a box, or null when they name none (the BIM decides). */
+export function roleFromThing(roles: readonly string[], inputs: number, outputs: number): BimRole | null {
+  if (!roles.length) return null;
+  const has = (r: string): boolean => roles.includes(r);
+  if (has('inputs') && (has('metering') || has('monitoring'))) return 'meter';
+  if (has('inputs')) return outputs ? 'both' : 'in';
+  if (has('source')) return 'out';
+  return inputs && outputs ? 'both' : outputs ? 'out' : 'in';
+}
+
+/** The instrument library's answers matchMeters reads (discovered-families). */
+export interface Library {
+  rolesOf(d: { model?: string }): readonly string[];
+  typeOf(d: { model?: string }): string;
+}
+const NO_LIBRARY: Library = { rolesOf: () => [], typeOf: () => '' };
+
 const expand = (p: { group?: string; terminal?: string; count?: number }): string[] => {
   const n = Math.max(1, Math.min(p.count ?? 1, 32));
   const name = p.group || p.terminal || '?';
@@ -66,7 +98,7 @@ const expand = (p: { group?: string; terminal?: string; count?: number }): strin
  *  is one entry: when two sightings match it, the VISA one keeps it.
  *  Inputs: input jacks, power excluded (mains is not a route). Outputs: every
  *  output jack — signal, clock AND power: a supply's DC OUT is what it gives. */
-export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], parts: BimPart[]): Map<string, MeterInfo> {
+export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], parts: BimPart[], lib: Library = NO_LIBRARY): Map<string, MeterInfo> {
   const byPart = new Map(parts.map((p) => [p.id, p] as const));
   const out = new Map<string, MeterInfo>();
   const claimed = new Set<string>();
@@ -89,9 +121,11 @@ export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], pa
     }
     if (!inputs.length && !outputs.length) continue;
     const measuring = inst.part.category === MEASURING;
-    const role: BimRole = measuring
+    const asPart = { model: inst.part.model };
+    const roles = lib.rolesOf(d).length ? lib.rolesOf(d) : lib.rolesOf(asPart);
+    const role: BimRole = roleFromThing(roles, inputs.length, outputs.length) ?? (measuring
       ? (outputs.length >= inputs.length ? 'out' : 'meter')
-      : (inputs.length && outputs.length ? 'both' : outputs.length ? 'out' : 'in');
+      : (inputs.length && outputs.length ? 'both' : outputs.length ? 'out' : 'in'));
     claimed.add(inst.key);
     const make = inst.part.manufacturer || d.make;
     out.set(d.key, {
@@ -99,7 +133,8 @@ export function matchMeters(devices: DeviceSetup[], instances: BimInstance[], pa
       label: `${make} ${inst.part.model ?? d.model}${serial && serial !== '0' ? ` #${serial}` : d.address ? ` @ ${d.address}` : ''}`.trim(),
       part: inst.part.id,
       ...(inst.part.symbol ? { symbol: inst.part.symbol } : {}),
-      role, inputs, outputs,
+      ...(inst.panel?.prefix ? { prefix: inst.panel.prefix } : {}),
+      role, roles, family: lib.typeOf(d) || lib.typeOf(asPart), inputs, outputs,
     });
   }
   return out;

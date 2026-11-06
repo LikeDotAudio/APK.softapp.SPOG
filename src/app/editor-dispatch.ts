@@ -18,6 +18,7 @@ import { applyScope } from '../ui/console/auth-panel.js';
 import { BLURBS } from './blurbs.js';
 import { PAL } from '../domain/palette.js';
 import { trueInkVar } from '../ui/ink-var.js';
+import { isInstrumentRoles } from '../editors/instrument/data.js';
 
 /** A twist element in the console was clicked → open its dispatched editor. */
 export function openEditorForTwist(twistEl: HTMLElement): void {
@@ -46,7 +47,13 @@ export function openEditorForTwist(twistEl: HTMLElement): void {
   // A TEST SIGNAL GENERATOR feed routed onto any twist/MONITOR opens the TSG editor,
   // so the op can choose which standardised pattern the generator outputs.
   const hasTsg = twistEl.querySelector('.signal-node.tsg-source');
-  const plugin = hasPrompter
+  // A BENCH INSTRUMENT's jack (ROAD-3516): the Discovered layer stamped the twist with
+  // what its family's thing.json says it is — metering / monitoring opens the instrument
+  // editor on its readings and trace, whatever the jack is called (HI, CH 1, INPUT).
+  const instrument = typeof twist === 'object' && isInstrumentRoles(twist.instrument?.roles);
+  const plugin = instrument
+    ? pluginFor('INSTRUMENT')
+    : hasPrompter
     ? (pluginFor('PROMPTER') ?? pluginFor(name))
     : hasTimer
       ? (pluginFor('TIMER') ?? pluginFor(name))

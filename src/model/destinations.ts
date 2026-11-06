@@ -4,8 +4,22 @@ import type { SwitcherDef } from './switcher.js';
 
 export type Accepts = 'video' | 'audio' | 'both' | 'camera';
 
+/** The bench instrument behind a discovered meter's twist (ROAD-3516): what its
+ *  family's thing.json says it is, and where it speaks on the bus. The Discovered
+ *  layer writes it; editor-dispatch opens editors/instrument on it. */
+export interface TwistInstrument {
+  label: string;
+  family: string;
+  model: string;
+  /** thing.json roles: 'inputs' | 'metering' | 'monitoring' | 'source'. */
+  roles: string[];
+  /** `APK.audio/System/Protocols/<proto>/Device/<F>/<M>/Dev…` — absent when it presents no panel. */
+  prefix?: string;
+}
+
 export interface TwistConfig {
   name: string;
+  instrument?: TwistInstrument;
   accepts?: Accepts;
   inputs?: string[];
   monitor?: boolean;
