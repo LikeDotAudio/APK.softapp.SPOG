@@ -17,6 +17,13 @@ import { topicMatches } from './topics.js';
 import { makeSessionId } from './session-id.js';
 import { noopBus } from './noop-bus.js';
 import { externalSubscriptions } from './external-subs.js';
+// THE UNIT GATE (ROAD-3558): a VISA unit's …/Write goes through the recorder agent's
+// one-exchange-per-unit gate while it is online — the rule is the contract's.
+// @ts-expect-error TS7016 — untyped vendored ES module (a .d.ts beside it would fail the vendor check)
+import { gateUnitWrite as gateUnitWriteUntyped, gateAgentOnline as gateAgentOnlineUntyped, UNIT_GATE_AGENT_TOPIC as GATE_AGENT } from '../../vendor/apk-contracts/apk-contracts.mjs';
+const gateUnitWrite = gateUnitWriteUntyped as (topic: string, command: string, by: string, online: boolean, ttlS?: number) => { topic: string; payload: string };
+const gateAgentOnline = gateAgentOnlineUntyped as (row: unknown) => boolean;
+const UNIT_GATE_AGENT_TOPIC = GATE_AGENT as string;
 
 // Re-exported so consumers (barrel index.ts) keep importing broker config from
 // client.js after the config/loader extraction — public bus API is unchanged.
@@ -62,6 +69,7 @@ export function createTwistBus(): TwistBus {
 
   // In-flight sends (encryption is async) — dispose() waits on them before end().
   const inflight = new Set<Promise<void>>();
+  let gateOnline = false;                     // the recorder agent's gate keeper, by its System/Agents row
   const send = (topic: string, payload: any, retain = true): Promise<void> => {
     const p = sendNow(topic, payload, retain).finally(() => inflight.delete(p));
     inflight.add(p);
@@ -103,6 +111,7 @@ export function createTwistBus(): TwistBus {
       connected = true;
       dbg('connected', sessionId);
       client!.subscribe(`${SPOG_ROOT}/#`, { qos: 0 });
+      client!.subscribe(UNIT_GATE_AGENT_TOPIC, { qos: 0 });   // the gate keeper's row (retained, will = offline)
       external.resubscribe(client!);
       const beat = (): void => { send(presenceTopic, { active: true, full_id: sessionId, ts: Date.now() }); };
       beat();
@@ -119,6 +128,7 @@ export function createTwistBus(): TwistBus {
     client.on('offline', () => { connected = false; });
     client.on('error', (e) => dbg('error', e));
     client.on('message', async (topic: string, payload: Uint8Array) => {
+      if (topic === UNIT_GATE_AGENT_TOPIC) { gateOnline = gateAgentOnline(new TextDecoder().decode(payload)); return; }
       let parsed: unknown = await decryptAndDecode(payload);
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('mqtt-raw-message', { detail: { topic, payload } }));
@@ -159,7 +169,10 @@ export function createTwistBus(): TwistBus {
     },
 
     publishExternal(topic, text): void {
-      if (client) client.publish(topic.replace(/^\/+/, ''), String(text), { retain: false, qos: 0 });
+      if (!client) return;
+      // A SCPI write on an instrument's …/Write is a request to the gate while its keeper is online.
+      const out = gateUnitWrite(topic.replace(/^\/+/, ''), String(text), `spog:${sessionId.split(':')[0]}`, gateOnline);
+      client.publish(out.topic, out.payload, { retain: false, qos: 0 });
     },
 
     subscribe(filter, cb): () => void {

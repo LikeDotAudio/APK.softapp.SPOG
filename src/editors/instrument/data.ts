@@ -8,7 +8,7 @@
 //               every answer KOMAND publishes for the box (nab / get), whoever asked.
 //   monitoring  System/Captures/Rig/<device>            {device, ts, rig: {"Trace/CHAN1": "<json>"}}
 //               the capture recorder's retained rig; each Trace/<source> leaf is the
-//               points and preamble to redraw it (WEB.OsApi capture_trace.py).
+//               points and preamble to redraw it (the CAPTURE.Recorder agent's tracer).
 
 // @ts-expect-error TS7016 — untyped vendored ES module (a .d.ts beside it would fail the vendor check)
 import { Topics as T, captureSegment as seg } from '../../vendor/apk-contracts/apk-contracts.mjs';
