@@ -7,6 +7,8 @@ describe('instrument editor — what each thing.json role reads off the bus', ()
   it('roles choose the panes: metering → readings, monitoring → trace', () => {
     expect(panesFor(['inputs', 'metering'])).toEqual({ readings: true, trace: false });
     expect(panesFor(['inputs', 'metering', 'monitoring'])).toEqual({ readings: true, trace: true });
+    expect(panesFor(['source', 'monitoring'])).toEqual({ readings: true, trace: true });   // a generator: its readbacks too
+    expect(panesFor(['source'])).toEqual({ readings: false, trace: false });
     expect(isInstrumentRoles(['inputs'])).toBe(false);          // a router is a destination, not an instrument view
     expect(isInstrumentRoles(undefined)).toBe(false);
   });

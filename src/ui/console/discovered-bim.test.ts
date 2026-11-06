@@ -115,4 +115,26 @@ describe('discovered — what the BIM library says a device takes in and gives o
     expect(d.twists.map((t) => t.name)).toEqual(['FORCE HI', 'SENSE HI']);
     expect(d.twists[0]!.instrument).toEqual({ label: 'Keithley 2450 #S1', family: 'SMU', model: '2450', roles: ['source', 'inputs', 'metering'], prefix });
   });
+
+  it('a source that meters opens the instrument editor too (ROAD-3543): a supply is a source AND a READINGS destination', () => {
+    const psu = dev({ name: '66104A', key: 'visa_psu', make: 'HP', model: '66104A', serial: '', address: 'tcpip0::44.44.44.222::gpib7,30,4::instr', wires: ['visa'] });
+    const prefix = 'APK.audio/System/Protocols/visa/Device/Power/66104A/Dev730-4';
+    const instances = [{ key: 'p', state: 'online', serial: null, resource: 'TCPIP::44.44.44.222::gpib7,30,4::INSTR', panel: { prefix },
+      part: { id: 'k/66104a', manufacturer: 'Keysight', model: '66104A', category: 'Test & Measurement' } }];
+    const parts = [{ id: 'k/66104a', ports: [{ group: 'DC OUT +', side: 'output', domain: 'power' }, { group: 'DC OUT -', side: 'output', domain: 'power' }] }];
+    const lib = { rolesOf: () => ['source', 'metering'], typeOf: () => 'Power' };
+    const bim = matchMeters([psu], instances, parts, lib);
+    expect(bim.get('visa_psu')!.role).toBe('out');
+    const layer = buildLayer([psu], [], [], () => 'out', bim);
+    const M = encodeURIComponent(CLASS_FOLDERS.meter);
+    const files = layer.get(`Routes/Destinations/${FOLDER}/${M}/index.json`) as string[];
+    expect(files).toHaveLength(1);                                  // no Data Logger: no meter on this bench
+    const d = layer.get(`Routes/Destinations/${FOLDER}/${M}/${files[0]}`) as { twists: { name: string; instrument: { roles: string[]; prefix: string } }[] };
+    expect(d.twists.map((t) => t.name)).toEqual(['READINGS']);
+    expect(d.twists[0]!.instrument).toMatchObject({ roles: ['source', 'metering'], prefix, family: 'Power' });
+    expect((layer.get(`Routes/Sources/${FOLDER}/${OUT}/index.json`) as string[])).toHaveLength(1);   // still a source
+    // a source with no metering or monitoring role opens nothing new
+    const plain = buildLayer([psu], [], [], () => 'out', matchMeters([psu], instances, parts, { rolesOf: () => ['source'], typeOf: () => 'Power' }));
+    expect(plain.get(`Routes/Destinations/${FOLDER}/${M}/index.json`)).toBeUndefined();
+  });
 });

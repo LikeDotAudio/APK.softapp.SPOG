@@ -30,13 +30,8 @@ export interface Trace {
   volts: ((p: number) => number) | null;
 }
 
-/** What the editor shows for a family's roles. */
-export const panesFor = (roles: readonly string[]): { readings: boolean; trace: boolean } =>
-  ({ readings: roles.includes('metering'), trace: roles.includes('monitoring') });
-
-/** True when a twist's family gives the instrument editor something to show. */
-export const isInstrumentRoles = (roles: readonly string[] | undefined): boolean =>
-  !!roles && (roles.includes('metering') || roles.includes('monitoring'));
+// What the roles open — one definition, shared with the Discovered layer.
+export { panesFor, opensInstrument as isInstrumentRoles } from '../../domain/instrument-roles.js';
 
 const json = (payload: unknown): unknown => {
   if (typeof payload !== 'string') return payload;

@@ -9,6 +9,7 @@ import { layStreams } from './discovered-streams.js';
 import { classify, groupPath, networkPaths, type DeviceClass } from './discovered-groups.js';
 import type { MeterInfo } from './discovered-meters.js';
 import type { TwistInstrument } from '../../model/destinations.js';
+import { opensInstrument } from '../../domain/instrument-roles.js';
 
 export * from './discovered-types.js';
 export * from './discovered-groups.js';
@@ -121,6 +122,18 @@ export function buildLayer(
       const f = `${n}_${base}${nonStreamAudio.length ? '-v' : ''}.json`;
       out.set(srcDir + f, { id: `disc-${d.key}${nonStreamAudio.length ? '-v' : ''}`, name: d.name, kind: 'video', extraClass: 'video-imported', video, ...common });
       srcFiles.push(f);
+    }
+
+    // 2c. A SOURCE that meters or monitors (a supply, a generator — thing.json,
+    //     ROAD-3543) is also a destination in the Meters group: one READINGS twist
+    //     opening the instrument editor on what it reports. Sources open no editor.
+    if (bim && bim.role !== 'meter' && opensInstrument(bim.roles)) {
+      const mpath = groupPath(d, 'meter', net);
+      const mfiles = into(destTree, mpath).files;
+      const rf = `${String(mfiles.length + 1).padStart(3, '0')}_${slugId(bim.label.replace(/^\S+\s+/, '')) || base}.json`;
+      out.set(DEST_DIR + mpath.map(seg).join('') + rf, { id: `disc-${d.key}-readings`, name: bim.label.toUpperCase(), device: d, bim: bim.part,
+        status: d.online ? 'OK' : 'OFFLINE', twists: [{ name: 'READINGS', accepts: 'both', instrument: instrumentOf(bim, d) }] });
+      mfiles.push(rf);
     }
 
     const meter = classes.get(d.key) === 'meter' && bim?.role === 'meter' ? bim : undefined;
