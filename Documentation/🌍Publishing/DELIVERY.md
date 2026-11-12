@@ -198,6 +198,12 @@ From this repository's own commits (the commit message is the record):
 - bump: apk-contracts re-vendored in nested repos (five report codes, ROAD-3695) (`b5e1c30`)
 - re-vendor apk-contracts web bundle: contracts 2.4.0 retires APK.audio/Tests/{suite} (ROAD-3729) (`32d6fb7`)
 - bump src/ui/clock-faces: apk-contracts web bundle re-vendored, contracts 2.4.0 retires APK.audio/Tests/{suite} (ROAD-3729) (`94b9082`)
+- wiki: lanes, README and smoke result refreshed (wiki.py + smoke.py) (`8a87cf1`)
+- docs(smoke): pass — results in the wiki (`81fd8b2`)
+- vendor: apk-contracts re-vendored (contracts gained the youtube_audio problem codes, root f013ba68a) (`3e856fc`)
+- vendor/apk-contracts: refresh to contracts/generated/web after ROAD-3759 (contracts split; CHAT_TOPIC origin note) (`954cfbe`)
+- vendor: apk-softapp / apk-table re-joined from their parts (one GENERATED banner line; ROAD-3762) (`c54e7b3`)
+- ROAD-3763: lcars.css split into five files, in its own order (`2dc1bfe`)
 
 ## Releases
 - **Released `2.0.0`, tag `v2.0.0`** (2026-11-01, ROAD-3452, the owner's V2) — no SDK pin; every manifest says 2.0.0; GitHub release `v2.0.0`.
