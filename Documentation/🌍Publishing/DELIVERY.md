@@ -187,5 +187,17 @@ its secrets to env vars on the deploy step. `FTP_USER`/`FTP_PASS` unset aborts t
 - **ROAD-3464 closed (2026-10-31)** — colour emoji follow every mode, not only grey: each run of colour-emoji glyphs goes into its own `span[data-emoji]` (`ui/console/emoji-ink.ts`, clusters in `emoji-runs.ts`; a canvas probe keeps text-glyph pictographs like ©, 🎙 out) and takes `filter: var(--emoji-filter)`, the mode's own chain spelled as CSS (`colour-resolve.ts` `cssFilter`, the same steps `resolveColour` runs), so no element's resolved paint is filtered twice. Headless Chrome 154, 40 emoji, px off the mode by > 2 levels inside the emoji: grey 0, low 0, greyhigh 216, high 1,298, mono 1,947 (was 13–15 thousand each); what remains is anti-aliased / translucent edge pixels under the clamping chains. The overlay's `--ed-color` (true colour via `openOverlay({ ink })`; multi-viewer and intercom no longer re-stamp it), the gang elbow's `--zone-color` (`carryInk`), the program row's Routes colour (`--prod-color`, was written raw) and a dropped group's colour (`trueColourOf`) go through ink-var and repaint on every mode change.
 - **ROAD-3465 closed (2026-10-31)** — an open editor follows every mode change: the context carries TRUE colours (the production's from the twist's `data-ink`, each feed's via `trueColourOf`, which now reads a node's own `--sig-node`; before, feeds arrived as the string `var(--sig-node)` and chips never showed them), and `ui/ink-inline.ts` hands every literal colour an editor writes into an inline style to `setInkVar` (a MutationObserver on the overlay body; `data-true-colour` subtrees left alone), so the Colour Engine's repaint reaches it. Swept the same "read the paint once" class out of the helix stops, the timeline group chips, the MONITOR fixture's feed, the router export's Color column, the seat menu's tiles, the system editors' `--ed-color` and the 3-D positioner. Headless Chrome, editor opened full → grey: device rail + cards 0 colour px (was 7,132), feed chips 0; back to full pixel-identical.
 
+## Delivered 2026-11-11 – 2026-11-12
+
+From this repository's own commits (the commit message is the record):
+
+- vendor: apk-contracts web bundle refreshed from contracts/generated/web (report.ts: LogLine + ProblemRecord, System/Problems family) (`64aab5f`)
+- ROAD-3693: bump clock-faces to its main (7106453) — Smith Chart sits on its main (0acacd6) (`86d97c4`)
+- bump: apk-softapp re-vendored in nested repos (every problem card reported through the SDK, ROAD-3695 step 2) (`07d5db5`)
+- vendor: apk-contracts web bundle refreshed from contracts/generated/web (five report codes, ROAD-3695; unit-gate, ROAD-3684) (`add2cef`)
+- bump: apk-contracts re-vendored in nested repos (five report codes, ROAD-3695) (`b5e1c30`)
+- re-vendor apk-contracts web bundle: contracts 2.4.0 retires APK.audio/Tests/{suite} (ROAD-3729) (`32d6fb7`)
+- bump src/ui/clock-faces: apk-contracts web bundle re-vendored, contracts 2.4.0 retires APK.audio/Tests/{suite} (ROAD-3729) (`94b9082`)
+
 ## Releases
 - **Released `2.0.0`, tag `v2.0.0`** (2026-11-01, ROAD-3452, the owner's V2) — no SDK pin; every manifest says 2.0.0; GitHub release `v2.0.0`.
