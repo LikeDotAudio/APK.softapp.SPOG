@@ -545,5 +545,5 @@ non-commercial fan tribute and a working engineering tool; no affiliation or end
 implied.
 
 <!-- wiki:smoke -->
-**Smoke test** — ❌ FAIL 0/1 since 2026-11-12 00:16 EST — [results](Documentation/%F0%9F%A7%A9Manual%20and%20Artifacts/SMOKE.md)
+**Smoke test** — ✅ PASS 1/1 since 2026-11-12 00:40 EST — [results](Documentation/%F0%9F%A7%A9Manual%20and%20Artifacts/SMOKE.md)
 <!-- /wiki:smoke -->
