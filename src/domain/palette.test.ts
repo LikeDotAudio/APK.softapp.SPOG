@@ -37,6 +37,12 @@ const RGBA_CEILING = 0;
 const RGBA = /\brgba?\(|\bhsla?\(/g;
 const MACHINERY = ['domain/colour-resolve.ts', 'ui/canvas-ink.ts', 'ui/ink-var.ts'];
 const LCARS = resolve(SRC, '../lcars.css');
+/** lcars.css and the four parts it @imports (ROAD-3763), as one text. */
+const readLcars = (): string => {
+  const entry = readFileSync(LCARS, 'utf8');
+  const parts = [...entry.matchAll(/@import "\.\/([^"]+)";/g)].map((m) => resolve(SRC, '..', m[1] ?? ''));
+  return [entry, ...parts.map((f) => readFileSync(f, 'utf8'))].join('\n');
+};
 
 describe('palette ratchet (ROAD-3449, ROAD-3456)', () => {
   const all = files(SRC);
@@ -48,7 +54,7 @@ describe('palette ratchet (ROAD-3449, ROAD-3456)', () => {
     expect(total, `the count fell to ${total}: lower RGBA_CEILING to match`).toBe(RGBA_CEILING);
   });
   it('lcars.css spells no colour: every one is var(--pal-*) (ROAD-3456)', () => {
-    const css = readFileSync(LCARS, 'utf8');
+    const css = readLcars();
     expect(css.match(HEX) ?? []).toEqual([]);
     expect(css.match(RGBA) ?? []).toEqual([]);
   });
@@ -61,7 +67,7 @@ describe('palette ratchet (ROAD-3449, ROAD-3456)', () => {
   });
   it('every palette colour is used, and spelled once', () => {
     const text = all.filter((f) => ownFile(f) && relative(SRC, f) !== 'domain/palette.ts' && !f.endsWith('.test.ts')).map((f) => readFileSync(f, 'utf8')).join('\n');
-    const css = readFileSync(LCARS, 'utf8');
+    const css = readLcars();
     expect(Object.keys(TRUE).filter((k) => !new RegExp(`(PAL|HEX)\\.${k}\\b`).test(text) && !css.includes(`var(--pal-${k})`))).toEqual([]);
     const vals = Object.values(TRUE);
     expect(vals.length).toBe(new Set(vals).size);

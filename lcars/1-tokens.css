@@ -1,0 +1,304 @@
+/* lcars/1-tokens.css — part 1 of lcars.css (ROAD-3763), imported by it in order.
+   TOKENS AND THE ENGINES: the :root tokens (colour engine, Tier-1 and Tier-2), the chirality engine, the palette strip, the page base (body, container) and the right-handed overrides. */
+
+        :root {
+            --bg-color: var(--pal-blue05_060c16);
+            --panel-bg: color-mix(in srgb, var(--pal-blue09s58) 80%, transparent);
+            --cyan: var(--pal-cyan50);
+            --magenta: var(--pal-purple50);
+            --blue: var(--pal-blue65);
+            --text-main: var(--pal-sky94s100);
+            /* Signal category colours */
+            --video-color: var(--pal-purple70);   /* violet */
+            --audio-color: var(--pal-orange69);   /* orange */
+            --program-color: var(--pal-blue60); /* blue */
+            --glow-cyan: 0 0 10px var(--cyan), 0 0 20px color-mix(in srgb, var(--pal-cyan50) 40%, transparent);
+            --glow-magenta: 0 0 10px var(--magenta), 0 0 20px color-mix(in srgb, var(--pal-purple50) 40%, transparent);
+
+            /* ── COLOUR ENGINE (Documentation/Colours and shapes.md) ──────────────────────
+               Sibling to the CHIRALITY ENGINE below. Three orthogonal axes live as
+               attributes on <html>: data-cvd (palette), data-chroma (hue), data-vision
+               (contrast). Tier-1 = Okabe-Ito CVD-safe primitives (never referenced by
+               components). Tier-2 = semantic signal/state tokens (the ONLY thing UI
+               reads). Modes re-point Tier-2 (cvd); chroma + vision reach every colour
+               through the palette: this sheet spells none, each is var(--pal-*), and the
+               engine (src/ui/console/palette-paint.ts) writes those already resolved for
+               the mode — no page filter, so signal content (TSG, video, scopes) keeps its
+               TRUE colour (ROAD-3456). */
+            --ok-orange: var(--pal-amber45); --ok-skyblue: var(--pal-sky63s77); --ok-green: var(--pal-teal31);
+            --ok-yellow: var(--pal-yellow56); --ok-blue: var(--pal-sky35s100); --ok-vermillion: var(--pal-orange42);
+            --ok-purple: var(--pal-pink64);
+            /* Tier-2 semantic (components/preview read ONLY these). */
+            --sig-video:   var(--video-color);
+            --sig-audio:   var(--audio-color);
+            --sig-program: var(--program-color);
+            --state-alarm: var(--pal-red62);
+            --state-ok:    var(--pal-teal54);
+            --state-onair: var(--pal-amber50s100);
+        }
+
+        /* CVD palette — data-cvd names the active palette; its six semantic tokens
+           (+ the three legacy category vars) are written INLINE onto <html> by
+           colour-scheme.ts (PALETTES is the single source of truth). The :root values
+           above are the Classic fallback if the script never runs. */
+        /* CHROMA (grey strips hue; mono = amber phosphor) and CONTRAST (high boosts,
+           low dims for dark-adapted rooms) are resolved into --pal-* by the engine
+           (src/domain/colour-resolve.ts holds the maths). High also kills glow, which
+           lowers effective contrast. */
+        html[data-vision="high"] { --glow-cyan: none; --glow-magenta: none; }
+        /* Colour-emoji glyphs are no palette colour: each run sits in its own span[data-emoji]
+           (src/ui/console/emoji-ink.ts) and takes the mode as a filter (--emoji-filter, palette-paint.ts). */
+        [data-emoji] { filter: var(--emoji-filter, none); }
+        /* Native controls (range, checkbox, radio, progress) paint the browser's own accent unless told:
+           Chrome's default blue as a palette colour (sky50), so it follows the mode like everything else. */
+        html { accent-color: var(--pal-sky50); }
+
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; } }
+
+        /* ── CHIRALITY ENGINE ─────────────────────────────────────────────────
+           Handedness axis (Documentation/Audit /Chirality Deployment strategy.md, C0+C1).
+           html[data-chirality="right"|"left"]. `right` (default) docks the SOURCES
+           rail on the dominant-hand RIGHT edge; `left` = the classic left dock.
+           --chir (+1 right / -1 left) is the sign every JS-computed placement reads
+           (drag ghost side, popovers). .chir-fixed rides content back upright if a
+           subtree is ever scaleX-reflected (reserved for later phases). */
+        html { --chir: 1; }
+        html[data-chirality="left"] { --chir: -1; }
+        .chir-fixed { transform: scaleX(var(--chir, 1)); }
+
+        /* The handedness toggle (a hand glyph pointing at the rail side). */
+        .chir-toggle {
+            position: fixed;
+            bottom: 42px;                                        /* aligns with the MQTT chip / clock row */
+            right: calc(120px + var(--ptp-clock-w, 180px));      /* just LEFT of the MQTT chip */
+            z-index: 1600;
+            font: 700 13px 'Courier New', monospace;
+            letter-spacing: 1px;
+            padding: 6px 11px;
+            border: none;
+            border-radius: 14px;
+            background: var(--pal-blue19);
+            color: var(--pal-sky69);
+            cursor: pointer;
+            opacity: 0.85;
+        }
+        .chir-toggle:hover { opacity: 1; filter: brightness(1.12); }
+
+        /* The colour-scheme launcher (painter's palette), docked just LEFT of the
+           handedness toggle → opens the COLOUR & VISION editor (colour-scheme.ts). */
+        .palette-toggle {
+            position: fixed;
+            bottom: 42px;
+            right: calc(120px + var(--ptp-clock-w, 180px) + 58px);   /* clears the chirality toggle */
+            z-index: 1600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
+            padding: 6px 8px;
+            border: none;
+            border-radius: 14px;
+            background: var(--pal-blue19);
+            color: var(--pal-purple70);
+            cursor: pointer;
+            opacity: 0.85;
+        }
+        .palette-toggle:hover { opacity: 1; filter: brightness(1.12); }
+        .palette-toggle svg { width: 18px !important; height: 18px !important; display: block; }
+
+        /* ── CHIRALITY C2 — editor bodies (Documentation/Audit /Editor-Chirality-Audit.md) ──
+           Editors open in .ed-overlay OUTSIDE the console mirror, so they flip on
+           their own. First wave = the clean-grid editors whose driven-control column
+           sits on the RIGHT (correct for the default right-hand-dominant mode). In
+           LEFT-handed mode we reverse the grid's inline axis so those controls dock
+           LEFT (the reachable, non-occluded corner). direction:rtl reorders the GRID
+           TRACKS only; the immediate children reset to ltr, so text is never reversed
+           and every canvas/scope/meter renders pixel-identical (they are not text and
+           ignore `direction`). Scoped to left mode → the default mode is untouched.
+           WYSIWYG (1fr|280) · IFB (200|1fr|320) · AUDIO MONITOR (1fr|300). */
+        html[data-chirality="left"] .wy,
+        html[data-chirality="left"] .ifb,
+        html[data-chirality="left"] .am2 { direction: rtl; }
+        html[data-chirality="left"] .wy > *,
+        html[data-chirality="left"] .ifb > *,
+        html[data-chirality="left"] .am2 > * { direction: ltr; }
+
+        /* CHIRALITY C2 — wave 2. Same grid-track reorder, plus the one editor whose
+           LCARS geometry is asymmetric (audio-mixer's rail vs master elbows). */
+        /* audio-mixer: swap the left LAYER RAIL ⇄ right MASTER tab, and mirror their
+           44px elbow curves so the big radius still hugs the OUTER edge after the swap. */
+        html[data-chirality="left"] .am-console { flex-direction: row-reverse; }
+        html[data-chirality="left"] .am-rail { border-radius: 10px 44px 44px 10px; }
+        html[data-chirality="left"] .am-rail-foot { border-radius: 6px 6px 6px 44px; }
+        html[data-chirality="left"] .am-master-tab { border-radius: 44px 10px 10px 44px; }
+        /* camera-control: the 580px control rail (joystick + shading dials) docks to
+           the dominant side; the glass + its docked scopes/maps ride along. The maps
+           and scopes are tagged .chir-exempt in markup (spatial — never mirror). */
+        html[data-chirality="left"] .cc-wrap { direction: rtl; }
+        html[data-chirality="left"] .cc-wrap > * { direction: ltr; }
+        /* stagebox: its rotary-dial card is coded on the LEFT, so it is the RIGHT-hand
+           mode that moves it to the reachable dominant side (left mode keeps the coded
+           layout — correct for a left-hander). The one editor that flips in right mode. */
+        html[data-chirality="right"] .sb { direction: rtl; }
+        html[data-chirality="right"] .sb > * { direction: ltr; }
+
+        /* chir-exempt — opt a node OUT of any chirality flip (spatial diagrams:
+           camera robotics maps, lighting rig, positioner room; and any raster/scope).
+           Under the current geometry mechanism a canvas already ignores `direction`,
+           so this is a defensive inline-direction reset + the governance marker every
+           spatial diagram carries (the hook for the review checklist and any future
+           scaleX phase). Audit: Documentation/Audit /Editor-Chirality-Audit.md §4. */
+        .chir-exempt { direction: ltr; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            height: 100dvh; /* dvh tracks the *visible* viewport so the footer
+                               isn't pushed under a tablet/mobile browser's toolbars */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, var(--pal-blue20s48) 0%, var(--pal-blue05_060c16) 80%);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: var(--sidebar-width, 250px) 6px 1fr;
+            gap: 0; /* the sash is the only divider — no dead gutter beside it */
+            flex: 1;
+            padding: 0; /* elbows run flush to the top and both edges — no wasted gutter */
+            min-height: 0;
+        }
+
+        /* CHIRALITY C1 — right-handed docks the SOURCES rail on the RIGHT edge.
+           Grid reorder only (text/data untouched); scoped to the desktop layout so
+           the mobile stacked layout (@media max-width:768px) is unaffected. */
+        @media (min-width: 769px) {
+            /* Move the SOURCES rail to the RIGHT edge by flipping the grid's inline
+               axis: direction:rtl lands the first template column (the sidebar) on
+               the right and the 1fr content column on the left — a single full-height
+               row, unchanged. Children reset to ltr so their content is unaffected.
+               (Per-item grid-column:3/2/1 was wrong: sparse auto-placement can't run
+               columns backward, so it split the items into 3 rows → diagonal layout.) */
+            html[data-chirality="right"] .container { direction: rtl; }
+            html[data-chirality="right"] .container > * { direction: ltr; }
+
+            /* Mirror the LCARS section elbows so the coloured spine hugs the RIGHT
+               (outer) edge. Explicit geometry swap — NO transform anywhere, because
+               TEXT IS NEVER MIRRORED (the big rule). The spine border flips
+               left→right, the top bar + label + emoji anchors swap sides, and the
+               black notch offsets mirror with them. */
+            html[data-chirality="right"] .ingress-panel .super-pool-container {
+                padding: 27px 62px 2px 2px;
+            }
+            html[data-chirality="right"] .ingress-panel .super-pool-container::before {
+                left: auto;
+                right: 0;
+                border: none;
+                background-image: 
+                    linear-gradient(to bottom, var(--lcars-color, var(--pal-amber50s100)) 25px, transparent 25px),
+                    linear-gradient(to left, var(--lcars-color, var(--pal-amber50s100)) 60px, transparent 60px);
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                border-top-right-radius: 40px;
+                border-bottom-right-radius: 40px;
+            }
+            html[data-chirality="right"] .ingress-panel .super-pool-container.folded::before {
+                border-top-right-radius: 15px; border-bottom-right-radius: 15px;
+            }
+            html[data-chirality="right"] .ingress-panel .super-pool-container::after {
+                left: 0; right: 105px;
+                border-top-right-radius: 0; border-bottom-right-radius: 0;
+                border-top-left-radius: 12px; border-bottom-left-radius: 12px;
+            }
+            html[data-chirality="right"] .ingress-panel .super-pool-title { right: auto; left: 15px; }
+            html[data-chirality="right"] .ingress-panel .super-pool-emoji { left: auto; right: 40px; }
+
+            /* The elbow geometry mirrored, but the CONTENT did not: the FLOOR/BANK
+               pills are left-aligned in both chiralities, so in right-handed mode
+               they clung to the OUTER edge and left a wide dead gap to the coloured
+               spine. Right-align the content so the pills hug the right spine and
+               fold out right→left — the true mirror of the left dock. Grids and node
+               internals keep their own left-to-right order (re-set below). */
+            html[data-chirality="right"] .ingress-panel .super-pool-content { text-align: right; }
+            /* A floor's expanded grid keeps left-to-right cell order (101,102,103…);
+               justify-content nudges any non-filling grid toward the spine (1fr grids
+               already fill their bracket, so this is a no-op for them). */
+            html[data-chirality="right"] .ingress-panel .super-pool-content .input-grid-video,
+            html[data-chirality="right"] .ingress-panel .super-pool-content .input-grid-audio {
+                text-align: left; justify-content: end;
+            }
+            html[data-chirality="right"] .ingress-panel .super-pool-content .multiplex-children,
+            html[data-chirality="right"] .ingress-panel .super-pool-content .signal-node { text-align: left; }
+
+            /* DESTINATION / PRODUCTION frame — mirror the same way. The production
+               spine hugs the outer (LEFT) edge, its title cap flips, and every twist
+               elbow curls the other way. Geometry only; text/data untouched. */
+            html[data-chirality="right"] .program-row::after {
+                right: auto; left: 0;
+                border-radius: 30px 0 30px 30px;
+            }
+            /* Title text hugs the INNER edge (toward the sources rail) — right in
+               right-handed mode, so ENCODER 1 sits close to the sources. */
+            html[data-chirality="right"] .program-title { border-radius: 30px 14px 14px 0; text-align: right; }
+            html[data-chirality="right"] .program-body { padding: 2px 8px 4px 60px; }
+
+            html[data-chirality="right"] .twist-container { padding: 24px 55px 6px 10px; }
+            html[data-chirality="right"] .twist-container::before {
+                left: auto; right: 0;
+                /* Keep the left border's WIDTH (just hide it) so border-top still
+                   spans the full box — zeroing it collapsed the box and dropped the
+                   top-bar stub that bridges the spine to the rail. */
+                border-left-color: transparent;
+                border-right: 45px solid var(--lcars-color, var(--pal-amber50s100));
+                border-top-left-radius: 0; border-bottom-left-radius: 0;
+                border-top-right-radius: 25px; border-bottom-right-radius: 25px;
+            }
+            html[data-chirality="right"] .twist-container::after {
+                left: 0; right: 110px;
+                border-top-right-radius: 0; border-bottom-right-radius: 0;
+                border-top-left-radius: 10px; border-bottom-left-radius: 10px;
+            }
+            /* Reading order in right-handed mode: the DESTINATION NAME leads the
+               bar (right after the fold lip), the source details follow after. */
+            html[data-chirality="right"] .twist-title { left: 40px; right: auto; }
+
+            /* Content must clear the elbow's whole sweep (26px column + 16px inner
+               curve + a black seam), and sit a seam below the 14px top bar — never
+               on top of the LCARS. */
+            html[data-chirality="right"] .twist-container.monitor-twist { padding: 22px 48px 10px 6px; }
+            /* Slim tiles also re-tighten the corner radii: the generic RTL rule's
+               25px on a 26px bar rendered as a half-circle blob (Corner Law: the
+               small tile uses the 16px step, same as the left-handed variant). */
+            html[data-chirality="right"] .twist-container.monitor-twist::before {
+                border-right-width: 26px;
+                border-top-right-radius: 16px;
+                border-bottom-right-radius: 16px;
+            }
+            /* Keep the left anchor (from the general ::after rule) so the rail has
+               width — `left:auto` collapsed the empty pseudo-element to nothing,
+               dropping the whole top rail on the small kit-row twists. */
+            html[data-chirality="right"] .twist-container.monitor-twist::after { right: 64px; }
+            html[data-chirality="right"] .twist-container.monitor-twist .twist-title { left: 28px; right: auto; }
+
+            /* Top-rail furniture: NAME leads, so the SOURCES stats move to the
+               trailing end of the bar (clear of the elbow arm); fold lip's rounded
+               cap + chevron to the left, fold-bar to the right over the spine. */
+            html[data-chirality="right"] .twist-stats { left: auto; right: 90px; }
+            html[data-chirality="right"] .twist-container.monitor-twist .twist-stats { right: 60px; }
+            html[data-chirality="right"] .twist-lip {
+                right: auto; left: 0;
+                border-top-right-radius: 0; border-bottom-right-radius: 0;
+                border-top-left-radius: 10px; border-bottom-left-radius: 10px;
+            }
+            html[data-chirality="right"] .twist-lip::after { right: auto; left: 8px; }
+            html[data-chirality="right"] .twist-foldbar { left: auto; right: 0; }
+        }
